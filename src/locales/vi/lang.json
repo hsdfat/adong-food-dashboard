@@ -1,0 +1,103 @@
+{
+  "login": {
+    "title": "Đăng nhập",
+    "description": "Đăng nhập vào tài khoản của bạn",
+    "form": {
+      "username": "Tên đăng nhập",
+      "password": "Mật khẩu",
+      "submit": "Đăng nhập"
+    },
+    "forgot_password": "Quên mật khẩu?",
+    "signup": {
+      "title": "Đăng ký",
+      "description": "Tạo tài khoản mới"
+    },
+    "message": {
+      "auth_failed": "Tên đăng nhập hoặc mật khẩu không đúng"
+    }
+  },
+  "pagination": {
+    "summary": "Hiển thị {{from}} đến {{to}} trong tổng số {{total}} kết quả",
+    "rows_per_page": "Số dòng mỗi trang"
+  },
+  "action": {
+    "info": "Thông tin",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "submit": "Gửi",
+    "submitting": "Đang gửi...",
+    "reset": "Đặt lại"
+  },
+  "theme": {
+    "light": "Sáng",
+    "dark": "Tối",
+    "auto": "Tự động"
+  },
+  "sidebar": {
+    "items": {
+      "dashboard": "Bảng điều khiển",
+      "ingredients": "Nguyên liệu",
+      "kitchens": "Bếp",
+      "dishes": "Món ăn",
+      "suppliers": "Nhà cung cấp",
+      "users": "Người dùng",
+      "recipe_standards": "Định mức",
+      "orders": "Đơn hàng",
+      "receiving": "Nhận hàng",
+      "inventory": "Tồn kho",
+      "reports": "Báo cáo",
+      "master_data": "Dữ liệu chính",
+      "recipes": "Công thức",
+      "inventory_management": "Quản lý kho"
+    }
+  },
+  "ingredients": {
+    "title": "Quản lý nguyên liệu",
+    "add_new": "Thêm nguyên liệu mới",
+    "id": "Mã nguyên liệu",
+    "name": "Tên nguyên liệu",
+    "property": "Tính chất",
+    "material_group": "Nhóm vật tư",
+    "unit": "Đơn vị tính",
+    "created_date": "Ngày tạo"
+  },
+  "kitchens": {
+    "title": "Quản lý bếp",
+    "add_new": "Thêm bếp mới",
+    "id": "Mã bếp",
+    "name": "Tên bếp",
+    "address": "Địa chỉ",
+    "phone": "Số điện thoại",
+    "status": "Trạng thái"
+  },
+  "dishes": {
+    "title": "Quản lý món ăn",
+    "add_new": "Thêm món ăn mới",
+    "id": "Mã món ăn",
+    "name": "Tên món ăn",
+    "cooking_method": "Kiểu chế biến",
+    "group": "Nhóm",
+    "description": "Mô tả",
+    "status": "Trạng thái"
+  },
+  "suppliers": {
+    "title": "Quản lý nhà cung cấp",
+    "add_new": "Thêm nhà cung cấp mới",
+    "id": "Mã NCC",
+    "name": "Tên nhà cung cấp",
+    "zalo_link": "Link Zalo",
+    "address": "Địa chỉ",
+    "phone": "Số điện thoại",
+    "email": "Email"
+  },
+  "recipe_standards": {
+    "title": "Định mức món ăn",
+    "add_new": "Thêm định mức mới",
+    "dish": "Món ăn",
+    "ingredient": "Nguyên liệu",
+    "standard_per_serving": "Định mức 1 suất",
+    "unit": "Đơn vị",
+    "amount": "Thành tiền",
+    "note": "Ghi chú"
+  }
+}

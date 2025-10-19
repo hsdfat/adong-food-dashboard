@@ -83,7 +83,7 @@ export default function Login({ callbackUrl }: { callbackUrl: string }) {
             disabled={submitting}
             placeholder={dict.login.form.username}
             aria-label="Username"
-            defaultValue="Username"
+            defaultValue="NV001"
           />
         </InputGroup>
 
@@ -101,7 +101,7 @@ export default function Login({ callbackUrl }: { callbackUrl: string }) {
             disabled={submitting}
             placeholder={dict.login.form.password}
             aria-label="Password"
-            defaultValue="Password"
+            defaultValue="1234"
           />
         </InputGroup>
 
