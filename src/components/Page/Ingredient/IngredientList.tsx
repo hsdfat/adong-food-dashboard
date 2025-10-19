@@ -27,7 +27,7 @@ export default function IngredientsList() {
       const data = await ingredientApi.getAll()
       setIngredients(data)
     } catch (err) {
-      setError('Failed to load ingredients')
+      setError(dict.ingredients?.error_load || 'Failed to load ingredients')
       console.error(err)
     } finally {
       setLoading(false)
@@ -35,7 +35,7 @@ export default function IngredientsList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this ingredient?')) {
+    if (!confirm(dict.ingredients?.confirm_delete || 'Are you sure you want to delete this ingredient?')) {
       return
     }
 
@@ -43,13 +43,13 @@ export default function IngredientsList() {
       await ingredientApi.delete(id)
       await loadIngredients()
     } catch (err) {
-      setError('Failed to delete ingredient')
+      setError(dict.ingredients?.error_delete || 'Failed to delete ingredient')
       console.error(err)
     }
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>{dict.ingredients?.loading || 'Loading...'}</div>
   }
 
   return (
@@ -63,19 +63,19 @@ export default function IngredientsList() {
       <div className="mb-3 text-end">
         <Button variant="success" onClick={() => router.push('/ingredients/create')}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' Add New'}
+          {' '}{dict.ingredients?.add_new || 'Add New'}
         </Button>
       </div>
 
       <Table responsive bordered hover>
         <thead>
           <tr className="table-light dark:table-dark">
-            <th>ID</th>
-            <th>Name</th>
-            <th>Property</th>
-            <th>Material Group</th>
-            <th>Unit</th>
-            <th>Created Date</th>
+            <th>{dict.ingredients?.id || 'ID'}</th>
+            <th>{dict.ingredients?.name || 'Name'}</th>
+            <th>{dict.ingredients?.property || 'Property'}</th>
+            <th>{dict.ingredients?.material_group || 'Material Group'}</th>
+            <th>{dict.ingredients?.unit || 'Unit'}</th>
+            <th>{dict.ingredients?.created_date || 'Created Date'}</th>
             <th aria-label="Action" />
           </tr>
         </thead>
@@ -83,7 +83,7 @@ export default function IngredientsList() {
           {ingredients.length === 0 ? (
             <tr>
               <td colSpan={7} className="text-center">
-                No ingredients found
+                {dict.ingredients?.no_data || 'No ingredients found'}
               </td>
             </tr>
           ) : (

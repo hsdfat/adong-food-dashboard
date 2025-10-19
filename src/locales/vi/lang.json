@@ -10,10 +10,22 @@
     "forgot_password": "Quên mật khẩu?",
     "signup": {
       "title": "Đăng ký",
-      "description": "Tạo tài khoản mới"
+      "description": "Đây là trang demo cho https://github.com/kitloong/nextjs-dashboard. Nhấn 'Đăng nhập' để xem bảng điều khiển đầy đủ."
     },
     "message": {
       "auth_failed": "Tên đăng nhập hoặc mật khẩu không đúng"
+    }
+  },
+  "signup": {
+    "title": "Đăng ký",
+    "description": "Tạo tài khoản mới",
+    "register_now": "Đăng ký ngay!",
+    "form": {
+      "username": "Tên đăng nhập",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "confirm_password": "Xác nhận mật khẩu",
+      "submit": "Tạo tài khoản"
     }
   },
   "pagination": {
@@ -33,6 +45,230 @@
     "dark": "Tối",
     "auto": "Tự động"
   },
+  "dashboard": {
+    "featured": {
+      "user": "Người dùng",
+      "income": "Thu nhập",
+      "conversion_rate": "Tỷ lệ chuyển đổi",
+      "sessions": "Phiên",
+      "action": {
+        "action1": "Hành động",
+        "action2": "Hành động khác",
+        "action3": "Hành động khác nữa"
+      }
+    },
+    "traffic": {
+      "title": "Lưu lượng truy cập",
+      "duration": "Tháng 1 - Tháng 7 2021",
+      "option": {
+        "day": "Ngày",
+        "month": "Tháng",
+        "year": "Năm"
+      },
+      "chart": {
+        "xlabel1": "Tháng 1",
+        "xlabel2": "Tháng 2",
+        "xlabel3": "Tháng 3",
+        "xlabel4": "Tháng 4",
+        "xlabel5": "Tháng 5",
+        "xlabel6": "Tháng 6",
+        "xlabel7": "Tháng 7"
+      },
+      "users": "Người dùng",
+      "views": "Lượt xem",
+      "category1": "Lượt truy cập",
+      "category2": "Duy nhất",
+      "category3": "Lượt xem trang",
+      "category4": "Người dùng mới",
+      "category5": "Tỷ lệ thoát"
+    },
+    "social": {
+      "facebook": {
+        "label1": "Bạn bè",
+        "label2": "Tin tức"
+      },
+      "twitter": {
+        "label1": "Người theo dõi",
+        "label2": "Tweet"
+      },
+      "instagram": {
+        "label1": "Liên hệ",
+        "label2": "Tin tức"
+      }
+    },
+    "sales": {
+      "title": "Lưu lượng & Bán hàng",
+      "stats": {
+        "stat1": "Khách hàng mới",
+        "stat2": "Khách hàng quay lại",
+        "stat3": "Lượt xem trang",
+        "stat4": "Lưu lượng tự nhiên"
+      },
+      "monday": "Thứ hai",
+      "tuesday": "Thứ ba",
+      "wednesday": "Thứ tư",
+      "thursday": "Thứ năm",
+      "friday": "Thứ sáu",
+      "saturday": "Thứ bảy",
+      "sunday": "Chủ nhật",
+      "male": "Nam",
+      "female": "Nữ",
+      "organic": "Tìm kiếm tự nhiên",
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn"
+    },
+    "listing": {
+      "headers": {
+        "header1": "Người dùng",
+        "header2": "Sử dụng",
+        "header3": "Phương thức thanh toán",
+        "header4": "Hoạt động"
+      },
+      "user_status": {
+        "new": "Mới",
+        "recurring": "Quay lại"
+      },
+      "registered": "Đã đăng ký",
+      "last_login": "Đăng nhập lần cuối",
+      "usage_duration": "11 Tháng 6, 2020 - 10 Tháng 7, 2020",
+      "registered_at": "1 Tháng 1, 2020",
+      "items": {
+        "item1": {
+          "name": "Nguyễn Văn A",
+          "login_at": "10 giây trước"
+        },
+        "item2": {
+          "name": "Trần Thị B",
+          "login_at": "5 phút trước"
+        },
+        "item3": {
+          "name": "Lê Văn C",
+          "login_at": "1 giờ trước"
+        },
+        "item4": {
+          "name": "Phạm Thị D",
+          "login_at": "Tháng trước"
+        },
+        "item5": {
+          "name": "Hoàng Văn E",
+          "login_at": "Tuần trước"
+        },
+        "item6": {
+          "name": "Đỗ Thị F",
+          "login_at": "Hôm qua"
+        }
+      }
+    }
+  },
+  "pokemons": {
+    "title": "Pokemon",
+    "add_new": "Thêm mới",
+    "attribute": {
+      "name": "Tên",
+      "type": "Loại",
+      "egg_group": "Nhóm trứng",
+      "hp": "HP",
+      "attack": "Tấn công",
+      "defense": "Phòng thủ",
+      "sp_attack": "Tấn công đặc biệt",
+      "sp_defense": "Phòng thủ đặc biệt",
+      "speed": "Tốc độ",
+      "total": "Tổng"
+    }
+  },
+  "featured_nav": {
+    "dashboard": "Bảng điều khiển",
+    "users": "Người dùng",
+    "settings": "Cài đặt"
+  },
+  "notification": {
+    "message": "Bạn có {{total}} thông báo",
+    "items": {
+      "new_user": "Người dùng mới đã đăng ký",
+      "deleted_user": "Người dùng đã bị xóa",
+      "sales_report": "Báo cáo bán hàng đã sẵn sàng",
+      "new_client": "Khách hàng mới",
+      "server_overloaded": "Máy chủ quá tải"
+    },
+    "server": {
+      "title": "máy chủ",
+      "processes": "Tiến trình",
+      "cores": "Lõi",
+      "items": {
+        "cpu": "Sử dụng CPU",
+        "memory": "Sử dụng bộ nhớ",
+        "ssd1": "Sử dụng SSD 1"
+      }
+    }
+  },
+  "task": {
+    "message": "Bạn có {{total}} nhiệm vụ đang chờ",
+    "items": {
+      "task1": "Nâng cấp Next.JS",
+      "task2": "Huấn luyện Pokemon",
+      "task3": "Hoàn thành Pokedex",
+      "task4": "Bắt tất cả shiny",
+      "task5": "Đánh bại tất cả phòng gym"
+    },
+    "view_all": "Xem tất cả nhiệm vụ"
+  },
+  "messages": {
+    "message": "Bạn có {{total}} tin nhắn",
+    "items": {
+      "item1": {
+        "user": "Nguyễn Văn A",
+        "time": "Vừa xong",
+        "title": "Thú cưng Pikachu",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt"
+      },
+      "item2": {
+        "user": "Trần Thị B",
+        "time": "5 phút trước",
+        "title": "Trang phục Eevee",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt"
+      },
+      "item3": {
+        "user": "Lê Văn C",
+        "time": "1:52 CH",
+        "title": "Huấn luyện theo nhóm",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt"
+      },
+      "item4": {
+        "user": "Phạm Thị D",
+        "time": "4:03 CH",
+        "title": "Đi đến Safari Zone",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt"
+      }
+    }
+  },
+  "profile": {
+    "account": {
+      "title": "Tài khoản",
+      "items": {
+        "updates": "Cập nhật",
+        "messages": "Tin nhắn",
+        "tasks": "Nhiệm vụ",
+        "comments": "Bình luận"
+      }
+    },
+    "settings": {
+      "title": "Cài đặt",
+      "items": {
+        "profile": "Hồ sơ",
+        "settings": "Cài đặt",
+        "payments": "Thanh toán",
+        "projects": "Dự án"
+      }
+    },
+    "lock_account": "Khóa tài khoản",
+    "logout": "Đăng xuất"
+  },
+  "breadcrumb": {
+    "home": "Trang chủ",
+    "library": "Thư viện",
+    "data": "Dữ liệu"
+  },
   "sidebar": {
     "items": {
       "dashboard": "Bảng điều khiển",
@@ -41,27 +277,88 @@
       "dishes": "Món ăn",
       "suppliers": "Nhà cung cấp",
       "users": "Người dùng",
-      "recipe_standards": "Định mức",
+      "recipe_standards": "Định mức công thức",
       "orders": "Đơn hàng",
       "receiving": "Nhận hàng",
       "inventory": "Tồn kho",
       "reports": "Báo cáo",
-      "master_data": "Dữ liệu chính",
-      "recipes": "Công thức",
-      "inventory_management": "Quản lý kho"
+      "sample": "Mẫu",
+      "theme": "Giao diện",
+      "colors": "Màu sắc",
+      "typography": "Kiểu chữ",
+      "components": "Thành phần",
+      "accordion": "Accordion",
+      "breadcrumb": "Breadcrumb",
+      "cards": "Thẻ",
+      "carousel": "Carousel",
+      "collapse": "Thu gọn",
+      "list_group": "Danh sách nhóm",
+      "navs": "Điều hướng",
+      "pagination": "Phân trang",
+      "popovers": "Popover",
+      "progress": "Thanh tiến trình",
+      "scrollspy": "Scrollspy",
+      "spinners": "Spinner",
+      "tables": "Bảng",
+      "tabs": "Tab",
+      "tooltips": "Tooltip",
+      "buttons": "Nút",
+      "buttons_group": "Nhóm nút",
+      "dropdowns": "Dropdown",
+      "charts": "Biểu đồ",
+      "form_control": "Điều khiển biểu mẫu",
+      "select": "Chọn",
+      "checks_and_radios": "Checkbox và Radio",
+      "range": "Phạm vi",
+      "input_group": "Nhóm input",
+      "floating_labels": "Nhãn nổi",
+      "layout": "Bố cục",
+      "validation": "Xác thực",
+      "core_ui_icons": "Biểu tượng CoreUI",
+      "core_ui_icons_brand": "Biểu tượng CoreUI - Thương hiệu",
+      "core_ui_icons_flag": "Biểu tượng CoreUI - Cờ",
+      "alerts": "Cảnh báo",
+      "badge": "Huy hiệu",
+      "modals": "Modal",
+      "toasts": "Toast",
+      "widgets": "Widget",
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "error404": "Lỗi 404",
+      "error500": "Lỗi 500",
+      "docs": "Tài liệu",
+      "try_core_ui_pro": "Dùng thử CoreUI PRO",
+      "base": "Cơ bản",
+      "forms": "Biểu mẫu",
+      "icons": "Biểu tượng",
+      "notifications": "Thông báo",
+      "extras": "Bổ sung",
+      "pages": "Trang",
+      "master_data": "Dữ liệu chính"
     }
   },
+ 
   "ingredients": {
-    "title": "Quản lý nguyên liệu",
-    "add_new": "Thêm nguyên liệu mới",
-    "id": "Mã nguyên liệu",
-    "name": "Tên nguyên liệu",
-    "property": "Tính chất",
-    "material_group": "Nhóm vật tư",
-    "unit": "Đơn vị tính",
-    "created_date": "Ngày tạo"
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy nguyên liệu",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa nguyên liệu này?",
+    "error_load": "Không thể tải danh sách nguyên liệu",
+    "error_delete": "Không thể xóa nguyên liệu",
+    "error_create": "Không thể tạo nguyên liệu",
+    "error_update": "Không thể cập nhật nguyên liệu",
+    "success_create": "Tạo nguyên liệu thành công",
+    "success_update": "Cập nhật nguyên liệu thành công"
   },
   "kitchens": {
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy bếp",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa bếp này?",
+    "error_load": "Không thể tải danh sách bếp",
+    "error_delete": "Không thể xóa bếp",
+    "error_create": "Không thể tạo bếp",
+    "error_update": "Không thể cập nhật bếp",
+    "success_create": "Tạo bếp thành công",
+    "success_update": "Cập nhật bếp thành công",
     "title": "Quản lý bếp",
     "add_new": "Thêm bếp mới",
     "id": "Mã bếp",
@@ -71,33 +368,61 @@
     "status": "Trạng thái"
   },
   "dishes": {
-    "title": "Quản lý món ăn",
-    "add_new": "Thêm món ăn mới",
-    "id": "Mã món ăn",
-    "name": "Tên món ăn",
-    "cooking_method": "Kiểu chế biến",
-    "group": "Nhóm",
-    "description": "Mô tả",
-    "status": "Trạng thái"
+    "title": "Dish Management",
+    "add_new": "Add New Dish",
+    "id": "Dish ID",
+    "name": "Dish Name",
+    "cooking_method": "Cooking Method",
+    "group": "Group",
+    "description": "Description",
+    "status": "Status",
+    "loading": "Loading...",
+    "no_data": "No dishes found",
+    "confirm_delete": "Are you sure you want to delete this dish?",
+    "error_load": "Failed to load dishes",
+    "error_delete": "Failed to delete dish",
+    "view_recipe": "View Recipe"
   },
   "suppliers": {
-    "title": "Quản lý nhà cung cấp",
-    "add_new": "Thêm nhà cung cấp mới",
-    "id": "Mã NCC",
-    "name": "Tên nhà cung cấp",
-    "zalo_link": "Link Zalo",
-    "address": "Địa chỉ",
-    "phone": "Số điện thoại",
-    "email": "Email"
+    "title": "Supplier Management",
+    "add_new": "Add New Supplier",
+    "id": "Supplier ID",
+    "name": "Supplier Name",
+    "zalo_link": "Zalo Link",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "loading": "Loading...",
+    "no_data": "No suppliers found",
+    "confirm_delete": "Are you sure you want to delete this supplier?",
+    "error_load": "Failed to load suppliers",
+    "error_delete": "Failed to delete supplier"
   },
   "recipe_standards": {
-    "title": "Định mức món ăn",
-    "add_new": "Thêm định mức mới",
-    "dish": "Món ăn",
-    "ingredient": "Nguyên liệu",
-    "standard_per_serving": "Định mức 1 suất",
-    "unit": "Đơn vị",
-    "amount": "Thành tiền",
-    "note": "Ghi chú"
+    "title": "Recipe Standards",
+    "add_new": "Add New Standard",
+    "dish": "Dish",
+    "ingredient": "Ingredient",
+    "standard_per_serving": "Standard Per Serving",
+    "unit": "Unit",
+    "amount": "Amount",
+    "note": "Note",
+    "no_data": "No recipe standards found",
+    "confirm_delete": "Are you sure you want to delete this recipe standard?",
+    "error_load": "Failed to load recipe standards",
+    "error_delete": "Failed to delete recipe standard"
+  },
+  "common": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "loading": "Loading...",
+    "no_data": "No data available",
+    "cancel": "Cancel",
+    "save": "Save",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "actions": "Actions"
   }
 }

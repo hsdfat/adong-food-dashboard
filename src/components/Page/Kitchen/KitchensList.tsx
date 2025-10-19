@@ -27,7 +27,7 @@ export default function KitchensList() {
       const data = await kitchenApi.getAll()
       setKitchens(data)
     } catch (err) {
-      setError('Failed to load kitchens')
+      setError(dict.kitchens?.error_load || 'Failed to load kitchens')
       console.error(err)
     } finally {
       setLoading(false)
@@ -35,7 +35,7 @@ export default function KitchensList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this kitchen?')) {
+    if (!confirm(dict.kitchens?.confirm_delete || 'Are you sure you want to delete this kitchen?')) {
       return
     }
 
@@ -43,13 +43,13 @@ export default function KitchensList() {
       await kitchenApi.delete(id)
       await loadKitchens()
     } catch (err) {
-      setError('Failed to delete kitchen')
+      setError(dict.kitchens?.error_delete || 'Failed to delete kitchen')
       console.error(err)
     }
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>{dict.kitchens?.loading || 'Loading...'}</div>
   }
 
   return (
@@ -63,19 +63,19 @@ export default function KitchensList() {
       <div className="mb-3 text-end">
         <Button variant="success" onClick={() => router.push('/kitchens/create')}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' Add New Kitchen'}
+          {' '}{dict.kitchens?.add_new || 'Add New Kitchen'}
         </Button>
       </div>
 
       <Table responsive bordered hover>
         <thead>
           <tr className="table-light dark:table-dark">
-            <th>ID</th>
-            <th>Kitchen Name</th>
-            <th>Address</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Created Date</th>
+            <th>{dict.kitchens?.id || 'ID'}</th>
+            <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
+            <th>{dict.kitchens?.address || 'Address'}</th>
+            <th>{dict.kitchens?.phone || 'Phone'}</th>
+            <th>{dict.kitchens?.status || 'Status'}</th>
+            <th>{dict.ingredients?.created_date || 'Created Date'}</th>
             <th aria-label="Action" />
           </tr>
         </thead>
@@ -83,7 +83,7 @@ export default function KitchensList() {
           {kitchens.length === 0 ? (
             <tr>
               <td colSpan={7} className="text-center">
-                No kitchens found
+                {dict.kitchens?.no_data || 'No kitchens found'}
               </td>
             </tr>
           ) : (
@@ -95,7 +95,7 @@ export default function KitchensList() {
                 <td>{kitchen.phone || '-'}</td>
                 <td>
                   <Badge bg={kitchen.active ? 'success' : 'secondary'}>
-                    {kitchen.active ? 'Active' : 'Inactive'}
+                    {kitchen.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
                   </Badge>
                 </td>
                 <td>{new Date(kitchen.createdDate).toLocaleDateString()}</td>

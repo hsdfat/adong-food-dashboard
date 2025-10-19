@@ -21,9 +21,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   console.log('Fetching ingredient with id:', params.id)
   const ingredient = await fetchIngredient(params.id)
 
-  // if (!ingredient) {
-  //   return notFound()
-  // }
+  if (!ingredient) {
+    return notFound()
+  }
 
   return (
     <Card>

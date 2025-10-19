@@ -10,7 +10,6 @@ import { Dish } from '@/models'
 import useDictionary from '@/locales/dictionary-hook'
 
 export default function DishesList() {
-     console.log('DishesList')
   const [dishes, setDishes] = useState<Dish[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -23,13 +22,12 @@ export default function DishesList() {
 
   const loadDishes = async () => {
     try {
-        console.log('Loading dishes from API')
       setLoading(true)
       setError('')
       const data = await dishApi.getAll()
       setDishes(data)
     } catch (err) {
-      setError('Failed to load dishes')
+      setError(dict.dishes?.error_load || 'Failed to load dishes')
       console.error(err)
     } finally {
       setLoading(false)
@@ -37,7 +35,7 @@ export default function DishesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this dish?')) {
+    if (!confirm(dict.dishes?.confirm_delete || 'Are you sure you want to delete this dish?')) {
       return
     }
 
@@ -45,13 +43,13 @@ export default function DishesList() {
       await dishApi.delete(id)
       await loadDishes()
     } catch (err) {
-      setError('Failed to delete dish')
+      setError(dict.dishes?.error_delete || 'Failed to delete dish')
       console.error(err)
     }
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>{dict.dishes?.loading || 'Loading...'}</div>
   }
 
   return (
@@ -65,19 +63,19 @@ export default function DishesList() {
       <div className="mb-3 text-end">
         <Button variant="success" onClick={() => router.push('/dishes/create')}>
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' Add New Dish'}
+          {' '}{dict.dishes?.add_new || 'Add New Dish'}
         </Button>
       </div>
 
       <Table responsive bordered hover>
         <thead>
           <tr className="table-light dark:table-dark">
-            <th>ID</th>
-            <th>Dish Name</th>
-            <th>Cooking Method</th>
-            <th>Group</th>
-            <th>Description</th>
-            <th>Status</th>
+            <th>{dict.dishes?.id || 'ID'}</th>
+            <th>{dict.dishes?.name || 'Dish Name'}</th>
+            <th>{dict.dishes?.cooking_method || 'Cooking Method'}</th>
+            <th>{dict.dishes?.group || 'Group'}</th>
+            <th>{dict.dishes?.description || 'Description'}</th>
+            <th>{dict.dishes?.status || 'Status'}</th>
             <th aria-label="Action" />
           </tr>
         </thead>
@@ -85,7 +83,7 @@ export default function DishesList() {
           {dishes.length === 0 ? (
             <tr>
               <td colSpan={7} className="text-center">
-                No dishes found
+                {dict.dishes?.no_data || 'No dishes found'}
               </td>
             </tr>
           ) : (
@@ -100,7 +98,7 @@ export default function DishesList() {
                 </td>
                 <td>
                   <Badge bg={dish.active ? 'success' : 'secondary'}>
-                    {dish.active ? 'Active' : 'Inactive'}
+                    {dish.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
                   </Badge>
                 </td>
                 <td>
@@ -119,7 +117,7 @@ export default function DishesList() {
                         {dict.action.edit}
                       </DropdownItem>
                       <DropdownItem onClick={() => router.push(`/recipe-standards/dish/${dish.dishId}`)}>
-                        View Recipe
+                        {dict.dishes?.view_recipe || 'View Recipe'}
                       </DropdownItem>
                       <DropdownItem
                         className="text-danger"

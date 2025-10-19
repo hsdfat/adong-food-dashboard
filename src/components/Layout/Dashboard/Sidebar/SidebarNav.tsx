@@ -17,6 +17,9 @@ import {
   faBoxes,
   faTruck,
   faClipboardList,
+  faUsers,
+  faStore,
+  faBook,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import { Badge } from 'react-bootstrap'
@@ -41,52 +44,52 @@ export default async function SidebarNav() {
         {dict.sidebar.items.dashboard}
       </SidebarNavItem>
 
-      <SidebarNavTitle>Food Management</SidebarNavTitle>
+      <SidebarNavTitle>{dict.sidebar.items.master_data || 'Master Data'}</SidebarNavTitle>
 
-      <SidebarNavGroup toggleIcon={faPuzzlePiece} toggleText="Master Data">
+      <SidebarNavGroup toggleIcon={faPuzzlePiece} toggleText={dict.sidebar.items.master_data || 'Master Data'}>
         <SidebarNavItem href="/ingredients">
-          Ingredients
+          {dict.sidebar.items.ingredients}
         </SidebarNavItem>
         <SidebarNavItem href="/kitchens">
-          Kitchens
+          {dict.sidebar.items.kitchens}
         </SidebarNavItem>
         <SidebarNavItem href="/dishes">
-          Dishes
+          {dict.sidebar.items.dishes}
         </SidebarNavItem>
         <SidebarNavItem href="/suppliers">
-          Suppliers
+          {dict.sidebar.items.suppliers}
         </SidebarNavItem>
         <SidebarNavItem href="/users">
-          Users
+          {dict.sidebar.items.users}
         </SidebarNavItem>
       </SidebarNavGroup>
 
-      <SidebarNavGroup toggleIcon={faUtensils} toggleText="Recipes">
+      <SidebarNavGroup toggleIcon={faUtensils} toggleText={dict.sidebar.items.recipes || 'Recipes'}>
         <SidebarNavItem href="/recipe-standards">
-          Recipe Standards
+          {dict.sidebar.items.recipe_standards}
         </SidebarNavItem>
         <SidebarNavItem href="/recipe-standards/by-dish">
-          By Dish
+          {dict.sidebar.items.by_dish || 'By Dish'}
         </SidebarNavItem>
       </SidebarNavGroup>
 
-      <SidebarNavGroup toggleIcon={faBoxes} toggleText="Inventory">
+      <SidebarNavGroup toggleIcon={faBoxes} toggleText={dict.sidebar.items.inventory_management || 'Inventory'}>
         <SidebarNavItem href="/supplier-prices">
-          Supplier Prices
+          {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
         </SidebarNavItem>
         <SidebarNavItem href="/orders">
-          Orders
+          {dict.sidebar.items.orders}
         </SidebarNavItem>
         <SidebarNavItem href="/receiving">
-          Receiving
+          {dict.sidebar.items.receiving}
         </SidebarNavItem>
         <SidebarNavItem href="/inventory">
-          Stock Levels
+          {dict.sidebar.items.inventory || 'Stock Levels'}
         </SidebarNavItem>
       </SidebarNavGroup>
 
       <SidebarNavItem icon={faClipboardList} href="/reports">
-        Reports
+        {dict.sidebar.items.reports}
       </SidebarNavItem>
 
       <SidebarNavTitle>{dict.sidebar.items.theme}</SidebarNavTitle>
