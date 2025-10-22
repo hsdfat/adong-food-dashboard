@@ -1,82 +1,16 @@
 # ProjectDump Analysis
 
-**Generated on:** 2025-10-20 01:56:28
+**Generated on:** 2025-10-22 07:05:57
 **Project Path:** src/
 
 ## Project Summary
 
-- **Primary Language:** Python
-- **Total Files:** 99
-- **Processed Files:** 99
-- **Project Size:** 228.73 KB
+- **Primary Language:** TypeScript
+- **Total Files:** 91
+- **Processed Files:** 91
+- **Project Size:** 214.10 KB
 
 ## Detected Technologies
-
-### Python (100.0% confidence)
-*Python programming language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 74 more files
-
-### Rust (100.0% confidence)
-*Rust systems programming language*
-
-**Related files:**
-- app/(authentication)/login/login.tsx
-- app/(authentication)/register/register.tsx
-- app/(dashboard)/dishes/[id]/edit/page.tsx
-- app/(dashboard)/ingredients/[id]/edit/page.tsx
-- app/(dashboard)/kitchens/[id]/edit/page.tsx
-- ... and 35 more files
-
-### Docker (100.0% confidence)
-*Docker containerization platform*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 72 more files
-
-### JavaScript (100.0% confidence)
-*JavaScript runtime and ecosystem*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 86 more files
-
-### CSS (100.0% confidence)
-*Cascading Style Sheets*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 93 more files
-
-### HTML (100.0% confidence)
-*HyperText Markup Language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/page.tsx
-- app/(dashboard)/layout.tsx
-- app/(dashboard)/page.tsx
-- app/(dashboard)/pokemons/index.tsx
-- ... and 21 more files
 
 ### TypeScript (100.0% confidence)
 *TypeScript - JavaScript with static typing*
@@ -87,17 +21,61 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 85 more files
+- ... and 77 more files
 
-### Ruby (100.0% confidence)
-*Ruby programming language*
+### React (100.0% confidence)
+*React JavaScript library for building user interfaces*
 
 **Related files:**
+- app/(authentication)/layout.tsx
 - app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 51 more files
+
+### Docker (100.0% confidence)
+*Docker containerization platform*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 64 more files
+
+### CSS (100.0% confidence)
+*Cascading Style Sheets*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 85 more files
+
+### PHP (100.0% confidence)
+*PHP server-side scripting language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 57 more files
+
+### HTML (100.0% confidence)
+*HyperText Markup Language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/page.tsx
+- app/(dashboard)/layout.tsx
 - app/(dashboard)/page.tsx
-- app/(dashboard)/pokemons/index.tsx
-- components/Layout/Dashboard/Header/HeaderLocale.tsx
-- components/Layout/Dashboard/Header/HeaderNotificationNav.tsx
+- app/layout.tsx
 - ... and 19 more files
 
 ### Go (100.0% confidence)
@@ -109,10 +87,21 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 76 more files
+- ... and 68 more files
 
-### PHP (100.0% confidence)
-*PHP server-side scripting language*
+### Ruby (100.0% confidence)
+*Ruby programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(dashboard)/page.tsx
+- components/Layout/Dashboard/Header/HeaderLocale.tsx
+- components/Layout/Dashboard/Header/HeaderNotificationNav.tsx
+- components/Layout/Dashboard/Header/HeaderTheme.tsx
+- ... and 16 more files
+
+### JavaScript (100.0% confidence)
+*JavaScript runtime and ecosystem*
 
 **Related files:**
 - app/(authentication)/layout.tsx
@@ -120,10 +109,10 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 65 more files
+- ... and 78 more files
 
-### React (100.0% confidence)
-*React JavaScript library for building user interfaces*
+### Python (100.0% confidence)
+*Python programming language*
 
 **Related files:**
 - app/(authentication)/layout.tsx
@@ -131,18 +120,26 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 58 more files
+- ... and 66 more files
 
-### Node.js (35.0% confidence)
+### Rust (100.0% confidence)
+*Rust systems programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(authentication)/register/register.tsx
+- app/(dashboard)/dishes/[id]/edit/page.tsx
+- app/(dashboard)/ingredients/create/page.tsx
+- app/(dashboard)/kitchens/[id]/edit/page.tsx
+- ... and 33 more files
+
+### Node.js (15.0% confidence)
 *Node.js JavaScript runtime*
 
 **Related files:**
-- app/(dashboard)/pokemons/[id]/edit/page.tsx
-- app/(dashboard)/pokemons/index.tsx
-- app/(dashboard)/pokemons/page.tsx
 - app/api/auth/option.ts
 - app/layout.tsx
-- ... and 2 more files
+- utils/api_client.ts
 
 ## Directory Structure
 
@@ -179,16 +176,7 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   └── pokemons
-│   │       ├── [id]
-│   │       │   └── edit
-│   │       │       └── page.tsx
-│   │       ├── create
-│   │       │   ├── action.ts
-│   │       │   └── page.tsx
-│   │       ├── index.tsx
-│   │       └── page.tsx
+│   │   └── page.tsx
 │   ├── api
 │   │   ├── auth
 │   │   │   ├── [...nextauth]
@@ -232,6 +220,7 @@
 │   │   │   ├── TrafficChart.tsx
 │   │   │   └── UserChart.tsx
 │   │   ├── Dish
+│   │   │   ├── DishForm.tsx
 │   │   │   └── DishesList.tsx
 │   │   ├── Ingredient
 │   │   │   ├── IngredientForm.tsx
@@ -239,12 +228,6 @@
 │   │   ├── Kitchen
 │   │   │   ├── KitchenForm.tsx
 │   │   │   └── KitchensList.tsx
-│   │   ├── Pokemon
-│   │   │   ├── Form
-│   │   │   │   ├── Form.tsx
-│   │   │   │   └── PokemonForm.tsx
-│   │   │   ├── PokemonList.tsx
-│   │   │   └── PokemonTypeLabel.tsx
 │   │   └── RecipeStandard
 │   │       └── RecipeStandardsList.tsx
 │   ├── Pagination
@@ -2011,41 +1994,41 @@ console.log('Fetching dictionary for dishes page')
 ### app/(dashboard)/dishes/[id]/edit/
 
 #### app/(dashboard)/dishes/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1115 bytes*
+*Language: TypeScript | Size: 986 bytes*
 
 ```typescript
 'use server'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
 import { notFound } from 'next/navigation'
-import { dishApi, ingredientApi } from '@/services'
-import { Ingredient } from '@/models'
+import { dishApi } from '@/services'
+import { Dish } from '@/models'
+import DishForm from '@/components/Page/Dish/DishForm'
 
-const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
+const fetchDish = async (id: string): Promise<Dish | null> => {
   try {
     // Note: This is server-side fetch, need to handle authentication differently
-    console.log('Fetching ingredient with id:', id)
-    const response = await ingredientApi.getById(id)
+    console.log('Fetching dish with id:', id)
+    const response = await dishApi.getById(id)
     return response
   } catch (error) {
-    console.error('Error fetching ingredient:', error)
+    console.error('Error fetching dish:', error)
     return null
   }
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  console.log('Fetching ingredient with id:', params.id)
-  const ingredient = await fetchIngredient(params.id)
+  console.log('Fetching dish with id:', params.id)
+  const dish = await fetchDish(params.id)
 
-  if (!ingredient) {
+  if (!dish) {
     return notFound()
   }
 
   return (
     <Card>
-      <CardHeader>Edit Ingredient: {ingredient.ingredientName}</CardHeader>
+      <CardHeader>Edit Dish: {dish.dishName}</CardHeader>
       <CardBody>
-        <IngredientForm ingredient={ingredient} isEdit />
+        <DishForm dish={dish} isEdit />
       </CardBody>
     </Card>
   )
@@ -2055,18 +2038,18 @@ export default async function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/dishes/create/
 
 #### app/(dashboard)/dishes/create/page.tsx
-*Language: TypeScript | Size: 319 bytes*
+*Language: TypeScript | Size: 289 bytes*
 
 ```typescript
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
+import DishForm from '@/components/Page/Dish/DishForm'
 
 export default function Page() {
   return (
     <Card>
-      <CardHeader>Add New Ingredient</CardHeader>
+      <CardHeader>Add New Dish</CardHeader>
       <CardBody>
-        <IngredientForm />
+        <DishForm />
       </CardBody>
     </Card>
   )
@@ -2076,7 +2059,7 @@ export default function Page() {
 ### app/(dashboard)/ingredients/
 
 #### app/(dashboard)/ingredients/page.tsx
-*Language: TypeScript | Size: 500 bytes*
+*Language: TypeScript | Size: 492 bytes*
 
 ```typescript
 import React from 'react'
@@ -2089,9 +2072,9 @@ export default async function Page() {
 
   return (
     <Card>
-      {/* <CardHeader>
+      <CardHeader>
         {dict.sidebar.items?.ingredients || 'Ingredients'}
-      </CardHeader> */}
+      </CardHeader>
       <CardBody>
         <IngredientsList />
       </CardBody>
@@ -2103,17 +2086,18 @@ export default async function Page() {
 ### app/(dashboard)/ingredients/[id]/edit/
 
 #### app/(dashboard)/ingredients/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1115 bytes*
+*Language: TypeScript | Size: 1214 bytes*
 
 ```typescript
-'use server'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
 import { notFound } from 'next/navigation'
 import { dishApi, ingredientApi } from '@/services'
 import { Ingredient } from '@/models'
+import { getDictionary } from '@/locales/dictionary'
 
 const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
+ 
   try {
     // Note: This is server-side fetch, need to handle authentication differently
     console.log('Fetching ingredient with id:', id)
@@ -2126,6 +2110,7 @@ const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
+   const dict = await getDictionary()
   console.log('Fetching ingredient with id:', params.id)
   const ingredient = await fetchIngredient(params.id)
 
@@ -2135,7 +2120,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>Edit Ingredient: {ingredient.ingredientName}</CardHeader>
+      <CardHeader>{dict.ingredients?.edit || 'Edit'}: {ingredient.ingredientName}</CardHeader>
       <CardBody>
         <IngredientForm ingredient={ingredient} isEdit />
       </CardBody>
@@ -2147,16 +2132,20 @@ export default async function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/ingredients/create/
 
 #### app/(dashboard)/ingredients/create/page.tsx
-*Language: TypeScript | Size: 319 bytes*
+*Language: TypeScript | Size: 440 bytes*
 
 ```typescript
+'use client'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
+import useDictionary from '@/locales/dictionary-hook'
 
 export default function Page() {
+  const dict = useDictionary()
+
   return (
     <Card>
-      <CardHeader>Add New Ingredient</CardHeader>
+      <CardHeader>{dict.ingredients?.add_new || 'Add new'}</CardHeader>
       <CardBody>
         <IngredientForm />
       </CardBody>
@@ -2251,325 +2240,6 @@ export default function Page() {
       <CardHeader>Add New Kitchen</CardHeader>
       <CardBody>
         <KitchenForm />
-      </CardBody>
-    </Card>
-  )
-}
-```
-
-### app/(dashboard)/pokemons/
-
-#### app/(dashboard)/pokemons/index.tsx
-*Language: TypeScript | Size: 2346 bytes*
-
-```typescript
-'use client'
-
-import { Button, Card } from 'react-bootstrap'
-import React from 'react'
-import { newResource, ResourceCollection } from '@/models/resource'
-import { Pokemon } from '@/models/pokemon'
-import Pagination from '@/components/Pagination/Pagination'
-import { useRouter } from 'next/navigation'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import useSWR from 'swr'
-import PokemonList from '@/components/Page/Pokemon/PokemonList'
-import Cookies from 'js-cookie'
-import useDictionary from '@/locales/dictionary-hook'
-
-type Props = {
-  props: {
-    pokemonResource: ResourceCollection<Pokemon>;
-    page: number;
-    perPage: number;
-    sort: string;
-    order: string;
-  };
-}
-
-export default function Index(props: Props) {
-  const {
-    props: {
-      pokemonResource: pokemonResourceFallback,
-      page,
-      perPage,
-      sort,
-      order,
-    },
-  } = props
-
-  const router = useRouter()
-  const dict = useDictionary()
-
-  const pokemonListURL = `${process.env.NEXT_PUBLIC_POKEMON_LIST_API_BASE_URL}${Cookies.get('locale')}_pokemons` || ''
-  const url = new URL(pokemonListURL)
-  url.searchParams.set('_page', page.toString())
-  url.searchParams.set('_limit', perPage.toString())
-  url.searchParams.set('_sort', sort)
-  url.searchParams.set('_order', order)
-
-  const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then(async (res) => {
-    if (res.ok) {
-      const pokemons: Pokemon[] = await res.json()
-      const total = Number(res.headers.get('x-total-count')) ?? 0
-      return newResource(pokemons, total, page, perPage)
-    }
-
-    return pokemonResourceFallback
-  })
-
-  const { data: pokemonResource } = useSWR(url.toString(), fetcher, {
-    fallbackData: pokemonResourceFallback,
-  })
-
-  return (
-    <Card>
-      <Card.Header>{dict.pokemons.title}</Card.Header>
-      <Card.Body>
-        <div className="mb-3 text-end">
-          <Button variant="success" onClick={() => router.push('/pokemons/create')}>
-            <FontAwesomeIcon icon={faPlus} fixedWidth />
-            {dict.pokemons.add_new}
-          </Button>
-        </div>
-        <Pagination meta={pokemonResource.meta} />
-        <PokemonList pokemons={pokemonResource.data} />
-        <Pagination meta={pokemonResource.meta} />
-      </Card.Body>
-    </Card>
-  )
-}
-```
-
-#### app/(dashboard)/pokemons/page.tsx
-*Language: TypeScript | Size: 1722 bytes*
-
-```typescript
-import React from 'react'
-import { newResource, ResourceCollection } from '@/models/resource'
-import { Pokemon } from '@/models/pokemon'
-import { SearchParams } from '@/types/next'
-import Index from '@/app/(dashboard)/pokemons/index'
-import serverFetch from '@/utils/server-fetch'
-import { getLocale } from '@/locales/dictionary'
-
-const fetchPokemons = async (searchParams: SearchParams) => {
-  const locale = getLocale()
-
-  const pokemonListURL = `${process.env.NEXT_PUBLIC_POKEMON_LIST_API_BASE_URL}${locale}_pokemons` || ''
-  let page = 1
-  if (searchParams?.page) {
-    page = parseInt(searchParams.page.toString(), 10)
-  }
-
-  let perPage = 20
-  if (searchParams?.per_page) {
-    perPage = parseInt(searchParams.per_page.toString(), 10)
-  }
-
-  let sort = 'id'
-  if (searchParams?.sort) {
-    sort = searchParams.sort.toString()
-  }
-
-  let order = 'asc'
-  if (searchParams?.order && typeof searchParams.order === 'string') {
-    order = searchParams.order
-  }
-
-  const url = new URL(pokemonListURL)
-  url.searchParams.set('_page', page.toString())
-  url.searchParams.set('_limit', perPage.toString())
-  url.searchParams.set('_sort', sort)
-  url.searchParams.set('_order', order)
-
-  const res = await serverFetch(url, {
-    method: 'GET',
-  })
-  const pokemons: Pokemon[] = await res.json()
-
-  const total = Number(res.headers.get('x-total-count')) ?? 0
-  const pokemonResource: ResourceCollection<Pokemon> = newResource(pokemons, total, page, perPage)
-
-  return {
-    pokemonResource,
-    page,
-    perPage,
-    sort,
-    order,
-  }
-}
-
-export default async function Page({ searchParams }: { searchParams: SearchParams }) {
-  const props = await fetchPokemons(searchParams)
-
-  return (
-    <Index props={props} />
-  )
-}
-```
-
-### app/(dashboard)/pokemons/[id]/edit/
-
-#### app/(dashboard)/pokemons/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1132 bytes*
-
-```typescript
-import { Pokemon } from '@/models/pokemon'
-import { notFound } from 'next/navigation'
-import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import PokemonForm from '@/components/Page/Pokemon/Form/PokemonForm'
-import serverFetch from '@/utils/server-fetch'
-import { getLocale } from '@/locales/dictionary'
-import { Resource } from '@/models/resource'
-
-const fetchPokemon = async (id: number): Promise<Resource<Pokemon>> => {
-  const locale = getLocale()
-
-  const url = `${process.env.NEXT_PUBLIC_POKEMON_LIST_API_BASE_URL}${locale}_pokemons/${id}` || ''
-
-  try {
-    const res = await serverFetch(url, {
-      method: 'GET',
-    })
-
-    if (!res.ok) {
-      return notFound()
-    }
-
-    const pokemon: Pokemon = await res.json()
-
-    return {
-      data: pokemon,
-    }
-  } catch (error) {
-    return notFound()
-  }
-}
-
-export default async function Page({ params }: { params: { id: string } }) {
-  const { data: pokemon } = await fetchPokemon(Number(params.id))
-
-  return (
-    <Card>
-      <CardHeader>{pokemon.name}</CardHeader>
-      <CardBody>
-        <PokemonForm pokemon={pokemon} />
-      </CardBody>
-    </Card>
-  )
-}
-```
-
-### app/(dashboard)/pokemons/create/
-
-#### app/(dashboard)/pokemons/create/action.ts
-*Language: TypeScript | Size: 1855 bytes*
-
-```typescript
-'use server'
-
-import { z } from '@/zod/zod'
-
-const ZodAttribute = z.string()
-  .min(1)
-  .pipe(
-    z.number({
-      coerce: true,
-    }).min(0)
-      .max(255),
-  )
-
-const schema = z.object({
-  name: z
-    .string()
-    .min(1),
-  types: z
-    .array(z.string())
-    .min(1),
-  eggGroups: z
-    .array(z.string())
-    .min(1),
-  hp: ZodAttribute,
-  attack: ZodAttribute,
-  defense: ZodAttribute,
-  special_attack: ZodAttribute,
-  special_defense: ZodAttribute,
-  speed: ZodAttribute,
-})
-
-type FormState = {
-  success: boolean;
-  message: string;
-  scrollTop: boolean;
-  formKey: number;
-  errors?: {
-    [key in keyof typeof schema.shape]?: string[];
-  };
-}
-
-export default async function create(prevState: FormState, formData: FormData): Promise<FormState> {
-  const validatedFields = schema.safeParse({
-    name: formData.get('name'),
-    types: formData.getAll('types'),
-    eggGroups: formData.getAll('eggGroups'),
-    hp: formData.get('hp'),
-    attack: formData.get('attack'),
-    defense: formData.get('defense'),
-    special_attack: formData.get('special_attack'),
-    special_defense: formData.get('special_defense'),
-    speed: formData.get('speed'),
-  })
-
-  // Return early if the form data is invalid
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      scrollTop: false,
-      formKey: prevState.formKey,
-      message: 'Validation error',
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
-  }
-
-  // Mock error.
-  if (validatedFields.data.name === 'error') {
-    return {
-      success: false,
-      scrollTop: true,
-      formKey: prevState.formKey,
-      message: 'Unexpected error occurred. Please try again.',
-    }
-  }
-
-  // Implement real add new record logic.
-
-  return {
-    success: true,
-    scrollTop: true,
-    formKey: prevState.formKey + 1,
-    message: 'Record saved successfully.',
-  }
-}
-```
-
-#### app/(dashboard)/pokemons/create/page.tsx
-*Language: TypeScript | Size: 415 bytes*
-
-```typescript
-import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import PokemonForm from '@/components/Page/Pokemon/Form/PokemonForm'
-import { getDictionary } from '@/locales/dictionary'
-
-export default async function Page() {
-  const dict = await getDictionary()
-
-  return (
-    <Card>
-      <CardHeader>{dict.pokemons.add_new}</CardHeader>
-      <CardBody>
-        <PokemonForm />
       </CardBody>
     </Card>
   )
@@ -3804,7 +3474,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 ```
 
 #### components/Layout/Dashboard/Sidebar/SidebarNav.tsx
-*Language: TypeScript | Size: 3979 bytes*
+*Language: TypeScript | Size: 3947 bytes*
 
 ```typescript
 import {
@@ -3826,9 +3496,6 @@ import {
   faBoxes,
   faTruck,
   faClipboardList,
-  faUsers,
-  faStore,
-  faBook,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import { Badge } from 'react-bootstrap'
@@ -4510,6 +4177,199 @@ export default function UserChart() {
 
 ### components/Page/Dish/
 
+#### components/Page/Dish/DishForm.tsx
+*Language: TypeScript | Size: 5229 bytes*
+
+```typescript
+'use client'
+
+import React, { useState } from 'react'
+import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import { useRouter } from 'next/navigation'
+import { dishApi } from '@/services'
+import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
+import useDictionary from '@/locales/dictionary-hook'
+import { boolean } from 'zod'
+
+interface DishFormProps {
+  dish?: Dish
+  isEdit?: boolean
+}
+
+export default function DishForm({ dish, isEdit = false }: DishFormProps) {
+  const router = useRouter()
+  const dict = useDictionary()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const [formData, setFormData] = useState({
+    dishId: dish?.dishId || '',
+    dishName: dish?.dishName || '',
+    cookingMethod: dish?.cookingMethod || '',
+    group: dish?.group || '',
+    description: dish?.description || '',
+    active: dish?.active || true,
+  })
+
+  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target
+      setFormData(prev => ({
+        ...prev,
+        [name]: name === 'active' ? value === 'true' : value
+      }))
+    }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      if (isEdit && dish) {
+        const updateData: UpdateDishInput = {
+          dishName: formData.dishName,
+          cookingMethod: formData.cookingMethod,
+          group: formData.group,
+          description: formData.description,
+          active: formData.active,
+        }
+        await dishApi.update(dish.dishId, updateData)
+        setSuccess('Dish updated successfully')
+      } else {
+        const createData: CreateDishInput = {
+          dishId: formData.dishId,
+          dishName: formData.dishName,
+          cookingMethod: formData.cookingMethod,
+          group: formData.group,
+          description: formData.description,
+          active: formData.active,
+        }
+        await dishApi.create(createData)
+        setSuccess('Dish created successfully')
+      }
+
+      setTimeout(() => {
+        router.push('/dishs')
+      }, 1500)
+    } catch (err) {
+      setError(isEdit ? 'Failed to update dish' : 'Failed to create dish')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  return (
+    <>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+          {success}
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit}>
+        <FormGroup className="mb-3">
+          <FormLabel>Dish ID</FormLabel>
+          <FormControl
+            type="text"
+            name="dishId"
+            value={formData.dishId}
+            onChange={handleChange}
+            disabled={isEdit}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>Dish Name</FormLabel>
+          <FormControl
+            type="text"
+            name="dishName"
+            value={formData.dishName}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>Property</FormLabel>
+          <FormControl
+            type="text"
+            name="cookingMethod"
+            value={formData.cookingMethod}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>Material Group</FormLabel>
+          <FormControl
+            type="text"
+            name="group"
+            value={formData.group}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>Unit</FormLabel>
+          <FormControl
+            type="text"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        <FormGroup className="mb-3">
+          <FormLabel>{dict.kitchens?.status || 'Status'}</FormLabel>
+          <Form.Select
+            name="active"
+            value={formData.active ? 'true' : 'false'}
+            onChange={handleChangeActive}
+          >
+            <option value="true">{dict.common?.active || 'Active'}</option>
+            <option value="false">{dict.common?.inactive || 'Inactive'}</option>
+          </Form.Select>
+        </FormGroup>
+        <Button
+          type="submit"
+          variant="success"
+          disabled={loading}
+          className="me-3"
+        >
+          {loading ? dict.action.submitting : dict.action.submit}
+        </Button>
+
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => router.push('/dishs')}
+        >
+          Cancel
+        </Button>
+      </Form>
+    </>
+  )
+}
+```
+
 #### components/Page/Dish/DishesList.tsx
 *Language: TypeScript | Size: 4689 bytes*
 
@@ -4657,7 +4517,7 @@ export default function DishesList() {
 ### components/Page/Ingredient/
 
 #### components/Page/Ingredient/IngredientForm.tsx
-*Language: TypeScript | Size: 4609 bytes*
+*Language: TypeScript | Size: 4749 bytes*
 
 ```typescript
 'use client'
@@ -4752,7 +4612,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
 
       <Form onSubmit={handleSubmit}>
         <FormGroup className="mb-3">
-          <FormLabel>Ingredient ID</FormLabel>
+          <FormLabel>{dict.ingredients?.id || 'ID'}</FormLabel>
           <FormControl
             type="text"
             name="ingredientId"
@@ -4764,7 +4624,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Ingredient Name</FormLabel>
+          <FormLabel>{dict.ingredients?.name || 'Name'}</FormLabel>
           <FormControl
             type="text"
             name="ingredientName"
@@ -4775,7 +4635,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Property</FormLabel>
+          <FormLabel>{dict.ingredients?.property || 'Property'}</FormLabel>
           <FormControl
             type="text"
             name="property"
@@ -4785,7 +4645,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Material Group</FormLabel>
+          <FormLabel>{dict.ingredients?.material_group || 'Material Group'}</FormLabel>
           <FormControl
             type="text"
             name="materialGroup"
@@ -4795,7 +4655,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Unit</FormLabel>
+          <FormLabel>{dict.ingredients?.unit || 'Unit'}</FormLabel>
           <FormControl
             type="text"
             name="unit"
@@ -5282,498 +5142,6 @@ export default function KitchensList() {
         </tbody>
       </Table>
     </>
-  )
-}
-```
-
-### components/Page/Pokemon/
-
-#### components/Page/Pokemon/PokemonList.tsx
-*Language: TypeScript | Size: 4378 bytes*
-
-```typescript
-import {
-  Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Table,
-} from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Pokemon } from '@/models/pokemon'
-import THSort from '@/components/TableSort/THSort'
-import PokemonTypeLabel from '@/components/Page/Pokemon/PokemonTypeLabel'
-import useDictionary from '@/locales/dictionary-hook'
-
-type Props = {
-  pokemons: Pokemon[];
-}
-
-export default function PokemonList(props: Props) {
-  const { pokemons } = props
-  const dict = useDictionary()
-
-  return (
-    <Table responsive bordered hover>
-      <thead>
-        <tr className="table-light dark:table-dark">
-          <th><THSort name="id">#</THSort></th>
-          <th aria-label="Photo" />
-          <th><THSort name="name">{dict.pokemons.attribute.name}</THSort></th>
-          <th>{dict.pokemons.attribute.type}</th>
-          <th className="text-center">{dict.pokemons.attribute.egg_group}</th>
-          <th className="text-end"><THSort name="hp">{dict.pokemons.attribute.hp}</THSort></th>
-          <th className="text-end"><THSort name="attack">{dict.pokemons.attribute.attack}</THSort></th>
-          <th className="text-end"><THSort name="defense">{dict.pokemons.attribute.defense}</THSort></th>
-          <th className="text-end"><THSort name="special_attack">{dict.pokemons.attribute.sp_attack}</THSort></th>
-          <th className="text-end"><THSort name="special_defense">{dict.pokemons.attribute.sp_defense}</THSort></th>
-          <th className="text-end"><THSort name="speed">{dict.pokemons.attribute.speed}</THSort></th>
-          <th className="text-end"><THSort name="total">{dict.pokemons.attribute.total}</THSort></th>
-          <th aria-label="Action" />
-        </tr>
-      </thead>
-      <tbody>
-        {pokemons.map((pokemon) => (
-          <tr key={pokemon.id}>
-            <td>{pokemon.id}</td>
-            <td>
-              <div className="position-relative mx-auto" style={{ width: '70px', height: '70px' }}>
-                <Image
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  alt={pokemon.pokemondb_identifier}
-                  sizes="5vw"
-                  src={`https://img.pokemondb.net/sprites/home/normal/2x/${pokemon.pokemondb_identifier}.jpg`}
-                />
-              </div>
-            </td>
-            <td>{pokemon.name}</td>
-            <td>
-              {pokemon.types.map((type) => (
-                <span key={type.id} className="me-2"><PokemonTypeLabel type={type} /></span>
-              ))}
-            </td>
-            <td className="text-center" style={{ whiteSpace: 'pre' }}>
-              {pokemon.egg_groups.map((eggGroup) => eggGroup.name).join('\n')}
-            </td>
-            <td className="text-end">{pokemon.hp}</td>
-            <td className="text-end">{pokemon.attack}</td>
-            <td className="text-end">{pokemon.defense}</td>
-            <td className="text-end">{pokemon.special_attack}</td>
-            <td className="text-end">{pokemon.special_defense}</td>
-            <td className="text-end">{pokemon.speed}</td>
-            <td className="text-end">{pokemon.total}</td>
-            <td>
-              <Dropdown align="end">
-                <DropdownToggle
-                  as="button"
-                  bsPrefix="btn"
-                  className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
-                  id={`action-${pokemon.id}`}
-                >
-                  <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
-                </DropdownToggle>
-
-                <DropdownMenu>
-                  <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                  <Link href={`pokemons/${pokemon.id}/edit`} passHref legacyBehavior>
-                    <DropdownItem>{dict.action.edit}</DropdownItem>
-                  </Link>
-                  <DropdownItem
-                    className="text-danger"
-                    href="#/action-3"
-                  >
-                    {dict.action.delete}
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-  )
-}
-```
-
-#### components/Page/Pokemon/PokemonTypeLabel.tsx
-*Language: TypeScript | Size: 1259 bytes*
-
-```typescript
-import React from 'react'
-
-import { Type, TypeIdentifier } from '@/models/type'
-
-const typeColorMap = new Map<TypeIdentifier, string>([
-  [TypeIdentifier.Normal, '#aa9'],
-  [TypeIdentifier.Fighting, '#b54'],
-  [TypeIdentifier.Flying, '#89f'],
-  [TypeIdentifier.Poison, '#a59'],
-  [TypeIdentifier.Ground, '#db5'],
-  [TypeIdentifier.Rock, '#ba6'],
-  [TypeIdentifier.Bug, '#ab2'],
-  [TypeIdentifier.Ghost, '#66b'],
-  [TypeIdentifier.Steel, '#aab'],
-  [TypeIdentifier.Fire, '#f42'],
-  [TypeIdentifier.Water, '#39f'],
-  [TypeIdentifier.Grass, '#7c5'],
-  [TypeIdentifier.Electric, '#fc3'],
-  [TypeIdentifier.Psychic, '#f59'],
-  [TypeIdentifier.Ice, '#6cf'],
-  [TypeIdentifier.Dragon, '#76e'],
-  [TypeIdentifier.Dark, '#754'],
-  [TypeIdentifier.Fairy, '#e9e'],
-  [TypeIdentifier.Unknown, '#6AA596'],
-  [TypeIdentifier.Shadow, '#705898'],
-])
-
-type Props = {
-  type: Type;
-}
-
-export default function PokemonTypeLabel({ type }: Props) {
-  return (
-    <span
-      className="text-white d-inline-block text-uppercase text-center rounded-1 shadow-sm"
-      style={{
-        backgroundColor: typeColorMap.get(type.id),
-        textShadow: '1px 1px 2px rgb(0 0 0 / 70%)',
-        fontSize: '.7rem',
-        width: '70px',
-      }}
-    >
-      {type.name}
-    </span>
-  )
-}
-```
-
-### components/Page/Pokemon/Form/
-
-#### components/Page/Pokemon/Form/Form.tsx
-*Language: TypeScript | Size: 6859 bytes*
-
-```typescript
-'use client'
-
-import { useFormState, useFormStatus } from 'react-dom'
-import {
-  Alert,
-  Button,
-  Col,
-  Form as BSForm,
-  FormCheck,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  Row,
-} from 'react-bootstrap'
-import React, { useEffect } from 'react'
-import classNames from 'classnames'
-import Image from 'next/image'
-import { Pokemon } from '@/models/pokemon'
-import FormError from '@/components/Form/FormError'
-import PokemonTypeLabel from '@/components/Page/Pokemon/PokemonTypeLabel'
-import create from '@/app/(dashboard)/pokemons/create/action'
-import useDictionary from '@/locales/dictionary-hook'
-import { Type } from '@/models/type'
-import { EggGroup } from '@/models/egg-group'
-import FormCheckInput from 'react-bootstrap/FormCheckInput'
-import FormCheckLabel from 'react-bootstrap/FormCheckLabel'
-
-type Props = {
-  types: Type[];
-  eggGroups: EggGroup[];
-  pokemon?: Pokemon;
-}
-
-const SubmitButton = () => {
-  const { pending } = useFormStatus()
-  const dict = useDictionary()
-
-  return (
-    <Button disabled={pending} className="me-3" type="submit" variant="success">
-      {pending ? dict.action.submitting : dict.action.submit}
-    </Button>
-  )
-}
-
-export default function Form(props: Props) {
-  const {
-    pokemon,
-    types,
-    eggGroups,
-  } = props
-
-  const dict = useDictionary()
-
-  const [state, formAction] = useFormState(create, {
-    success: false,
-    scrollTop: false,
-    message: '',
-    formKey: 0,
-  })
-
-  useEffect(() => {
-    if (state.scrollTop) {
-      window.scrollTo(0, 0)
-    }
-  }, [state])
-
-  return (
-    <BSForm noValidate key={state.formKey} action={formAction}>
-      <Alert
-        variant={state.success ? 'success' : 'danger'}
-        show={state.errors === undefined && state.message !== ''}
-      >
-        {state.message}
-      </Alert>
-
-      {pokemon && (
-        <div
-          className="position-relative mx-auto"
-          style={{
-            width: '150px',
-            height: '150px',
-          }}
-        >
-          <Image
-            fill
-            style={{ objectFit: 'contain' }}
-            alt={pokemon.pokemondb_identifier}
-            sizes="5vw"
-            src={`https://img.pokemondb.net/sprites/home/normal/2x/${pokemon.pokemondb_identifier}.jpg`}
-          />
-        </div>
-      )}
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.name}</FormLabel>
-        <FormControl
-          type="text"
-          name="name"
-          defaultValue={pokemon?.name}
-          isInvalid={!!state.errors?.name}
-          required
-        />
-        <FormError messages={state.errors?.name} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.type}</FormLabel>
-        <div className={classNames({ 'is-invalid': !!state.errors?.types })}>
-          <Row>
-            {types.map((type) => (
-              <Col xs={6} sm={4} md={3} lg={2} key={type.id}>
-                <FormCheck id={`type-${type.id}`}>
-                  <FormCheckInput
-                    type="checkbox"
-                    name="types"
-                    value={type.id}
-                    defaultChecked={pokemon?.types.some((t) => t.id)}
-                  />
-                  <FormCheckLabel>
-                    <span className="position-relative" style={{ top: '-.1rem' }}>
-                      <PokemonTypeLabel type={type} />
-                    </span>
-                  </FormCheckLabel>
-                </FormCheck>
-              </Col>
-            ))}
-          </Row>
-        </div>
-        <FormError messages={state.errors?.types} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.egg_group}</FormLabel>
-        <div className={classNames({ 'is-invalid': !!state.errors?.eggGroups })}>
-          <Row>
-            {eggGroups.map((eggGroup) => (
-              <Col xs={6} sm={4} md={3} lg={2} key={eggGroup.id}>
-                <FormCheck
-                  id={`eg-${eggGroup.id}`}
-                  type="checkbox"
-                  name="eggGroups"
-                  value={eggGroup.id}
-                  label={eggGroup.name}
-                  defaultChecked={pokemon?.egg_groups.some((eg) => eg.id === eggGroup.id)}
-                />
-              </Col>
-            ))}
-          </Row>
-        </div>
-        <FormError messages={state.errors?.eggGroups} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.hp}</FormLabel>
-        <FormControl
-          className="w-auto"
-          type="text"
-          name="hp"
-          required
-          defaultValue={pokemon?.hp}
-          isInvalid={!!state.errors?.hp}
-        />
-        <FormError messages={state.errors?.hp} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.attack}</FormLabel>
-        <FormControl
-          className="w-auto"
-          type="number"
-          name="attack"
-          required
-          defaultValue={pokemon?.attack}
-          isInvalid={!!state.errors?.attack}
-        />
-        <FormError messages={state.errors?.attack} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.defense}</FormLabel>
-        <FormControl
-          className="w-auto"
-          type="number"
-          name="defense"
-          required
-          defaultValue={pokemon?.defense}
-          isInvalid={!!state.errors?.defense}
-        />
-        <FormError messages={state.errors?.defense} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.sp_attack}</FormLabel>
-        <FormControl
-          className="w-auto"
-          type="number"
-          name="special_attack"
-          required
-          defaultValue={pokemon?.special_attack}
-          isInvalid={!!state.errors?.special_attack}
-        />
-        <FormError messages={state.errors?.special_attack} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.sp_defense}</FormLabel>
-        <FormControl
-          className="w-auto"
-          type="number"
-          name="special_defense"
-          required
-          defaultValue={pokemon?.special_defense}
-          isInvalid={!!state.errors?.special_defense}
-        />
-        <FormError messages={state.errors?.special_defense} />
-      </FormGroup>
-
-      <FormGroup className="mb-3">
-        <FormLabel>{dict.pokemons.attribute.speed}</FormLabel>
-        <FormControl
-          className="w-auto"
-          type="number"
-          name="speed"
-          required
-          defaultValue={pokemon?.speed}
-          isInvalid={!!state.errors?.speed}
-        />
-        <FormError messages={state.errors?.speed} />
-      </FormGroup>
-
-      <SubmitButton />
-      <Button type="reset" variant="secondary">{dict.action.reset}</Button>
-    </BSForm>
-  )
-}
-```
-
-#### components/Page/Pokemon/Form/PokemonForm.tsx
-*Language: TypeScript | Size: 1693 bytes*
-
-```typescript
-import Form from '@/components/Page/Pokemon/Form/Form'
-import { Pokemon } from '@/models/pokemon'
-import { Resource } from '@/models/resource'
-import { Type } from '@/models/type'
-import { getLocale } from '@/locales/dictionary'
-import serverFetch from '@/utils/server-fetch'
-import { EggGroup } from '@/models/egg-group'
-
-type Props = {
-  pokemon?: Pokemon;
-}
-
-const fetchTypes = async (): Promise<Resource<Type[]>> => {
-  const locale = getLocale()
-
-  const url = `${process.env.NEXT_PUBLIC_POKEMON_LIST_API_BASE_URL}${locale}_types` || ''
-
-  try {
-    const res = await serverFetch(url, {
-      method: 'GET',
-    })
-
-    if (!res.ok) {
-      return {
-        data: [],
-      }
-    }
-
-    const types: Type[] = await res.json()
-
-    return {
-      data: types,
-    }
-  } catch (error) {
-    return {
-      data: [],
-    }
-  }
-}
-
-const fetchEggGroups = async (): Promise<Resource<EggGroup[]>> => {
-  const locale = getLocale()
-
-  const url = `${process.env.NEXT_PUBLIC_POKEMON_LIST_API_BASE_URL}${locale}_egg_groups` || ''
-
-  try {
-    const res = await serverFetch(url, {
-      method: 'GET',
-    })
-
-    if (!res.ok) {
-      return {
-        data: [],
-      }
-    }
-
-    const eggGroups: EggGroup[] = await res.json()
-
-    return {
-      data: eggGroups,
-    }
-  } catch (error) {
-    return {
-      data: [],
-    }
-  }
-}
-
-export default async function PokemonForm(props: Props) {
-  const [typesResponse, eggGroupsResponse] = await Promise.all([
-    fetchTypes(), fetchEggGroups(),
-  ])
-
-  const { pokemon } = props
-  const { data: types } = typesResponse
-  const { data: eggGroups } = eggGroupsResponse
-
-  return (
-    <Form types={types} eggGroups={eggGroups} pokemon={pokemon} />
   )
 }
 ```
@@ -6314,7 +5682,7 @@ export const getDictionary = async () => {
 ### locales/en/
 
 #### locales/en/lang.json
-*Language: JSON | Size: 11979 bytes*
+*Language: JSON | Size: 12264 bytes*
 
 ```json
 {
@@ -6480,22 +5848,6 @@ export const getDictionary = async () => {
       }
     }
   },
-  "pokemons": {
-    "title": "Pokémon",
-    "add_new": "Add new",
-    "attribute": {
-      "name": "Name",
-      "type": "Type",
-      "egg_group": "Egg Group",
-      "hp": "Hp",
-      "attack": "Atk",
-      "defense": "Def",
-      "sp_attack": "SpA",
-      "sp_defense": "SpD",
-      "speed": "Spd",
-      "total": "Total"
-    }
-  },
   "featured_nav": {
     "dashboard": "Dashboard",
     "users": "Users",
@@ -6652,7 +6004,14 @@ export const getDictionary = async () => {
       "icons": "Icons",
       "notifications": "Notifications",
       "extras": "Extras",
-      "pages": "Pages"
+      "pages": "Pages",
+      "master_data": "Master Data",
+      "supplier_prices": "Supplier Prices",
+      "inventory_management": "Inventory Management",
+      "order_management": "Order Management",
+      "receiving_management": "Receiving Management",
+      "recipes": "Recipes",
+      "by_dish": "By Dish"
     }
   },
   "ingredients": {
@@ -6672,7 +6031,9 @@ export const getDictionary = async () => {
     "error_create": "Failed to create ingredient",
     "error_update": "Failed to update ingredient",
     "success_create": "Ingredient created successfully",
-    "success_update": "Ingredient updated successfully"
+    "success_update": "Ingredient updated successfully",
+    "edit":"Edit"
+  
   },
   "kitchens": {
     "title": "Kitchen Management",
@@ -6698,15 +6059,23 @@ export const getDictionary = async () => {
     "id": "Dish ID",
     "name": "Dish Name",
     "cooking_method": "Cooking Method",
-    "group": "Group",
-    "description": "Description",
     "status": "Status",
     "loading": "Loading...",
     "no_data": "No dishes found",
     "confirm_delete": "Are you sure you want to delete this dish?",
     "error_load": "Failed to load dishes",
     "error_delete": "Failed to delete dish",
-    "view_recipe": "View Recipe"
+    "view_recipe": "View Recipe",
+    "error_create": "Failed to create dish",
+    "error_update": "Failed to update dish",
+    "success_create": "Dish created successfully",
+    "success_update": "Dish updated successfully",
+    "dishId": "Dish Id",
+    "dishName": "Dish Name",
+    "cookingMethod": "Cooking Method",
+    "group": "Group",
+    "description": "Description",
+    "active": "Active"
   },
   "suppliers": {
     "title": "Supplier Management",
@@ -6756,7 +6125,7 @@ export const getDictionary = async () => {
 ### locales/vi/
 
 #### locales/vi/lang.json
-*Language: JSON | Size: 13019 bytes*
+*Language: JSON | Size: 14245 bytes*
 
 ```json
 {
@@ -7095,7 +6464,14 @@ export const getDictionary = async () => {
       "notifications": "Thông báo",
       "extras": "Bổ sung",
       "pages": "Trang",
-      "master_data": "Dữ liệu chính"
+      "master_data": "Dữ liệu chính",
+      "supplier_prices": "Giá nhà cung cấp",
+      "inventory_management": "Quản lý tồn kho",
+      "order_management": "Quản lý đơn hàng",
+      "receiving_management": "Quản lý nhận hàng",
+      "recipes": "Công thức",
+      "by_dish": "Theo món ăn",
+      "by_ingredient": "Theo nguyên liệu"
     }
   },
  
@@ -7108,7 +6484,19 @@ export const getDictionary = async () => {
     "error_create": "Không thể tạo nguyên liệu",
     "error_update": "Không thể cập nhật nguyên liệu",
     "success_create": "Tạo nguyên liệu thành công",
-    "success_update": "Cập nhật nguyên liệu thành công"
+    "success_update": "Cập nhật nguyên liệu thành công",
+    "add_new": "Thêm nguyên liệu mới",
+    "title": "Quản lý nguyên liệu",
+    "id": "Mã nguyên liệu",
+    "name": "Tên nguyên liệu",
+    "unit": "Đơn vị",
+    "category": "Danh mục",
+    "supplier": "Nhà cung cấp",
+    "status": "Trạng thái",
+    "property": "Tính chất",
+    "material_group": "Nhóm vật liệu",
+    "created_date": "Ngày tạo",
+    "edit":"Sửa"
   },
   "kitchens": {
     "loading": "Đang tải...",
@@ -7129,62 +6517,66 @@ export const getDictionary = async () => {
     "status": "Trạng thái"
   },
   "dishes": {
-    "title": "Dish Management",
-    "add_new": "Add New Dish",
-    "id": "Dish ID",
-    "name": "Dish Name",
-    "cooking_method": "Cooking Method",
-    "group": "Group",
-    "description": "Description",
-    "status": "Status",
-    "loading": "Loading...",
-    "no_data": "No dishes found",
-    "confirm_delete": "Are you sure you want to delete this dish?",
-    "error_load": "Failed to load dishes",
-    "error_delete": "Failed to delete dish",
-    "view_recipe": "View Recipe"
+    "title": "Quản lý món ăn",
+    "add_new": "Thêm món mới",
+    "id": "Mã món",
+    "name": "Tên món",
+    "cooking_method": "Phương pháp nấu",
+    "status": "Trạng thái",
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy món ăn",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa món ăn này?",
+    "error_load": "Không thể tải danh sách món ăn",
+    "error_delete": "Không thể xóa món ăn",
+    "view_recipe": "Xem công thức",
+    "dishId": "Mã món",
+    "dishName": "Tên món",
+    "cookingMethod": "Phương pháp nấu",
+    "group": "Nhóm",
+    "description": "Mô tả",
+    "active": "Hoạt động"
   },
   "suppliers": {
-    "title": "Supplier Management",
-    "add_new": "Add New Supplier",
-    "id": "Supplier ID",
-    "name": "Supplier Name",
-    "zalo_link": "Zalo Link",
-    "address": "Address",
-    "phone": "Phone",
+    "title": "Quản lý nhà cung cấp",
+    "add_new": "Thêm nhà cung cấp mới",
+    "id": "Mã nhà cung cấp",
+    "name": "Tên nhà cung cấp",
+    "zalo_link": "Liên kết Zalo",
+    "address": "Địa chỉ",
+    "phone": "Số điện thoại",
     "email": "Email",
-    "loading": "Loading...",
-    "no_data": "No suppliers found",
-    "confirm_delete": "Are you sure you want to delete this supplier?",
-    "error_load": "Failed to load suppliers",
-    "error_delete": "Failed to delete supplier"
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy nhà cung cấp",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa nhà cung cấp này?",
+    "error_load": "Không thể tải danh sách nhà cung cấp",
+    "error_delete": "Không thể xóa nhà cung cấp"
   },
   "recipe_standards": {
-    "title": "Recipe Standards",
-    "add_new": "Add New Standard",
-    "dish": "Dish",
-    "ingredient": "Ingredient",
-    "standard_per_serving": "Standard Per Serving",
-    "unit": "Unit",
-    "amount": "Amount",
-    "note": "Note",
-    "no_data": "No recipe standards found",
-    "confirm_delete": "Are you sure you want to delete this recipe standard?",
-    "error_load": "Failed to load recipe standards",
-    "error_delete": "Failed to delete recipe standard"
+    "title": "Định mức công thức",
+    "add_new": "Thêm định mức mới",
+    "dish": "Món ăn",
+    "ingredient": "Nguyên liệu",
+    "standard_per_serving": "Định mức cho mỗi khẩu phần",
+    "unit": "Đơn vị",
+    "amount": "Số lượng",
+    "note": "Ghi chú",
+    "no_data": "Không tìm thấy định mức công thức",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa định mức công thức này?",
+    "error_load": "Không thể tải danh sách định mức công thức",
+    "error_delete": "Không thể xóa định mức công thức"
   },
   "common": {
-    "active": "Active",
-    "inactive": "Inactive",
-    "loading": "Loading...",
-    "no_data": "No data available",
-    "cancel": "Cancel",
-    "save": "Save",
-    "search": "Search",
-    "filter": "Filter",
-    "export": "Export",
-    "import": "Import",
-    "actions": "Actions"
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "loading": "Đang tải...",
+    "no_data": "Không có dữ liệu",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "import": "Nhập",
+    "actions": "Hành động"
   }
 }
 ```
@@ -8168,7 +7560,7 @@ export type SearchParams = {
 ### utils/
 
 #### utils/api_client.ts
-*Language: TypeScript | Size: 3046 bytes*
+*Language: TypeScript | Size: 2823 bytes*
 
 ```typescript
 'use server'
@@ -8194,17 +7586,15 @@ async function apiClient<T>(
   options: RequestOptions = {}
 ): Promise<T> {
   const session = await getServerSession(authOptions)
-  console.log('Current session in apiClient:', session)
+
   if (!session) {
     console.log('No session found')
     throw new ApiError(401, t('error.unauthorized'))
   } else {
-    console.log('Session found:', session)
   }
 
   const token = session?.accessToken
 
-  console.log('API Request:')
   const { requiresAuth = true, ...fetchOptions } = options
 
   const headers: HeadersInit = {
