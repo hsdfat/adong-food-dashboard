@@ -90,7 +90,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
 
       <Form onSubmit={handleSubmit}>
         <FormGroup className="mb-3">
-          <FormLabel>Ingredient ID</FormLabel>
+          <FormLabel>{dict.ingredients?.id || 'ID'}</FormLabel>
           <FormControl
             type="text"
             name="ingredientId"
@@ -102,7 +102,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Ingredient Name</FormLabel>
+          <FormLabel>{dict.ingredients?.name || 'Name'}</FormLabel>
           <FormControl
             type="text"
             name="ingredientName"
@@ -113,7 +113,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Property</FormLabel>
+          <FormLabel>{dict.ingredients?.property || 'Property'}</FormLabel>
           <FormControl
             type="text"
             name="property"
@@ -123,7 +123,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Material Group</FormLabel>
+          <FormLabel>{dict.ingredients?.material_group || 'Material Group'}</FormLabel>
           <FormControl
             type="text"
             name="materialGroup"
@@ -133,7 +133,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>Unit</FormLabel>
+          <FormLabel>{dict.ingredients?.unit || 'Unit'}</FormLabel>
           <FormControl
             type="text"
             name="unit"

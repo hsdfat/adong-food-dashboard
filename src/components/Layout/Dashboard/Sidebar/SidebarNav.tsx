@@ -17,9 +17,6 @@ import {
   faBoxes,
   faTruck,
   faClipboardList,
-  faUsers,
-  faStore,
-  faBook,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import { Badge } from 'react-bootstrap'

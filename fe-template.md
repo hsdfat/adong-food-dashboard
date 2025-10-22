@@ -8212,13 +8212,11 @@ async function apiClient<T>(
     ...fetchOptions.headers,
   }
 
-  console.log('Using token:', token)
     if (token) {
       headers.Authorization = `Bearer ${token}`
     }
 
   const url = `${API_BASE_URL}${endpoint}`
-  console.log('API Request:', url, fetchOptions, headers)
   try {
     const response = await fetch(url, {
       ...fetchOptions,

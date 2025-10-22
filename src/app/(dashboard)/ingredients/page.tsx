@@ -8,9 +8,9 @@ export default async function Page() {
 
   return (
     <Card>
-      {/* <CardHeader>
+      <CardHeader>
         {dict.sidebar.items?.ingredients || 'Ingredients'}
-      </CardHeader> */}
+      </CardHeader>
       <CardBody>
         <IngredientsList />
       </CardBody>

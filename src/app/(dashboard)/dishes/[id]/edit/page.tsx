@@ -1,35 +1,35 @@
 'use server'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
 import { notFound } from 'next/navigation'
-import { dishApi, ingredientApi } from '@/services'
-import { Ingredient } from '@/models'
+import { dishApi } from '@/services'
+import { Dish } from '@/models'
+import DishForm from '@/components/Page/Dish/DishForm'
 
-const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
+const fetchDish = async (id: string): Promise<Dish | null> => {
   try {
     // Note: This is server-side fetch, need to handle authentication differently
-    console.log('Fetching ingredient with id:', id)
-    const response = await ingredientApi.getById(id)
+    console.log('Fetching dish with id:', id)
+    const response = await dishApi.getById(id)
     return response
   } catch (error) {
-    console.error('Error fetching ingredient:', error)
+    console.error('Error fetching dish:', error)
     return null
   }
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  console.log('Fetching ingredient with id:', params.id)
-  const ingredient = await fetchIngredient(params.id)
+  console.log('Fetching dish with id:', params.id)
+  const dish = await fetchDish(params.id)
 
-  if (!ingredient) {
+  if (!dish) {
     return notFound()
   }
 
   return (
     <Card>
-      <CardHeader>Edit Ingredient: {ingredient.ingredientName}</CardHeader>
+      <CardHeader>Edit Dish: {dish.dishName}</CardHeader>
       <CardBody>
-        <IngredientForm ingredient={ingredient} isEdit />
+        <DishForm dish={dish} isEdit />
       </CardBody>
     </Card>
   )

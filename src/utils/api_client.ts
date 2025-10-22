@@ -21,17 +21,15 @@ async function apiClient<T>(
   options: RequestOptions = {}
 ): Promise<T> {
   const session = await getServerSession(authOptions)
-  console.log('Current session in apiClient:', session)
+
   if (!session) {
     console.log('No session found')
     throw new ApiError(401, t('error.unauthorized'))
   } else {
-    console.log('Session found:', session)
   }
 
   const token = session?.accessToken
 
-  console.log('API Request:')
   const { requiresAuth = true, ...fetchOptions } = options
 
   const headers: HeadersInit = {
@@ -39,13 +37,11 @@ async function apiClient<T>(
     ...fetchOptions.headers,
   }
 
-  console.log('Using token:', token)
     if (token) {
       headers.Authorization = `Bearer ${token}`
     }
 
   const url = `${API_BASE_URL}${endpoint}`
-  console.log('API Request:', url, fetchOptions, headers)
   try {
     const response = await fetch(url, {
       ...fetchOptions,

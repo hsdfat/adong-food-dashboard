@@ -1,12 +1,12 @@
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
+import DishForm from '@/components/Page/Dish/DishForm'
 
 export default function Page() {
   return (
     <Card>
-      <CardHeader>Add New Ingredient</CardHeader>
+      <CardHeader>Add New Dish</CardHeader>
       <CardBody>
-        <IngredientForm />
+        <DishForm />
       </CardBody>
     </Card>
   )
