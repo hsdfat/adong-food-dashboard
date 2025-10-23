@@ -24,6 +24,7 @@ async function apiClient<T>(
 
   if (!session) {
     console.log('No session found')
+    window.location.href = '/login'
     throw new ApiError(401, t('error.unauthorized'))
   } else {
   }

@@ -1,19 +1,18 @@
-'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import IngredientsList from '@/components/Page/Ingredient/IngredientList'
-import useDictionary from '@/locales/dictionary-hook'
+import { getDictionary } from '@/locales/dictionary'
+import SuppliersList from '@/components/Page/Supplier/SuppliersList'
 
 export default async function Page() {
-  const dict = useDictionary()
+  const dict = await getDictionary()
 
   return (
     <Card>
-      <CardHeader>
+      {/* <CardHeader>
         {dict.sidebar.items?.ingredients || 'Ingredients'}
-      </CardHeader>
+      </CardHeader> */}
       <CardBody>
-        <IngredientsList />
+        <SuppliersList />
       </CardBody>
     </Card>
   )

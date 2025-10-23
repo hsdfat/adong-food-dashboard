@@ -1,10 +1,11 @@
-'use server'
+'use client'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
 import DishForm from '@/components/Page/Dish/DishForm'
-import { getDictionary } from '@/locales/dictionary'
+import useDictionary from '@/locales/dictionary-hook'
+import { useState, useEffect } from 'react'
 
 const fetchDish = async (id: string): Promise<Dish | null> => {
   try {
@@ -18,20 +19,42 @@ const fetchDish = async (id: string): Promise<Dish | null> => {
   }
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const dish = await fetchDish(params.id)
-  const dict = await getDictionary()
+export default function Page({ params }: { params: { id: string } }) {
 
-  if (!dish) {
-    return notFound()
-  }
+  const dict = useDictionary()
+  const [dish, setDish] = useState<Dish | null>(null)
+  const [notFoundFlag, setNotFoundFlag] = useState(false)
+  
+  useEffect(() => {
+    const loadDish = async () => {
+      const fetchedDish = await fetchDish(params.id)
+      if (!fetchedDish) {
+        setNotFoundFlag(true)
+        return
+      }
+      setNotFoundFlag(false)
+      setDish(fetchedDish)
+    }
+    loadDish()
+  }, [])
 
   return (
     <Card>
-      <CardHeader>{dict.dishes.edit}: {dish.dishName}</CardHeader>
-      <CardBody>
-        <DishForm dish={dish} isEdit />
-      </CardBody>
+      <CardHeader>{dict.dishes.edit}: {dish && dish.dishName}</CardHeader>
+      {
+        !dish ? (
+          <CardBody>
+            <p>{dict.dishes.loading || 'Loading...'}</p>
+          </CardBody>
+        ) : notFoundFlag ? (
+          notFound()
+        ) : (
+          <CardBody>
+            <DishForm dish={dish} />
+          </CardBody>
+        )
+      }
+      
     </Card>
   )
 }

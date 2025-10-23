@@ -431,6 +431,11 @@
     "filter": "Filter",
     "export": "Export",
     "import": "Import",
-    "actions": "Actions"
+    "actions": "Actions",
+    "created_date": "Created Date",
+    "success_update": "Updated successfully",
+    "success_create": "Created successfully",
+    "error_update": "Failed to update",
+    "error_create": "Failed to create"
   }
 }

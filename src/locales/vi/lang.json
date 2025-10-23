@@ -447,6 +447,11 @@
     "filter": "Lọc",
     "export": "Xuất",
     "import": "Nhập",
-    "actions": "Hành động"
+    "actions": "Hành động",
+    "created_date": "Ngày tạo",
+    "success_update": "Cập nhật thành công",
+    "success_create": "Tạo thành công",
+    "error_update": "Cập nhật thất bại",
+    "error_create": "Tạo thất bại"
   }
 }

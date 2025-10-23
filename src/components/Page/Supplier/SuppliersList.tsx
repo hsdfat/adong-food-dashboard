@@ -19,14 +19,14 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ingredientApi } from '@/services'
-import { Ingredient } from '@/models'
+import { supplierApi } from '@/services'
+import { Supplier } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
-export default function IngredientesList() {
-  const [ingredientsData, setIngredientesData] = useState<ResourceCollection<Ingredient> | null>(null)
+export default function SupplieresList() {
+  const [suppliersData, setSupplieresData] = useState<ResourceCollection<Supplier> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -41,10 +41,10 @@ export default function IngredientesList() {
 
   useEffect(() => {
     setSearchQuery(search)
-    loadIngredientes()
+    loadSupplieres()
   }, [page, perPage, search])
 
-  const loadIngredientes = async () => {
+  const loadSupplieres = async () => {
     try {
       setLoading(true)
       setError('')
@@ -58,10 +58,10 @@ export default function IngredientesList() {
       }
 
       // Call API with query parameters
-      const data = await ingredientApi.getAll(`?${params.toString()}`)
-      setIngredientesData(data)
+      const data = await supplierApi.getAll(`?${params.toString()}`)
+      setSupplieresData(data)
     } catch (err) {
-      setError(dict.ingredients?.error_load || 'Failed to load ingredients')
+      setError(dict.suppliers?.error_load || 'Failed to load suppliers')
       console.error(err)
     } finally {
       setLoading(false)
@@ -69,15 +69,15 @@ export default function IngredientesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.ingredients?.confirm_delete || 'Are you sure you want to delete this ingredient?')) {
+    if (!confirm(dict.suppliers?.confirm_delete || 'Are you sure you want to delete this supplier?')) {
       return
     }
 
     try {
-      await ingredientApi.delete(id)
-      loadIngredientes()
+      await supplierApi.delete(id)
+      loadSupplieres()
     } catch (err) {
-      setError(dict.ingredients?.error_delete || 'Failed to delete ingredient')
+      setError(dict.suppliers?.error_delete || 'Failed to delete supplier')
       console.error(err)
     }
   }
@@ -94,7 +94,7 @@ export default function IngredientesList() {
       newSearchParams.delete('search')
     }
     
-    router.push(`/ingredients?${newSearchParams.toString()}`)
+    router.push(`/suppliers?${newSearchParams.toString()}`)
   }
 
   const handleClearSearch = () => {
@@ -102,7 +102,7 @@ export default function IngredientesList() {
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1')
     newSearchParams.delete('search')
-    router.push(`/ingredients?${newSearchParams.toString()}`)
+    router.push(`/suppliers?${newSearchParams.toString()}`)
   }
 
   if (loading) {
@@ -110,7 +110,7 @@ export default function IngredientesList() {
       <Card>
         <CardBody>
           <div className="text-center py-4">
-            {dict.ingredients?.loading || 'Loading...'}
+            {dict.suppliers?.loading || 'Loading...'}
           </div>
         </CardBody>
       </Card>
@@ -121,14 +121,14 @@ export default function IngredientesList() {
   return (
     <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
-        <span>{dict.ingredients?.title || 'Ingredient Management'}</span>
+        <span>{dict.suppliers?.title || 'Supplier Management'}</span>
         <Button
           variant="primary"
           size="sm"
-          onClick={() => router.push('/ingredients/create')}
+          onClick={() => router.push('/suppliers/create')}
         >
           <FontAwesomeIcon icon={faPlus} className="me-2" />
-          {dict.ingredients?.add_new || 'Add New Ingredient'}
+          {dict.suppliers?.add_new || 'Add New Supplier'}
         </Button>
       </CardHeader>
       <CardBody>
@@ -143,7 +143,7 @@ export default function IngredientesList() {
           <InputGroup>
             <FormControl
               type="text"
-              placeholder={dict.common?.search || 'Search ingredients...'}
+              placeholder={dict.common?.search || 'Search suppliers...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -164,25 +164,25 @@ export default function IngredientesList() {
           <Table hover>
             <thead>
               <tr>
-                <th>{dict.ingredients?.id || 'ID'}</th>
-                <th>{dict.ingredients?.name || 'Name'}</th>
-                <th>{dict.ingredients?.property || 'Property'}</th>
-                <th>{dict.ingredients?.material_group || 'Material Group'}</th>
-                <th>{dict.ingredients?.unit || 'Unit'}</th>
-                <th>{dict.ingredients?.created_date || 'Created Date'}</th>
-                <th aria-label="Action" />
+                  <th>{dict.suppliers?.id || 'ID'}</th>
+                  <th>{dict.suppliers?.name || 'Supplier Name'}</th>
+                  <th>{dict.suppliers?.address || 'Address'}</th>
+                  <th>{dict.suppliers?.phone || 'Phone'}</th>
+                  <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
+                  <th>{dict.common?.created_date || 'Created Date'}</th>
+                  <th aria-label="Action" />
               </tr>
             </thead>
             <tbody>
-              {ingredientsData && ingredientsData.data && ingredientsData.data.length > 0 ? (
-                ingredientsData.data.map((ingredient) => (
-                  <tr key={ingredient.ingredientId}>
-                      <td>{ingredient.ingredientId}</td>
-                      <td>{ingredient.ingredientName}</td>
-                      <td>{ingredient.property || '-'}</td>
-                      <td>{ingredient.materialGroup || '-'}</td>
-                      <td>{ingredient.unit}</td>
-                      <td>{new Date(ingredient.createdDate).toLocaleDateString()}</td>
+              {suppliersData && suppliersData.data && suppliersData.data.length > 0 ? (
+                suppliersData.data.map((supplier) => (
+                  <tr key={supplier.supplierId}>
+                      <td>{supplier.supplierId}</td>
+                      <td>{supplier.supplierName}</td>
+                      <td>{supplier.address || '-'}</td>
+                      <td>{supplier.phone || '-'}</td>
+                      <td>{supplier.zaloLink || '-'}</td>
+                <td>{new Date(supplier.createdDate).toLocaleDateString()}</td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -193,10 +193,10 @@ export default function IngredientesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/ingredients/${ingredient.ingredientId}/edit`)}>
+                          <DropdownItem onClick={() => router.push(`/suppliers/${supplier.supplierId}/edit`)}>
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(ingredient.ingredientId)} className="text-danger">
+                          <DropdownItem onClick={() => handleDelete(supplier.supplierId)} className="text-danger">
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
@@ -207,7 +207,7 @@ export default function IngredientesList() {
               ) : (
                 <tr>
                   <td colSpan={5} className="text-center py-4">
-                    {dict.ingredients?.no_data || 'No ingredients found'}
+                    {dict.suppliers?.no_data || 'No suppliers found'}
                   </td>
                 </tr>
               )}
@@ -216,8 +216,8 @@ export default function IngredientesList() {
         </div>
 
         {/* Pagination */}
-        {ingredientsData && ingredientsData.meta && (
-          <Pagination meta={ingredientsData.meta} />
+        {suppliersData && suppliersData.meta && (
+          <Pagination meta={suppliersData.meta} />
         )}
       </CardBody>
     </Card>

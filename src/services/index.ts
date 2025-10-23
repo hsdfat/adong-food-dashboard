@@ -10,8 +10,10 @@ import { ResourceCollection } from '@/models/resource'
 
 // Ingredients API
 export const ingredientApi = {
-  getAll: () => apiClient<Ingredient[]>('/api/ingredients'),
-  getById: (id: string) => apiClient<Ingredient>(`/api/ingredients/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Ingredient>>(`/api/ingredients${queryString}`),
+  getById: (id: string) => 
+    apiClient<Ingredient>(`/api/ingredients/${id}`),
   create: (data: CreateIngredientInput) => 
     apiClient<Ingredient>('/api/ingredients', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateIngredientInput) => 
@@ -22,8 +24,10 @@ export const ingredientApi = {
 
 // Kitchens API
 export const kitchenApi = {
-  getAll: () => apiClient<Kitchen[]>('/api/kitchens'),
-  getById: (id: string) => apiClient<Kitchen>(`/api/kitchens/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Kitchen>>(`/api/kitchens${queryString}`),
+  getById: (id: string) => 
+    apiClient<Kitchen>(`/api/kitchens/${id}`),
   create: (data: CreateKitchenInput) => 
     apiClient<Kitchen>('/api/kitchens', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateKitchenInput) => 
@@ -48,8 +52,10 @@ export const dishApi = {
 
 // Suppliers API
 export const supplierApi = {
-  getAll: () => apiClient<Supplier[]>('/api/suppliers'),
-  getById: (id: string) => apiClient<Supplier>(`/api/suppliers/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Supplier>>(`/api/suppliers${queryString}`),
+  getById: (id: string) => 
+    apiClient<Supplier>(`/api/suppliers/${id}`),
   create: (data: CreateSupplierInput) => 
     apiClient<Supplier>('/api/suppliers', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateSupplierInput) => 
@@ -60,14 +66,14 @@ export const supplierApi = {
 
 // Recipe Standards API
 export const recipeStandardApi = {
-  getAll: () => apiClient<RecipeStandard[]>('/api/recipe-standards'),
-  getById: (id: number) => apiClient<RecipeStandard>(`/api/recipe-standards/${id}`),
-  getByDish: (dishId: string) => 
-    apiClient<RecipeStandard[]>(`/api/recipe-standards/dish/${dishId}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<RecipeStandard>>(`/api/recipe-standards${queryString}`),
+  getById: (id: string) => 
+    apiClient<RecipeStandard>(`/api/recipe-standards/${id}`),
   create: (data: CreateRecipeStandardInput) => 
     apiClient<RecipeStandard>('/api/recipe-standards', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: number, data: UpdateRecipeStandardInput) => 
+  update: (id: string, data: UpdateRecipeStandardInput) => 
     apiClient<RecipeStandard>(`/api/recipe-standards/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: number) => 
+  delete: (id: string) => 
     apiClient<{ message: string }>(`/api/recipe-standards/${id}`, { method: 'DELETE' }),
 }
