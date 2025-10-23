@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
 import DishForm from '@/components/Page/Dish/DishForm'
+import { getDictionary } from '@/locales/dictionary'
 
 const fetchDish = async (id: string): Promise<Dish | null> => {
   try {
@@ -18,8 +19,8 @@ const fetchDish = async (id: string): Promise<Dish | null> => {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  console.log('Fetching dish with id:', params.id)
   const dish = await fetchDish(params.id)
+  const dict = await getDictionary()
 
   if (!dish) {
     return notFound()
@@ -27,7 +28,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>Edit Dish: {dish.dishName}</CardHeader>
+      <CardHeader>{dict.dishes.edit}: {dish.dishName}</CardHeader>
       <CardBody>
         <DishForm dish={dish} isEdit />
       </CardBody>

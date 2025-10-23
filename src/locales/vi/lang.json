@@ -404,7 +404,8 @@
     "cookingMethod": "Phương pháp nấu",
     "group": "Nhóm",
     "description": "Mô tả",
-    "active": "Hoạt động"
+    "active": "Hoạt động",
+    "edit": "Cập nhật"
   },
   "suppliers": {
     "title": "Quản lý nhà cung cấp",

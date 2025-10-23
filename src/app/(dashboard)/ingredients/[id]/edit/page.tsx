@@ -19,7 +19,7 @@ const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-   const dict = await getDictionary()
+  const dict = await getDictionary()
   console.log('Fetching ingredient with id:', params.id)
   const ingredient = await fetchIngredient(params.id)
 

@@ -6,6 +6,7 @@ import {
   Supplier, CreateSupplierInput, UpdateSupplierInput,
   RecipeStandard, CreateRecipeStandardInput, UpdateRecipeStandardInput
 } from '@/models'
+import { ResourceCollection } from '@/models/resource'
 
 // Ingredients API
 export const ingredientApi = {
@@ -31,10 +32,12 @@ export const kitchenApi = {
     apiClient<{ message: string }>(`/api/kitchens/${id}`, { method: 'DELETE' }),
 }
 
-// Dishes API
+// Dishes API with pagination support
 export const dishApi = {
-  getAll: () => apiClient<Dish[]>('/api/dishes'),
-  getById: (id: string) => apiClient<Dish>(`/api/dishes/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Dish>>(`/api/dishes${queryString}`),
+  getById: (id: string) => 
+    apiClient<Dish>(`/api/dishes/${id}`),
   create: (data: CreateDishInput) => 
     apiClient<Dish>('/api/dishes', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateDishInput) => 
@@ -67,16 +70,4 @@ export const recipeStandardApi = {
     apiClient<RecipeStandard>(`/api/recipe-standards/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: number) => 
     apiClient<{ message: string }>(`/api/recipe-standards/${id}`, { method: 'DELETE' }),
-}
-
-// Users API
-export const userApi = {
-  getAll: () => apiClient<any[]>('/api/users'),
-  getById: (id: string) => apiClient<any>(`/api/users/${id}`),
-  create: (data: any) => 
-    apiClient<any>('/api/users', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: any) => 
-    apiClient<any>(`/api/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
-    apiClient<{ message: string }>(`/api/users/${id}`, { method: 'DELETE' }),
 }

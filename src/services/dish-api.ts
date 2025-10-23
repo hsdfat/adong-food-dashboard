@@ -1,9 +1,10 @@
 import { apiClient } from '@/utils/api_client'
 import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
+import { ResourceCollection } from '@/models/resource'
 
 export const dishApi = {
-  getAll: async (): Promise<Dish[]> => {
-    return apiClient<Dish[]>('/api/dishes')
+  getAll: async (queryString: string = ''): Promise<ResourceCollection<Dish>> => {
+    return apiClient<ResourceCollection<Dish>>(`/api/dishes${queryString}`)
   },
 
   getById: async (id: string): Promise<Dish> => {

@@ -388,7 +388,8 @@
     "cookingMethod": "Cooking Method",
     "group": "Group",
     "description": "Description",
-    "active": "Active"
+    "active": "Active",
+    "edit": "Edit"
   },
   "suppliers": {
     "title": "Supplier Management",

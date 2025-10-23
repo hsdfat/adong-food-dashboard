@@ -1,6 +1,6 @@
 # ProjectDump Analysis
 
-**Generated on:** 2025-10-22 07:05:57
+**Generated on:** 2025-10-22 21:57:01
 **Project Path:** src/
 
 ## Project Summary
@@ -8,7 +8,7 @@
 - **Primary Language:** TypeScript
 - **Total Files:** 91
 - **Processed Files:** 91
-- **Project Size:** 214.10 KB
+- **Project Size:** 214.30 KB
 
 ## Detected Technologies
 
@@ -23,8 +23,19 @@
 - app/(authentication)/register/register.tsx
 - ... and 77 more files
 
-### React (100.0% confidence)
-*React JavaScript library for building user interfaces*
+### Rust (100.0% confidence)
+*Rust systems programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(authentication)/register/register.tsx
+- app/(dashboard)/dishes/[id]/edit/page.tsx
+- app/(dashboard)/dishes/create/page.tsx
+- app/(dashboard)/ingredients/create/page.tsx
+- ... and 34 more files
+
+### Go (100.0% confidence)
+*Go programming language*
 
 **Related files:**
 - app/(authentication)/layout.tsx
@@ -32,7 +43,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 51 more files
+- ... and 68 more files
 
 ### Docker (100.0% confidence)
 *Docker containerization platform*
@@ -45,17 +56,6 @@
 - app/(authentication)/register/register.tsx
 - ... and 64 more files
 
-### CSS (100.0% confidence)
-*Cascading Style Sheets*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 85 more files
-
 ### PHP (100.0% confidence)
 *PHP server-side scripting language*
 
@@ -67,6 +67,28 @@
 - app/(authentication)/register/register.tsx
 - ... and 57 more files
 
+### Python (100.0% confidence)
+*Python programming language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 66 more files
+
+### CSS (100.0% confidence)
+*Cascading Style Sheets*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 85 more files
+
 ### HTML (100.0% confidence)
 *HyperText Markup Language*
 
@@ -77,17 +99,6 @@
 - app/(dashboard)/page.tsx
 - app/layout.tsx
 - ... and 19 more files
-
-### Go (100.0% confidence)
-*Go programming language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 68 more files
 
 ### Ruby (100.0% confidence)
 *Ruby programming language*
@@ -111,8 +122,8 @@
 - app/(authentication)/register/register.tsx
 - ... and 78 more files
 
-### Python (100.0% confidence)
-*Python programming language*
+### React (100.0% confidence)
+*React JavaScript library for building user interfaces*
 
 **Related files:**
 - app/(authentication)/layout.tsx
@@ -120,18 +131,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 66 more files
-
-### Rust (100.0% confidence)
-*Rust systems programming language*
-
-**Related files:**
-- app/(authentication)/login/login.tsx
-- app/(authentication)/register/register.tsx
-- app/(dashboard)/dishes/[id]/edit/page.tsx
-- app/(dashboard)/ingredients/create/page.tsx
-- app/(dashboard)/kitchens/[id]/edit/page.tsx
-- ... and 33 more files
+- ... and 51 more files
 
 ### Node.js (15.0% confidence)
 *Node.js JavaScript runtime*
@@ -1994,7 +1994,7 @@ console.log('Fetching dictionary for dishes page')
 ### app/(dashboard)/dishes/[id]/edit/
 
 #### app/(dashboard)/dishes/[id]/edit/page.tsx
-*Language: TypeScript | Size: 986 bytes*
+*Language: TypeScript | Size: 1034 bytes*
 
 ```typescript
 'use server'
@@ -2003,6 +2003,7 @@ import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
 import DishForm from '@/components/Page/Dish/DishForm'
+import { getDictionary } from '@/locales/dictionary'
 
 const fetchDish = async (id: string): Promise<Dish | null> => {
   try {
@@ -2017,8 +2018,8 @@ const fetchDish = async (id: string): Promise<Dish | null> => {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  console.log('Fetching dish with id:', params.id)
   const dish = await fetchDish(params.id)
+  const dict = await getDictionary()
 
   if (!dish) {
     return notFound()
@@ -2026,7 +2027,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>Edit Dish: {dish.dishName}</CardHeader>
+      <CardHeader>{dict.dishes.edit}: {dish.dishName}</CardHeader>
       <CardBody>
         <DishForm dish={dish} isEdit />
       </CardBody>
@@ -2038,16 +2039,19 @@ export default async function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/dishes/create/
 
 #### app/(dashboard)/dishes/create/page.tsx
-*Language: TypeScript | Size: 289 bytes*
+*Language: TypeScript | Size: 396 bytes*
 
 ```typescript
+'use client'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import DishForm from '@/components/Page/Dish/DishForm'
+import useDictionary from '@/locales/dictionary-hook'
 
 export default function Page() {
+  const dict = useDictionary()
   return (
     <Card>
-      <CardHeader>Add New Dish</CardHeader>
+      <CardHeader>{dict.dishes.add_new}</CardHeader>
       <CardBody>
         <DishForm />
       </CardBody>
@@ -2086,7 +2090,7 @@ export default async function Page() {
 ### app/(dashboard)/ingredients/[id]/edit/
 
 #### app/(dashboard)/ingredients/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1214 bytes*
+*Language: TypeScript | Size: 1213 bytes*
 
 ```typescript
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
@@ -2110,7 +2114,7 @@ const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-   const dict = await getDictionary()
+  const dict = await getDictionary()
   console.log('Fetching ingredient with id:', params.id)
   const ingredient = await fetchIngredient(params.id)
 
@@ -5682,7 +5686,7 @@ export const getDictionary = async () => {
 ### locales/en/
 
 #### locales/en/lang.json
-*Language: JSON | Size: 12264 bytes*
+*Language: JSON | Size: 12284 bytes*
 
 ```json
 {
@@ -6075,7 +6079,8 @@ export const getDictionary = async () => {
     "cookingMethod": "Cooking Method",
     "group": "Group",
     "description": "Description",
-    "active": "Active"
+    "active": "Active",
+    "edit": "Edit"
   },
   "suppliers": {
     "title": "Supplier Management",
@@ -6125,7 +6130,7 @@ export const getDictionary = async () => {
 ### locales/vi/
 
 #### locales/vi/lang.json
-*Language: JSON | Size: 14245 bytes*
+*Language: JSON | Size: 14273 bytes*
 
 ```json
 {
@@ -6534,7 +6539,8 @@ export const getDictionary = async () => {
     "cookingMethod": "Phương pháp nấu",
     "group": "Nhóm",
     "description": "Mô tả",
-    "active": "Hoạt động"
+    "active": "Hoạt động",
+    "edit": "Cập nhật"
   },
   "suppliers": {
     "title": "Quản lý nhà cung cấp",
