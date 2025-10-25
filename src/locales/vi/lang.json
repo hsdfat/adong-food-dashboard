@@ -38,7 +38,10 @@
     "delete": "Xóa",
     "submit": "Gửi",
     "submitting": "Đang gửi...",
-    "reset": "Đặt lại"
+    "reset": "Đặt lại",
+    "cancel":"Hủy",
+    "save":"Lưu",
+    "saving":"Đang lưu..."
   },
   "theme": {
     "light": "Sáng",
@@ -423,6 +426,7 @@
     "error_delete": "Không thể xóa nhà cung cấp"
   },
   "recipe_standards": {
+    "dishId": "Mã cong",
     "title": "Định mức công thức",
     "add_new": "Thêm định mức mới",
     "dish": "Món ăn",
@@ -434,7 +438,16 @@
     "no_data": "Không tìm thấy định mức công thức",
     "confirm_delete": "Bạn có chắc chắn muốn xóa định mức công thức này?",
     "error_load": "Không thể tải danh sách định mức công thức",
-    "error_delete": "Không thể xóa định mức công thức"
+    "error_delete": "Không thể xóa định mức công thức",
+    "standard_help": "Số lượng cần cho 1 khẩu phần",
+    "amount_help": "Tổng số lượng nguyên liệu cho định mức công thức",
+    "note_placeholder": "Nhập ghi chú về định mức công thức (tùy chọn)",
+
+    "description": "Mô tả",
+    "create_title": "Tạo định mức công thức",
+    "create_description": "Điền thông tin bên dưới để tạo định mức công thức mới.",
+    "edit_title": "Chỉnh sửa định mức công thức",
+    "edit_description": "Cập nhật thông tin định mức công thức bên dưới."
   },
   "common": {
     "active": "Hoạt động",
@@ -448,10 +461,18 @@
     "export": "Xuất",
     "import": "Nhập",
     "actions": "Hành động",
+    "select": "Chọn",
+    "not_found": "Không tìm thấy",
     "created_date": "Ngày tạo",
     "success_update": "Cập nhật thành công",
     "success_create": "Tạo thành công",
     "error_update": "Cập nhật thất bại",
-    "error_create": "Tạo thất bại"
+    "error_create": "Tạo thất bại",
+    "load_error": "Tải dữ liệu thất bại",
+    "save_error": "Lưu dữ liệu thất bại"
+  },
+  "validation": {
+    "required_field": "Trường này là bắt buộc",
+    "invalid_number": "Số không hợp lệ"
   }
 }

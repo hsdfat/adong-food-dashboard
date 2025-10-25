@@ -38,7 +38,10 @@
     "delete": "Delete",
     "submit": "Submit",
     "submitting": "Submitting...",
-    "reset": "Reset"
+    "reset": "Reset",
+    "cancel":"Cancel",
+    "save":"Save",
+    "saving":"Saving..."
   },
   "theme": {
     "light": "Light",
@@ -407,6 +410,8 @@
     "error_delete": "Failed to delete supplier"
   },
   "recipe_standards": {
+    "dishId": "Dish Id",
+    "ingredientId": "Ingredient Id",
     "title": "Recipe Standards",
     "add_new": "Add New Standard",
     "dish": "Dish",
@@ -418,7 +423,15 @@
     "no_data": "No recipe standards found",
     "confirm_delete": "Are you sure you want to delete this recipe standard?",
     "error_load": "Failed to load recipe standards",
-    "error_delete": "Failed to delete recipe standard"
+    "error_delete": "Failed to delete recipe standard",
+    "standard_help": "Quantity needed for 1 serving",
+    "amount_help": "Total quantity of ingredient for the recipe standard",
+    "note_placeholder": "Enter notes about the recipe standard (optional)",
+    "description": "Description",
+    "create_title": "Create Recipe Standard",
+    "create_description": "Fill in the details below to create a new recipe standard.",
+    "edit_title": "Edit Recipe Standard",
+    "edit_description": "Update the details of the recipe standard below."
   },
   "common": {
     "active": "Active",
@@ -432,10 +445,18 @@
     "export": "Export",
     "import": "Import",
     "actions": "Actions",
+    "select": "Select",
+    "not_found": "Not Found",
     "created_date": "Created Date",
     "success_update": "Updated successfully",
     "success_create": "Created successfully",
     "error_update": "Failed to update",
-    "error_create": "Failed to create"
+    "error_create": "Failed to create",
+    "save_error": "Failed to save data",
+    "load_error": "Failed to load data"
+  },
+  "validation": {
+    "required_field": "This field is required",
+    "invalid_number": "Invalid number"
   }
 }

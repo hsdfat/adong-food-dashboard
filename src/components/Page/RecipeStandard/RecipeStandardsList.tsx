@@ -75,16 +75,16 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
 
       <Table responsive bordered hover>
         <thead>
-          <tr className="table-light dark:table-dark">
-            <th>ID</th>
-            <th>Dish</th>
-            <th>Ingredient</th>
-            <th>Standard Per Serving</th>
-            <th>Unit</th>
-            <th>Amount</th>
-            <th>Note</th>
-            <th aria-label="Action" />
-          </tr>
+            <tr className="table-light dark:table-dark">
+            <th>{dict.recipe_standards?.dishId ?? 'ID'}</th>
+            <th>{dict.recipe_standards?.dish ?? 'Dish'}</th>
+            <th>{dict.recipe_standards?.ingredient ?? 'Ingredient'}</th>
+            <th>{dict.recipe_standards?.standard_per_serving ?? 'Standard Per Serving'}</th>
+            <th>{dict.recipe_standards?.unit ?? 'Unit'}</th>
+            <th>{dict.recipe_standards?.amount ?? 'Amount'}</th>
+            <th>{dict.recipe_standards?.note ?? 'Note'}</th>
+            <th aria-label={''} />
+            </tr>
         </thead>
         <tbody>
           {standards.length === 0 ? (

@@ -1,14 +1,14 @@
 # ProjectDump Analysis
 
-**Generated on:** 2025-10-22 21:57:01
+**Generated on:** 2025-10-24 06:52:28
 **Project Path:** src/
 
 ## Project Summary
 
 - **Primary Language:** TypeScript
-- **Total Files:** 91
-- **Processed Files:** 91
-- **Project Size:** 214.30 KB
+- **Total Files:** 96
+- **Processed Files:** 96
+- **Project Size:** 237.16 KB
 
 ## Detected Technologies
 
@@ -21,18 +21,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 77 more files
-
-### Rust (100.0% confidence)
-*Rust systems programming language*
-
-**Related files:**
-- app/(authentication)/login/login.tsx
-- app/(authentication)/register/register.tsx
-- app/(dashboard)/dishes/[id]/edit/page.tsx
-- app/(dashboard)/dishes/create/page.tsx
-- app/(dashboard)/ingredients/create/page.tsx
-- ... and 34 more files
+- ... and 82 more files
 
 ### Go (100.0% confidence)
 *Go programming language*
@@ -43,29 +32,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 68 more files
-
-### Docker (100.0% confidence)
-*Docker containerization platform*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 64 more files
-
-### PHP (100.0% confidence)
-*PHP server-side scripting language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 57 more files
+- ... and 73 more files
 
 ### Python (100.0% confidence)
 *Python programming language*
@@ -76,40 +43,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 66 more files
-
-### CSS (100.0% confidence)
-*Cascading Style Sheets*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 85 more files
-
-### HTML (100.0% confidence)
-*HyperText Markup Language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/page.tsx
-- app/(dashboard)/layout.tsx
-- app/(dashboard)/page.tsx
-- app/layout.tsx
-- ... and 19 more files
-
-### Ruby (100.0% confidence)
-*Ruby programming language*
-
-**Related files:**
-- app/(authentication)/login/login.tsx
-- app/(dashboard)/page.tsx
-- components/Layout/Dashboard/Header/HeaderLocale.tsx
-- components/Layout/Dashboard/Header/HeaderNotificationNav.tsx
-- components/Layout/Dashboard/Header/HeaderTheme.tsx
-- ... and 16 more files
+- ... and 71 more files
 
 ### JavaScript (100.0% confidence)
 *JavaScript runtime and ecosystem*
@@ -120,7 +54,29 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 78 more files
+- ... and 83 more files
+
+### HTML (100.0% confidence)
+*HyperText Markup Language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/page.tsx
+- app/(dashboard)/layout.tsx
+- app/(dashboard)/page.tsx
+- app/layout.tsx
+- ... and 21 more files
+
+### Rust (100.0% confidence)
+*Rust systems programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(authentication)/register/register.tsx
+- app/(dashboard)/dishes/[id]/edit/page.tsx
+- app/(dashboard)/dishes/create/page.tsx
+- app/(dashboard)/dishes/page.tsx
+- ... and 39 more files
 
 ### React (100.0% confidence)
 *React JavaScript library for building user interfaces*
@@ -131,7 +87,51 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 51 more files
+- ... and 56 more files
+
+### CSS (100.0% confidence)
+*Cascading Style Sheets*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 90 more files
+
+### Docker (100.0% confidence)
+*Docker containerization platform*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 69 more files
+
+### PHP (100.0% confidence)
+*PHP server-side scripting language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 62 more files
+
+### Ruby (100.0% confidence)
+*Ruby programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(dashboard)/page.tsx
+- components/Layout/Dashboard/Header/HeaderLocale.tsx
+- components/Layout/Dashboard/Header/HeaderNotificationNav.tsx
+- components/Layout/Dashboard/Header/HeaderTheme.tsx
+- ... and 17 more files
 
 ### Node.js (15.0% confidence)
 *Node.js JavaScript runtime*
@@ -176,7 +176,14 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
-│   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   └── suppliers
+│   │       ├── [id]
+│   │       │   └── edit
+│   │       │       └── page.tsx
+│   │       ├── create
+│   │       │   └── page.tsx
+│   │       └── page.tsx
 │   ├── api
 │   │   ├── auth
 │   │   │   ├── [...nextauth]
@@ -228,8 +235,11 @@
 │   │   ├── Kitchen
 │   │   │   ├── KitchenForm.tsx
 │   │   │   └── KitchensList.tsx
-│   │   └── RecipeStandard
-│   │       └── RecipeStandardsList.tsx
+│   │   ├── RecipeStandard
+│   │   │   └── RecipeStandardsList.tsx
+│   │   └── Supplier
+│   │       ├── SupplierForm.tsx
+│   │       └── SuppliersList.tsx
 │   ├── Pagination
 │   │   ├── Paginate.tsx
 │   │   ├── Pagination.tsx
@@ -293,7 +303,7 @@
 ### app/
 
 #### app/layout.tsx
-*Language: TypeScript | Size: 1946 bytes*
+*Language: TypeScript | Size: 1945 bytes*
 
 ```typescript
 import '@/styles/globals.scss'
@@ -351,7 +361,7 @@ export default async function RootLayout({
 ### app/(authentication)/
 
 #### app/(authentication)/layout.tsx
-*Language: TypeScript | Size: 329 bytes*
+*Language: TypeScript | Size: 328 bytes*
 
 ```typescript
 import { Container } from 'react-bootstrap'
@@ -1961,29 +1971,19 @@ export default async function Page() {
 ### app/(dashboard)/dishes/
 
 #### app/(dashboard)/dishes/page.tsx
-*Language: TypeScript | Size: 710 bytes*
+*Language: TypeScript | Size: 345 bytes*
 
 ```typescript
+'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import DishesList from '@/components/Page/Dish/DishesList'
-import { getDictionary } from '@/locales/dictionary'
 
 export default async function Page() {
-  // console.log('Fetching dictionary for dishes page')
-  const dict = await getDictionary()
 console.log('Fetching dictionary for dishes page')
   return (
-    // <Card>
-    //   {/* <CardHeader>
-    //     {dict.sidebar.items?.dishes || 'Dishes'}
-    //   </CardHeader> */}
-     
-    // </Card>
     <Card>
-      {/* <CardHeader>{dict.pokemons.title}</CardHeader> */}
       <CardBody>
-        {/* <DishesList /> */}
       </CardBody>
       <DishesList />
     </Card>
@@ -1994,16 +1994,17 @@ console.log('Fetching dictionary for dishes page')
 ### app/(dashboard)/dishes/[id]/edit/
 
 #### app/(dashboard)/dishes/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1034 bytes*
+*Language: TypeScript | Size: 1600 bytes*
 
 ```typescript
-'use server'
+'use client'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
 import DishForm from '@/components/Page/Dish/DishForm'
-import { getDictionary } from '@/locales/dictionary'
+import useDictionary from '@/locales/dictionary-hook'
+import { useState, useEffect } from 'react'
 
 const fetchDish = async (id: string): Promise<Dish | null> => {
   try {
@@ -2017,20 +2018,42 @@ const fetchDish = async (id: string): Promise<Dish | null> => {
   }
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const dish = await fetchDish(params.id)
-  const dict = await getDictionary()
+export default function Page({ params }: { params: { id: string } }) {
 
-  if (!dish) {
-    return notFound()
-  }
+  const dict = useDictionary()
+  const [dish, setDish] = useState<Dish | null>(null)
+  const [notFoundFlag, setNotFoundFlag] = useState(false)
+  
+  useEffect(() => {
+    const loadDish = async () => {
+      const fetchedDish = await fetchDish(params.id)
+      if (!fetchedDish) {
+        setNotFoundFlag(true)
+        return
+      }
+      setNotFoundFlag(false)
+      setDish(fetchedDish)
+    }
+    loadDish()
+  }, [])
 
   return (
     <Card>
-      <CardHeader>{dict.dishes.edit}: {dish.dishName}</CardHeader>
-      <CardBody>
-        <DishForm dish={dish} isEdit />
-      </CardBody>
+      <CardHeader>{dict.dishes.edit}: {dish && dish.dishName}</CardHeader>
+      {
+        !dish ? (
+          <CardBody>
+            <p>{dict.dishes.loading || 'Loading...'}</p>
+          </CardBody>
+        ) : notFoundFlag ? (
+          notFound()
+        ) : (
+          <CardBody>
+            <DishForm dish={dish} />
+          </CardBody>
+        )
+      }
+      
     </Card>
   )
 }
@@ -2063,16 +2086,17 @@ export default function Page() {
 ### app/(dashboard)/ingredients/
 
 #### app/(dashboard)/ingredients/page.tsx
-*Language: TypeScript | Size: 492 bytes*
+*Language: TypeScript | Size: 500 bytes*
 
 ```typescript
+'use client'
 import React from 'react'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import IngredientsList from '@/components/Page/Ingredient/IngredientList'
-import { getDictionary } from '@/locales/dictionary'
+import useDictionary from '@/locales/dictionary-hook'
 
 export default async function Page() {
-  const dict = await getDictionary()
+  const dict = useDictionary()
 
   return (
     <Card>
@@ -2244,6 +2268,98 @@ export default function Page() {
       <CardHeader>Add New Kitchen</CardHeader>
       <CardBody>
         <KitchenForm />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
+### app/(dashboard)/suppliers/
+
+#### app/(dashboard)/suppliers/page.tsx
+*Language: TypeScript | Size: 493 bytes*
+
+```typescript
+import React from 'react'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import { getDictionary } from '@/locales/dictionary'
+import SuppliersList from '@/components/Page/Supplier/SuppliersList'
+
+export default async function Page() {
+  const dict = await getDictionary()
+
+  return (
+    <Card>
+      {/* <CardHeader>
+        {dict.sidebar.items?.ingredients || 'Ingredients'}
+      </CardHeader> */}
+      <CardBody>
+        <SuppliersList />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
+### app/(dashboard)/suppliers/[id]/edit/
+
+#### app/(dashboard)/suppliers/[id]/edit/page.tsx
+*Language: TypeScript | Size: 1066 bytes*
+
+```typescript
+'use server'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import SupplierForm from '@/components/Page/Supplier/SupplierForm'
+import { notFound } from 'next/navigation'
+import { supplierApi } from '@/services'
+import { Supplier } from '@/models'
+
+const fetchSupplier = async (id: string): Promise<Supplier | null> => {
+  try {
+    // Note: This is server-side fetch, need to handle authentication differently
+    console.log('Fetching supplier with id:', id)
+    const response = await supplierApi.getById(id)
+    return response
+  } catch (error) {
+    console.error('Error fetching supplier:', error)
+    return null
+  }
+}
+
+export default async function Page({ params }: { params: { id: string } }) {
+  console.log('Fetching supplier with id:', params.id)
+  const supplier = await fetchSupplier(params.id)
+
+  if (!supplier) {
+    return notFound()
+  }
+
+  return (
+    <Card>
+      <CardHeader>Edit Supplier: {supplier.supplierName}</CardHeader>
+      <CardBody>
+        <SupplierForm supplier={supplier} isEdit />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
+### app/(dashboard)/suppliers/create/
+
+#### app/(dashboard)/suppliers/create/page.tsx
+*Language: TypeScript | Size: 309 bytes*
+
+```typescript
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import SupplierForm from '@/components/Page/Supplier/SupplierForm'
+
+export default function Page() {
+  return (
+    <Card>
+      <CardHeader>Add New Supplier</CardHeader>
+      <CardBody>
+        <SupplierForm />
       </CardBody>
     </Card>
   )
@@ -4375,37 +4491,71 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
 ```
 
 #### components/Page/Dish/DishesList.tsx
-*Language: TypeScript | Size: 4689 bytes*
+*Language: TypeScript | Size: 7233 bytes*
 
 ```typescript
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert, Badge } from 'react-bootstrap'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+  Badge,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
+import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
+import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
+import Pagination from '@/components/Pagination/Pagination'
 
 export default function DishesList() {
-  const [dishes, setDishes] = useState<Dish[]>([])
+  const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
+  const searchParams = useSearchParams()
   const dict = useDictionary()
 
+  // Get query params
+  const page = parseInt(searchParams.get('page') || '1')
+  const perPage = parseInt(searchParams.get('per_page') || '10')
+  const search = searchParams.get('search') || ''
+
   useEffect(() => {
+    setSearchQuery(search)
     loadDishes()
-  }, [])
+  }, [page, perPage, search])
 
   const loadDishes = async () => {
     try {
       setLoading(true)
       setError('')
-      const data = await dishApi.getAll()
-      setDishes(data)
+      
+      // Build query string
+      const params = new URLSearchParams()
+      params.append('page', page.toString())
+      params.append('per_page', perPage.toString())
+      if (search) {
+        params.append('search', search)
+      }
+
+      // Call API with query parameters
+      const data = await dishApi.getAll(`?${params.toString()}`)
+      setDishesData(data)
     } catch (err) {
       setError(dict.dishes?.error_load || 'Failed to load dishes')
       console.error(err)
@@ -4421,99 +4571,154 @@ export default function DishesList() {
 
     try {
       await dishApi.delete(id)
-      await loadDishes()
+      loadDishes()
     } catch (err) {
       setError(dict.dishes?.error_delete || 'Failed to delete dish')
       console.error(err)
     }
   }
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1') // Reset to first page
+    
+    if (searchQuery.trim()) {
+      newSearchParams.set('search', searchQuery.trim())
+    } else {
+      newSearchParams.delete('search')
+    }
+    
+    router.push(`/dishes?${newSearchParams.toString()}`)
+  }
+
+  const handleClearSearch = () => {
+    setSearchQuery('')
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1')
+    newSearchParams.delete('search')
+    router.push(`/dishes?${newSearchParams.toString()}`)
+  }
+
   if (loading) {
-    return <div>{dict.dishes?.loading || 'Loading...'}</div>
+    return (
+      <Card>
+        <CardBody>
+          <div className="text-center py-4">
+            {dict.dishes?.loading || 'Loading...'}
+          </div>
+        </CardBody>
+      </Card>
+    )
   }
 
   return (
-    <>
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      <div className="mb-3 text-end">
-        <Button variant="success" onClick={() => router.push('/dishes/create')}>
-          <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' '}{dict.dishes?.add_new || 'Add New Dish'}
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
+        <span>{dict.dishes?.title || 'Dish Management'}</span>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => router.push('/dishes/create')}
+        >
+          <FontAwesomeIcon icon={faPlus} className="me-2" />
+          {dict.dishes?.add_new || 'Add New Dish'}
         </Button>
-      </div>
+      </CardHeader>
+      <CardBody>
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')}>
+            {error}
+          </Alert>
+        )}
 
-      <Table responsive bordered hover>
-        <thead>
-          <tr className="table-light dark:table-dark">
-            <th>{dict.dishes?.id || 'ID'}</th>
-            <th>{dict.dishes?.name || 'Dish Name'}</th>
-            <th>{dict.dishes?.cooking_method || 'Cooking Method'}</th>
-            <th>{dict.dishes?.group || 'Group'}</th>
-            <th>{dict.dishes?.description || 'Description'}</th>
-            <th>{dict.dishes?.status || 'Status'}</th>
-            <th aria-label="Action" />
-          </tr>
-        </thead>
-        <tbody>
-          {dishes.length === 0 ? (
-            <tr>
-              <td colSpan={7} className="text-center">
-                {dict.dishes?.no_data || 'No dishes found'}
-              </td>
-            </tr>
-          ) : (
-            dishes.map((dish) => (
-              <tr key={dish.dishId}>
-                <td>{dish.dishId}</td>
-                <td>{dish.dishName}</td>
-                <td>{dish.cookingMethod || '-'}</td>
-                <td>{dish.group || '-'}</td>
-                <td className="text-truncate" style={{ maxWidth: '200px' }}>
-                  {dish.description || '-'}
-                </td>
-                <td>
-                  <Badge bg={dish.active ? 'success' : 'secondary'}>
-                    {dish.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
-                  </Badge>
-                </td>
-                <td>
-                  <Dropdown align="end">
-                    <DropdownToggle
-                      as="button"
-                      bsPrefix="btn"
-                      className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
-                      id={`action-${dish.dishId}`}
-                    >
-                      <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
-                    </DropdownToggle>
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="mb-3">
+          <InputGroup>
+            <FormControl
+              type="text"
+              placeholder={dict.common?.search || 'Search dishes...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button variant="primary" type="submit">
+              <FontAwesomeIcon icon={faSearch} className="me-2" />
+              {dict.common?.search || 'Search'}
+            </Button>
+            {search && (
+              <Button variant="secondary" onClick={handleClearSearch}>
+                Clear
+              </Button>
+            )}
+          </InputGroup>
+        </form>
 
-                    <DropdownMenu>
-                      <DropdownItem onClick={() => router.push(`/dishes/${dish.dishId}/edit`)}>
-                        {dict.action.edit}
-                      </DropdownItem>
-                      <DropdownItem onClick={() => router.push(`/recipe-standards/dish/${dish.dishId}`)}>
-                        {dict.dishes?.view_recipe || 'View Recipe'}
-                      </DropdownItem>
-                      <DropdownItem
-                        className="text-danger"
-                        onClick={() => handleDelete(dish.dishId)}
-                      >
-                        {dict.action.delete}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </td>
+        {/* Table */}
+        <div className="table-responsive">
+          <Table hover>
+            <thead>
+              <tr>
+                <th>{dict.dishes?.id || 'Dish ID'}</th>
+                <th>{dict.dishes?.name || 'Dish Name'}</th>
+                <th>{dict.dishes?.cooking_method || 'Cooking Method'}</th>
+                <th>{dict.dishes?.status || 'Status'}</th>
+                <th className="text-end">{dict.common?.actions || 'Actions'}</th>
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
-    </>
+            </thead>
+            <tbody>
+              {dishesData && dishesData.data && dishesData.data.length > 0 ? (
+                dishesData.data.map((dish) => (
+                  <tr key={dish.dishId}>
+                    <td>{dish.dishId}</td>
+                    <td>{dish.dishName}</td>
+                    <td>{dish.cookingMethod}</td>
+                    <td>
+                      <Badge bg={dish.active ? 'success' : 'secondary'}>
+                        {dish.active 
+                          ? (dict.common?.active || 'Active')
+                          : (dict.common?.inactive || 'Inactive')
+                        }
+                      </Badge>
+                    </td>
+                    <td className="text-end">
+                      <Dropdown align="end">
+                        <DropdownToggle
+                          as="button"
+                          className="btn btn-transparent btn-sm p-0"
+                          bsPrefix="none"
+                        >
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem onClick={() => router.push(`/dishes/${dish.dishId}/edit`)}>
+                            {dict.action?.edit || 'Edit'}
+                          </DropdownItem>
+                          <DropdownItem onClick={() => handleDelete(dish.dishId)} className="text-danger">
+                            {dict.action?.delete || 'Delete'}
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-4">
+                    {dict.dishes?.no_data || 'No dishes found'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
+        {dishesData && dishesData.meta && (
+          <Pagination meta={dishesData.meta} />
+        )}
+      </CardBody>
+    </Card>
   )
 }
 ```
@@ -4692,37 +4897,71 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
 ```
 
 #### components/Page/Ingredient/IngredientList.tsx
-*Language: TypeScript | Size: 4482 bytes*
+*Language: TypeScript | Size: 7478 bytes*
 
 ```typescript
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'react-bootstrap'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+  Badge,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
-import { ingredientApi } from '@/services/ingredient-api'
-import { Ingredient } from '@/models/ingredient'
+import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { ingredientApi } from '@/services'
+import { Ingredient } from '@/models'
+import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
+import Pagination from '@/components/Pagination/Pagination'
 
-export default function IngredientsList() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([])
+export default function IngredientesList() {
+  const [ingredientsData, setIngredientesData] = useState<ResourceCollection<Ingredient> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
+  const searchParams = useSearchParams()
   const dict = useDictionary()
 
-  useEffect(() => {
-    loadIngredients()
-  }, [])
+  // Get query params
+  const page = parseInt(searchParams.get('page') || '1')
+  const perPage = parseInt(searchParams.get('per_page') || '10')
+  const search = searchParams.get('search') || ''
 
-  const loadIngredients = async () => {
+  useEffect(() => {
+    setSearchQuery(search)
+    loadIngredientes()
+  }, [page, perPage, search])
+
+  const loadIngredientes = async () => {
     try {
       setLoading(true)
       setError('')
-      const data = await ingredientApi.getAll()
-      setIngredients(data)
+      
+      // Build query string
+      const params = new URLSearchParams()
+      params.append('page', page.toString())
+      params.append('per_page', perPage.toString())
+      if (search) {
+        params.append('search', search)
+      }
+
+      // Call API with query parameters
+      const data = await ingredientApi.getAll(`?${params.toString()}`)
+      setIngredientesData(data)
     } catch (err) {
       setError(dict.ingredients?.error_load || 'Failed to load ingredients')
       console.error(err)
@@ -4738,90 +4977,152 @@ export default function IngredientsList() {
 
     try {
       await ingredientApi.delete(id)
-      await loadIngredients()
+      loadIngredientes()
     } catch (err) {
       setError(dict.ingredients?.error_delete || 'Failed to delete ingredient')
       console.error(err)
     }
   }
 
-  if (loading) {
-    return <div>{dict.ingredients?.loading || 'Loading...'}</div>
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1') // Reset to first page
+    
+    if (searchQuery.trim()) {
+      newSearchParams.set('search', searchQuery.trim())
+    } else {
+      newSearchParams.delete('search')
+    }
+    
+    router.push(`/ingredients?${newSearchParams.toString()}`)
   }
 
+  const handleClearSearch = () => {
+    setSearchQuery('')
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1')
+    newSearchParams.delete('search')
+    router.push(`/ingredients?${newSearchParams.toString()}`)
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardBody>
+          <div className="text-center py-4">
+            {dict.ingredients?.loading || 'Loading...'}
+          </div>
+        </CardBody>
+      </Card>
+    )
+  }
+
+
   return (
-    <>
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      <div className="mb-3 text-end">
-        <Button variant="success" onClick={() => router.push('/ingredients/create')}>
-          <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' '}{dict.ingredients?.add_new || 'Add New'}
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
+        <span>{dict.ingredients?.title || 'Ingredient Management'}</span>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => router.push('/ingredients/create')}
+        >
+          <FontAwesomeIcon icon={faPlus} className="me-2" />
+          {dict.ingredients?.add_new || 'Add New Ingredient'}
         </Button>
-      </div>
+      </CardHeader>
+      <CardBody>
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')}>
+            {error}
+          </Alert>
+        )}
 
-      <Table responsive bordered hover>
-        <thead>
-          <tr className="table-light dark:table-dark">
-            <th>{dict.ingredients?.id || 'ID'}</th>
-            <th>{dict.ingredients?.name || 'Name'}</th>
-            <th>{dict.ingredients?.property || 'Property'}</th>
-            <th>{dict.ingredients?.material_group || 'Material Group'}</th>
-            <th>{dict.ingredients?.unit || 'Unit'}</th>
-            <th>{dict.ingredients?.created_date || 'Created Date'}</th>
-            <th aria-label="Action" />
-          </tr>
-        </thead>
-        <tbody>
-          {ingredients.length === 0 ? (
-            <tr>
-              <td colSpan={7} className="text-center">
-                {dict.ingredients?.no_data || 'No ingredients found'}
-              </td>
-            </tr>
-          ) : (
-            ingredients.map((ingredient) => (
-              <tr key={ingredient.ingredientId}>
-                <td>{ingredient.ingredientId}</td>
-                <td>{ingredient.ingredientName}</td>
-                <td>{ingredient.property || '-'}</td>
-                <td>{ingredient.materialGroup || '-'}</td>
-                <td>{ingredient.unit}</td>
-                <td>{new Date(ingredient.createdDate).toLocaleDateString()}</td>
-                <td>
-                  <Dropdown align="end">
-                    <DropdownToggle
-                      as="button"
-                      bsPrefix="btn"
-                      className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
-                      id={`action-${ingredient.ingredientId}`}
-                    >
-                      <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
-                    </DropdownToggle>
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="mb-3">
+          <InputGroup>
+            <FormControl
+              type="text"
+              placeholder={dict.common?.search || 'Search ingredients...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button variant="primary" type="submit">
+              <FontAwesomeIcon icon={faSearch} className="me-2" />
+              {dict.common?.search || 'Search'}
+            </Button>
+            {search && (
+              <Button variant="secondary" onClick={handleClearSearch}>
+                Clear
+              </Button>
+            )}
+          </InputGroup>
+        </form>
 
-                    <DropdownMenu>
-                      <DropdownItem onClick={() => router.push(`/ingredients/${ingredient.ingredientId}/edit`)}>
-                        {dict.action.edit}
-                      </DropdownItem>
-                      <DropdownItem
-                        className="text-danger"
-                        onClick={() => handleDelete(ingredient.ingredientId)}
-                      >
-                        {dict.action.delete}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </td>
+        {/* Table */}
+        <div className="table-responsive">
+          <Table hover>
+            <thead>
+              <tr>
+                <th>{dict.ingredients?.id || 'ID'}</th>
+                <th>{dict.ingredients?.name || 'Name'}</th>
+                <th>{dict.ingredients?.property || 'Property'}</th>
+                <th>{dict.ingredients?.material_group || 'Material Group'}</th>
+                <th>{dict.ingredients?.unit || 'Unit'}</th>
+                <th>{dict.ingredients?.created_date || 'Created Date'}</th>
+                <th aria-label="Action" />
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
-    </>
+            </thead>
+            <tbody>
+              {ingredientsData && ingredientsData.data && ingredientsData.data.length > 0 ? (
+                ingredientsData.data.map((ingredient) => (
+                  <tr key={ingredient.ingredientId}>
+                      <td>{ingredient.ingredientId}</td>
+                      <td>{ingredient.ingredientName}</td>
+                      <td>{ingredient.property || '-'}</td>
+                      <td>{ingredient.materialGroup || '-'}</td>
+                      <td>{ingredient.unit}</td>
+                      <td>{new Date(ingredient.createdDate).toLocaleDateString()}</td>
+                    <td className="text-end">
+                      <Dropdown align="end">
+                        <DropdownToggle
+                          as="button"
+                          className="btn btn-transparent btn-sm p-0"
+                          bsPrefix="none"
+                        >
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem onClick={() => router.push(`/ingredients/${ingredient.ingredientId}/edit`)}>
+                            {dict.action?.edit || 'Edit'}
+                          </DropdownItem>
+                          <DropdownItem onClick={() => handleDelete(ingredient.ingredientId)} className="text-danger">
+                            {dict.action?.delete || 'Delete'}
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-4">
+                    {dict.ingredients?.no_data || 'No ingredients found'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
+        {ingredientsData && ingredientsData.meta && (
+          <Pagination meta={ingredientsData.meta} />
+        )}
+      </CardBody>
+    </Card>
   )
 }
 ```
@@ -5012,37 +5313,71 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
 ```
 
 #### components/Page/Kitchen/KitchensList.tsx
-*Language: TypeScript | Size: 4525 bytes*
+*Language: TypeScript | Size: 7532 bytes*
 
 ```typescript
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert, Badge } from 'react-bootstrap'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+  Badge,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
+import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { kitchenApi } from '@/services'
 import { Kitchen } from '@/models'
+import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
+import Pagination from '@/components/Pagination/Pagination'
 
-export default function KitchensList() {
-  const [kitchens, setKitchens] = useState<Kitchen[]>([])
+export default function KitchenesList() {
+  const [kitchensData, setKitchenesData] = useState<ResourceCollection<Kitchen> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
+  const searchParams = useSearchParams()
   const dict = useDictionary()
 
-  useEffect(() => {
-    loadKitchens()
-  }, [])
+  // Get query params
+  const page = parseInt(searchParams.get('page') || '1')
+  const perPage = parseInt(searchParams.get('per_page') || '10')
+  const search = searchParams.get('search') || ''
 
-  const loadKitchens = async () => {
+  useEffect(() => {
+    setSearchQuery(search)
+    loadKitchenes()
+  }, [page, perPage, search])
+
+  const loadKitchenes = async () => {
     try {
       setLoading(true)
       setError('')
-      const data = await kitchenApi.getAll()
-      setKitchens(data)
+      
+      // Build query string
+      const params = new URLSearchParams()
+      params.append('page', page.toString())
+      params.append('per_page', perPage.toString())
+      if (search) {
+        params.append('search', search)
+      }
+
+      // Call API with query parameters
+      const data = await kitchenApi.getAll(`?${params.toString()}`)
+      setKitchenesData(data)
     } catch (err) {
       setError(dict.kitchens?.error_load || 'Failed to load kitchens')
       console.error(err)
@@ -5058,94 +5393,156 @@ export default function KitchensList() {
 
     try {
       await kitchenApi.delete(id)
-      await loadKitchens()
+      loadKitchenes()
     } catch (err) {
       setError(dict.kitchens?.error_delete || 'Failed to delete kitchen')
       console.error(err)
     }
   }
 
-  if (loading) {
-    return <div>{dict.kitchens?.loading || 'Loading...'}</div>
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1') // Reset to first page
+    
+    if (searchQuery.trim()) {
+      newSearchParams.set('search', searchQuery.trim())
+    } else {
+      newSearchParams.delete('search')
+    }
+    
+    router.push(`/kitchens?${newSearchParams.toString()}`)
   }
 
+  const handleClearSearch = () => {
+    setSearchQuery('')
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1')
+    newSearchParams.delete('search')
+    router.push(`/kitchens?${newSearchParams.toString()}`)
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardBody>
+          <div className="text-center py-4">
+            {dict.kitchens?.loading || 'Loading...'}
+          </div>
+        </CardBody>
+      </Card>
+    )
+  }
+
+
   return (
-    <>
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      <div className="mb-3 text-end">
-        <Button variant="success" onClick={() => router.push('/kitchens/create')}>
-          <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' '}{dict.kitchens?.add_new || 'Add New Kitchen'}
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
+        <span>{dict.kitchens?.title || 'Kitchen Management'}</span>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => router.push('/kitchens/create')}
+        >
+          <FontAwesomeIcon icon={faPlus} className="me-2" />
+          {dict.kitchens?.add_new || 'Add New Kitchen'}
         </Button>
-      </div>
+      </CardHeader>
+      <CardBody>
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')}>
+            {error}
+          </Alert>
+        )}
 
-      <Table responsive bordered hover>
-        <thead>
-          <tr className="table-light dark:table-dark">
-            <th>{dict.kitchens?.id || 'ID'}</th>
-            <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
-            <th>{dict.kitchens?.address || 'Address'}</th>
-            <th>{dict.kitchens?.phone || 'Phone'}</th>
-            <th>{dict.kitchens?.status || 'Status'}</th>
-            <th>{dict.ingredients?.created_date || 'Created Date'}</th>
-            <th aria-label="Action" />
-          </tr>
-        </thead>
-        <tbody>
-          {kitchens.length === 0 ? (
-            <tr>
-              <td colSpan={7} className="text-center">
-                {dict.kitchens?.no_data || 'No kitchens found'}
-              </td>
-            </tr>
-          ) : (
-            kitchens.map((kitchen) => (
-              <tr key={kitchen.kitchenId}>
-                <td>{kitchen.kitchenId}</td>
-                <td>{kitchen.kitchenName}</td>
-                <td>{kitchen.address || '-'}</td>
-                <td>{kitchen.phone || '-'}</td>
-                <td>
-                  <Badge bg={kitchen.active ? 'success' : 'secondary'}>
-                    {kitchen.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
-                  </Badge>
-                </td>
-                <td>{new Date(kitchen.createdDate).toLocaleDateString()}</td>
-                <td>
-                  <Dropdown align="end">
-                    <DropdownToggle
-                      as="button"
-                      bsPrefix="btn"
-                      className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
-                      id={`action-${kitchen.kitchenId}`}
-                    >
-                      <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
-                    </DropdownToggle>
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="mb-3">
+          <InputGroup>
+            <FormControl
+              type="text"
+              placeholder={dict.common?.search || 'Search kitchens...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button variant="primary" type="submit">
+              <FontAwesomeIcon icon={faSearch} className="me-2" />
+              {dict.common?.search || 'Search'}
+            </Button>
+            {search && (
+              <Button variant="secondary" onClick={handleClearSearch}>
+                Clear
+              </Button>
+            )}
+          </InputGroup>
+        </form>
 
-                    <DropdownMenu>
-                      <DropdownItem onClick={() => router.push(`/kitchens/${kitchen.kitchenId}/edit`)}>
-                        {dict.action.edit}
-                      </DropdownItem>
-                      <DropdownItem
-                        className="text-danger"
-                        onClick={() => handleDelete(kitchen.kitchenId)}
-                      >
-                        {dict.action.delete}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </td>
+        {/* Table */}
+        <div className="table-responsive">
+          <Table hover>
+            <thead>
+              <tr>
+                  <th>{dict.kitchens?.id || 'ID'}</th>
+                  <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
+                  <th>{dict.kitchens?.address || 'Address'}</th>
+                  <th>{dict.kitchens?.phone || 'Phone'}</th>
+                  <th>{dict.kitchens?.status || 'Status'}</th>
+                  <th>{dict.common?.created_date || 'Created Date'}</th>
+                  <th aria-label="Action" />
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
-    </>
+            </thead>
+            <tbody>
+              {kitchensData && kitchensData.data && kitchensData.data.length > 0 ? (
+                kitchensData.data.map((kitchen) => (
+                  <tr key={kitchen.kitchenId}>
+                      <td>{kitchen.kitchenId}</td>
+                      <td>{kitchen.kitchenName}</td>
+                      <td>{kitchen.address || '-'}</td>
+                      <td>{kitchen.phone || '-'}</td>
+                      <td>
+                        <Badge bg={kitchen.active ? 'success' : 'secondary'}>
+                          {kitchen.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
+                        </Badge>
+                      </td>
+                <td>{new Date(kitchen.createdDate).toLocaleDateString()}</td>
+                    <td className="text-end">
+                      <Dropdown align="end">
+                        <DropdownToggle
+                          as="button"
+                          className="btn btn-transparent btn-sm p-0"
+                          bsPrefix="none"
+                        >
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem onClick={() => router.push(`/kitchens/${kitchen.kitchenId}/edit`)}>
+                            {dict.action?.edit || 'Edit'}
+                          </DropdownItem>
+                          <DropdownItem onClick={() => handleDelete(kitchen.kitchenId)} className="text-danger">
+                            {dict.action?.delete || 'Delete'}
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-4">
+                    {dict.kitchens?.no_data || 'No kitchens found'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
+        {kitchensData && kitchensData.meta && (
+          <Pagination meta={kitchensData.meta} />
+        )}
+      </CardBody>
+    </Card>
   )
 }
 ```
@@ -5295,6 +5692,420 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
         </tbody>
       </Table>
     </>
+  )
+}
+```
+
+### components/Page/Supplier/
+
+#### components/Page/Supplier/SupplierForm.tsx
+*Language: TypeScript | Size: 5023 bytes*
+
+```typescript
+'use client'
+
+import React, { useState } from 'react'
+import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import { useRouter } from 'next/navigation'
+import { supplierApi } from '@/services'
+import { Supplier, CreateSupplierInput, UpdateSupplierInput } from '@/models/supplier'
+import useDictionary from '@/locales/dictionary-hook'
+
+interface SupplierFormProps {
+  supplier?: Supplier
+  isEdit?: boolean
+}
+
+export default function SupplierForm({ supplier, isEdit = false }: SupplierFormProps) {
+  const router = useRouter()
+  const dict = useDictionary()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const [formData, setFormData] = useState({
+    supplierId: supplier?.supplierId || '',
+    supplierName: supplier?.supplierName || '',
+    address: supplier?.address || '',
+    phone: supplier?.phone || '',
+    zaloLink: supplier?.zaloLink || '',
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      if (isEdit && supplier) {
+        const updateData: UpdateSupplierInput = {
+          supplierName: formData.supplierName,
+          address: formData.address,
+          phone: formData.phone,
+          zaloLink: formData.zaloLink,
+        }
+        await supplierApi.update(supplier.supplierId, updateData)
+        setSuccess(dict.common?.success_update || 'Supplier updated successfully')
+      } else {
+        const createData: CreateSupplierInput = {
+          supplierId: formData.supplierId,
+          supplierName: formData.supplierName,
+          address: formData.address,
+          phone: formData.phone,
+          zaloLink: formData.zaloLink,
+        }
+        await supplierApi.create(createData)
+        setSuccess(dict.common?.success_create || 'Supplier created successfully')
+      }
+
+      setTimeout(() => {
+        router.push('/suppliers')
+      }, 1500)
+    } catch (err) {
+      setError(isEdit ? 
+        (dict.common?.error_update || 'Failed to update supplier') : 
+        (dict.common?.error_create || 'Failed to create supplier')
+      )
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'active' ? value === 'true' : value
+    }))
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  return (
+    <>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+          {success}
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit}>
+        <FormGroup className="mb-3">
+          <FormLabel>{dict.suppliers?.id || 'Supplier ID'}</FormLabel>
+          <FormControl
+            type="text"
+            name="supplierId"
+            value={formData.supplierId}
+            onChange={handleChange}
+            disabled={isEdit}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>{dict.suppliers?.name || 'Supplier Name'}</FormLabel>
+          <FormControl
+            type="text"
+            name="supplierName"
+            value={formData.supplierName}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>{dict.suppliers?.address || 'Address'}</FormLabel>
+          <FormControl
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+        <FormGroup className="mb-3">
+          <FormLabel>{dict.suppliers?.phone || 'Phone'}</FormLabel>
+          <FormControl
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+         <FormGroup className="mb-3">
+          <FormLabel>{dict.suppliers?.zalo_link || 'Zalo link'}</FormLabel>
+          <FormControl
+            type="text"
+            name="zaloLink"
+            value={formData.zaloLink}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+        <Button
+          type="submit"
+          variant="success"
+          disabled={loading}
+          className="me-3"
+        >
+          {loading ? dict.action.submitting : dict.action.submit}
+        </Button>
+
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => router.push('/suppliers')}
+        >
+          {dict.common?.cancel || 'Cancel'}
+        </Button>
+      </Form>
+    </>
+  )
+}
+```
+
+#### components/Page/Supplier/SuppliersList.tsx
+*Language: TypeScript | Size: 7364 bytes*
+
+```typescript
+'use client'
+
+import React, { useEffect, useState } from 'react'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+  Badge,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { supplierApi } from '@/services'
+import { Supplier } from '@/models'
+import { ResourceCollection } from '@/models/resource'
+import useDictionary from '@/locales/dictionary-hook'
+import Pagination from '@/components/Pagination/Pagination'
+
+export default function SupplieresList() {
+  const [suppliersData, setSupplieresData] = useState<ResourceCollection<Supplier> | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const dict = useDictionary()
+
+  // Get query params
+  const page = parseInt(searchParams.get('page') || '1')
+  const perPage = parseInt(searchParams.get('per_page') || '10')
+  const search = searchParams.get('search') || ''
+
+  useEffect(() => {
+    setSearchQuery(search)
+    loadSupplieres()
+  }, [page, perPage, search])
+
+  const loadSupplieres = async () => {
+    try {
+      setLoading(true)
+      setError('')
+      
+      // Build query string
+      const params = new URLSearchParams()
+      params.append('page', page.toString())
+      params.append('per_page', perPage.toString())
+      if (search) {
+        params.append('search', search)
+      }
+
+      // Call API with query parameters
+      const data = await supplierApi.getAll(`?${params.toString()}`)
+      setSupplieresData(data)
+    } catch (err) {
+      setError(dict.suppliers?.error_load || 'Failed to load suppliers')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm(dict.suppliers?.confirm_delete || 'Are you sure you want to delete this supplier?')) {
+      return
+    }
+
+    try {
+      await supplierApi.delete(id)
+      loadSupplieres()
+    } catch (err) {
+      setError(dict.suppliers?.error_delete || 'Failed to delete supplier')
+      console.error(err)
+    }
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1') // Reset to first page
+    
+    if (searchQuery.trim()) {
+      newSearchParams.set('search', searchQuery.trim())
+    } else {
+      newSearchParams.delete('search')
+    }
+    
+    router.push(`/suppliers?${newSearchParams.toString()}`)
+  }
+
+  const handleClearSearch = () => {
+    setSearchQuery('')
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set('page', '1')
+    newSearchParams.delete('search')
+    router.push(`/suppliers?${newSearchParams.toString()}`)
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardBody>
+          <div className="text-center py-4">
+            {dict.suppliers?.loading || 'Loading...'}
+          </div>
+        </CardBody>
+      </Card>
+    )
+  }
+
+
+  return (
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
+        <span>{dict.suppliers?.title || 'Supplier Management'}</span>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => router.push('/suppliers/create')}
+        >
+          <FontAwesomeIcon icon={faPlus} className="me-2" />
+          {dict.suppliers?.add_new || 'Add New Supplier'}
+        </Button>
+      </CardHeader>
+      <CardBody>
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="mb-3">
+          <InputGroup>
+            <FormControl
+              type="text"
+              placeholder={dict.common?.search || 'Search suppliers...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button variant="primary" type="submit">
+              <FontAwesomeIcon icon={faSearch} className="me-2" />
+              {dict.common?.search || 'Search'}
+            </Button>
+            {search && (
+              <Button variant="secondary" onClick={handleClearSearch}>
+                Clear
+              </Button>
+            )}
+          </InputGroup>
+        </form>
+
+        {/* Table */}
+        <div className="table-responsive">
+          <Table hover>
+            <thead>
+              <tr>
+                  <th>{dict.suppliers?.id || 'ID'}</th>
+                  <th>{dict.suppliers?.name || 'Supplier Name'}</th>
+                  <th>{dict.suppliers?.address || 'Address'}</th>
+                  <th>{dict.suppliers?.phone || 'Phone'}</th>
+                  <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
+                  <th>{dict.common?.created_date || 'Created Date'}</th>
+                  <th aria-label="Action" />
+              </tr>
+            </thead>
+            <tbody>
+              {suppliersData && suppliersData.data && suppliersData.data.length > 0 ? (
+                suppliersData.data.map((supplier) => (
+                  <tr key={supplier.supplierId}>
+                      <td>{supplier.supplierId}</td>
+                      <td>{supplier.supplierName}</td>
+                      <td>{supplier.address || '-'}</td>
+                      <td>{supplier.phone || '-'}</td>
+                      <td>{supplier.zaloLink || '-'}</td>
+                <td>{new Date(supplier.createdDate).toLocaleDateString()}</td>
+                    <td className="text-end">
+                      <Dropdown align="end">
+                        <DropdownToggle
+                          as="button"
+                          className="btn btn-transparent btn-sm p-0"
+                          bsPrefix="none"
+                        >
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem onClick={() => router.push(`/suppliers/${supplier.supplierId}/edit`)}>
+                            {dict.action?.edit || 'Edit'}
+                          </DropdownItem>
+                          <DropdownItem onClick={() => handleDelete(supplier.supplierId)} className="text-danger">
+                            {dict.action?.delete || 'Delete'}
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-4">
+                    {dict.suppliers?.no_data || 'No suppliers found'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
+        {suppliersData && suppliersData.meta && (
+          <Pagination meta={suppliersData.meta} />
+        )}
+      </CardBody>
+    </Card>
   )
 }
 ```
@@ -5686,7 +6497,7 @@ export const getDictionary = async () => {
 ### locales/en/
 
 #### locales/en/lang.json
-*Language: JSON | Size: 12284 bytes*
+*Language: JSON | Size: 12492 bytes*
 
 ```json
 {
@@ -6122,7 +6933,12 @@ export const getDictionary = async () => {
     "filter": "Filter",
     "export": "Export",
     "import": "Import",
-    "actions": "Actions"
+    "actions": "Actions",
+    "created_date": "Created Date",
+    "success_update": "Updated successfully",
+    "success_create": "Created successfully",
+    "error_update": "Failed to update",
+    "error_create": "Failed to create"
   }
 }
 ```
@@ -6130,7 +6946,7 @@ export const getDictionary = async () => {
 ### locales/vi/
 
 #### locales/vi/lang.json
-*Language: JSON | Size: 14273 bytes*
+*Language: JSON | Size: 14494 bytes*
 
 ```json
 {
@@ -6582,7 +7398,12 @@ export const getDictionary = async () => {
     "filter": "Lọc",
     "export": "Xuất",
     "import": "Nhập",
-    "actions": "Hành động"
+    "actions": "Hành động",
+    "created_date": "Ngày tạo",
+    "success_update": "Cập nhật thành công",
+    "success_create": "Tạo thành công",
+    "error_update": "Cập nhật thất bại",
+    "error_create": "Tạo thất bại"
   }
 }
 ```
@@ -6983,15 +7804,16 @@ export default async function middleware(request: NextRequest, event: NextFetchE
 ### services/
 
 #### services/dish-api.ts
-*Language: TypeScript | Size: 868 bytes*
+*Language: TypeScript | Size: 997 bytes*
 
 ```typescript
 import { apiClient } from '@/utils/api_client'
 import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
+import { ResourceCollection } from '@/models/resource'
 
 export const dishApi = {
-  getAll: async (): Promise<Dish[]> => {
-    return apiClient<Dish[]>('/api/dishes')
+  getAll: async (queryString: string = ''): Promise<ResourceCollection<Dish>> => {
+    return apiClient<ResourceCollection<Dish>>(`/api/dishes${queryString}`)
   },
 
   getById: async (id: string): Promise<Dish> => {
@@ -7021,7 +7843,7 @@ export const dishApi = {
 ```
 
 #### services/index.ts
-*Language: TypeScript | Size: 3850 bytes*
+*Language: TypeScript | Size: 3662 bytes*
 
 ```typescript
 import { apiClient } from '@/utils/api_client'
@@ -7032,11 +7854,14 @@ import {
   Supplier, CreateSupplierInput, UpdateSupplierInput,
   RecipeStandard, CreateRecipeStandardInput, UpdateRecipeStandardInput
 } from '@/models'
+import { ResourceCollection } from '@/models/resource'
 
 // Ingredients API
 export const ingredientApi = {
-  getAll: () => apiClient<Ingredient[]>('/api/ingredients'),
-  getById: (id: string) => apiClient<Ingredient>(`/api/ingredients/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Ingredient>>(`/api/ingredients${queryString}`),
+  getById: (id: string) => 
+    apiClient<Ingredient>(`/api/ingredients/${id}`),
   create: (data: CreateIngredientInput) => 
     apiClient<Ingredient>('/api/ingredients', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateIngredientInput) => 
@@ -7047,8 +7872,10 @@ export const ingredientApi = {
 
 // Kitchens API
 export const kitchenApi = {
-  getAll: () => apiClient<Kitchen[]>('/api/kitchens'),
-  getById: (id: string) => apiClient<Kitchen>(`/api/kitchens/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Kitchen>>(`/api/kitchens${queryString}`),
+  getById: (id: string) => 
+    apiClient<Kitchen>(`/api/kitchens/${id}`),
   create: (data: CreateKitchenInput) => 
     apiClient<Kitchen>('/api/kitchens', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateKitchenInput) => 
@@ -7057,10 +7884,12 @@ export const kitchenApi = {
     apiClient<{ message: string }>(`/api/kitchens/${id}`, { method: 'DELETE' }),
 }
 
-// Dishes API
+// Dishes API with pagination support
 export const dishApi = {
-  getAll: () => apiClient<Dish[]>('/api/dishes'),
-  getById: (id: string) => apiClient<Dish>(`/api/dishes/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Dish>>(`/api/dishes${queryString}`),
+  getById: (id: string) => 
+    apiClient<Dish>(`/api/dishes/${id}`),
   create: (data: CreateDishInput) => 
     apiClient<Dish>('/api/dishes', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateDishInput) => 
@@ -7071,8 +7900,10 @@ export const dishApi = {
 
 // Suppliers API
 export const supplierApi = {
-  getAll: () => apiClient<Supplier[]>('/api/suppliers'),
-  getById: (id: string) => apiClient<Supplier>(`/api/suppliers/${id}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<Supplier>>(`/api/suppliers${queryString}`),
+  getById: (id: string) => 
+    apiClient<Supplier>(`/api/suppliers/${id}`),
   create: (data: CreateSupplierInput) => 
     apiClient<Supplier>('/api/suppliers', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: UpdateSupplierInput) => 
@@ -7083,28 +7914,16 @@ export const supplierApi = {
 
 // Recipe Standards API
 export const recipeStandardApi = {
-  getAll: () => apiClient<RecipeStandard[]>('/api/recipe-standards'),
-  getById: (id: number) => apiClient<RecipeStandard>(`/api/recipe-standards/${id}`),
-  getByDish: (dishId: string) => 
-    apiClient<RecipeStandard[]>(`/api/recipe-standards/dish/${dishId}`),
+  getAll: (queryString: string = '') => 
+    apiClient<ResourceCollection<RecipeStandard>>(`/api/recipe-standards${queryString}`),
+  getById: (id: string) => 
+    apiClient<RecipeStandard>(`/api/recipe-standards/${id}`),
   create: (data: CreateRecipeStandardInput) => 
     apiClient<RecipeStandard>('/api/recipe-standards', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: number, data: UpdateRecipeStandardInput) => 
+  update: (id: string, data: UpdateRecipeStandardInput) => 
     apiClient<RecipeStandard>(`/api/recipe-standards/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: number) => 
-    apiClient<{ message: string }>(`/api/recipe-standards/${id}`, { method: 'DELETE' }),
-}
-
-// Users API
-export const userApi = {
-  getAll: () => apiClient<any[]>('/api/users'),
-  getById: (id: string) => apiClient<any>(`/api/users/${id}`),
-  create: (data: any) => 
-    apiClient<any>('/api/users', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: any) => 
-    apiClient<any>(`/api/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: string) => 
-    apiClient<{ message: string }>(`/api/users/${id}`, { method: 'DELETE' }),
+    apiClient<{ message: string }>(`/api/recipe-standards/${id}`, { method: 'DELETE' }),
 }
 ```
 
@@ -7566,7 +8385,7 @@ export type SearchParams = {
 ### utils/
 
 #### utils/api_client.ts
-*Language: TypeScript | Size: 2823 bytes*
+*Language: TypeScript | Size: 2859 bytes*
 
 ```typescript
 'use server'
@@ -7595,6 +8414,7 @@ async function apiClient<T>(
 
   if (!session) {
     console.log('No session found')
+    window.location.href = '/login'
     throw new ApiError(401, t('error.unauthorized'))
   } else {
   }

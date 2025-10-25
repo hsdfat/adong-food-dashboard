@@ -7,6 +7,8 @@ import {
   RecipeStandard, CreateRecipeStandardInput, UpdateRecipeStandardInput
 } from '@/models'
 import { ResourceCollection } from '@/models/resource'
+import {recipeStandardApi} from './recipe-standard'
+import exp from 'constants'
 
 // Ingredients API
 export const ingredientApi = {
@@ -64,16 +66,4 @@ export const supplierApi = {
     apiClient<{ message: string }>(`/api/suppliers/${id}`, { method: 'DELETE' }),
 }
 
-// Recipe Standards API
-export const recipeStandardApi = {
-  getAll: (queryString: string = '') => 
-    apiClient<ResourceCollection<RecipeStandard>>(`/api/recipe-standards${queryString}`),
-  getById: (id: string) => 
-    apiClient<RecipeStandard>(`/api/recipe-standards/${id}`),
-  create: (data: CreateRecipeStandardInput) => 
-    apiClient<RecipeStandard>('/api/recipe-standards', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: UpdateRecipeStandardInput) => 
-    apiClient<RecipeStandard>(`/api/recipe-standards/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
-    apiClient<{ message: string }>(`/api/recipe-standards/${id}`, { method: 'DELETE' }),
-}
+export { recipeStandardApi }
