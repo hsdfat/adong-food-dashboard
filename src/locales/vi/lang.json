@@ -41,7 +41,9 @@
     "reset": "Đặt lại",
     "cancel": "Hủy",
     "save": "Lưu",
-    "saving": "Đang lưu..."
+    "saving": "Đang lưu...",
+    "add": "Thêm mới",
+    "confirm": "Xác nhận"
   },
   "theme": {
     "light": "Sáng",

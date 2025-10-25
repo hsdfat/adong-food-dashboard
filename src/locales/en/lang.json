@@ -39,9 +39,11 @@
     "submit": "Submit",
     "submitting": "Submitting...",
     "reset": "Reset",
-    "cancel":"Cancel",
-    "save":"Save",
-    "saving":"Saving..."
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "add": "Add",
+    "confirm": "Confirm"
   },
   "theme": {
     "light": "Light",
@@ -348,8 +350,7 @@
     "error_update": "Failed to update ingredient",
     "success_create": "Ingredient created successfully",
     "success_update": "Ingredient updated successfully",
-    "edit":"Edit"
-  
+    "edit": "Edit"
   },
   "kitchens": {
     "title": "Kitchen Management",
