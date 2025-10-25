@@ -6,6 +6,8 @@ export interface RecipeStandard {
   standardId: number
   dishId: string
   ingredientId: string
+  dishName: string
+  ingredientName: string
   unit: string
   standardPer1: number
   note?: string

@@ -392,7 +392,8 @@
     "group": "Group",
     "description": "Description",
     "active": "Active",
-    "edit": "Edit"
+    "edit": "Edit",
+    "recipe_standards": "Recipe"
   },
   "suppliers": {
     "title": "Supplier Management",
@@ -410,6 +411,7 @@
     "error_delete": "Failed to delete supplier"
   },
   "recipe_standards": {
+    "add": "Add Recipe Standard",
     "dishId": "Dish Id",
     "ingredientId": "Ingredient Id",
     "title": "Recipe Standards",

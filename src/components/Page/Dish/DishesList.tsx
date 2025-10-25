@@ -209,6 +209,16 @@ export default function DishesList() {
                         <DropdownMenu>
                           <DropdownItem
                             onClick={() =>
+                              router.push(
+                                `/dishes/${dish.dishId}/recipe-standard`,
+                              )
+                            }
+                          >
+                            {dict.dishes?.recipe_standards ||
+                              'Recipe Standards'}
+                          </DropdownItem>
+                          <DropdownItem
+                            onClick={() =>
                               router.push(`/dishes/${dish.dishId}/edit`)
                             }
                           >

@@ -41,8 +41,10 @@ export const recipeStandardApi = {
 
   // Get recipe standards by dish ID
   getByDish: async (dishId: string): Promise<RecipeStandard[]> => {
-    const response = await apiClient<RecipeStandard[]>(`${BASE_URL}/dish/${dishId}`)
-    return response
+    const response = await apiClient<RecipeStandardsResponse>(
+      `${BASE_URL}/dish/${dishId}`,
+    )
+    return response.data
   },
 
   // Create new recipe standard

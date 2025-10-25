@@ -39,9 +39,9 @@
     "submit": "Gửi",
     "submitting": "Đang gửi...",
     "reset": "Đặt lại",
-    "cancel":"Hủy",
-    "save":"Lưu",
-    "saving":"Đang lưu..."
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "saving": "Đang lưu..."
   },
   "theme": {
     "light": "Sáng",
@@ -347,7 +347,7 @@
       "by_ingredient": "Theo nguyên liệu"
     }
   },
- 
+
   "ingredients": {
     "loading": "Đang tải...",
     "no_data": "Không tìm thấy nguyên liệu",
@@ -369,7 +369,7 @@
     "property": "Tính chất",
     "material_group": "Nhóm vật liệu",
     "created_date": "Ngày tạo",
-    "edit":"Sửa"
+    "edit": "Sửa"
   },
   "kitchens": {
     "loading": "Đang tải...",
@@ -408,7 +408,8 @@
     "group": "Nhóm",
     "description": "Mô tả",
     "active": "Hoạt động",
-    "edit": "Cập nhật"
+    "edit": "Cập nhật",
+    "recipe_standards": "Định mức công thức"
   },
   "suppliers": {
     "title": "Quản lý nhà cung cấp",
@@ -426,7 +427,8 @@
     "error_delete": "Không thể xóa nhà cung cấp"
   },
   "recipe_standards": {
-    "dishId": "Mã cong",
+    "add": "Thêm định mức công thức",
+    "dishId": "Mã công thức",
     "title": "Định mức công thức",
     "add_new": "Thêm định mức mới",
     "dish": "Món ăn",

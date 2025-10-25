@@ -1,27 +1,16 @@
 # ProjectDump Analysis
 
-**Generated on:** 2025-10-24 06:52:28
+**Generated on:** 2025-10-26 00:25:25
 **Project Path:** src/
 
 ## Project Summary
 
-- **Primary Language:** TypeScript
-- **Total Files:** 96
-- **Processed Files:** 96
-- **Project Size:** 237.16 KB
+- **Primary Language:** Go
+- **Total Files:** 102
+- **Processed Files:** 102
+- **Project Size:** 262.46 KB
 
 ## Detected Technologies
-
-### TypeScript (100.0% confidence)
-*TypeScript - JavaScript with static typing*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 82 more files
 
 ### Go (100.0% confidence)
 *Go programming language*
@@ -32,29 +21,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 73 more files
-
-### Python (100.0% confidence)
-*Python programming language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 71 more files
-
-### JavaScript (100.0% confidence)
-*JavaScript runtime and ecosystem*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 83 more files
+- ... and 80 more files
 
 ### HTML (100.0% confidence)
 *HyperText Markup Language*
@@ -62,21 +29,10 @@
 **Related files:**
 - app/(authentication)/layout.tsx
 - app/(authentication)/login/page.tsx
+- app/(dashboard)/dishes/[id]/recipe-standard/page.tsx
 - app/(dashboard)/layout.tsx
 - app/(dashboard)/page.tsx
-- app/layout.tsx
-- ... and 21 more files
-
-### Rust (100.0% confidence)
-*Rust systems programming language*
-
-**Related files:**
-- app/(authentication)/login/login.tsx
-- app/(authentication)/register/register.tsx
-- app/(dashboard)/dishes/[id]/edit/page.tsx
-- app/(dashboard)/dishes/create/page.tsx
-- app/(dashboard)/dishes/page.tsx
-- ... and 39 more files
+- ... and 26 more files
 
 ### React (100.0% confidence)
 *React JavaScript library for building user interfaces*
@@ -87,7 +43,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 56 more files
+- ... and 61 more files
 
 ### CSS (100.0% confidence)
 *Cascading Style Sheets*
@@ -98,7 +54,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 90 more files
+- ... and 96 more files
 
 ### Docker (100.0% confidence)
 *Docker containerization platform*
@@ -109,10 +65,10 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 69 more files
+- ... and 76 more files
 
-### PHP (100.0% confidence)
-*PHP server-side scripting language*
+### Python (100.0% confidence)
+*Python programming language*
 
 **Related files:**
 - app/(authentication)/layout.tsx
@@ -120,7 +76,40 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 62 more files
+- ... and 78 more files
+
+### TypeScript (100.0% confidence)
+*TypeScript - JavaScript with static typing*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 88 more files
+
+### JavaScript (100.0% confidence)
+*JavaScript runtime and ecosystem*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 89 more files
+
+### Rust (100.0% confidence)
+*Rust systems programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(authentication)/register/register.tsx
+- app/(dashboard)/dishes/[id]/edit/page.tsx
+- app/(dashboard)/dishes/[id]/recipe-standard/page.tsx
+- app/(dashboard)/dishes/create/page.tsx
+- ... and 44 more files
 
 ### Ruby (100.0% confidence)
 *Ruby programming language*
@@ -131,7 +120,18 @@
 - components/Layout/Dashboard/Header/HeaderLocale.tsx
 - components/Layout/Dashboard/Header/HeaderNotificationNav.tsx
 - components/Layout/Dashboard/Header/HeaderTheme.tsx
-- ... and 17 more files
+- ... and 19 more files
+
+### PHP (100.0% confidence)
+*PHP server-side scripting language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 67 more files
 
 ### Node.js (15.0% confidence)
 *Node.js JavaScript runtime*
@@ -156,7 +156,9 @@
 │   ├── (dashboard)
 │   │   ├── dishes
 │   │   │   ├── [id]
-│   │   │   │   └── edit
+│   │   │   │   ├── edit
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── recipe-standard
 │   │   │   │       └── page.tsx
 │   │   │   ├── create
 │   │   │   │   └── page.tsx
@@ -177,6 +179,13 @@
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
+│   │   ├── recipe-standards
+│   │   │   ├── [id]
+│   │   │   │   └── edit
+│   │   │   │       └── page.tsx
+│   │   │   ├── create
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
 │   │   └── suppliers
 │   │       ├── [id]
 │   │       │   └── edit
@@ -236,6 +245,7 @@
 │   │   │   ├── KitchenForm.tsx
 │   │   │   └── KitchensList.tsx
 │   │   ├── RecipeStandard
+│   │   │   ├── RecipeStandardForm.tsx
 │   │   │   └── RecipeStandardsList.tsx
 │   │   └── Supplier
 │   │       ├── SupplierForm.tsx
@@ -276,7 +286,8 @@
 ├── services
 │   ├── dish-api.ts
 │   ├── index.ts
-│   └── ingredient-api.ts
+│   ├── ingredient-api.ts
+│   └── recipe-standard.ts
 ├── styles
 │   ├── _custom.scss
 │   ├── globals.scss
@@ -731,7 +742,7 @@ export default function Register() {
 ### app/(dashboard)/
 
 #### app/(dashboard)/layout.tsx
-*Language: TypeScript | Size: 1020 bytes*
+*Language: TypeScript | Size: 990 bytes*
 
 ```typescript
 import { Container } from 'react-bootstrap'
@@ -743,11 +754,7 @@ import SidebarNav from '@/components/Layout/Dashboard/Sidebar/SidebarNav'
 import Header from '@/components/Layout/Dashboard/Header/Header'
 import Footer from '@/components/Layout/Dashboard/Footer/Footer'
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <SidebarOverlay />
@@ -759,9 +766,7 @@ export default function Layout({
         <Header />
 
         <div className="body flex-grow-1 px-sm-2 mb-4">
-          <Container fluid="lg">
-            {children}
-          </Container>
+          <Container fluid="lg">{children}</Container>
         </div>
 
         <Footer />
@@ -774,7 +779,7 @@ export default function Layout({
 ```
 
 #### app/(dashboard)/page.tsx
-*Language: TypeScript | Size: 50348 bytes*
+*Language: TypeScript | Size: 53203 bytes*
 
 ```typescript
 import Image from 'next/image'
@@ -834,8 +839,7 @@ export default async function Page() {
                   26K
                   <span className="fs-6 ms-2 fw-normal">
                     (-12.4%
-                    <FontAwesomeIcon icon={faArrowDown} fixedWidth />
-                    )
+                    <FontAwesomeIcon icon={faArrowDown} fixedWidth />)
                   </span>
                 </div>
                 <div>{dict.dashboard.featured.user}</div>
@@ -851,9 +855,15 @@ export default async function Page() {
                 </DropdownToggle>
 
                 <DropdownMenu>
-                  <DropdownItem href="#/action-1">{dict.dashboard.featured.action.action1}</DropdownItem>
-                  <DropdownItem href="#/action-2">{dict.dashboard.featured.action.action2}</DropdownItem>
-                  <DropdownItem href="#/action-3">{dict.dashboard.featured.action.action3}</DropdownItem>
+                  <DropdownItem href="#/action-1">
+                    {dict.dashboard.featured.action.action1}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-2">
+                    {dict.dashboard.featured.action.action2}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-3">
+                    {dict.dashboard.featured.action.action3}
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </CardBody>
@@ -871,8 +881,7 @@ export default async function Page() {
                   $6.200
                   <span className="fs-6 ms-2 fw-normal">
                     (40.9%
-                    <FontAwesomeIcon icon={faArrowUp} fixedWidth />
-                    )
+                    <FontAwesomeIcon icon={faArrowUp} fixedWidth />)
                   </span>
                 </div>
                 <div>{dict.dashboard.featured.income}</div>
@@ -888,9 +897,15 @@ export default async function Page() {
                 </DropdownToggle>
 
                 <DropdownMenu>
-                  <DropdownItem href="#/action-1">{dict.dashboard.featured.action.action1}</DropdownItem>
-                  <DropdownItem href="#/action-2">{dict.dashboard.featured.action.action2}</DropdownItem>
-                  <DropdownItem href="#/action-3">{dict.dashboard.featured.action.action3}</DropdownItem>
+                  <DropdownItem href="#/action-1">
+                    {dict.dashboard.featured.action.action1}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-2">
+                    {dict.dashboard.featured.action.action2}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-3">
+                    {dict.dashboard.featured.action.action3}
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </CardBody>
@@ -908,8 +923,7 @@ export default async function Page() {
                   2.49%
                   <span className="fs-6 ms-2 fw-normal">
                     (84.7%
-                    <FontAwesomeIcon icon={faArrowUp} fixedWidth />
-                    )
+                    <FontAwesomeIcon icon={faArrowUp} fixedWidth />)
                   </span>
                 </div>
                 <div>{dict.dashboard.featured.conversion_rate}</div>
@@ -925,9 +939,15 @@ export default async function Page() {
                 </DropdownToggle>
 
                 <DropdownMenu>
-                  <DropdownItem href="#/action-1">{dict.dashboard.featured.action.action1}</DropdownItem>
-                  <DropdownItem href="#/action-2">{dict.dashboard.featured.action.action2}</DropdownItem>
-                  <DropdownItem href="#/action-3">{dict.dashboard.featured.action.action3}</DropdownItem>
+                  <DropdownItem href="#/action-1">
+                    {dict.dashboard.featured.action.action1}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-2">
+                    {dict.dashboard.featured.action.action2}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-3">
+                    {dict.dashboard.featured.action.action3}
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </CardBody>
@@ -945,8 +965,7 @@ export default async function Page() {
                   44K
                   <span className="fs-6 ms-2 fw-normal">
                     (-23.6%
-                    <FontAwesomeIcon icon={faArrowDown} fixedWidth />
-                    )
+                    <FontAwesomeIcon icon={faArrowDown} fixedWidth />)
                   </span>
                 </div>
                 <div>{dict.dashboard.featured.sessions}</div>
@@ -962,9 +981,15 @@ export default async function Page() {
                 </DropdownToggle>
 
                 <DropdownMenu>
-                  <DropdownItem href="#/action-1">{dict.dashboard.featured.action.action1}</DropdownItem>
-                  <DropdownItem href="#/action-2">{dict.dashboard.featured.action.action2}</DropdownItem>
-                  <DropdownItem href="#/action-3">{dict.dashboard.featured.action.action3}</DropdownItem>
+                  <DropdownItem href="#/action-1">
+                    {dict.dashboard.featured.action.action1}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-2">
+                    {dict.dashboard.featured.action.action2}
+                  </DropdownItem>
+                  <DropdownItem href="#/action-3">
+                    {dict.dashboard.featured.action.action3}
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </CardBody>
@@ -980,7 +1005,9 @@ export default async function Page() {
           <div className="d-flex justify-content-between">
             <div>
               <h4 className="mb-0">{dict.dashboard.traffic.title}</h4>
-              <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.traffic.duration}</div>
+              <div className="small text-black-50 dark:text-gray-500">
+                {dict.dashboard.traffic.duration}
+              </div>
             </div>
             <div className="d-none d-md-block">
               <ButtonGroup aria-label="Toolbar with buttons" className="mx-3">
@@ -991,10 +1018,7 @@ export default async function Page() {
                   name="options"
                   autoComplete="off"
                 />
-                <label
-                  className="btn btn-outline-secondary"
-                  htmlFor="option1"
-                >
+                <label className="btn btn-outline-secondary" htmlFor="option1">
                   {dict.dashboard.traffic.option.day}
                 </label>
                 <input
@@ -1018,10 +1042,7 @@ export default async function Page() {
                   name="options"
                   autoComplete="off"
                 />
-                <label
-                  className="btn btn-outline-secondary"
-                  htmlFor="option3"
-                >
+                <label className="btn btn-outline-secondary" htmlFor="option3">
                   {dict.dashboard.traffic.option.year}
                 </label>
               </ButtonGroup>
@@ -1042,12 +1063,12 @@ export default async function Page() {
         <CardFooter>
           <div className="row row-cols-1 row-cols-md-5 text-center">
             <div className="col mb-sm-2 mb-0">
-              <div className="text-black-50 dark:text-gray-500">{dict.dashboard.traffic.category1}</div>
+              <div className="text-black-50 dark:text-gray-500">
+                {dict.dashboard.traffic.category1}
+              </div>
               <div className="fw-semibold">
                 29.703
-                {dict.dashboard.traffic.users}
-                {' '}
-                (40%)
+                {dict.dashboard.traffic.users} (40%)
               </div>
               <ProgressBar
                 className="progress-thin mt-2"
@@ -1056,12 +1077,12 @@ export default async function Page() {
               />
             </div>
             <div className="col mb-sm-2 mb-0">
-              <div className="text-black-50 dark:text-gray-500">{dict.dashboard.traffic.category2}</div>
+              <div className="text-black-50 dark:text-gray-500">
+                {dict.dashboard.traffic.category2}
+              </div>
               <div className="fw-semibold">
                 24.093
-                {dict.dashboard.traffic.users}
-                {' '}
-                (20%)
+                {dict.dashboard.traffic.users} (20%)
               </div>
               <ProgressBar
                 className="progress-thin mt-2"
@@ -1070,12 +1091,12 @@ export default async function Page() {
               />
             </div>
             <div className="col mb-sm-2 mb-0">
-              <div className="text-black-50 dark:text-gray-500">{dict.dashboard.traffic.category3}</div>
+              <div className="text-black-50 dark:text-gray-500">
+                {dict.dashboard.traffic.category3}
+              </div>
               <div className="fw-semibold">
                 78.706
-                {dict.dashboard.traffic.views}
-                {' '}
-                (60%)
+                {dict.dashboard.traffic.views} (60%)
               </div>
               <ProgressBar
                 className="progress-thin mt-2"
@@ -1084,12 +1105,12 @@ export default async function Page() {
               />
             </div>
             <div className="col mb-sm-2 mb-0">
-              <div className="text-black-50 dark:text-gray-500">{dict.dashboard.traffic.category4}</div>
+              <div className="text-black-50 dark:text-gray-500">
+                {dict.dashboard.traffic.category4}
+              </div>
               <div className="fw-semibold">
                 22.123
-                {dict.dashboard.traffic.users}
-                {' '}
-                (80%)
+                {dict.dashboard.traffic.users} (80%)
               </div>
               <ProgressBar
                 className="progress-thin mt-2"
@@ -1098,7 +1119,9 @@ export default async function Page() {
               />
             </div>
             <div className="col mb-sm-2 mb-0">
-              <div className="text-black-50 dark:text-gray-500">{dict.dashboard.traffic.category5}</div>
+              <div className="text-black-50 dark:text-gray-500">
+                {dict.dashboard.traffic.category5}
+              </div>
               <div className="fw-semibold">40.15%</div>
               <ProgressBar
                 className="progress-thin mt-2"
@@ -1209,15 +1232,12 @@ export default async function Page() {
             </CardBody>
           </Card>
         </div>
-
       </div>
 
       <div className="row">
         <div className="col-md-12">
           <Card>
-            <CardHeader>
-              {dict.dashboard.sales.title}
-            </CardHeader>
+            <CardHeader>{dict.dashboard.sales.title}</CardHeader>
             <CardBody>
               <div className="row">
                 <div className="col-sm-6">
@@ -1239,7 +1259,6 @@ export default async function Page() {
                         <div className="fs-5 fw-semibold">22,643</div>
                       </div>
                     </div>
-
                   </div>
 
                   <hr className="mt-0" />
@@ -1404,7 +1423,6 @@ export default async function Page() {
                         <div className="fs-5 fw-semibold">49,123</div>
                       </div>
                     </div>
-
                   </div>
 
                   <hr className="mt-0" />
@@ -1413,7 +1431,11 @@ export default async function Page() {
                     <div className="mb-3">
                       <div className="d-flex mb-1">
                         <div>
-                          <FontAwesomeIcon className="me-2" icon={faMars} fixedWidth />
+                          <FontAwesomeIcon
+                            className="me-2"
+                            icon={faMars}
+                            fixedWidth
+                          />
                           {dict.dashboard.sales.male}
                         </div>
                         <div className="ms-auto fw-semibold">43%</div>
@@ -1428,7 +1450,11 @@ export default async function Page() {
                     <div className="mb-3">
                       <div className="d-flex mb-1">
                         <div>
-                          <FontAwesomeIcon className="me-2" icon={faVenus} fixedWidth />
+                          <FontAwesomeIcon
+                            className="me-2"
+                            icon={faVenus}
+                            fixedWidth
+                          />
                           {dict.dashboard.sales.female}
                         </div>
                         <div className="ms-auto fw-semibold">37%</div>
@@ -1444,11 +1470,17 @@ export default async function Page() {
                   <div className="mb-3">
                     <div className="d-flex mb-1">
                       <div>
-                        <FontAwesomeIcon className="me-2" icon={faSearch} fixedWidth />
+                        <FontAwesomeIcon
+                          className="me-2"
+                          icon={faSearch}
+                          fixedWidth
+                        />
                         {dict.dashboard.sales.organic}
                       </div>
                       <div className="ms-auto fw-semibold me-2">191.235</div>
-                      <div className="text-black-50 dark:text-gray-500 small">(56%)</div>
+                      <div className="text-black-50 dark:text-gray-500 small">
+                        (56%)
+                      </div>
                     </div>
                     <ProgressBar
                       className="progress-thin"
@@ -1460,11 +1492,17 @@ export default async function Page() {
                   <div className="mb-3">
                     <div className="d-flex mb-1">
                       <div>
-                        <FontAwesomeIcon className="me-2" icon={faFacebookF} fixedWidth />
+                        <FontAwesomeIcon
+                          className="me-2"
+                          icon={faFacebookF}
+                          fixedWidth
+                        />
                         {dict.dashboard.sales.facebook}
                       </div>
                       <div className="ms-auto fw-semibold me-2">51.223</div>
-                      <div className="text-black-50 dark:text-gray-500 small">(15%)</div>
+                      <div className="text-black-50 dark:text-gray-500 small">
+                        (15%)
+                      </div>
                     </div>
                     <ProgressBar
                       className="progress-thin"
@@ -1476,11 +1514,17 @@ export default async function Page() {
                   <div className="mb-3">
                     <div className="d-flex mb-1">
                       <div>
-                        <FontAwesomeIcon className="me-2" icon={faTwitter} fixedWidth />
+                        <FontAwesomeIcon
+                          className="me-2"
+                          icon={faTwitter}
+                          fixedWidth
+                        />
                         {dict.dashboard.sales.twitter}
                       </div>
                       <div className="ms-auto fw-semibold me-2">37.564</div>
-                      <div className="text-black-50 dark:text-gray-500 small">(11%)</div>
+                      <div className="text-black-50 dark:text-gray-500 small">
+                        (11%)
+                      </div>
                     </div>
                     <ProgressBar
                       className="progress-thin"
@@ -1492,11 +1536,17 @@ export default async function Page() {
                   <div className="mb-3">
                     <div className="d-flex mb-1">
                       <div>
-                        <FontAwesomeIcon className="me-2" icon={faLinkedinIn} fixedWidth />
+                        <FontAwesomeIcon
+                          className="me-2"
+                          icon={faLinkedinIn}
+                          fixedWidth
+                        />
                         {dict.dashboard.sales.linkedin}
                       </div>
                       <div className="ms-auto fw-semibold me-2">27.319</div>
-                      <div className="text-black-50 dark:text-gray-500 small">(8%)</div>
+                      <div className="text-black-50 dark:text-gray-500 small">
+                        (8%)
+                      </div>
                     </div>
                     <ProgressBar
                       className="progress-thin"
@@ -1518,7 +1568,9 @@ export default async function Page() {
                       </th>
                       <th>{dict.dashboard.listing.headers.header1}</th>
                       <th>{dict.dashboard.listing.headers.header2}</th>
-                      <th className="text-center">{dict.dashboard.listing.headers.header3}</th>
+                      <th className="text-center">
+                        {dict.dashboard.listing.headers.header3}
+                      </th>
                       <th>{dict.dashboard.listing.headers.header4}</th>
                       <th aria-label="Action" />
                     </tr>
@@ -1534,21 +1586,14 @@ export default async function Page() {
                             src="/assets/img/avatars/1.jpg"
                             alt="user@email.com"
                           />
-                          <span
-                            className="avatar-status position-absolute d-block bottom-0 end-0 bg-success rounded-circle border border-white"
-                          />
+                          <span className="avatar-status position-absolute d-block bottom-0 end-0 bg-success rounded-circle border border-white" />
                         </div>
                       </td>
                       <td>
                         <div>{dict.dashboard.listing.items.item1.name}</div>
                         <div className="small text-black-50 dark:text-gray-500">
-                          <span>{dict.dashboard.listing.user_status.new}</span>
-                          {' '}
-                          |
-                          {' '}
-                          {dict.dashboard.listing.registered}
-                          :
-                          {' '}
+                          <span>{dict.dashboard.listing.user_status.new}</span>{' '}
+                          | {dict.dashboard.listing.registered}:{' '}
                           {dict.dashboard.listing.registered_at}
                         </div>
                       </td>
@@ -1563,14 +1608,22 @@ export default async function Page() {
                             </small>
                           </div>
                         </div>
-                        <ProgressBar className="progress-thin" variant="success" now={50} />
+                        <ProgressBar
+                          className="progress-thin"
+                          variant="success"
+                          now={50}
+                        />
                       </td>
                       <td className="text-center" aria-label="icon">
                         <FontAwesomeIcon icon={faCcAmex} size="lg" fixedWidth />
                       </td>
                       <td>
-                        <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.listing.last_login}</div>
-                        <div className="fw-semibold">{dict.dashboard.listing.items.item1.login_at}</div>
+                        <div className="small text-black-50 dark:text-gray-500">
+                          {dict.dashboard.listing.last_login}
+                        </div>
+                        <div className="fw-semibold">
+                          {dict.dashboard.listing.items.item1.login_at}
+                        </div>
                       </td>
                       <td>
                         <Dropdown align="end">
@@ -1580,12 +1633,19 @@ export default async function Page() {
                             className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
                             id="action-user1"
                           >
-                            <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={faEllipsisVertical}
+                            />
                           </DropdownToggle>
 
                           <DropdownMenu>
-                            <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                            <DropdownItem href="#/action-2">{dict.action.edit}</DropdownItem>
+                            <DropdownItem href="#/action-1">
+                              {dict.action.info}
+                            </DropdownItem>
+                            <DropdownItem href="#/action-2">
+                              {dict.action.edit}
+                            </DropdownItem>
                             <DropdownItem
                               className="text-danger"
                               href="#/action-3"
@@ -1606,21 +1666,16 @@ export default async function Page() {
                             src="/assets/img/avatars/2.jpg"
                             alt="user@email.com"
                           />
-                          <span
-                            className="avatar-status position-absolute d-block bottom-0 end-0 bg-danger rounded-circle border border-white"
-                          />
+                          <span className="avatar-status position-absolute d-block bottom-0 end-0 bg-danger rounded-circle border border-white" />
                         </div>
                       </td>
                       <td>
                         <div>{dict.dashboard.listing.items.item2.name}</div>
                         <div className="small text-black-50 dark:text-gray-500">
-                          <span>{dict.dashboard.listing.user_status.recurring}</span>
-                          {' '}
-                          |
-                          {' '}
-                          {dict.dashboard.listing.registered}
-                          :
-                          {' '}
+                          <span>
+                            {dict.dashboard.listing.user_status.recurring}
+                          </span>{' '}
+                          | {dict.dashboard.listing.registered}:{' '}
                           {dict.dashboard.listing.registered_at}
                         </div>
                       </td>
@@ -1635,14 +1690,22 @@ export default async function Page() {
                             </small>
                           </div>
                         </div>
-                        <ProgressBar className="progress-thin" variant="info" now={10} />
+                        <ProgressBar
+                          className="progress-thin"
+                          variant="info"
+                          now={10}
+                        />
                       </td>
                       <td className="text-center" aria-label="icon">
                         <FontAwesomeIcon icon={faCcVisa} size="lg" fixedWidth />
                       </td>
                       <td>
-                        <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.listing.last_login}</div>
-                        <div className="fw-semibold">{dict.dashboard.listing.items.item2.login_at}</div>
+                        <div className="small text-black-50 dark:text-gray-500">
+                          {dict.dashboard.listing.last_login}
+                        </div>
+                        <div className="fw-semibold">
+                          {dict.dashboard.listing.items.item2.login_at}
+                        </div>
                       </td>
                       <td>
                         <Dropdown align="end">
@@ -1652,12 +1715,19 @@ export default async function Page() {
                             className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
                             id="action-user2"
                           >
-                            <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={faEllipsisVertical}
+                            />
                           </DropdownToggle>
 
                           <DropdownMenu>
-                            <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                            <DropdownItem href="#/action-2">{dict.action.edit}</DropdownItem>
+                            <DropdownItem href="#/action-1">
+                              {dict.action.info}
+                            </DropdownItem>
+                            <DropdownItem href="#/action-2">
+                              {dict.action.edit}
+                            </DropdownItem>
                             <DropdownItem
                               className="text-danger"
                               href="#/action-3"
@@ -1678,21 +1748,14 @@ export default async function Page() {
                             src="/assets/img/avatars/3.jpg"
                             alt="user@email.com"
                           />
-                          <span
-                            className="avatar-status position-absolute d-block bottom-0 end-0 bg-warning rounded-circle border border-white"
-                          />
+                          <span className="avatar-status position-absolute d-block bottom-0 end-0 bg-warning rounded-circle border border-white" />
                         </div>
                       </td>
                       <td>
                         <div>{dict.dashboard.listing.items.item3.name}</div>
                         <div className="small text-black-50 dark:text-gray-500">
-                          <span>{dict.dashboard.listing.user_status.new}</span>
-                          {' '}
-                          |
-                          {' '}
-                          {dict.dashboard.listing.registered}
-                          :
-                          {' '}
+                          <span>{dict.dashboard.listing.user_status.new}</span>{' '}
+                          | {dict.dashboard.listing.registered}:{' '}
                           {dict.dashboard.listing.registered_at}
                         </div>
                       </td>
@@ -1707,14 +1770,26 @@ export default async function Page() {
                             </small>
                           </div>
                         </div>
-                        <ProgressBar className="progress-thin" variant="warning" now={74} />
+                        <ProgressBar
+                          className="progress-thin"
+                          variant="warning"
+                          now={74}
+                        />
                       </td>
                       <td className="text-center" aria-label="icon">
-                        <FontAwesomeIcon icon={faCcStripe} size="lg" fixedWidth />
+                        <FontAwesomeIcon
+                          icon={faCcStripe}
+                          size="lg"
+                          fixedWidth
+                        />
                       </td>
                       <td>
-                        <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.listing.last_login}</div>
-                        <div className="fw-semibold">{dict.dashboard.listing.items.item3.login_at}</div>
+                        <div className="small text-black-50 dark:text-gray-500">
+                          {dict.dashboard.listing.last_login}
+                        </div>
+                        <div className="fw-semibold">
+                          {dict.dashboard.listing.items.item3.login_at}
+                        </div>
                       </td>
                       <td>
                         <Dropdown align="end">
@@ -1724,12 +1799,19 @@ export default async function Page() {
                             className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
                             id="action-user3"
                           >
-                            <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={faEllipsisVertical}
+                            />
                           </DropdownToggle>
 
                           <DropdownMenu>
-                            <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                            <DropdownItem href="#/action-2">{dict.action.edit}</DropdownItem>
+                            <DropdownItem href="#/action-1">
+                              {dict.action.info}
+                            </DropdownItem>
+                            <DropdownItem href="#/action-2">
+                              {dict.action.edit}
+                            </DropdownItem>
                             <DropdownItem
                               className="text-danger"
                               href="#/action-3"
@@ -1750,21 +1832,14 @@ export default async function Page() {
                             src="/assets/img/avatars/4.jpg"
                             alt="user@email.com"
                           />
-                          <span
-                            className="avatar-status position-absolute d-block bottom-0 end-0 bg-secondary rounded-circle border border-white"
-                          />
+                          <span className="avatar-status position-absolute d-block bottom-0 end-0 bg-secondary rounded-circle border border-white" />
                         </div>
                       </td>
                       <td>
                         <div>{dict.dashboard.listing.items.item4.name}</div>
                         <div className="small text-black-50 dark:text-gray-500">
-                          <span>{dict.dashboard.listing.user_status.new}</span>
-                          {' '}
-                          |
-                          {' '}
-                          {dict.dashboard.listing.registered}
-                          :
-                          {' '}
+                          <span>{dict.dashboard.listing.user_status.new}</span>{' '}
+                          | {dict.dashboard.listing.registered}:{' '}
                           {dict.dashboard.listing.registered_at}
                         </div>
                       </td>
@@ -1779,14 +1854,26 @@ export default async function Page() {
                             </small>
                           </div>
                         </div>
-                        <ProgressBar className="progress-thin" variant="danger" now={98} />
+                        <ProgressBar
+                          className="progress-thin"
+                          variant="danger"
+                          now={98}
+                        />
                       </td>
                       <td className="text-center" aria-label="icon">
-                        <FontAwesomeIcon icon={faCcPaypal} size="lg" fixedWidth />
+                        <FontAwesomeIcon
+                          icon={faCcPaypal}
+                          size="lg"
+                          fixedWidth
+                        />
                       </td>
                       <td>
-                        <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.listing.last_login}</div>
-                        <div className="fw-semibold">{dict.dashboard.listing.items.item4.login_at}</div>
+                        <div className="small text-black-50 dark:text-gray-500">
+                          {dict.dashboard.listing.last_login}
+                        </div>
+                        <div className="fw-semibold">
+                          {dict.dashboard.listing.items.item4.login_at}
+                        </div>
                       </td>
                       <td>
                         <Dropdown align="end">
@@ -1796,12 +1883,19 @@ export default async function Page() {
                             className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
                             id="action-user4"
                           >
-                            <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={faEllipsisVertical}
+                            />
                           </DropdownToggle>
 
                           <DropdownMenu>
-                            <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                            <DropdownItem href="#/action-2">{dict.action.edit}</DropdownItem>
+                            <DropdownItem href="#/action-1">
+                              {dict.action.info}
+                            </DropdownItem>
+                            <DropdownItem href="#/action-2">
+                              {dict.action.edit}
+                            </DropdownItem>
                             <DropdownItem
                               className="text-danger"
                               href="#/action-3"
@@ -1822,21 +1916,14 @@ export default async function Page() {
                             src="/assets/img/avatars/5.jpg"
                             alt="user@email.com"
                           />
-                          <span
-                            className="avatar-status position-absolute d-block bottom-0 end-0 bg-success rounded-circle border border-white"
-                          />
+                          <span className="avatar-status position-absolute d-block bottom-0 end-0 bg-success rounded-circle border border-white" />
                         </div>
                       </td>
                       <td>
                         <div>{dict.dashboard.listing.items.item5.name}</div>
                         <div className="small text-black-50 dark:text-gray-500">
-                          <span>{dict.dashboard.listing.user_status.new}</span>
-                          {' '}
-                          |
-                          {' '}
-                          {dict.dashboard.listing.registered}
-                          :
-                          {' '}
+                          <span>{dict.dashboard.listing.user_status.new}</span>{' '}
+                          | {dict.dashboard.listing.registered}:{' '}
                           {dict.dashboard.listing.registered_at}
                         </div>
                       </td>
@@ -1851,14 +1938,26 @@ export default async function Page() {
                             </small>
                           </div>
                         </div>
-                        <ProgressBar className="progress-thin" variant="info" now={22} />
+                        <ProgressBar
+                          className="progress-thin"
+                          variant="info"
+                          now={22}
+                        />
                       </td>
                       <td className="text-center" aria-label="icon">
-                        <FontAwesomeIcon icon={faCcApplePay} size="lg" fixedWidth />
+                        <FontAwesomeIcon
+                          icon={faCcApplePay}
+                          size="lg"
+                          fixedWidth
+                        />
                       </td>
                       <td>
-                        <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.listing.last_login}</div>
-                        <div className="fw-semibold">{dict.dashboard.listing.items.item5.login_at}</div>
+                        <div className="small text-black-50 dark:text-gray-500">
+                          {dict.dashboard.listing.last_login}
+                        </div>
+                        <div className="fw-semibold">
+                          {dict.dashboard.listing.items.item5.login_at}
+                        </div>
                       </td>
                       <td>
                         <Dropdown align="end">
@@ -1868,12 +1967,19 @@ export default async function Page() {
                             className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
                             id="action-user5"
                           >
-                            <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={faEllipsisVertical}
+                            />
                           </DropdownToggle>
 
                           <DropdownMenu>
-                            <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                            <DropdownItem href="#/action-2">{dict.action.edit}</DropdownItem>
+                            <DropdownItem href="#/action-1">
+                              {dict.action.info}
+                            </DropdownItem>
+                            <DropdownItem href="#/action-2">
+                              {dict.action.edit}
+                            </DropdownItem>
                             <DropdownItem
                               className="text-danger"
                               href="#/action-3"
@@ -1894,21 +2000,14 @@ export default async function Page() {
                             src="/assets/img/avatars/6.jpg"
                             alt="user@email.com"
                           />
-                          <span
-                            className="avatar-status position-absolute d-block bottom-0 end-0 bg-danger rounded-circle border border-white"
-                          />
+                          <span className="avatar-status position-absolute d-block bottom-0 end-0 bg-danger rounded-circle border border-white" />
                         </div>
                       </td>
                       <td>
                         <div>{dict.dashboard.listing.items.item6.name}</div>
                         <div className="small text-black-50 dark:text-gray-500">
-                          <span>{dict.dashboard.listing.user_status.new}</span>
-                          {' '}
-                          |
-                          {' '}
-                          {dict.dashboard.listing.registered}
-                          :
-                          {' '}
+                          <span>{dict.dashboard.listing.user_status.new}</span>{' '}
+                          | {dict.dashboard.listing.registered}:{' '}
                           {dict.dashboard.listing.registered_at}
                         </div>
                       </td>
@@ -1923,14 +2022,22 @@ export default async function Page() {
                             </small>
                           </div>
                         </div>
-                        <ProgressBar className="progress-thin" variant="success" now={43} />
+                        <ProgressBar
+                          className="progress-thin"
+                          variant="success"
+                          now={43}
+                        />
                       </td>
                       <td className="text-center" aria-label="icon">
                         <FontAwesomeIcon icon={faCcAmex} size="lg" fixedWidth />
                       </td>
                       <td>
-                        <div className="small text-black-50 dark:text-gray-500">{dict.dashboard.listing.last_login}</div>
-                        <div className="fw-semibold">{dict.dashboard.listing.items.item6.login_at}</div>
+                        <div className="small text-black-50 dark:text-gray-500">
+                          {dict.dashboard.listing.last_login}
+                        </div>
+                        <div className="fw-semibold">
+                          {dict.dashboard.listing.items.item6.login_at}
+                        </div>
                       </td>
                       <td>
                         <Dropdown align="end">
@@ -1940,12 +2047,19 @@ export default async function Page() {
                             className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
                             id="action-user6"
                           >
-                            <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={faEllipsisVertical}
+                            />
                           </DropdownToggle>
 
                           <DropdownMenu>
-                            <DropdownItem href="#/action-1">{dict.action.info}</DropdownItem>
-                            <DropdownItem href="#/action-2">{dict.action.edit}</DropdownItem>
+                            <DropdownItem href="#/action-1">
+                              {dict.action.info}
+                            </DropdownItem>
+                            <DropdownItem href="#/action-2">
+                              {dict.action.edit}
+                            </DropdownItem>
                             <DropdownItem
                               className="text-danger"
                               href="#/action-3"
@@ -1971,7 +2085,7 @@ export default async function Page() {
 ### app/(dashboard)/dishes/
 
 #### app/(dashboard)/dishes/page.tsx
-*Language: TypeScript | Size: 345 bytes*
+*Language: TypeScript | Size: 341 bytes*
 
 ```typescript
 'use client'
@@ -1980,11 +2094,10 @@ import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import DishesList from '@/components/Page/Dish/DishesList'
 
 export default async function Page() {
-console.log('Fetching dictionary for dishes page')
+  console.log('Fetching dictionary for dishes page')
   return (
     <Card>
-      <CardBody>
-      </CardBody>
+      <CardBody></CardBody>
       <DishesList />
     </Card>
   )
@@ -1994,7 +2107,7 @@ console.log('Fetching dictionary for dishes page')
 ### app/(dashboard)/dishes/[id]/edit/
 
 #### app/(dashboard)/dishes/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1600 bytes*
+*Language: TypeScript | Size: 1571 bytes*
 
 ```typescript
 'use client'
@@ -2019,11 +2132,10 @@ const fetchDish = async (id: string): Promise<Dish | null> => {
 }
 
 export default function Page({ params }: { params: { id: string } }) {
-
   const dict = useDictionary()
   const [dish, setDish] = useState<Dish | null>(null)
   const [notFoundFlag, setNotFoundFlag] = useState(false)
-  
+
   useEffect(() => {
     const loadDish = async () => {
       const fetchedDish = await fetchDish(params.id)
@@ -2039,21 +2151,54 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>{dict.dishes.edit}: {dish && dish.dishName}</CardHeader>
-      {
-        !dish ? (
-          <CardBody>
-            <p>{dict.dishes.loading || 'Loading...'}</p>
-          </CardBody>
-        ) : notFoundFlag ? (
-          notFound()
-        ) : (
-          <CardBody>
-            <DishForm dish={dish} />
-          </CardBody>
-        )
-      }
-      
+      <CardHeader>
+        {dict.dishes.edit}: {dish && dish.dishName}
+      </CardHeader>
+      {!dish ? (
+        <CardBody>
+          <p>{dict.dishes.loading || 'Loading...'}</p>
+        </CardBody>
+      ) : notFoundFlag ? (
+        notFound()
+      ) : (
+        <CardBody>
+          <DishForm dish={dish} />
+        </CardBody>
+      )}
+    </Card>
+  )
+}
+```
+
+### app/(dashboard)/dishes/[id]/recipe-standard/
+
+#### app/(dashboard)/dishes/[id]/recipe-standard/page.tsx
+*Language: TypeScript | Size: 791 bytes*
+
+```typescript
+// app/(dashboard)/recipe-standards/page.tsx
+'use client'
+
+import React from 'react'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import RecipeStandardsList from '@/components/Page/RecipeStandard/RecipeStandardsList'
+import useDictionary from '@/locales/dictionary-hook'
+
+export default function Page({ params }: { params: { id: string } }) {
+  const dict = useDictionary()
+
+  return (
+    <Card>
+      <CardHeader>
+        <h4>{dict.sidebar?.items?.recipe_standards || 'Recipe Standards'}</h4>
+        <div className="text-muted">
+          {dict.recipe_standards?.description ||
+            'Manage ingredient quantities for dishes'}
+        </div>
+      </CardHeader>
+      <CardBody>
+        <RecipeStandardsList dishId={params.id} />
+      </CardBody>
     </Card>
   )
 }
@@ -2062,7 +2207,7 @@ export default function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/dishes/create/
 
 #### app/(dashboard)/dishes/create/page.tsx
-*Language: TypeScript | Size: 396 bytes*
+*Language: TypeScript | Size: 397 bytes*
 
 ```typescript
 'use client'
@@ -2086,7 +2231,7 @@ export default function Page() {
 ### app/(dashboard)/ingredients/
 
 #### app/(dashboard)/ingredients/page.tsx
-*Language: TypeScript | Size: 500 bytes*
+*Language: TypeScript | Size: 501 bytes*
 
 ```typescript
 'use client'
@@ -2114,7 +2259,7 @@ export default async function Page() {
 ### app/(dashboard)/ingredients/[id]/edit/
 
 #### app/(dashboard)/ingredients/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1213 bytes*
+*Language: TypeScript | Size: 1228 bytes*
 
 ```typescript
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
@@ -2125,7 +2270,6 @@ import { Ingredient } from '@/models'
 import { getDictionary } from '@/locales/dictionary'
 
 const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
- 
   try {
     // Note: This is server-side fetch, need to handle authentication differently
     console.log('Fetching ingredient with id:', id)
@@ -2148,7 +2292,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>{dict.ingredients?.edit || 'Edit'}: {ingredient.ingredientName}</CardHeader>
+      <CardHeader>
+        {dict.ingredients?.edit || 'Edit'}: {ingredient.ingredientName}
+      </CardHeader>
       <CardBody>
         <IngredientForm ingredient={ingredient} isEdit />
       </CardBody>
@@ -2160,7 +2306,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/ingredients/create/
 
 #### app/(dashboard)/ingredients/create/page.tsx
-*Language: TypeScript | Size: 440 bytes*
+*Language: TypeScript | Size: 441 bytes*
 
 ```typescript
 'use client'
@@ -2185,7 +2331,7 @@ export default function Page() {
 ### app/(dashboard)/kitchens/
 
 #### app/(dashboard)/kitchens/page.tsx
-*Language: TypeScript | Size: 489 bytes*
+*Language: TypeScript | Size: 490 bytes*
 
 ```typescript
 import React from 'react'
@@ -2212,7 +2358,7 @@ export default async function Page() {
 ### app/(dashboard)/kitchens/[id]/edit/
 
 #### app/(dashboard)/kitchens/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1046 bytes*
+*Language: TypeScript | Size: 1047 bytes*
 
 ```typescript
 'use server'
@@ -2256,7 +2402,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/kitchens/create/
 
 #### app/(dashboard)/kitchens/create/page.tsx
-*Language: TypeScript | Size: 304 bytes*
+*Language: TypeScript | Size: 305 bytes*
 
 ```typescript
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
@@ -2274,10 +2420,166 @@ export default function Page() {
 }
 ```
 
+### app/(dashboard)/recipe-standards/
+
+#### app/(dashboard)/recipe-standards/page.tsx
+*Language: TypeScript | Size: 749 bytes*
+
+```typescript
+// app/(dashboard)/recipe-standards/page.tsx
+'use client'
+
+import React from 'react'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import RecipeStandardsList from '@/components/Page/RecipeStandard/RecipeStandardsList'
+import useDictionary from '@/locales/dictionary-hook'
+
+export default function RecipeStandardsPage() {
+  const dict = useDictionary()
+
+  return (
+    <Card>
+      <CardHeader>
+        <h4>{dict.sidebar?.items?.recipe_standards || 'Recipe Standards'}</h4>
+        <div className="text-muted">
+          {dict.recipe_standards?.description ||
+            'Manage ingredient quantities for dishes'}
+        </div>
+      </CardHeader>
+      <CardBody>
+        <RecipeStandardsList />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
+### app/(dashboard)/recipe-standards/[id]/edit/
+
+#### app/(dashboard)/recipe-standards/[id]/edit/page.tsx
+*Language: TypeScript | Size: 2193 bytes*
+
+```typescript
+// app/(dashboard)/recipe-standards/[id]/edit/page.tsx
+'use client'
+
+import React, { useEffect, useState } from 'react'
+import { Card, CardBody, CardHeader, Spinner, Alert } from 'react-bootstrap'
+import { useParams } from 'next/navigation'
+import RecipeStandardForm from '@/components/Page/RecipeStandard/RecipeStandardForm'
+import { recipeStandardApi } from '@/services'
+import { RecipeStandard } from '@/models/recipe_standard'
+import useDictionary from '@/locales/dictionary-hook'
+
+export default function EditRecipeStandardPage() {
+  const params = useParams()
+  const id = params?.id as string
+  const dict = useDictionary()
+  const [standard, setStandard] = useState<RecipeStandard | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const loadStandard = async () => {
+      try {
+        setLoading(true)
+        setError('')
+        const data = await recipeStandardApi.getById(parseInt(id))
+        setStandard(data)
+      } catch (err) {
+        setError(dict.common?.load_error || 'Failed to load recipe standard')
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (id) {
+      loadStandard()
+    }
+  }, [id])
+
+  if (loading) {
+    return (
+      <Card>
+        <CardBody className="text-center py-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">{dict.common.loading}</span>
+          </Spinner>
+        </CardBody>
+      </Card>
+    )
+  }
+
+  if (error || !standard) {
+    return (
+      <Card>
+        <CardBody>
+          <Alert variant="danger">
+            {error || dict.common?.not_found || 'Recipe standard not found'}
+          </Alert>
+        </CardBody>
+      </Card>
+    )
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <h4>{dict.recipe_standards?.edit_title || 'Edit Recipe Standard'}</h4>
+        <div className="text-muted">
+          {dict.recipe_standards?.edit_description ||
+            'Update ingredient quantities for a dish'}
+        </div>
+      </CardHeader>
+      <CardBody>
+        <RecipeStandardForm recipeStandard={standard} isEdit />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
+### app/(dashboard)/recipe-standards/create/
+
+#### app/(dashboard)/recipe-standards/create/page.tsx
+*Language: TypeScript | Size: 786 bytes*
+
+```typescript
+// app/(dashboard)/recipe-standards/create/page.tsx
+'use client'
+
+import React from 'react'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import RecipeStandardForm from '@/components/Page/RecipeStandard/RecipeStandardForm'
+import useDictionary from '@/locales/dictionary-hook'
+
+export default function CreateRecipeStandardPage() {
+  const dict = useDictionary()
+
+  return (
+    <Card>
+      <CardHeader>
+        <h4>
+          {dict.recipe_standards?.create_title || 'Create Recipe Standard'}
+        </h4>
+        <div className="text-muted">
+          {dict.recipe_standards?.create_description ||
+            'Add ingredient quantities for a dish'}
+        </div>
+      </CardHeader>
+      <CardBody>
+        <RecipeStandardForm />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
 ### app/(dashboard)/suppliers/
 
 #### app/(dashboard)/suppliers/page.tsx
-*Language: TypeScript | Size: 493 bytes*
+*Language: TypeScript | Size: 494 bytes*
 
 ```typescript
 import React from 'react'
@@ -2304,7 +2606,7 @@ export default async function Page() {
 ### app/(dashboard)/suppliers/[id]/edit/
 
 #### app/(dashboard)/suppliers/[id]/edit/page.tsx
-*Language: TypeScript | Size: 1066 bytes*
+*Language: TypeScript | Size: 1067 bytes*
 
 ```typescript
 'use server'
@@ -2348,7 +2650,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 ### app/(dashboard)/suppliers/create/
 
 #### app/(dashboard)/suppliers/create/page.tsx
-*Language: TypeScript | Size: 309 bytes*
+*Language: TypeScript | Size: 310 bytes*
 
 ```typescript
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
@@ -2649,7 +2951,7 @@ export const useSidebar = () => {
 ### components/Layout/Dashboard/Breadcrumb/
 
 #### components/Layout/Dashboard/Breadcrumb/Breadcrumb.tsx
-*Language: TypeScript | Size: 714 bytes*
+*Language: TypeScript | Size: 722 bytes*
 
 ```typescript
 import { Breadcrumb as BSBreadcrumb, BreadcrumbItem } from 'react-bootstrap'
@@ -2665,13 +2967,13 @@ export default async function Breadcrumb() {
       >
         {dict.breadcrumb.home}
       </BreadcrumbItem>
-      <BreadcrumbItem
+      {/* <BreadcrumbItem
         linkProps={{ className: 'text-decoration-none' }}
         href="/"
       >
         {dict.breadcrumb.library}
       </BreadcrumbItem>
-      <BreadcrumbItem active>{dict.breadcrumb.data}</BreadcrumbItem>
+      <BreadcrumbItem active>{dict.breadcrumb.data}</BreadcrumbItem> */}
     </BSBreadcrumb>
   )
 }
@@ -3868,7 +4170,7 @@ export default function SidebarOverlay() {
 ### components/Page/Dashboard/
 
 #### components/Page/Dashboard/ConversionChart.tsx
-*Language: TypeScript | Size: 1254 bytes*
+*Language: TypeScript | Size: 1385 bytes*
 
 ```typescript
 'use client'
@@ -3886,7 +4188,15 @@ import {
   Tooltip,
 } from 'chart.js'
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Filler,
+)
 
 export default function ConversionChart() {
   return (
@@ -3919,14 +4229,24 @@ export default function ConversionChart() {
         },
       }}
       data={{
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'rgba(255,255,255,.2)',
-          borderColor: 'rgba(255,255,255,.55)',
-          data: [78, 81, 80, 45, 34, 12, 40],
-          fill: true,
-        }],
+        labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+        ],
+        datasets: [
+          {
+            label: 'My First dataset',
+            backgroundColor: 'rgba(255,255,255,.2)',
+            borderColor: 'rgba(255,255,255,.55)',
+            data: [78, 81, 80, 45, 34, 12, 40],
+            fill: true,
+          },
+        ],
       }}
     />
   )
@@ -3934,7 +4254,7 @@ export default function ConversionChart() {
 ```
 
 #### components/Page/Dashboard/IncomeChart.tsx
-*Language: TypeScript | Size: 1533 bytes*
+*Language: TypeScript | Size: 1662 bytes*
 
 ```typescript
 'use client'
@@ -3952,7 +4272,15 @@ import {
   Tooltip,
 } from 'chart.js'
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Filler,
+)
 
 export default function IncomeChart() {
   return (
@@ -4000,13 +4328,23 @@ export default function IncomeChart() {
         },
       }}
       data={{
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'transparent',
-          borderColor: 'rgba(255,255,255,.55)',
-          data: [1, 18, 9, 17, 34, 22, 11],
-        }],
+        labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+        ],
+        datasets: [
+          {
+            label: 'My First dataset',
+            backgroundColor: 'transparent',
+            borderColor: 'rgba(255,255,255,.55)',
+            data: [1, 18, 9, 17, 34, 22, 11],
+          },
+        ],
       }}
     />
   )
@@ -4014,7 +4352,7 @@ export default function IncomeChart() {
 ```
 
 #### components/Page/Dashboard/SessionChart.tsx
-*Language: TypeScript | Size: 1502 bytes*
+*Language: TypeScript | Size: 1752 bytes*
 
 ```typescript
 'use client'
@@ -4032,7 +4370,15 @@ import {
   Tooltip,
 } from 'chart.js'
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Filler,
+)
 
 export default function SessionChart() {
   return (
@@ -4069,14 +4415,35 @@ export default function SessionChart() {
         },
       }}
       data={{
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April'],
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'rgba(255,255,255,.2)',
-          borderColor: 'rgba(255,255,255,.55)',
-          data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82],
-          barPercentage: 0.6,
-        }],
+        labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+          'January',
+          'February',
+          'March',
+          'April',
+        ],
+        datasets: [
+          {
+            label: 'My First dataset',
+            backgroundColor: 'rgba(255,255,255,.2)',
+            borderColor: 'rgba(255,255,255,.55)',
+            data: [
+              78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82,
+            ],
+            barPercentage: 0.6,
+          },
+        ],
       }}
     />
   )
@@ -4084,7 +4451,7 @@ export default function SessionChart() {
 ```
 
 #### components/Page/Dashboard/TrafficChart.tsx
-*Language: TypeScript | Size: 3255 bytes*
+*Language: TypeScript | Size: 3389 bytes*
 
 ```typescript
 'use client'
@@ -4104,9 +4471,18 @@ import {
 import useDictionary from '@/locales/dictionary-hook'
 import useComputedStyle from '@/hooks/use-computed-style'
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Filler,
+)
 
-const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min)
+const random = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min)
 
 export default function TrafficChart() {
   const dict = useDictionary()
@@ -4125,44 +4501,48 @@ export default function TrafficChart() {
           dict.dashboard.traffic.chart.xlabel6,
           dict.dashboard.traffic.chart.xlabel7,
         ],
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          borderColor: 'rgba(13, 202, 240, 1)',
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 2,
-          data: [
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-          ],
-          fill: true,
-        }, {
-          label: 'My Second dataset',
-          borderColor: 'rgba(25, 135, 84, 1)',
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 2,
-          data: [
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-            random(50, 200),
-          ],
-        }, {
-          label: 'My Third dataset',
-          borderColor: 'rgba(220, 53, 69, 1)',
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 1,
-          borderDash: [8, 5],
-          data: [65, 65, 65, 65, 65, 65, 65],
-        }],
+        datasets: [
+          {
+            label: 'My First dataset',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            borderColor: 'rgba(13, 202, 240, 1)',
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: [
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+            ],
+            fill: true,
+          },
+          {
+            label: 'My Second dataset',
+            borderColor: 'rgba(25, 135, 84, 1)',
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: [
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+              random(50, 200),
+            ],
+          },
+          {
+            label: 'My Third dataset',
+            borderColor: 'rgba(220, 53, 69, 1)',
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 1,
+            borderDash: [8, 5],
+            data: [65, 65, 65, 65, 65, 65, 65],
+          },
+        ],
       }}
       options={{
         maintainAspectRatio: false,
@@ -4215,7 +4595,7 @@ export default function TrafficChart() {
 ```
 
 #### components/Page/Dashboard/UserChart.tsx
-*Language: TypeScript | Size: 1559 bytes*
+*Language: TypeScript | Size: 1688 bytes*
 
 ```typescript
 'use client'
@@ -4233,7 +4613,15 @@ import {
   Tooltip,
 } from 'chart.js'
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Filler,
+)
 
 export default function UserChart() {
   return (
@@ -4282,13 +4670,23 @@ export default function UserChart() {
         },
       }}
       data={{
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'transparent',
-          borderColor: 'rgba(255,255,255,.55)',
-          data: [65, 59, 84, 84, 51, 55, 40],
-        }],
+        labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+        ],
+        datasets: [
+          {
+            label: 'My First dataset',
+            backgroundColor: 'transparent',
+            borderColor: 'rgba(255,255,255,.55)',
+            data: [65, 59, 84, 84, 51, 55, 40],
+          },
+        ],
       }}
     />
   )
@@ -4298,13 +4696,20 @@ export default function UserChart() {
 ### components/Page/Dish/
 
 #### components/Page/Dish/DishForm.tsx
-*Language: TypeScript | Size: 5229 bytes*
+*Language: TypeScript | Size: 5246 bytes*
 
 ```typescript
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
@@ -4332,13 +4737,15 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
     active: dish?.active || true,
   })
 
-  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target
-      setFormData(prev => ({
-        ...prev,
-        [name]: name === 'active' ? value === 'true' : value
-      }))
-    }
+  const handleChangeActive = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'active' ? value === 'true' : value,
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -4383,9 +4790,9 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -4491,7 +4898,7 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
 ```
 
 #### components/Page/Dish/DishesList.tsx
-*Language: TypeScript | Size: 7233 bytes*
+*Language: TypeScript | Size: 7895 bytes*
 
 ```typescript
 'use client'
@@ -4513,7 +4920,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
@@ -4522,7 +4933,9 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function DishesList() {
-  const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(null)
+  const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(
+    null,
+  )
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -4544,7 +4957,7 @@ export default function DishesList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -4565,7 +4978,12 @@ export default function DishesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.dishes?.confirm_delete || 'Are you sure you want to delete this dish?')) {
+    if (
+      !confirm(
+        dict.dishes?.confirm_delete ||
+          'Are you sure you want to delete this dish?',
+      )
+    ) {
       return
     }
 
@@ -4580,16 +4998,16 @@ export default function DishesList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/dishes?${newSearchParams.toString()}`)
   }
 
@@ -4663,7 +5081,9 @@ export default function DishesList() {
                 <th>{dict.dishes?.name || 'Dish Name'}</th>
                 <th>{dict.dishes?.cooking_method || 'Cooking Method'}</th>
                 <th>{dict.dishes?.status || 'Status'}</th>
-                <th className="text-end">{dict.common?.actions || 'Actions'}</th>
+                <th className="text-end">
+                  {dict.common?.actions || 'Actions'}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -4675,10 +5095,9 @@ export default function DishesList() {
                     <td>{dish.cookingMethod}</td>
                     <td>
                       <Badge bg={dish.active ? 'success' : 'secondary'}>
-                        {dish.active 
-                          ? (dict.common?.active || 'Active')
-                          : (dict.common?.inactive || 'Inactive')
-                        }
+                        {dish.active
+                          ? dict.common?.active || 'Active'
+                          : dict.common?.inactive || 'Inactive'}
                       </Badge>
                     </td>
                     <td className="text-end">
@@ -4691,10 +5110,27 @@ export default function DishesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/dishes/${dish.dishId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(
+                                `/dishes/${dish.dishId}/recipe-standard`,
+                              )
+                            }
+                          >
+                            {dict.dishes?.recipe_standards ||
+                              'Recipe Standards'}
+                          </DropdownItem>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(`/dishes/${dish.dishId}/edit`)
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(dish.dishId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() => handleDelete(dish.dishId)}
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
@@ -4714,9 +5150,7 @@ export default function DishesList() {
         </div>
 
         {/* Pagination */}
-        {dishesData && dishesData.meta && (
-          <Pagination meta={dishesData.meta} />
-        )}
+        {dishesData && dishesData.meta && <Pagination meta={dishesData.meta} />}
       </CardBody>
     </Card>
   )
@@ -4726,16 +5160,27 @@ export default function DishesList() {
 ### components/Page/Ingredient/
 
 #### components/Page/Ingredient/IngredientForm.tsx
-*Language: TypeScript | Size: 4749 bytes*
+*Language: TypeScript | Size: 4819 bytes*
 
 ```typescript
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { ingredientApi } from '@/services'
-import { Ingredient, CreateIngredientInput, UpdateIngredientInput } from '@/models/ingredient'
+import {
+  Ingredient,
+  CreateIngredientInput,
+  UpdateIngredientInput,
+} from '@/models/ingredient'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface IngredientFormProps {
@@ -4743,7 +5188,10 @@ interface IngredientFormProps {
   isEdit?: boolean
 }
 
-export default function IngredientForm({ ingredient, isEdit = false }: IngredientFormProps) {
+export default function IngredientForm({
+  ingredient,
+  isEdit = false,
+}: IngredientFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
@@ -4790,7 +5238,9 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         router.push('/ingredients')
       }, 1500)
     } catch (err) {
-      setError(isEdit ? 'Failed to update ingredient' : 'Failed to create ingredient')
+      setError(
+        isEdit ? 'Failed to update ingredient' : 'Failed to create ingredient',
+      )
       console.error(err)
     } finally {
       setLoading(false)
@@ -4799,9 +5249,9 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -4854,7 +5304,9 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>{dict.ingredients?.material_group || 'Material Group'}</FormLabel>
+          <FormLabel>
+            {dict.ingredients?.material_group || 'Material Group'}
+          </FormLabel>
           <FormControl
             type="text"
             name="materialGroup"
@@ -4897,7 +5349,7 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
 ```
 
 #### components/Page/Ingredient/IngredientList.tsx
-*Language: TypeScript | Size: 7478 bytes*
+*Language: TypeScript | Size: 7891 bytes*
 
 ```typescript
 'use client'
@@ -4919,7 +5371,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ingredientApi } from '@/services'
 import { Ingredient } from '@/models'
@@ -4928,7 +5384,8 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function IngredientesList() {
-  const [ingredientsData, setIngredientesData] = useState<ResourceCollection<Ingredient> | null>(null)
+  const [ingredientsData, setIngredientesData] =
+    useState<ResourceCollection<Ingredient> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -4950,7 +5407,7 @@ export default function IngredientesList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -4971,7 +5428,12 @@ export default function IngredientesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.ingredients?.confirm_delete || 'Are you sure you want to delete this ingredient?')) {
+    if (
+      !confirm(
+        dict.ingredients?.confirm_delete ||
+          'Are you sure you want to delete this ingredient?',
+      )
+    ) {
       return
     }
 
@@ -4986,16 +5448,16 @@ export default function IngredientesList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/ingredients?${newSearchParams.toString()}`)
   }
 
@@ -5018,7 +5480,6 @@ export default function IngredientesList() {
       </Card>
     )
   }
-
 
   return (
     <Card>
@@ -5076,15 +5537,19 @@ export default function IngredientesList() {
               </tr>
             </thead>
             <tbody>
-              {ingredientsData && ingredientsData.data && ingredientsData.data.length > 0 ? (
+              {ingredientsData &&
+              ingredientsData.data &&
+              ingredientsData.data.length > 0 ? (
                 ingredientsData.data.map((ingredient) => (
                   <tr key={ingredient.ingredientId}>
-                      <td>{ingredient.ingredientId}</td>
-                      <td>{ingredient.ingredientName}</td>
-                      <td>{ingredient.property || '-'}</td>
-                      <td>{ingredient.materialGroup || '-'}</td>
-                      <td>{ingredient.unit}</td>
-                      <td>{new Date(ingredient.createdDate).toLocaleDateString()}</td>
+                    <td>{ingredient.ingredientId}</td>
+                    <td>{ingredient.ingredientName}</td>
+                    <td>{ingredient.property || '-'}</td>
+                    <td>{ingredient.materialGroup || '-'}</td>
+                    <td>{ingredient.unit}</td>
+                    <td>
+                      {new Date(ingredient.createdDate).toLocaleDateString()}
+                    </td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -5095,10 +5560,21 @@ export default function IngredientesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/ingredients/${ingredient.ingredientId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(
+                                `/ingredients/${ingredient.ingredientId}/edit`,
+                              )
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(ingredient.ingredientId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() =>
+                              handleDelete(ingredient.ingredientId)
+                            }
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
@@ -5130,16 +5606,27 @@ export default function IngredientesList() {
 ### components/Page/Kitchen/
 
 #### components/Page/Kitchen/KitchenForm.tsx
-*Language: TypeScript | Size: 5142 bytes*
+*Language: TypeScript | Size: 5233 bytes*
 
 ```typescript
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { kitchenApi } from '@/services'
-import { Kitchen, CreateKitchenInput, UpdateKitchenInput } from '@/models/kitchen'
+import {
+  Kitchen,
+  CreateKitchenInput,
+  UpdateKitchenInput,
+} from '@/models/kitchen'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface KitchenFormProps {
@@ -5147,7 +5634,10 @@ interface KitchenFormProps {
   isEdit?: boolean
 }
 
-export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProps) {
+export default function KitchenForm({
+  kitchen,
+  isEdit = false,
+}: KitchenFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
@@ -5177,7 +5667,9 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
           active: formData.active,
         }
         await kitchenApi.update(kitchen.kitchenId, updateData)
-        setSuccess(dict.kitchens?.success_update || 'Kitchen updated successfully')
+        setSuccess(
+          dict.kitchens?.success_update || 'Kitchen updated successfully',
+        )
       } else {
         const createData: CreateKitchenInput = {
           kitchenId: formData.kitchenId,
@@ -5187,16 +5679,19 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
           active: formData.active,
         }
         await kitchenApi.create(createData)
-        setSuccess(dict.kitchens?.success_create || 'Kitchen created successfully')
+        setSuccess(
+          dict.kitchens?.success_create || 'Kitchen created successfully',
+        )
       }
 
       setTimeout(() => {
         router.push('/kitchens')
       }, 1500)
     } catch (err) {
-      setError(isEdit ? 
-        (dict.kitchens?.error_update || 'Failed to update kitchen') : 
-        (dict.kitchens?.error_create || 'Failed to create kitchen')
+      setError(
+        isEdit
+          ? dict.kitchens?.error_update || 'Failed to update kitchen'
+          : dict.kitchens?.error_create || 'Failed to create kitchen',
       )
       console.error(err)
     } finally {
@@ -5204,19 +5699,21 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
     }
   }
 
-  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChangeActive = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'active' ? value === 'true' : value
+      [name]: name === 'active' ? value === 'true' : value,
     }))
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -5313,7 +5810,7 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
 ```
 
 #### components/Page/Kitchen/KitchensList.tsx
-*Language: TypeScript | Size: 7532 bytes*
+*Language: TypeScript | Size: 7853 bytes*
 
 ```typescript
 'use client'
@@ -5335,7 +5832,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { kitchenApi } from '@/services'
 import { Kitchen } from '@/models'
@@ -5344,7 +5845,8 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function KitchenesList() {
-  const [kitchensData, setKitchenesData] = useState<ResourceCollection<Kitchen> | null>(null)
+  const [kitchensData, setKitchenesData] =
+    useState<ResourceCollection<Kitchen> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -5366,7 +5868,7 @@ export default function KitchenesList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -5387,7 +5889,12 @@ export default function KitchenesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.kitchens?.confirm_delete || 'Are you sure you want to delete this kitchen?')) {
+    if (
+      !confirm(
+        dict.kitchens?.confirm_delete ||
+          'Are you sure you want to delete this kitchen?',
+      )
+    ) {
       return
     }
 
@@ -5402,16 +5909,16 @@ export default function KitchenesList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/kitchens?${newSearchParams.toString()}`)
   }
 
@@ -5434,7 +5941,6 @@ export default function KitchenesList() {
       </Card>
     )
   }
-
 
   return (
     <Card>
@@ -5482,29 +5988,35 @@ export default function KitchenesList() {
           <Table hover>
             <thead>
               <tr>
-                  <th>{dict.kitchens?.id || 'ID'}</th>
-                  <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
-                  <th>{dict.kitchens?.address || 'Address'}</th>
-                  <th>{dict.kitchens?.phone || 'Phone'}</th>
-                  <th>{dict.kitchens?.status || 'Status'}</th>
-                  <th>{dict.common?.created_date || 'Created Date'}</th>
-                  <th aria-label="Action" />
+                <th>{dict.kitchens?.id || 'ID'}</th>
+                <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
+                <th>{dict.kitchens?.address || 'Address'}</th>
+                <th>{dict.kitchens?.phone || 'Phone'}</th>
+                <th>{dict.kitchens?.status || 'Status'}</th>
+                <th>{dict.common?.created_date || 'Created Date'}</th>
+                <th aria-label="Action" />
               </tr>
             </thead>
             <tbody>
-              {kitchensData && kitchensData.data && kitchensData.data.length > 0 ? (
+              {kitchensData &&
+              kitchensData.data &&
+              kitchensData.data.length > 0 ? (
                 kitchensData.data.map((kitchen) => (
                   <tr key={kitchen.kitchenId}>
-                      <td>{kitchen.kitchenId}</td>
-                      <td>{kitchen.kitchenName}</td>
-                      <td>{kitchen.address || '-'}</td>
-                      <td>{kitchen.phone || '-'}</td>
-                      <td>
-                        <Badge bg={kitchen.active ? 'success' : 'secondary'}>
-                          {kitchen.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
-                        </Badge>
-                      </td>
-                <td>{new Date(kitchen.createdDate).toLocaleDateString()}</td>
+                    <td>{kitchen.kitchenId}</td>
+                    <td>{kitchen.kitchenName}</td>
+                    <td>{kitchen.address || '-'}</td>
+                    <td>{kitchen.phone || '-'}</td>
+                    <td>
+                      <Badge bg={kitchen.active ? 'success' : 'secondary'}>
+                        {kitchen.active
+                          ? dict.common?.active || 'Active'
+                          : dict.common?.inactive || 'Inactive'}
+                      </Badge>
+                    </td>
+                    <td>
+                      {new Date(kitchen.createdDate).toLocaleDateString()}
+                    </td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -5515,10 +6027,17 @@ export default function KitchenesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/kitchens/${kitchen.kitchenId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(`/kitchens/${kitchen.kitchenId}/edit`)
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(kitchen.kitchenId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() => handleDelete(kitchen.kitchenId)}
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
@@ -5549,14 +6068,383 @@ export default function KitchenesList() {
 
 ### components/Page/RecipeStandard/
 
+#### components/Page/RecipeStandard/RecipeStandardForm.tsx
+*Language: TypeScript | Size: 11019 bytes*
+
+```typescript
+// components/Page/RecipeStandard/RecipeStandardForm.tsx
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+  Row,
+  Col,
+  InputGroup,
+} from 'react-bootstrap'
+import { useRouter } from 'next/navigation'
+import { recipeStandardApi, dishApi, ingredientApi } from '@/services'
+import { RecipeStandard } from '@/models/recipe_standard'
+import { Dish } from '@/models/dish'
+import { Ingredient } from '@/models/ingredient'
+import useDictionary from '@/locales/dictionary-hook'
+import { ResourceCollection } from '@/models/resource'
+import Select from 'react-select'
+
+interface RecipeStandardFormProps {
+  recipeStandard?: RecipeStandard
+  isEdit?: boolean
+}
+
+export default function RecipeStandardForm({
+  recipeStandard,
+  isEdit = false,
+}: RecipeStandardFormProps) {
+  const router = useRouter()
+  const dict = useDictionary()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  // Dropdown options
+  const [dishes, setDishes] = useState<ResourceCollection<Dish> | null>(null)
+  const [ingredients, setIngredients] =
+    useState<ResourceCollection<Ingredient> | null>(null)
+  const [loadingOptions, setLoadingOptions] = useState(true)
+
+  const [formData, setFormData] = useState({
+    dishId: recipeStandard?.dishId || '',
+    ingredientId: recipeStandard?.ingredientId || '',
+    unit: recipeStandard?.unit || '',
+    standardPer1: recipeStandard?.standardPer1?.toString() || '',
+    note: recipeStandard?.note || '',
+    amount: recipeStandard?.amount?.toString() || '',
+  })
+
+  // Load dishes and ingredients for dropdowns
+  useEffect(() => {
+    const loadOptions = async () => {
+      try {
+        setLoadingOptions(true)
+        const [dishesData, ingredientsData] = await Promise.all([
+          dishApi.getAll(),
+          ingredientApi.getAll(),
+        ])
+        setDishes(dishesData)
+        setIngredients(ingredientsData)
+      } catch (err) {
+        console.error('Failed to load options:', err)
+        setError(dict.common?.load_error || 'Failed to load form options')
+      } finally {
+        setLoadingOptions(false)
+      }
+    }
+
+    loadOptions()
+  }, [])
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const validateForm = (): boolean => {
+    if (!formData.dishId.trim()) {
+      setError(dict.validation?.required_field || 'Dish is required')
+      return false
+    }
+    if (!formData.ingredientId.trim()) {
+      setError(dict.validation?.required_field || 'Ingredient is required')
+      return false
+    }
+    if (!formData.unit.trim()) {
+      setError(dict.validation?.required_field || 'Unit is required')
+      return false
+    }
+    if (!formData.standardPer1 || parseFloat(formData.standardPer1) <= 0) {
+      setError(
+        dict.validation?.invalid_number ||
+          'Standard per serving must be a positive number',
+      )
+      return false
+    }
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const submitData = {
+        dishId: formData.dishId,
+        ingredientId: formData.ingredientId,
+        unit: formData.unit,
+        standardPer1: parseFloat(formData.standardPer1),
+        note: formData.note || undefined,
+        amount: formData.amount ? parseFloat(formData.amount) : undefined,
+        updatedById: 'admin', // This should come from authenticated user
+      }
+
+      if (isEdit && recipeStandard) {
+        await recipeStandardApi.update(recipeStandard.standardId, submitData)
+        setSuccess(
+          dict.common?.success_update || 'Recipe standard updated successfully',
+        )
+      } else {
+        await recipeStandardApi.create(submitData)
+        setSuccess(
+          dict.common?.success_create || 'Recipe standard created successfully',
+        )
+      }
+
+      // Redirect after success
+      setTimeout(() => {
+        router.push('/recipe-standards')
+      }, 1500)
+    } catch (err: any) {
+      setError(
+        err.message ||
+          dict.common?.save_error ||
+          'Failed to save recipe standard',
+      )
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCancel = () => {
+    router.push('/recipe-standards')
+  }
+
+  if (loadingOptions) {
+    return <div className="text-center py-4">Loading form...</div>
+  }
+
+  return (
+    <>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+          {success}
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          {dishes && (
+            <Col md={6}>
+              <FormGroup className="mb-3">
+                <FormLabel>{dict.recipe_standards?.dish || 'Dish'} *</FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="ingredientId"
+                  value={
+                    dishes.data
+                      .map((dish) => ({
+                        value: dish.dishId,
+                        label: `${dish.dishId} - ${dish.dishName}`,
+                      }))
+                      .find((opt) => opt.value === formData.ingredientId) ||
+                    null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      dishId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={dishes.data.map((dish) => ({
+                    value: dish.dishId,
+                    label: `${dish.dishId} - ${dish.dishName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder={dict.common?.select || 'Select an dish'}
+                />
+              </FormGroup>
+            </Col>
+          )}
+          {ingredients && (
+            <Col md={6}>
+              <FormGroup className="mb-3">
+                <FormLabel>
+                  {dict.recipe_standards?.ingredient || 'Ingredient'} *
+                </FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="ingredientId"
+                  value={
+                    ingredients.data
+                      .map((ingredient) => ({
+                        value: ingredient.ingredientId,
+                        label: `${ingredient.ingredientId} - ${ingredient.ingredientName}`,
+                      }))
+                      .find((opt) => opt.value === formData.ingredientId) ||
+                    null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      ingredientId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={ingredients.data.map((ingredient) => ({
+                    value: ingredient.ingredientId,
+                    label: `${ingredient.ingredientId} - ${ingredient.ingredientName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder={dict.common?.select || 'Select an ingredient'}
+                />
+              </FormGroup>
+            </Col>
+          )}
+        </Row>
+
+        <Row>
+          <Col md={4}>
+            <FormGroup className="mb-3">
+              <FormLabel>
+                {dict.recipe_standards?.standard_per_serving ||
+                  'Standard Per Serving'}{' '}
+                *
+              </FormLabel>
+              <FormControl
+                type="number"
+                step="0.0001"
+                name="standardPer1"
+                value={formData.standardPer1}
+                onChange={handleChange}
+                placeholder="0.5"
+                disabled={loading}
+                required
+              />
+              <Form.Text className="text-muted">
+                {dict.recipe_standards?.standard_help ||
+                  'Quantity needed for 1 serving'}
+              </Form.Text>
+            </FormGroup>
+          </Col>
+
+          <Col md={4}>
+            <FormGroup className="mb-3">
+              <FormLabel>{dict.recipe_standards?.unit || 'Unit'} *</FormLabel>
+              <FormControl
+                type="text"
+                name="unit"
+                value={formData.unit}
+                onChange={handleChange}
+                placeholder="kg, g, ml, l"
+                disabled={loading}
+                required
+                maxLength={50}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col md={4}>
+            <FormGroup className="mb-3">
+              <FormLabel>{dict.recipe_standards?.amount || 'Amount'}</FormLabel>
+              <InputGroup>
+                <FormControl
+                  type="number"
+                  step="0.01"
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleChange}
+                  placeholder="50000"
+                  disabled={loading}
+                />
+              </InputGroup>
+              <Form.Text className="text-muted">
+                {dict.recipe_standards?.amount_help ||
+                  'Cost per serving (optional)'}
+              </Form.Text>
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <FormGroup className="mb-3">
+          <FormLabel>{dict.recipe_standards?.note || 'Note'}</FormLabel>
+          <FormControl
+            as="textarea"
+            rows={3}
+            name="note"
+            value={formData.note}
+            onChange={handleChange}
+            placeholder={
+              dict.recipe_standards?.note_placeholder ||
+              'Additional notes about this ingredient...'
+            }
+            disabled={loading}
+          />
+        </FormGroup>
+
+        <div className="d-flex gap-2 justify-content-end">
+          <Button variant="secondary" onClick={handleCancel} disabled={loading}>
+            {dict.action?.cancel || 'Cancel'}
+          </Button>
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                {dict.action?.saving || 'Saving...'}
+              </>
+            ) : (
+              dict.action?.save || 'Save'
+            )}
+          </Button>
+        </div>
+      </Form>
+    </>
+  )
+}
+```
+
 #### components/Page/RecipeStandard/RecipeStandardsList.tsx
-*Language: TypeScript | Size: 4549 bytes*
+*Language: TypeScript | Size: 5386 bytes*
 
 ```typescript
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'react-bootstrap'
+import {
+  Button,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
@@ -5568,7 +6456,9 @@ interface RecipeStandardsListProps {
   dishId?: string
 }
 
-export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps) {
+export default function RecipeStandardsList({
+  dishId,
+}: RecipeStandardsListProps) {
   const [standards, setStandards] = useState<RecipeStandard[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -5577,13 +6467,14 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
 
   useEffect(() => {
     loadStandards()
+    console.log('Loading recipe standards for dishId:', dishId, standards)
   }, [dishId])
 
   const loadStandards = async () => {
     try {
       setLoading(true)
       setError('')
-      const data = dishId 
+      const data = dishId
         ? await recipeStandardApi.getByDish(dishId)
         : await recipeStandardApi.getAll()
       setStandards(data)
@@ -5622,38 +6513,52 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
       )}
 
       <div className="mb-3 text-end">
-        <Button variant="success" onClick={() => router.push('/recipe-standards/create')}>
+        <Button
+          variant="success"
+          onClick={() => router.push('/recipe-standards/create')}
+        >
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' Add Recipe Standard'}
+          {dict.recipe_standards.add || 'Add New'}
         </Button>
       </div>
 
       <Table responsive bordered hover>
         <thead>
           <tr className="table-light dark:table-dark">
-            <th>ID</th>
-            <th>Dish</th>
-            <th>Ingredient</th>
-            <th>Standard Per Serving</th>
-            <th>Unit</th>
-            <th>Amount</th>
-            <th>Note</th>
-            <th aria-label="Action" />
+            <th>{dict.recipe_standards?.dishId ?? 'ID'}</th>
+            <th>{dict.recipe_standards?.dish ?? 'Dish'}</th>
+            <th>{dict.recipe_standards?.ingredient ?? 'Ingredient'}</th>
+            <th>
+              {dict.recipe_standards?.standard_per_serving ??
+                'Standard Per Serving'}
+            </th>
+            <th>{dict.recipe_standards?.unit ?? 'Unit'}</th>
+            <th>{dict.recipe_standards?.amount ?? 'Amount'}</th>
+            <th>{dict.recipe_standards?.note ?? 'Note'}</th>
+            <th aria-label={''} />
           </tr>
         </thead>
         <tbody>
-          {standards.length === 0 ? (
+          {standards && standards.length === 0 ? (
             <tr>
               <td colSpan={8} className="text-center">
-                No recipe standards found
+                {dict.common?.no_data || 'No data available'}
               </td>
             </tr>
           ) : (
             standards.map((standard) => (
               <tr key={standard.standardId}>
                 <td>{standard.standardId}</td>
-                <td>{standard.dish?.dishName || standard.dishId}</td>
-                <td>{standard.ingredient?.ingredientName || standard.ingredientId}</td>
+                <td>
+                  {standard.dish?.dishName ||
+                    standard.dishName ||
+                    standard.dishId}
+                </td>
+                <td>
+                  {standard.ingredient?.ingredientName ||
+                    standard.ingredientName ||
+                    standard.ingredientId}
+                </td>
                 <td className="text-end">{standard.standardPer1}</td>
                 <td>{standard.unit}</td>
                 <td className="text-end">
@@ -5674,7 +6579,13 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
                     </DropdownToggle>
 
                     <DropdownMenu>
-                      <DropdownItem onClick={() => router.push(`/recipe-standards/${standard.standardId}/edit`)}>
+                      <DropdownItem
+                        onClick={() =>
+                          router.push(
+                            `/recipe-standards/${standard.standardId}/edit`,
+                          )
+                        }
+                      >
                         {dict.action.edit}
                       </DropdownItem>
                       <DropdownItem
@@ -5699,16 +6610,27 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
 ### components/Page/Supplier/
 
 #### components/Page/Supplier/SupplierForm.tsx
-*Language: TypeScript | Size: 5023 bytes*
+*Language: TypeScript | Size: 5113 bytes*
 
 ```typescript
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { supplierApi } from '@/services'
-import { Supplier, CreateSupplierInput, UpdateSupplierInput } from '@/models/supplier'
+import {
+  Supplier,
+  CreateSupplierInput,
+  UpdateSupplierInput,
+} from '@/models/supplier'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface SupplierFormProps {
@@ -5716,7 +6638,10 @@ interface SupplierFormProps {
   isEdit?: boolean
 }
 
-export default function SupplierForm({ supplier, isEdit = false }: SupplierFormProps) {
+export default function SupplierForm({
+  supplier,
+  isEdit = false,
+}: SupplierFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
@@ -5746,7 +6671,9 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
           zaloLink: formData.zaloLink,
         }
         await supplierApi.update(supplier.supplierId, updateData)
-        setSuccess(dict.common?.success_update || 'Supplier updated successfully')
+        setSuccess(
+          dict.common?.success_update || 'Supplier updated successfully',
+        )
       } else {
         const createData: CreateSupplierInput = {
           supplierId: formData.supplierId,
@@ -5756,16 +6683,19 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
           zaloLink: formData.zaloLink,
         }
         await supplierApi.create(createData)
-        setSuccess(dict.common?.success_create || 'Supplier created successfully')
+        setSuccess(
+          dict.common?.success_create || 'Supplier created successfully',
+        )
       }
 
       setTimeout(() => {
         router.push('/suppliers')
       }, 1500)
     } catch (err) {
-      setError(isEdit ? 
-        (dict.common?.error_update || 'Failed to update supplier') : 
-        (dict.common?.error_create || 'Failed to create supplier')
+      setError(
+        isEdit
+          ? dict.common?.error_update || 'Failed to update supplier'
+          : dict.common?.error_create || 'Failed to create supplier',
       )
       console.error(err)
     } finally {
@@ -5773,19 +6703,21 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
     }
   }
 
-  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChangeActive = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'active' ? value === 'true' : value
+      [name]: name === 'active' ? value === 'true' : value,
     }))
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -5847,7 +6779,7 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
           />
         </FormGroup>
 
-         <FormGroup className="mb-3">
+        <FormGroup className="mb-3">
           <FormLabel>{dict.suppliers?.zalo_link || 'Zalo link'}</FormLabel>
           <FormControl
             type="text"
@@ -5880,7 +6812,7 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
 ```
 
 #### components/Page/Supplier/SuppliersList.tsx
-*Language: TypeScript | Size: 7364 bytes*
+*Language: TypeScript | Size: 7710 bytes*
 
 ```typescript
 'use client'
@@ -5902,7 +6834,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supplierApi } from '@/services'
 import { Supplier } from '@/models'
@@ -5911,7 +6847,8 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function SupplieresList() {
-  const [suppliersData, setSupplieresData] = useState<ResourceCollection<Supplier> | null>(null)
+  const [suppliersData, setSupplieresData] =
+    useState<ResourceCollection<Supplier> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -5933,7 +6870,7 @@ export default function SupplieresList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -5954,7 +6891,12 @@ export default function SupplieresList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.suppliers?.confirm_delete || 'Are you sure you want to delete this supplier?')) {
+    if (
+      !confirm(
+        dict.suppliers?.confirm_delete ||
+          'Are you sure you want to delete this supplier?',
+      )
+    ) {
       return
     }
 
@@ -5969,16 +6911,16 @@ export default function SupplieresList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/suppliers?${newSearchParams.toString()}`)
   }
 
@@ -6001,7 +6943,6 @@ export default function SupplieresList() {
       </Card>
     )
   }
-
 
   return (
     <Card>
@@ -6049,25 +6990,29 @@ export default function SupplieresList() {
           <Table hover>
             <thead>
               <tr>
-                  <th>{dict.suppliers?.id || 'ID'}</th>
-                  <th>{dict.suppliers?.name || 'Supplier Name'}</th>
-                  <th>{dict.suppliers?.address || 'Address'}</th>
-                  <th>{dict.suppliers?.phone || 'Phone'}</th>
-                  <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
-                  <th>{dict.common?.created_date || 'Created Date'}</th>
-                  <th aria-label="Action" />
+                <th>{dict.suppliers?.id || 'ID'}</th>
+                <th>{dict.suppliers?.name || 'Supplier Name'}</th>
+                <th>{dict.suppliers?.address || 'Address'}</th>
+                <th>{dict.suppliers?.phone || 'Phone'}</th>
+                <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
+                <th>{dict.common?.created_date || 'Created Date'}</th>
+                <th aria-label="Action" />
               </tr>
             </thead>
             <tbody>
-              {suppliersData && suppliersData.data && suppliersData.data.length > 0 ? (
+              {suppliersData &&
+              suppliersData.data &&
+              suppliersData.data.length > 0 ? (
                 suppliersData.data.map((supplier) => (
                   <tr key={supplier.supplierId}>
-                      <td>{supplier.supplierId}</td>
-                      <td>{supplier.supplierName}</td>
-                      <td>{supplier.address || '-'}</td>
-                      <td>{supplier.phone || '-'}</td>
-                      <td>{supplier.zaloLink || '-'}</td>
-                <td>{new Date(supplier.createdDate).toLocaleDateString()}</td>
+                    <td>{supplier.supplierId}</td>
+                    <td>{supplier.supplierName}</td>
+                    <td>{supplier.address || '-'}</td>
+                    <td>{supplier.phone || '-'}</td>
+                    <td>{supplier.zaloLink || '-'}</td>
+                    <td>
+                      {new Date(supplier.createdDate).toLocaleDateString()}
+                    </td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -6078,10 +7023,19 @@ export default function SupplieresList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/suppliers/${supplier.supplierId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(
+                                `/suppliers/${supplier.supplierId}/edit`,
+                              )
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(supplier.supplierId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() => handleDelete(supplier.supplierId)}
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
@@ -6497,7 +7451,7 @@ export const getDictionary = async () => {
 ### locales/en/
 
 #### locales/en/lang.json
-*Language: JSON | Size: 12492 bytes*
+*Language: JSON | Size: 13427 bytes*
 
 ```json
 {
@@ -6540,7 +7494,10 @@ export const getDictionary = async () => {
     "delete": "Delete",
     "submit": "Submit",
     "submitting": "Submitting...",
-    "reset": "Reset"
+    "reset": "Reset",
+    "cancel":"Cancel",
+    "save":"Save",
+    "saving":"Saving..."
   },
   "theme": {
     "light": "Light",
@@ -6891,7 +7848,8 @@ export const getDictionary = async () => {
     "group": "Group",
     "description": "Description",
     "active": "Active",
-    "edit": "Edit"
+    "edit": "Edit",
+    "recipe_standards": "Recipe"
   },
   "suppliers": {
     "title": "Supplier Management",
@@ -6909,6 +7867,9 @@ export const getDictionary = async () => {
     "error_delete": "Failed to delete supplier"
   },
   "recipe_standards": {
+    "add": "Add Recipe Standard",
+    "dishId": "Dish Id",
+    "ingredientId": "Ingredient Id",
     "title": "Recipe Standards",
     "add_new": "Add New Standard",
     "dish": "Dish",
@@ -6920,7 +7881,15 @@ export const getDictionary = async () => {
     "no_data": "No recipe standards found",
     "confirm_delete": "Are you sure you want to delete this recipe standard?",
     "error_load": "Failed to load recipe standards",
-    "error_delete": "Failed to delete recipe standard"
+    "error_delete": "Failed to delete recipe standard",
+    "standard_help": "Quantity needed for 1 serving",
+    "amount_help": "Total quantity of ingredient for the recipe standard",
+    "note_placeholder": "Enter notes about the recipe standard (optional)",
+    "description": "Description",
+    "create_title": "Create Recipe Standard",
+    "create_description": "Fill in the details below to create a new recipe standard.",
+    "edit_title": "Edit Recipe Standard",
+    "edit_description": "Update the details of the recipe standard below."
   },
   "common": {
     "active": "Active",
@@ -6934,11 +7903,19 @@ export const getDictionary = async () => {
     "export": "Export",
     "import": "Import",
     "actions": "Actions",
+    "select": "Select",
+    "not_found": "Not Found",
     "created_date": "Created Date",
     "success_update": "Updated successfully",
     "success_create": "Created successfully",
     "error_update": "Failed to update",
-    "error_create": "Failed to create"
+    "error_create": "Failed to create",
+    "save_error": "Failed to save data",
+    "load_error": "Failed to load data"
+  },
+  "validation": {
+    "required_field": "This field is required",
+    "invalid_number": "Invalid number"
   }
 }
 ```
@@ -6946,7 +7923,7 @@ export const getDictionary = async () => {
 ### locales/vi/
 
 #### locales/vi/lang.json
-*Language: JSON | Size: 14494 bytes*
+*Language: JSON | Size: 15588 bytes*
 
 ```json
 {
@@ -6989,7 +7966,10 @@ export const getDictionary = async () => {
     "delete": "Xóa",
     "submit": "Gửi",
     "submitting": "Đang gửi...",
-    "reset": "Đặt lại"
+    "reset": "Đặt lại",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "saving": "Đang lưu..."
   },
   "theme": {
     "light": "Sáng",
@@ -7295,7 +8275,7 @@ export const getDictionary = async () => {
       "by_ingredient": "Theo nguyên liệu"
     }
   },
- 
+
   "ingredients": {
     "loading": "Đang tải...",
     "no_data": "Không tìm thấy nguyên liệu",
@@ -7317,7 +8297,7 @@ export const getDictionary = async () => {
     "property": "Tính chất",
     "material_group": "Nhóm vật liệu",
     "created_date": "Ngày tạo",
-    "edit":"Sửa"
+    "edit": "Sửa"
   },
   "kitchens": {
     "loading": "Đang tải...",
@@ -7356,7 +8336,8 @@ export const getDictionary = async () => {
     "group": "Nhóm",
     "description": "Mô tả",
     "active": "Hoạt động",
-    "edit": "Cập nhật"
+    "edit": "Cập nhật",
+    "recipe_standards": "Định mức công thức"
   },
   "suppliers": {
     "title": "Quản lý nhà cung cấp",
@@ -7374,6 +8355,8 @@ export const getDictionary = async () => {
     "error_delete": "Không thể xóa nhà cung cấp"
   },
   "recipe_standards": {
+    "add": "Thêm định mức công thức",
+    "dishId": "Mã công thức",
     "title": "Định mức công thức",
     "add_new": "Thêm định mức mới",
     "dish": "Món ăn",
@@ -7385,7 +8368,16 @@ export const getDictionary = async () => {
     "no_data": "Không tìm thấy định mức công thức",
     "confirm_delete": "Bạn có chắc chắn muốn xóa định mức công thức này?",
     "error_load": "Không thể tải danh sách định mức công thức",
-    "error_delete": "Không thể xóa định mức công thức"
+    "error_delete": "Không thể xóa định mức công thức",
+    "standard_help": "Số lượng cần cho 1 khẩu phần",
+    "amount_help": "Tổng số lượng nguyên liệu cho định mức công thức",
+    "note_placeholder": "Nhập ghi chú về định mức công thức (tùy chọn)",
+
+    "description": "Mô tả",
+    "create_title": "Tạo định mức công thức",
+    "create_description": "Điền thông tin bên dưới để tạo định mức công thức mới.",
+    "edit_title": "Chỉnh sửa định mức công thức",
+    "edit_description": "Cập nhật thông tin định mức công thức bên dưới."
   },
   "common": {
     "active": "Hoạt động",
@@ -7399,11 +8391,19 @@ export const getDictionary = async () => {
     "export": "Xuất",
     "import": "Nhập",
     "actions": "Hành động",
+    "select": "Chọn",
+    "not_found": "Không tìm thấy",
     "created_date": "Ngày tạo",
     "success_update": "Cập nhật thành công",
     "success_create": "Tạo thành công",
     "error_update": "Cập nhật thất bại",
-    "error_create": "Tạo thất bại"
+    "error_create": "Tạo thất bại",
+    "load_error": "Tải dữ liệu thất bại",
+    "save_error": "Lưu dữ liệu thất bại"
+  },
+  "validation": {
+    "required_field": "Trường này là bắt buộc",
+    "invalid_number": "Số không hợp lệ"
   }
 }
 ```
@@ -7586,28 +8586,29 @@ export interface Pokemon {
 ```
 
 #### models/recipe_standard.ts
-*Language: TypeScript | Size: 671 bytes*
+*Language: TypeScript | Size: 884 bytes*
 
 ```typescript
+// models/recipe_standard.ts
+import { Dish } from './dish'
+import { Ingredient } from './ingredient'
+
 export interface RecipeStandard {
   standardId: number
   dishId: string
   ingredientId: string
+  dishName: string
+  ingredientName: string
   unit: string
   standardPer1: number
-  note: string
-  amount: number
-  updatedById: string
-  createdDate: string
-  modifiedDate: string
-  dish?: {
-    dishId: string
-    dishName: string
-  }
-  ingredient?: {
-    ingredientId: string
-    ingredientName: string
-  }
+  note?: string
+  amount?: number
+  updatedById?: string
+  createdDate?: Date
+  modifiedDate?: Date
+  // Relations
+  dish?: Dish
+  ingredient?: Ingredient
 }
 
 export interface CreateRecipeStandardInput {
@@ -7616,15 +8617,23 @@ export interface CreateRecipeStandardInput {
   unit: string
   standardPer1: number
   note?: string
-  amount: number
-  updatedById: string
+  amount?: number
+  updatedById?: string
 }
 
 export interface UpdateRecipeStandardInput {
   standardPer1?: number
+  unit?: string
   note?: string
   amount?: number
   updatedById?: string
+}
+
+export interface RecipeStandardsResponse {
+  data: RecipeStandard[]
+  total: number
+  page: number
+  pageSize: number
 }
 ```
 
@@ -7843,7 +8852,7 @@ export const dishApi = {
 ```
 
 #### services/index.ts
-*Language: TypeScript | Size: 3662 bytes*
+*Language: TypeScript | Size: 3052 bytes*
 
 ```typescript
 import { apiClient } from '@/utils/api_client'
@@ -7855,6 +8864,8 @@ import {
   RecipeStandard, CreateRecipeStandardInput, UpdateRecipeStandardInput
 } from '@/models'
 import { ResourceCollection } from '@/models/resource'
+import {recipeStandardApi} from './recipe-standard'
+import exp from 'constants'
 
 // Ingredients API
 export const ingredientApi = {
@@ -7912,19 +8923,7 @@ export const supplierApi = {
     apiClient<{ message: string }>(`/api/suppliers/${id}`, { method: 'DELETE' }),
 }
 
-// Recipe Standards API
-export const recipeStandardApi = {
-  getAll: (queryString: string = '') => 
-    apiClient<ResourceCollection<RecipeStandard>>(`/api/recipe-standards${queryString}`),
-  getById: (id: string) => 
-    apiClient<RecipeStandard>(`/api/recipe-standards/${id}`),
-  create: (data: CreateRecipeStandardInput) => 
-    apiClient<RecipeStandard>('/api/recipe-standards', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: UpdateRecipeStandardInput) => 
-    apiClient<RecipeStandard>(`/api/recipe-standards/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
-    apiClient<{ message: string }>(`/api/recipe-standards/${id}`, { method: 'DELETE' }),
-}
+export { recipeStandardApi }
 ```
 
 #### services/ingredient-api.ts
@@ -7959,6 +8958,86 @@ export const ingredientApi = {
 
   delete: async (id: string): Promise<{ message: string }> => {
     return apiClient<{ message: string }>(`/api/ingredients/${id}`, {
+      method: 'DELETE',
+    })
+  },
+}
+```
+
+#### services/recipe-standard.ts
+*Language: TypeScript | Size: 2293 bytes*
+
+```typescript
+// services/recipeStandardApi.ts
+import { apiClient } from '@/utils/api_client'
+import { 
+  RecipeStandard, 
+  CreateRecipeStandardInput, 
+  UpdateRecipeStandardInput,
+  RecipeStandardsResponse 
+} from '@/models/recipe_standard'
+
+const BASE_URL = '/api/recipe-standards'
+
+export const recipeStandardApi = {
+  // Get all recipe standards with pagination and search
+  getAll: async (params?: {
+    page?: number
+    pageSize?: number
+    search?: string
+    sortBy?: string
+    sortDir?: 'asc' | 'desc'
+  }): Promise<RecipeStandard[]> => {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append('page', params.page.toString())
+    if (params?.pageSize) queryParams.append('pageSize', params.pageSize.toString())
+    if (params?.search) queryParams.append('search', params.search)
+    if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
+    if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
+
+    const url = queryParams.toString() 
+      ? `${BASE_URL}?${queryParams.toString()}`
+      : BASE_URL
+
+    const response = await apiClient<RecipeStandardsResponse>(url)
+    return response.data
+  },
+
+  // Get recipe standard by ID
+  getById: async (id: number): Promise<RecipeStandard> => {
+    const response = await apiClient<RecipeStandard>(`${BASE_URL}/${id}`)
+    return response
+  },
+
+  // Get recipe standards by dish ID
+  getByDish: async (dishId: string): Promise<RecipeStandard[]> => {
+    const response = await apiClient<RecipeStandardsResponse>(
+      `${BASE_URL}/dish/${dishId}`,
+    )
+    return response.data
+  },
+
+  // Create new recipe standard
+  create: async (data: CreateRecipeStandardInput): Promise<RecipeStandard> => {
+    const response = await apiClient<RecipeStandard>(BASE_URL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    return response
+  },
+
+  // Update recipe standard
+  update: async (id: number, data: UpdateRecipeStandardInput): Promise<RecipeStandard> => {
+    const response = await apiClient<RecipeStandard>(`${BASE_URL}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+    return response
+  },
+
+  // Delete recipe standard
+  delete: async (id: number): Promise<void> => {
+    await apiClient(`${BASE_URL}/${id}`, {
       method: 'DELETE',
     })
   },

@@ -32,6 +32,7 @@ export default function RecipeStandardsList({
 
   useEffect(() => {
     loadStandards()
+    console.log('Loading recipe standards for dishId:', dishId, standards)
   }, [dishId])
 
   const loadStandards = async () => {
@@ -82,7 +83,7 @@ export default function RecipeStandardsList({
           onClick={() => router.push('/recipe-standards/create')}
         >
           <FontAwesomeIcon icon={faPlus} fixedWidth />
-          {' Add Recipe Standard'}
+          {dict.recipe_standards.add || 'Add New'}
         </Button>
       </div>
 
@@ -103,19 +104,25 @@ export default function RecipeStandardsList({
           </tr>
         </thead>
         <tbody>
-          {standards.length === 0 ? (
+          {standards && standards.length === 0 ? (
             <tr>
               <td colSpan={8} className="text-center">
-                No recipe standards found
+                {dict.common?.no_data || 'No data available'}
               </td>
             </tr>
           ) : (
             standards.map((standard) => (
               <tr key={standard.standardId}>
                 <td>{standard.standardId}</td>
-                <td>{standard.dish?.dishName || standard.dishId}</td>
                 <td>
-                  {standard.ingredient?.ingredientName || standard.ingredientId}
+                  {standard.dish?.dishName ||
+                    standard.dishName ||
+                    standard.dishId}
+                </td>
+                <td>
+                  {standard.ingredient?.ingredientName ||
+                    standard.ingredientName ||
+                    standard.ingredientId}
                 </td>
                 <td className="text-end">{standard.standardPer1}</td>
                 <td>{standard.unit}</td>
