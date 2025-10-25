@@ -17,7 +17,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supplierApi } from '@/services'
 import { Supplier } from '@/models'
@@ -26,7 +30,8 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function SupplieresList() {
-  const [suppliersData, setSupplieresData] = useState<ResourceCollection<Supplier> | null>(null)
+  const [suppliersData, setSupplieresData] =
+    useState<ResourceCollection<Supplier> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -48,7 +53,7 @@ export default function SupplieresList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -69,7 +74,12 @@ export default function SupplieresList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.suppliers?.confirm_delete || 'Are you sure you want to delete this supplier?')) {
+    if (
+      !confirm(
+        dict.suppliers?.confirm_delete ||
+          'Are you sure you want to delete this supplier?',
+      )
+    ) {
       return
     }
 
@@ -84,16 +94,16 @@ export default function SupplieresList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/suppliers?${newSearchParams.toString()}`)
   }
 
@@ -116,7 +126,6 @@ export default function SupplieresList() {
       </Card>
     )
   }
-
 
   return (
     <Card>
@@ -164,25 +173,29 @@ export default function SupplieresList() {
           <Table hover>
             <thead>
               <tr>
-                  <th>{dict.suppliers?.id || 'ID'}</th>
-                  <th>{dict.suppliers?.name || 'Supplier Name'}</th>
-                  <th>{dict.suppliers?.address || 'Address'}</th>
-                  <th>{dict.suppliers?.phone || 'Phone'}</th>
-                  <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
-                  <th>{dict.common?.created_date || 'Created Date'}</th>
-                  <th aria-label="Action" />
+                <th>{dict.suppliers?.id || 'ID'}</th>
+                <th>{dict.suppliers?.name || 'Supplier Name'}</th>
+                <th>{dict.suppliers?.address || 'Address'}</th>
+                <th>{dict.suppliers?.phone || 'Phone'}</th>
+                <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
+                <th>{dict.common?.created_date || 'Created Date'}</th>
+                <th aria-label="Action" />
               </tr>
             </thead>
             <tbody>
-              {suppliersData && suppliersData.data && suppliersData.data.length > 0 ? (
+              {suppliersData &&
+              suppliersData.data &&
+              suppliersData.data.length > 0 ? (
                 suppliersData.data.map((supplier) => (
                   <tr key={supplier.supplierId}>
-                      <td>{supplier.supplierId}</td>
-                      <td>{supplier.supplierName}</td>
-                      <td>{supplier.address || '-'}</td>
-                      <td>{supplier.phone || '-'}</td>
-                      <td>{supplier.zaloLink || '-'}</td>
-                <td>{new Date(supplier.createdDate).toLocaleDateString()}</td>
+                    <td>{supplier.supplierId}</td>
+                    <td>{supplier.supplierName}</td>
+                    <td>{supplier.address || '-'}</td>
+                    <td>{supplier.phone || '-'}</td>
+                    <td>{supplier.zaloLink || '-'}</td>
+                    <td>
+                      {new Date(supplier.createdDate).toLocaleDateString()}
+                    </td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -193,10 +206,19 @@ export default function SupplieresList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/suppliers/${supplier.supplierId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(
+                                `/suppliers/${supplier.supplierId}/edit`,
+                              )
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(supplier.supplierId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() => handleDelete(supplier.supplierId)}
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>

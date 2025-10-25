@@ -13,7 +13,15 @@ import {
   Tooltip,
 } from 'chart.js'
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Filler)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Filler,
+)
 
 export default function UserChart() {
   return (
@@ -62,13 +70,23 @@ export default function UserChart() {
         },
       }}
       data={{
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'transparent',
-          borderColor: 'rgba(255,255,255,.55)',
-          data: [65, 59, 84, 84, 51, 55, 40],
-        }],
+        labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+        ],
+        datasets: [
+          {
+            label: 'My First dataset',
+            backgroundColor: 'transparent',
+            borderColor: 'rgba(255,255,255,.55)',
+            data: [65, 59, 84, 84, 51, 55, 40],
+          },
+        ],
       }}
     />
   )

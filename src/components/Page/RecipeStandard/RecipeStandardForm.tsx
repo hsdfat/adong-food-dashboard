@@ -2,7 +2,17 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert, Row, Col, InputGroup } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+  Row,
+  Col,
+  InputGroup,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { recipeStandardApi, dishApi, ingredientApi } from '@/services'
 import { RecipeStandard } from '@/models/recipe_standard'
@@ -10,22 +20,27 @@ import { Dish } from '@/models/dish'
 import { Ingredient } from '@/models/ingredient'
 import useDictionary from '@/locales/dictionary-hook'
 import { ResourceCollection } from '@/models/resource'
+import Select from 'react-select'
 
 interface RecipeStandardFormProps {
   recipeStandard?: RecipeStandard
   isEdit?: boolean
 }
 
-export default function RecipeStandardForm({ recipeStandard, isEdit = false }: RecipeStandardFormProps) {
+export default function RecipeStandardForm({
+  recipeStandard,
+  isEdit = false,
+}: RecipeStandardFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  
+
   // Dropdown options
-  const [dishes, setDishes] = useState<ResourceCollection<Dish>| null>(null)
-  const [ingredients, setIngredients] = useState<ResourceCollection<Ingredient>| null>(null)
+  const [dishes, setDishes] = useState<ResourceCollection<Dish> | null>(null)
+  const [ingredients, setIngredients] =
+    useState<ResourceCollection<Ingredient> | null>(null)
   const [loadingOptions, setLoadingOptions] = useState(true)
 
   const [formData, setFormData] = useState({
@@ -59,11 +74,15 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
     loadOptions()
   }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -81,7 +100,10 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
       return false
     }
     if (!formData.standardPer1 || parseFloat(formData.standardPer1) <= 0) {
-      setError(dict.validation?.invalid_number || 'Standard per serving must be a positive number')
+      setError(
+        dict.validation?.invalid_number ||
+          'Standard per serving must be a positive number',
+      )
       return false
     }
     return true
@@ -89,7 +111,7 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -111,10 +133,14 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
 
       if (isEdit && recipeStandard) {
         await recipeStandardApi.update(recipeStandard.standardId, submitData)
-        setSuccess(dict.common?.success_update || 'Recipe standard updated successfully')
+        setSuccess(
+          dict.common?.success_update || 'Recipe standard updated successfully',
+        )
       } else {
         await recipeStandardApi.create(submitData)
-        setSuccess(dict.common?.success_create || 'Recipe standard created successfully')
+        setSuccess(
+          dict.common?.success_create || 'Recipe standard created successfully',
+        )
       }
 
       // Redirect after success
@@ -122,7 +148,11 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
         router.push('/recipe-standards')
       }, 1500)
     } catch (err: any) {
-      setError(err.message || dict.common?.save_error || 'Failed to save recipe standard')
+      setError(
+        err.message ||
+          dict.common?.save_error ||
+          'Failed to save recipe standard',
+      )
       console.error(err)
     } finally {
       setLoading(false)
@@ -144,7 +174,7 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
           {error}
         </Alert>
       )}
-      
+
       {success && (
         <Alert variant="success" dismissible onClose={() => setSuccess('')}>
           {success}
@@ -153,61 +183,82 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
 
       <Form onSubmit={handleSubmit}>
         <Row>
-          {
-            (dishes) && (
-                <Col md={6}>
-            <FormGroup className="mb-3">
-              <FormLabel>{dict.recipe_standards?.dish || 'Dish'} *</FormLabel>
-              <FormControl
-                as="select"
-                name="dishId"
-                value={formData.dishId}
-                onChange={handleChange}
-                disabled={isEdit || loading}
-                required
-              >
-                <option value="">{dict.common?.select || 'Select a dish'}</option>
-                {dishes.data.map((dish) => (
-                  <option key={dish.dishId} value={dish.dishId}>
-                    {dish.dishId} - {dish.dishName}
-                  </option>
-                ))}
-              </FormControl>
-            </FormGroup>
-          </Col>
-            )
-          }
-{
-            (ingredients) && (
-                 <Col md={6}>
-            <FormGroup className="mb-3">
-              <FormLabel>{dict.recipe_standards?.ingredient || 'Ingredient'} *</FormLabel>
-              <FormControl
-                as="select"
-                name="ingredientId"
-                value={formData.ingredientId}
-                onChange={handleChange}
-                disabled={isEdit || loading}
-                required
-              >
-                <option value="">{dict.common?.select || 'Select an ingredient'}</option>
-                {ingredients.data.map((ingredient) => (
-                  <option key={ingredient.ingredientId} value={ingredient.ingredientId}>
-                    {ingredient.ingredientId} - {ingredient.ingredientName}
-                  </option>
-                ))}
-              </FormControl>
-            </FormGroup>
-          </Col>
-            )
-          }
-         
+          {dishes && (
+            <Col md={6}>
+              <FormGroup className="mb-3">
+                <FormLabel>{dict.recipe_standards?.dish || 'Dish'} *</FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="ingredientId"
+                  value={
+                    dishes.data
+                      .map((dish) => ({
+                        value: dish.dishId,
+                        label: `${dish.dishId} - ${dish.dishName}`,
+                      }))
+                      .find((opt) => opt.value === formData.ingredientId) ||
+                    null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      dishId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={dishes.data.map((dish) => ({
+                    value: dish.dishId,
+                    label: `${dish.dishId} - ${dish.dishName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder={dict.common?.select || 'Select an dish'}
+                />
+              </FormGroup>
+            </Col>
+          )}
+          {ingredients && (
+            <Col md={6}>
+              <FormGroup className="mb-3">
+                <FormLabel>
+                  {dict.recipe_standards?.ingredient || 'Ingredient'} *
+                </FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="ingredientId"
+                  value={
+                    ingredients.data
+                      .map((ingredient) => ({
+                        value: ingredient.ingredientId,
+                        label: `${ingredient.ingredientId} - ${ingredient.ingredientName}`,
+                      }))
+                      .find((opt) => opt.value === formData.ingredientId) ||
+                    null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      ingredientId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={ingredients.data.map((ingredient) => ({
+                    value: ingredient.ingredientId,
+                    label: `${ingredient.ingredientId} - ${ingredient.ingredientName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder={dict.common?.select || 'Select an ingredient'}
+                />
+              </FormGroup>
+            </Col>
+          )}
         </Row>
 
         <Row>
           <Col md={4}>
             <FormGroup className="mb-3">
-              <FormLabel>{dict.recipe_standards?.standard_per_serving || 'Standard Per Serving'} *</FormLabel>
+              <FormLabel>
+                {dict.recipe_standards?.standard_per_serving ||
+                  'Standard Per Serving'}{' '}
+                *
+              </FormLabel>
               <FormControl
                 type="number"
                 step="0.0001"
@@ -219,7 +270,8 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
                 required
               />
               <Form.Text className="text-muted">
-                {dict.recipe_standards?.standard_help || 'Quantity needed for 1 serving'}
+                {dict.recipe_standards?.standard_help ||
+                  'Quantity needed for 1 serving'}
               </Form.Text>
             </FormGroup>
           </Col>
@@ -253,10 +305,10 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
                   placeholder="50000"
                   disabled={loading}
                 />
-                <InputGroup.Text>VNĐ</InputGroup.Text>
               </InputGroup>
               <Form.Text className="text-muted">
-                {dict.recipe_standards?.amount_help || 'Cost per serving (optional)'}
+                {dict.recipe_standards?.amount_help ||
+                  'Cost per serving (optional)'}
               </Form.Text>
             </FormGroup>
           </Col>
@@ -270,27 +322,26 @@ export default function RecipeStandardForm({ recipeStandard, isEdit = false }: R
             name="note"
             value={formData.note}
             onChange={handleChange}
-            placeholder={dict.recipe_standards?.note_placeholder || 'Additional notes about this ingredient...'}
+            placeholder={
+              dict.recipe_standards?.note_placeholder ||
+              'Additional notes about this ingredient...'
+            }
             disabled={loading}
           />
         </FormGroup>
 
         <div className="d-flex gap-2 justify-content-end">
-          <Button 
-            variant="secondary" 
-            onClick={handleCancel}
-            disabled={loading}
-          >
+          <Button variant="secondary" onClick={handleCancel} disabled={loading}>
             {dict.action?.cancel || 'Cancel'}
           </Button>
-          <Button 
-            variant="primary" 
-            type="submit"
-            disabled={loading}
-          >
+          <Button variant="primary" type="submit" disabled={loading}>
             {loading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
                 {dict.action?.saving || 'Saving...'}
               </>
             ) : (

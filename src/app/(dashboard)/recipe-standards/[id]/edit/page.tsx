@@ -42,7 +42,7 @@ export default function EditRecipeStandardPage() {
       <Card>
         <CardBody className="text-center py-5">
           <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{dict.common.loading}</span>
           </Spinner>
         </CardBody>
       </Card>
@@ -66,7 +66,8 @@ export default function EditRecipeStandardPage() {
       <CardHeader>
         <h4>{dict.recipe_standards?.edit_title || 'Edit Recipe Standard'}</h4>
         <div className="text-muted">
-          {dict.recipe_standards?.edit_description || 'Update ingredient quantities for a dish'}
+          {dict.recipe_standards?.edit_description ||
+            'Update ingredient quantities for a dish'}
         </div>
       </CardHeader>
       <CardBody>

@@ -20,11 +20,10 @@ const fetchDish = async (id: string): Promise<Dish | null> => {
 }
 
 export default function Page({ params }: { params: { id: string } }) {
-
   const dict = useDictionary()
   const [dish, setDish] = useState<Dish | null>(null)
   const [notFoundFlag, setNotFoundFlag] = useState(false)
-  
+
   useEffect(() => {
     const loadDish = async () => {
       const fetchedDish = await fetchDish(params.id)
@@ -40,21 +39,20 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>{dict.dishes.edit}: {dish && dish.dishName}</CardHeader>
-      {
-        !dish ? (
-          <CardBody>
-            <p>{dict.dishes.loading || 'Loading...'}</p>
-          </CardBody>
-        ) : notFoundFlag ? (
-          notFound()
-        ) : (
-          <CardBody>
-            <DishForm dish={dish} />
-          </CardBody>
-        )
-      }
-      
+      <CardHeader>
+        {dict.dishes.edit}: {dish && dish.dishName}
+      </CardHeader>
+      {!dish ? (
+        <CardBody>
+          <p>{dict.dishes.loading || 'Loading...'}</p>
+        </CardBody>
+      ) : notFoundFlag ? (
+        notFound()
+      ) : (
+        <CardBody>
+          <DishForm dish={dish} />
+        </CardBody>
+      )}
     </Card>
   )
 }

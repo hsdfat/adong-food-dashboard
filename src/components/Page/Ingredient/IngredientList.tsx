@@ -17,7 +17,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ingredientApi } from '@/services'
 import { Ingredient } from '@/models'
@@ -26,7 +30,8 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function IngredientesList() {
-  const [ingredientsData, setIngredientesData] = useState<ResourceCollection<Ingredient> | null>(null)
+  const [ingredientsData, setIngredientesData] =
+    useState<ResourceCollection<Ingredient> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -48,7 +53,7 @@ export default function IngredientesList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -69,7 +74,12 @@ export default function IngredientesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.ingredients?.confirm_delete || 'Are you sure you want to delete this ingredient?')) {
+    if (
+      !confirm(
+        dict.ingredients?.confirm_delete ||
+          'Are you sure you want to delete this ingredient?',
+      )
+    ) {
       return
     }
 
@@ -84,16 +94,16 @@ export default function IngredientesList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/ingredients?${newSearchParams.toString()}`)
   }
 
@@ -116,7 +126,6 @@ export default function IngredientesList() {
       </Card>
     )
   }
-
 
   return (
     <Card>
@@ -174,15 +183,19 @@ export default function IngredientesList() {
               </tr>
             </thead>
             <tbody>
-              {ingredientsData && ingredientsData.data && ingredientsData.data.length > 0 ? (
+              {ingredientsData &&
+              ingredientsData.data &&
+              ingredientsData.data.length > 0 ? (
                 ingredientsData.data.map((ingredient) => (
                   <tr key={ingredient.ingredientId}>
-                      <td>{ingredient.ingredientId}</td>
-                      <td>{ingredient.ingredientName}</td>
-                      <td>{ingredient.property || '-'}</td>
-                      <td>{ingredient.materialGroup || '-'}</td>
-                      <td>{ingredient.unit}</td>
-                      <td>{new Date(ingredient.createdDate).toLocaleDateString()}</td>
+                    <td>{ingredient.ingredientId}</td>
+                    <td>{ingredient.ingredientName}</td>
+                    <td>{ingredient.property || '-'}</td>
+                    <td>{ingredient.materialGroup || '-'}</td>
+                    <td>{ingredient.unit}</td>
+                    <td>
+                      {new Date(ingredient.createdDate).toLocaleDateString()}
+                    </td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -193,10 +206,21 @@ export default function IngredientesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/ingredients/${ingredient.ingredientId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(
+                                `/ingredients/${ingredient.ingredientId}/edit`,
+                              )
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(ingredient.ingredientId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() =>
+                              handleDelete(ingredient.ingredientId)
+                            }
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>

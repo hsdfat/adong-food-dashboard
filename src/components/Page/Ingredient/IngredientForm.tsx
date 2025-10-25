@@ -1,10 +1,21 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { ingredientApi } from '@/services'
-import { Ingredient, CreateIngredientInput, UpdateIngredientInput } from '@/models/ingredient'
+import {
+  Ingredient,
+  CreateIngredientInput,
+  UpdateIngredientInput,
+} from '@/models/ingredient'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface IngredientFormProps {
@@ -12,7 +23,10 @@ interface IngredientFormProps {
   isEdit?: boolean
 }
 
-export default function IngredientForm({ ingredient, isEdit = false }: IngredientFormProps) {
+export default function IngredientForm({
+  ingredient,
+  isEdit = false,
+}: IngredientFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
@@ -59,7 +73,9 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         router.push('/ingredients')
       }, 1500)
     } catch (err) {
-      setError(isEdit ? 'Failed to update ingredient' : 'Failed to create ingredient')
+      setError(
+        isEdit ? 'Failed to update ingredient' : 'Failed to create ingredient',
+      )
       console.error(err)
     } finally {
       setLoading(false)
@@ -68,9 +84,9 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -123,7 +139,9 @@ export default function IngredientForm({ ingredient, isEdit = false }: Ingredien
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>{dict.ingredients?.material_group || 'Material Group'}</FormLabel>
+          <FormLabel>
+            {dict.ingredients?.material_group || 'Material Group'}
+          </FormLabel>
           <FormControl
             type="text"
             name="materialGroup"

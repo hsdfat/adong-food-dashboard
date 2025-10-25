@@ -6,7 +6,6 @@ import { Ingredient } from '@/models'
 import { getDictionary } from '@/locales/dictionary'
 
 const fetchIngredient = async (id: string): Promise<Ingredient | null> => {
- 
   try {
     // Note: This is server-side fetch, need to handle authentication differently
     console.log('Fetching ingredient with id:', id)
@@ -29,7 +28,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Card>
-      <CardHeader>{dict.ingredients?.edit || 'Edit'}: {ingredient.ingredientName}</CardHeader>
+      <CardHeader>
+        {dict.ingredients?.edit || 'Edit'}: {ingredient.ingredientName}
+      </CardHeader>
       <CardBody>
         <IngredientForm ingredient={ingredient} isEdit />
       </CardBody>

@@ -14,7 +14,8 @@ export default function RecipeStandardsPage() {
       <CardHeader>
         <h4>{dict.sidebar?.items?.recipe_standards || 'Recipe Standards'}</h4>
         <div className="text-muted">
-          {dict.recipe_standards?.description || 'Manage ingredient quantities for dishes'}
+          {dict.recipe_standards?.description ||
+            'Manage ingredient quantities for dishes'}
         </div>
       </CardHeader>
       <CardBody>

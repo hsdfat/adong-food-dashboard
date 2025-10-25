@@ -11,13 +11,13 @@ export default async function Breadcrumb() {
       >
         {dict.breadcrumb.home}
       </BreadcrumbItem>
-      <BreadcrumbItem
+      {/* <BreadcrumbItem
         linkProps={{ className: 'text-decoration-none' }}
         href="/"
       >
         {dict.breadcrumb.library}
       </BreadcrumbItem>
-      <BreadcrumbItem active>{dict.breadcrumb.data}</BreadcrumbItem>
+      <BreadcrumbItem active>{dict.breadcrumb.data}</BreadcrumbItem> */}
     </BSBreadcrumb>
   )
 }

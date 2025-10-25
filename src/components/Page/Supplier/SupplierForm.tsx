@@ -1,10 +1,21 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { supplierApi } from '@/services'
-import { Supplier, CreateSupplierInput, UpdateSupplierInput } from '@/models/supplier'
+import {
+  Supplier,
+  CreateSupplierInput,
+  UpdateSupplierInput,
+} from '@/models/supplier'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface SupplierFormProps {
@@ -12,7 +23,10 @@ interface SupplierFormProps {
   isEdit?: boolean
 }
 
-export default function SupplierForm({ supplier, isEdit = false }: SupplierFormProps) {
+export default function SupplierForm({
+  supplier,
+  isEdit = false,
+}: SupplierFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
@@ -42,7 +56,9 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
           zaloLink: formData.zaloLink,
         }
         await supplierApi.update(supplier.supplierId, updateData)
-        setSuccess(dict.common?.success_update || 'Supplier updated successfully')
+        setSuccess(
+          dict.common?.success_update || 'Supplier updated successfully',
+        )
       } else {
         const createData: CreateSupplierInput = {
           supplierId: formData.supplierId,
@@ -52,16 +68,19 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
           zaloLink: formData.zaloLink,
         }
         await supplierApi.create(createData)
-        setSuccess(dict.common?.success_create || 'Supplier created successfully')
+        setSuccess(
+          dict.common?.success_create || 'Supplier created successfully',
+        )
       }
 
       setTimeout(() => {
         router.push('/suppliers')
       }, 1500)
     } catch (err) {
-      setError(isEdit ? 
-        (dict.common?.error_update || 'Failed to update supplier') : 
-        (dict.common?.error_create || 'Failed to create supplier')
+      setError(
+        isEdit
+          ? dict.common?.error_update || 'Failed to update supplier'
+          : dict.common?.error_create || 'Failed to create supplier',
       )
       console.error(err)
     } finally {
@@ -69,19 +88,21 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
     }
   }
 
-  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChangeActive = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'active' ? value === 'true' : value
+      [name]: name === 'active' ? value === 'true' : value,
     }))
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -143,7 +164,7 @@ export default function SupplierForm({ supplier, isEdit = false }: SupplierFormP
           />
         </FormGroup>
 
-         <FormGroup className="mb-3">
+        <FormGroup className="mb-3">
           <FormLabel>{dict.suppliers?.zalo_link || 'Zalo link'}</FormLabel>
           <FormControl
             type="text"

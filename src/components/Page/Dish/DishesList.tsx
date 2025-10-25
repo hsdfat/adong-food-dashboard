@@ -17,7 +17,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
@@ -26,7 +30,9 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function DishesList() {
-  const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(null)
+  const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(
+    null,
+  )
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -48,7 +54,7 @@ export default function DishesList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -69,7 +75,12 @@ export default function DishesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.dishes?.confirm_delete || 'Are you sure you want to delete this dish?')) {
+    if (
+      !confirm(
+        dict.dishes?.confirm_delete ||
+          'Are you sure you want to delete this dish?',
+      )
+    ) {
       return
     }
 
@@ -84,16 +95,16 @@ export default function DishesList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/dishes?${newSearchParams.toString()}`)
   }
 
@@ -167,7 +178,9 @@ export default function DishesList() {
                 <th>{dict.dishes?.name || 'Dish Name'}</th>
                 <th>{dict.dishes?.cooking_method || 'Cooking Method'}</th>
                 <th>{dict.dishes?.status || 'Status'}</th>
-                <th className="text-end">{dict.common?.actions || 'Actions'}</th>
+                <th className="text-end">
+                  {dict.common?.actions || 'Actions'}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -179,10 +192,9 @@ export default function DishesList() {
                     <td>{dish.cookingMethod}</td>
                     <td>
                       <Badge bg={dish.active ? 'success' : 'secondary'}>
-                        {dish.active 
-                          ? (dict.common?.active || 'Active')
-                          : (dict.common?.inactive || 'Inactive')
-                        }
+                        {dish.active
+                          ? dict.common?.active || 'Active'
+                          : dict.common?.inactive || 'Inactive'}
                       </Badge>
                     </td>
                     <td className="text-end">
@@ -195,10 +207,17 @@ export default function DishesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/dishes/${dish.dishId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(`/dishes/${dish.dishId}/edit`)
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(dish.dishId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() => handleDelete(dish.dishId)}
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
@@ -218,9 +237,7 @@ export default function DishesList() {
         </div>
 
         {/* Pagination */}
-        {dishesData && dishesData.meta && (
-          <Pagination meta={dishesData.meta} />
-        )}
+        {dishesData && dishesData.meta && <Pagination meta={dishesData.meta} />}
       </CardBody>
     </Card>
   )

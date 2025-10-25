@@ -1,10 +1,21 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { kitchenApi } from '@/services'
-import { Kitchen, CreateKitchenInput, UpdateKitchenInput } from '@/models/kitchen'
+import {
+  Kitchen,
+  CreateKitchenInput,
+  UpdateKitchenInput,
+} from '@/models/kitchen'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface KitchenFormProps {
@@ -12,7 +23,10 @@ interface KitchenFormProps {
   isEdit?: boolean
 }
 
-export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProps) {
+export default function KitchenForm({
+  kitchen,
+  isEdit = false,
+}: KitchenFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const [loading, setLoading] = useState(false)
@@ -42,7 +56,9 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
           active: formData.active,
         }
         await kitchenApi.update(kitchen.kitchenId, updateData)
-        setSuccess(dict.kitchens?.success_update || 'Kitchen updated successfully')
+        setSuccess(
+          dict.kitchens?.success_update || 'Kitchen updated successfully',
+        )
       } else {
         const createData: CreateKitchenInput = {
           kitchenId: formData.kitchenId,
@@ -52,16 +68,19 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
           active: formData.active,
         }
         await kitchenApi.create(createData)
-        setSuccess(dict.kitchens?.success_create || 'Kitchen created successfully')
+        setSuccess(
+          dict.kitchens?.success_create || 'Kitchen created successfully',
+        )
       }
 
       setTimeout(() => {
         router.push('/kitchens')
       }, 1500)
     } catch (err) {
-      setError(isEdit ? 
-        (dict.kitchens?.error_update || 'Failed to update kitchen') : 
-        (dict.kitchens?.error_create || 'Failed to create kitchen')
+      setError(
+        isEdit
+          ? dict.kitchens?.error_update || 'Failed to update kitchen'
+          : dict.kitchens?.error_create || 'Failed to create kitchen',
       )
       console.error(err)
     } finally {
@@ -69,19 +88,21 @@ export default function KitchenForm({ kitchen, isEdit = false }: KitchenFormProp
     }
   }
 
-  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChangeActive = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'active' ? value === 'true' : value
+      [name]: name === 'active' ? value === 'true' : value,
     }))
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 

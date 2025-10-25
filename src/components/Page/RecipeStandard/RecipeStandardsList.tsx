@@ -1,7 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Alert } from 'react-bootstrap'
+import {
+  Button,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
@@ -13,7 +21,9 @@ interface RecipeStandardsListProps {
   dishId?: string
 }
 
-export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps) {
+export default function RecipeStandardsList({
+  dishId,
+}: RecipeStandardsListProps) {
   const [standards, setStandards] = useState<RecipeStandard[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -28,7 +38,7 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
     try {
       setLoading(true)
       setError('')
-      const data = dishId 
+      const data = dishId
         ? await recipeStandardApi.getByDish(dishId)
         : await recipeStandardApi.getAll()
       setStandards(data)
@@ -67,7 +77,10 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
       )}
 
       <div className="mb-3 text-end">
-        <Button variant="success" onClick={() => router.push('/recipe-standards/create')}>
+        <Button
+          variant="success"
+          onClick={() => router.push('/recipe-standards/create')}
+        >
           <FontAwesomeIcon icon={faPlus} fixedWidth />
           {' Add Recipe Standard'}
         </Button>
@@ -75,16 +88,19 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
 
       <Table responsive bordered hover>
         <thead>
-            <tr className="table-light dark:table-dark">
+          <tr className="table-light dark:table-dark">
             <th>{dict.recipe_standards?.dishId ?? 'ID'}</th>
             <th>{dict.recipe_standards?.dish ?? 'Dish'}</th>
             <th>{dict.recipe_standards?.ingredient ?? 'Ingredient'}</th>
-            <th>{dict.recipe_standards?.standard_per_serving ?? 'Standard Per Serving'}</th>
+            <th>
+              {dict.recipe_standards?.standard_per_serving ??
+                'Standard Per Serving'}
+            </th>
             <th>{dict.recipe_standards?.unit ?? 'Unit'}</th>
             <th>{dict.recipe_standards?.amount ?? 'Amount'}</th>
             <th>{dict.recipe_standards?.note ?? 'Note'}</th>
             <th aria-label={''} />
-            </tr>
+          </tr>
         </thead>
         <tbody>
           {standards.length === 0 ? (
@@ -98,7 +114,9 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
               <tr key={standard.standardId}>
                 <td>{standard.standardId}</td>
                 <td>{standard.dish?.dishName || standard.dishId}</td>
-                <td>{standard.ingredient?.ingredientName || standard.ingredientId}</td>
+                <td>
+                  {standard.ingredient?.ingredientName || standard.ingredientId}
+                </td>
                 <td className="text-end">{standard.standardPer1}</td>
                 <td>{standard.unit}</td>
                 <td className="text-end">
@@ -119,7 +137,13 @@ export default function RecipeStandardsList({ dishId }: RecipeStandardsListProps
                     </DropdownToggle>
 
                     <DropdownMenu>
-                      <DropdownItem onClick={() => router.push(`/recipe-standards/${standard.standardId}/edit`)}>
+                      <DropdownItem
+                        onClick={() =>
+                          router.push(
+                            `/recipe-standards/${standard.standardId}/edit`,
+                          )
+                        }
+                      >
                         {dict.action.edit}
                       </DropdownItem>
                       <DropdownItem

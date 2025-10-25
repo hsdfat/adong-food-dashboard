@@ -12,9 +12,12 @@ export default function CreateRecipeStandardPage() {
   return (
     <Card>
       <CardHeader>
-        <h4>{dict.recipe_standards?.create_title || 'Create Recipe Standard'}</h4>
+        <h4>
+          {dict.recipe_standards?.create_title || 'Create Recipe Standard'}
+        </h4>
         <div className="text-muted">
-          {dict.recipe_standards?.create_description || 'Add ingredient quantities for a dish'}
+          {dict.recipe_standards?.create_description ||
+            'Add ingredient quantities for a dish'}
         </div>
       </CardHeader>
       <CardBody>

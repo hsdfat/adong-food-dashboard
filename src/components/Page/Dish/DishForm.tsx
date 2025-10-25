@@ -1,7 +1,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Form, Button, FormGroup, FormLabel, FormControl, Alert } from 'react-bootstrap'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+} from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
@@ -29,13 +36,15 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
     active: dish?.active || true,
   })
 
-  const handleChangeActive = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target
-      setFormData(prev => ({
-        ...prev,
-        [name]: name === 'active' ? value === 'true' : value
-      }))
-    }
+  const handleChangeActive = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'active' ? value === 'true' : value,
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,9 +89,9 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 

@@ -17,7 +17,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { kitchenApi } from '@/services'
 import { Kitchen } from '@/models'
@@ -26,7 +30,8 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 export default function KitchenesList() {
-  const [kitchensData, setKitchenesData] = useState<ResourceCollection<Kitchen> | null>(null)
+  const [kitchensData, setKitchenesData] =
+    useState<ResourceCollection<Kitchen> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -48,7 +53,7 @@ export default function KitchenesList() {
     try {
       setLoading(true)
       setError('')
-      
+
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
@@ -69,7 +74,12 @@ export default function KitchenesList() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm(dict.kitchens?.confirm_delete || 'Are you sure you want to delete this kitchen?')) {
+    if (
+      !confirm(
+        dict.kitchens?.confirm_delete ||
+          'Are you sure you want to delete this kitchen?',
+      )
+    ) {
       return
     }
 
@@ -84,16 +94,16 @@ export default function KitchenesList() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1') // Reset to first page
-    
+
     if (searchQuery.trim()) {
       newSearchParams.set('search', searchQuery.trim())
     } else {
       newSearchParams.delete('search')
     }
-    
+
     router.push(`/kitchens?${newSearchParams.toString()}`)
   }
 
@@ -116,7 +126,6 @@ export default function KitchenesList() {
       </Card>
     )
   }
-
 
   return (
     <Card>
@@ -164,29 +173,35 @@ export default function KitchenesList() {
           <Table hover>
             <thead>
               <tr>
-                  <th>{dict.kitchens?.id || 'ID'}</th>
-                  <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
-                  <th>{dict.kitchens?.address || 'Address'}</th>
-                  <th>{dict.kitchens?.phone || 'Phone'}</th>
-                  <th>{dict.kitchens?.status || 'Status'}</th>
-                  <th>{dict.common?.created_date || 'Created Date'}</th>
-                  <th aria-label="Action" />
+                <th>{dict.kitchens?.id || 'ID'}</th>
+                <th>{dict.kitchens?.name || 'Kitchen Name'}</th>
+                <th>{dict.kitchens?.address || 'Address'}</th>
+                <th>{dict.kitchens?.phone || 'Phone'}</th>
+                <th>{dict.kitchens?.status || 'Status'}</th>
+                <th>{dict.common?.created_date || 'Created Date'}</th>
+                <th aria-label="Action" />
               </tr>
             </thead>
             <tbody>
-              {kitchensData && kitchensData.data && kitchensData.data.length > 0 ? (
+              {kitchensData &&
+              kitchensData.data &&
+              kitchensData.data.length > 0 ? (
                 kitchensData.data.map((kitchen) => (
                   <tr key={kitchen.kitchenId}>
-                      <td>{kitchen.kitchenId}</td>
-                      <td>{kitchen.kitchenName}</td>
-                      <td>{kitchen.address || '-'}</td>
-                      <td>{kitchen.phone || '-'}</td>
-                      <td>
-                        <Badge bg={kitchen.active ? 'success' : 'secondary'}>
-                          {kitchen.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
-                        </Badge>
-                      </td>
-                <td>{new Date(kitchen.createdDate).toLocaleDateString()}</td>
+                    <td>{kitchen.kitchenId}</td>
+                    <td>{kitchen.kitchenName}</td>
+                    <td>{kitchen.address || '-'}</td>
+                    <td>{kitchen.phone || '-'}</td>
+                    <td>
+                      <Badge bg={kitchen.active ? 'success' : 'secondary'}>
+                        {kitchen.active
+                          ? dict.common?.active || 'Active'
+                          : dict.common?.inactive || 'Inactive'}
+                      </Badge>
+                    </td>
+                    <td>
+                      {new Date(kitchen.createdDate).toLocaleDateString()}
+                    </td>
                     <td className="text-end">
                       <Dropdown align="end">
                         <DropdownToggle
@@ -197,10 +212,17 @@ export default function KitchenesList() {
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => router.push(`/kitchens/${kitchen.kitchenId}/edit`)}>
+                          <DropdownItem
+                            onClick={() =>
+                              router.push(`/kitchens/${kitchen.kitchenId}/edit`)
+                            }
+                          >
                             {dict.action?.edit || 'Edit'}
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleDelete(kitchen.kitchenId)} className="text-danger">
+                          <DropdownItem
+                            onClick={() => handleDelete(kitchen.kitchenId)}
+                            className="text-danger"
+                          >
                             {dict.action?.delete || 'Delete'}
                           </DropdownItem>
                         </DropdownMenu>
