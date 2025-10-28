@@ -33,14 +33,12 @@ async function apiClient<T>(
 
   const { requiresAuth = true, ...fetchOptions } = options
 
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...fetchOptions.headers,
-  }
+  const headers = new Headers(fetchOptions.headers as HeadersInit)
+  headers.set('Content-Type', 'application/json')
 
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
-    }
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
 
   const url = `${API_BASE_URL}${endpoint}`
   try {
@@ -52,11 +50,11 @@ async function apiClient<T>(
     if (!response.ok) {
       if (response.status === 401) {
         // Token expired, try to refresh
-        const refreshed = await refreshToken()
-        if (refreshed) {
-          // Retry the request with new token
-          return apiClient(endpoint, options)
-        }
+        // const refreshed = await refreshToken()
+        // if (refreshed) {
+        //   // Retry the request with new token
+        //   return apiClient(endpoint, options)
+        // }
         // Redirect to login
         window.location.href = '/login'
         throw new ApiError(401, 'Unauthorized')
@@ -83,37 +81,6 @@ async function apiClient<T>(
   }
 }
 
-async function refreshToken(): Promise<boolean> {
-  try {
-    const cookieStore = cookies()
-const refreshToken = cookieStore.get('refresh_token')?.value
-    if (!refreshToken) {
-      return false
-    }
 
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ refresh_token: refreshToken }),
-    })
-
-    if (!response.ok) {
-      return false
-    }
-
-    const data = await response.json()
-    console.log('Token refreshed:', data)
-    cookieStore.set('access_token', data.token)
-    if (data.expire) {
-      cookieStore.set('token_expire', data.expire)
-    }
-
-    return true
-  } catch {
-    return false
-  }
-}
 
 export { apiClient, ApiError }
