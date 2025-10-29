@@ -260,6 +260,7 @@
   },
   "sidebar": {
     "items": {
+      "order": "Order",
       "dashboard": "Dashboard",
       "ingredients": "Ingredients",
       "kitchens": "Kitchens",
@@ -410,6 +411,30 @@
     "confirm_delete": "Are you sure you want to delete this supplier?",
     "error_load": "Failed to load suppliers",
     "error_delete": "Failed to delete supplier"
+  },
+  "orders":{
+    "title": "Order Management",
+    "create_title": "Create Order",
+    "create_description": "Fill in the details below to create a new order.",
+    "edit_title": "Edit Order",
+    "edit_description": "Update the details of the order below.",
+    "id": "Order ID",
+    "kitchen": "Kitchen",
+    "dish": "Dish",
+    "quantity": "Quantity",
+    "order_date": "Order Date",
+    "status": "Status",
+    "loading": "Loading...",
+    "no_data": "No orders found",
+    "confirm_delete": "Are you sure you want to delete this order?",
+    "error_load": "Failed to load orders",
+    "error_delete": "Failed to delete order",
+    "error_create": "Failed to create order",
+    "error_update": "Failed to update order",
+    "success_create": "Order created successfully",
+    "success_update": "Order updated successfully",
+    "select_kitchen": "Select Kitchen",
+    "select_dish": "Select Dish"
   },
   "recipe_standards": {
     "add": "Add Recipe Standard",

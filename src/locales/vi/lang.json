@@ -276,6 +276,7 @@
   },
   "sidebar": {
     "items": {
+      "order": "Lên đơn món ăn",
       "dashboard": "Bảng điều khiển",
       "ingredients": "Nguyên liệu",
       "kitchens": "Bếp",
@@ -348,6 +349,24 @@
       "by_dish": "Theo món ăn",
       "by_ingredient": "Theo nguyên liệu"
     }
+  },
+  "orders": {
+    "title": "Quản lý đơn hàng",
+    "add_new": "Tạo đơn hàng mới",
+    "id": "Mã đơn hàng",
+    "kitchen": "Bếp",
+    "order_date": "Ngày đặt hàng",
+    "status": "Trạng thái",
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy đơn hàng",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa đơn hàng này?",
+    "error_load": "Không thể tải danh sách đơn hàng",
+    "error_delete": "Không thể xóa đơn hàng",
+    "error_create": "Không thể tạo đơn hàng",
+    "error_update": "Không thể cập nhật đơn hàng",
+    "success_create": "Tạo đơn hàng thành công",
+    "success_update": "Cập nhật đơn hàng thành công",
+    "view_details": "Xem chi tiết đơn hàng"
   },
 
   "ingredients": {

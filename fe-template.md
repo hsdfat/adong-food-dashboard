@@ -1,27 +1,16 @@
 # ProjectDump Analysis
 
-**Generated on:** 2025-10-26 00:25:25
+**Generated on:** 2025-10-29 20:15:25
 **Project Path:** src/
 
 ## Project Summary
 
-- **Primary Language:** Go
-- **Total Files:** 102
-- **Processed Files:** 102
-- **Project Size:** 262.46 KB
+- **Primary Language:** HTML
+- **Total Files:** 113
+- **Processed Files:** 113
+- **Project Size:** 305.03 KB
 
 ## Detected Technologies
-
-### Go (100.0% confidence)
-*Go programming language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 80 more files
 
 ### HTML (100.0% confidence)
 *HyperText Markup Language*
@@ -31,8 +20,8 @@
 - app/(authentication)/login/page.tsx
 - app/(dashboard)/dishes/[id]/recipe-standard/page.tsx
 - app/(dashboard)/layout.tsx
-- app/(dashboard)/page.tsx
-- ... and 26 more files
+- app/(dashboard)/orders/create/page.tsx
+- ... and 33 more files
 
 ### React (100.0% confidence)
 *React JavaScript library for building user interfaces*
@@ -43,73 +32,7 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 61 more files
-
-### CSS (100.0% confidence)
-*Cascading Style Sheets*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 96 more files
-
-### Docker (100.0% confidence)
-*Docker containerization platform*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 76 more files
-
-### Python (100.0% confidence)
-*Python programming language*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 78 more files
-
-### TypeScript (100.0% confidence)
-*TypeScript - JavaScript with static typing*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 88 more files
-
-### JavaScript (100.0% confidence)
-*JavaScript runtime and ecosystem*
-
-**Related files:**
-- app/(authentication)/layout.tsx
-- app/(authentication)/login/login.tsx
-- app/(authentication)/login/page.tsx
-- app/(authentication)/register/page.tsx
-- app/(authentication)/register/register.tsx
-- ... and 89 more files
-
-### Rust (100.0% confidence)
-*Rust systems programming language*
-
-**Related files:**
-- app/(authentication)/login/login.tsx
-- app/(authentication)/register/register.tsx
-- app/(dashboard)/dishes/[id]/edit/page.tsx
-- app/(dashboard)/dishes/[id]/recipe-standard/page.tsx
-- app/(dashboard)/dishes/create/page.tsx
-- ... and 44 more files
+- ... and 68 more files
 
 ### Ruby (100.0% confidence)
 *Ruby programming language*
@@ -120,7 +43,62 @@
 - components/Layout/Dashboard/Header/HeaderLocale.tsx
 - components/Layout/Dashboard/Header/HeaderNotificationNav.tsx
 - components/Layout/Dashboard/Header/HeaderTheme.tsx
-- ... and 19 more files
+- ... and 23 more files
+
+### Rust (100.0% confidence)
+*Rust systems programming language*
+
+**Related files:**
+- app/(authentication)/login/login.tsx
+- app/(authentication)/register/register.tsx
+- app/(dashboard)/dishes/[id]/edit/page.tsx
+- app/(dashboard)/dishes/[id]/recipe-standard/page.tsx
+- app/(dashboard)/dishes/create/page.tsx
+- ... and 50 more files
+
+### TypeScript (100.0% confidence)
+*TypeScript - JavaScript with static typing*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 99 more files
+
+### Docker (100.0% confidence)
+*Docker containerization platform*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 85 more files
+
+### JavaScript (100.0% confidence)
+*JavaScript runtime and ecosystem*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 100 more files
+
+### Python (100.0% confidence)
+*Python programming language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 87 more files
 
 ### PHP (100.0% confidence)
 *PHP server-side scripting language*
@@ -131,7 +109,29 @@
 - app/(authentication)/login/page.tsx
 - app/(authentication)/register/page.tsx
 - app/(authentication)/register/register.tsx
-- ... and 67 more files
+- ... and 74 more files
+
+### CSS (100.0% confidence)
+*Cascading Style Sheets*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 107 more files
+
+### Go (100.0% confidence)
+*Go programming language*
+
+**Related files:**
+- app/(authentication)/layout.tsx
+- app/(authentication)/login/login.tsx
+- app/(authentication)/login/page.tsx
+- app/(authentication)/register/page.tsx
+- app/(authentication)/register/register.tsx
+- ... and 89 more files
 
 ### Node.js (15.0% confidence)
 *Node.js JavaScript runtime*
@@ -178,8 +178,18 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
+│   │   ├── orders
+│   │   │   └── create
+│   │   │       └── page.tsx
 │   │   ├── page.tsx
 │   │   ├── recipe-standards
+│   │   │   ├── [id]
+│   │   │   │   └── edit
+│   │   │   │       └── page.tsx
+│   │   │   ├── create
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── supplier-prices
 │   │   │   ├── [id]
 │   │   │   │   └── edit
 │   │   │   │       └── page.tsx
@@ -244,12 +254,17 @@
 │   │   ├── Kitchen
 │   │   │   ├── KitchenForm.tsx
 │   │   │   └── KitchensList.tsx
+│   │   ├── Order
+│   │   │   └── OrderForm.tsx
 │   │   ├── RecipeStandard
 │   │   │   ├── RecipeStandardForm.tsx
 │   │   │   └── RecipeStandardsList.tsx
-│   │   └── Supplier
-│   │       ├── SupplierForm.tsx
-│   │       └── SuppliersList.tsx
+│   │   ├── Supplier
+│   │   │   ├── SupplierForm.tsx
+│   │   │   └── SuppliersList.tsx
+│   │   └── SupplierPrice
+│   │       ├── SupplierPriceForm.tsx
+│   │       └── SupplierPricesList.tsx
 │   ├── Pagination
 │   │   ├── Paginate.tsx
 │   │   ├── Pagination.tsx
@@ -278,16 +293,20 @@
 │   ├── index.ts
 │   ├── ingredient.ts
 │   ├── kitchen.ts
+│   ├── menu_card.ts
 │   ├── pokemon.ts
 │   ├── recipe_standard.ts
 │   ├── resource.ts
+│   ├── supplier-price.ts
 │   ├── supplier.ts
 │   └── type.ts
 ├── services
 │   ├── dish-api.ts
 │   ├── index.ts
 │   ├── ingredient-api.ts
-│   └── recipe-standard.ts
+│   ├── menu-card.ts
+│   ├── recipe-standard.ts
+│   └── supplier-price.service.ts
 ├── styles
 │   ├── _custom.scss
 │   ├── globals.scss
@@ -2420,6 +2439,40 @@ export default function Page() {
 }
 ```
 
+### app/(dashboard)/orders/create/
+
+#### app/(dashboard)/orders/create/page.tsx
+*Language: TypeScript | Size: 647 bytes*
+
+```typescript
+// app/(dashboard)/recipe-standards/page.tsx
+'use client'
+
+import React from 'react'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import OrderForm from '@/components/Page/Order/OrderForm'
+import useDictionary from '@/locales/dictionary-hook'
+
+export default function RecipeStandardsPage() {
+  const dict = useDictionary()
+
+  return (
+    <Card>
+      <CardHeader>
+        <h4>{dict.sidebar?.items?.order || 'Orders'}</h4>
+        <div className="text-muted">
+          {dict.orders?.title ||
+            'Manage orders'}
+        </div>
+      </CardHeader>
+      <CardBody>
+        <OrderForm />
+      </CardBody>
+    </Card>
+  )
+}
+```
+
 ### app/(dashboard)/recipe-standards/
 
 #### app/(dashboard)/recipe-standards/page.tsx
@@ -2572,6 +2625,151 @@ export default function CreateRecipeStandardPage() {
         <RecipeStandardForm />
       </CardBody>
     </Card>
+  )
+}
+```
+
+### app/(dashboard)/supplier-prices/
+
+#### app/(dashboard)/supplier-prices/page.tsx
+*Language: TypeScript | Size: 694 bytes*
+
+```typescript
+'use client'
+import { Metadata } from 'next'
+import SupplierPricesList from '@/components/Page/SupplierPrice/SupplierPricesList'
+import useDictionary from '@/locales/dictionary-hook'
+
+
+export default function SupplierPricesPage() {
+  const dict = useDictionary()
+
+  return (
+    <div className="container-xxl">
+      <div className="row">
+        <div className="col-12">
+          <div className="card mb-4">
+            <div className="card-header">
+              <strong>{dict.supplierPrice?.description}</strong>
+            </div>
+            <div className="card-body">
+              <SupplierPricesList />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### app/(dashboard)/supplier-prices/[id]/edit/
+
+#### app/(dashboard)/supplier-prices/[id]/edit/page.tsx
+*Language: TypeScript | Size: 1752 bytes*
+
+```typescript
+// app/(dashboard)/supplier-prices/[id]/edit/page.tsx
+
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import SupplierPriceForm from '@/components/Page/SupplierPrice/SupplierPriceForm'
+import { SupplierPrice } from '@/models/supplier-price'
+import { supplierPriceApi } from '@/services/supplier-price.service'
+
+export default function EditSupplierPricePage() {
+  const params = useParams()
+  const id = params?.id as string
+
+  const [supplierPrice, setSupplierPrice] = useState<SupplierPrice | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (id) {
+      loadSupplierPrice()
+    }
+  }, [id])
+
+  const loadSupplierPrice = async () => {
+    try {
+      setLoading(true)
+      const data = await supplierPriceApi.getById(parseInt(id))
+      setSupplierPrice(data)
+    } catch (err) {
+      setError('Failed to load supplier price')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return <div className="text-center py-4">Loading...</div>
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        {error}
+      </div>
+    )
+  }
+
+  return (
+    <div className="container-xxl">
+      <div className="row">
+        <div className="col-12">
+          <div className="card mb-4">
+            <div className="card-header">
+              <strong>Edit Supplier Price</strong>
+            </div>
+            <div className="card-body">
+              {supplierPrice && (
+                <SupplierPriceForm supplierPrice={supplierPrice} isEdit />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### app/(dashboard)/supplier-prices/create/
+
+#### app/(dashboard)/supplier-prices/create/page.tsx
+*Language: TypeScript | Size: 713 bytes*
+
+```typescript
+// app/(dashboard)/supplier-prices/create/page.tsx
+
+import { Metadata } from 'next'
+import SupplierPriceForm from '@/components/Page/SupplierPrice/SupplierPriceForm'
+
+export const metadata: Metadata = {
+  title: 'Create Supplier Price',
+}
+
+export default function CreateSupplierPricePage() {
+  return (
+    <div className="container-xxl">
+      <div className="row">
+        <div className="col-12">
+          <div className="card mb-4">
+            <div className="card-header">
+              <strong>Create New Supplier Price</strong>
+            </div>
+            <div className="card-body">
+              <SupplierPriceForm />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 ```
@@ -3896,7 +4094,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 ```
 
 #### components/Layout/Dashboard/Sidebar/SidebarNav.tsx
-*Language: TypeScript | Size: 3947 bytes*
+*Language: TypeScript | Size: 3939 bytes*
 
 ```typescript
 import {
@@ -3966,8 +4164,8 @@ export default async function SidebarNav() {
         <SidebarNavItem href="/recipe-standards">
           {dict.sidebar.items.recipe_standards}
         </SidebarNavItem>
-        <SidebarNavItem href="/recipe-standards/by-dish">
-          {dict.sidebar.items.by_dish || 'By Dish'}
+        <SidebarNavItem href="/orders/create">
+          {dict.sidebar.items.order || 'Create Order'}
         </SidebarNavItem>
       </SidebarNavGroup>
 
@@ -6066,6 +6264,100 @@ export default function KitchenesList() {
 }
 ```
 
+### components/Page/Order/
+
+#### components/Page/Order/OrderForm.tsx
+*Language: TypeScript | Size: 2161 bytes*
+
+```typescript
+// components/Page/Order/OrderForm.tsx
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { Form, Button, Alert } from 'react-bootstrap'
+import { useRouter } from 'next/navigation'
+import useDictionary from '@/locales/dictionary-hook'
+
+interface OrderFormProps {
+  isEdit?: boolean
+}
+
+export default function OrderForm({ isEdit = false }: OrderFormProps) {
+  const router = useRouter()
+  const dict = useDictionary()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const [loadingOptions, setLoadingOptions] = useState(true)
+
+  // Load dishes and ingredients for dropdowns
+  useEffect(() => {
+    const loadOptions = async () => {}
+
+    loadOptions()
+  }, [])
+
+  const validateForm = (): boolean => {
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+  }
+
+  const handleCancel = () => {
+    router.push('/')
+  }
+
+  if (loadingOptions) {
+    return <div className="text-center py-4">Loading form...</div>
+  }
+
+  return (
+    <>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+          {success}
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit}>
+        <div className="d-flex gap-2 justify-content-end">
+          <Button variant="secondary" onClick={handleCancel} disabled={loading}>
+            {dict.action?.cancel || 'Cancel'}
+          </Button>
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                {dict.action?.saving || 'Saving...'}
+              </>
+            ) : (
+              dict.action?.save || 'Save'
+            )}
+          </Button>
+        </div>
+      </Form>
+    </>
+  )
+}
+```
+
 ### components/Page/RecipeStandard/
 
 #### components/Page/RecipeStandard/RecipeStandardForm.tsx
@@ -7064,6 +7356,912 @@ export default function SupplieresList() {
 }
 ```
 
+### components/Page/SupplierPrice/
+
+#### components/Page/SupplierPrice/SupplierPriceForm.tsx
+*Language: TypeScript | Size: 15678 bytes*
+
+```typescript
+'use client'
+
+// components/Page/SupplierPrice/SupplierPriceForm.tsx
+
+import React, { useState, useEffect } from 'react'
+import {
+  Form,
+  Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  Alert,
+  Row,
+  Col,
+  FormCheck,
+} from 'react-bootstrap'
+import { useRouter } from 'next/navigation'
+import Select from 'react-select'
+import { supplierPriceApi } from '@/services/supplier-price.service'
+import { ingredientApi } from '@/services'
+import { supplierApi } from '@/services'
+import {
+  SupplierPrice,
+  CreateSupplierPriceInput,
+  UpdateSupplierPriceInput,
+} from '@/models/supplier-price'
+import { Ingredient } from '@/models/ingredient'
+import { Supplier } from '@/models/supplier'
+import useDictionary from '@/locales/dictionary-hook'
+
+interface SupplierPriceFormProps {
+  supplierPrice?: SupplierPrice
+  isEdit?: boolean
+}
+
+export default function SupplierPriceForm({
+  supplierPrice,
+  isEdit = false,
+}: SupplierPriceFormProps) {
+  const router = useRouter()
+  const dict = useDictionary()
+  const [loading, setLoading] = useState(false)
+  const [loadingOptions, setLoadingOptions] = useState(true)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const [ingredients, setIngredients] = useState<{ data: Ingredient[] } | null>(
+    null,
+  )
+  const [suppliers, setSuppliers] = useState<{ data: Supplier[] } | null>(null)
+
+  const [formData, setFormData] = useState({
+    productName: supplierPrice?.productName || '',
+    ingredientId: supplierPrice?.ingredientId || '',
+    category: supplierPrice?.category || '',
+    supplierId: supplierPrice?.supplierId || '',
+    manufacturer: supplierPrice?.manufacturer || '',
+    unit: supplierPrice?.unit || '',
+    specification: supplierPrice?.specification || '',
+    unitPrice: supplierPrice?.unitPrice?.toString() || '',
+    pricePer1: supplierPrice?.pricePer1?.toString() || '',
+    effectiveFrom:
+      supplierPrice?.effectiveFrom?.split('T')[0] ||
+      new Date().toISOString().split('T')[0],
+    effectiveTo:
+      supplierPrice?.effectiveTo?.split('T')[0] ||
+      new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+        .toISOString()
+        .split('T')[0],
+    active: supplierPrice?.active ?? true,
+    newPrice: supplierPrice?.newPrice?.toString() || '0',
+    promotion: supplierPrice?.promotion || '',
+  })
+
+  useEffect(() => {
+    loadFormOptions()
+  }, [])
+
+  const loadFormOptions = async () => {
+    try {
+      setLoadingOptions(true)
+      const [ingredientsData, suppliersData] = await Promise.all([
+        ingredientApi.getAll(),
+        supplierApi.getAll(),
+      ])
+      setIngredients(ingredientsData)
+      setSuppliers(suppliersData)
+    } catch (err) {
+      console.error('Failed to load form options:', err)
+      setError('Failed to load form options')
+    } finally {
+      setLoadingOptions(false)
+    }
+  }
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value, type } = e.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    }))
+  }
+
+  const validateForm = (): boolean => {
+    if (!formData.productName.trim()) {
+      setError('Product name is required')
+      return false
+    }
+    if (!formData.ingredientId) {
+      setError('Ingredient is required')
+      return false
+    }
+    if (!formData.supplierId) {
+      setError('Supplier is required')
+      return false
+    }
+    if (!formData.unitPrice || parseFloat(formData.unitPrice) <= 0) {
+      setError('Valid unit price is required')
+      return false
+    }
+    if (!formData.pricePer1 || parseFloat(formData.pricePer1) <= 0) {
+      setError('Valid price per 1 is required')
+      return false
+    }
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const submitData = {
+        productName: formData.productName,
+        ingredientId: formData.ingredientId,
+        category: formData.category,
+        supplierId: formData.supplierId,
+        manufacturer: formData.manufacturer,
+        unit: formData.unit,
+        specification: formData.specification,
+        unitPrice: parseFloat(formData.unitPrice),
+        pricePer1: parseFloat(formData.pricePer1),
+        effectiveFrom: new Date(formData.effectiveFrom).toISOString(),
+        effectiveTo: new Date(formData.effectiveTo).toISOString(),
+        active: formData.active,
+        newPrice: formData.newPrice ? parseFloat(formData.newPrice) : 0,
+        promotion: formData.promotion || '',
+      }
+
+      if (isEdit && supplierPrice) {
+        const updateData: UpdateSupplierPriceInput = {
+          productName: submitData.productName,
+          category: submitData.category,
+          manufacturer: submitData.manufacturer,
+          unit: submitData.unit,
+          specification: submitData.specification,
+          unitPrice: submitData.unitPrice,
+          pricePer1: submitData.pricePer1,
+          effectiveFrom: submitData.effectiveFrom,
+          effectiveTo: submitData.effectiveTo,
+          active: submitData.active,
+          newPrice: submitData.newPrice,
+          promotion: submitData.promotion,
+        }
+        await supplierPriceApi.update(supplierPrice.productId, updateData)
+        setSuccess(
+          dict.common?.success_update || 'Supplier price updated successfully',
+        )
+      } else {
+        const createData: CreateSupplierPriceInput = submitData
+        await supplierPriceApi.create(createData)
+        setSuccess(
+          dict.common?.success_create || 'Supplier price created successfully',
+        )
+      }
+
+      // Redirect after success
+      setTimeout(() => {
+        router.push('/supplier-prices')
+      }, 1500)
+    } catch (err: any) {
+      setError(
+        err.message ||
+          dict.common?.save_error ||
+          'Failed to save supplier price',
+      )
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCancel = () => {
+    router.push('/supplier-prices')
+  }
+
+  if (loadingOptions) {
+    return <div className="text-center py-4">Loading form...</div>
+  }
+
+  return (
+    <>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+          {success}
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col md={12}>
+            <FormGroup className="mb-3">
+              <FormLabel>Product Name *</FormLabel>
+              <FormControl
+                type="text"
+                name="productName"
+                value={formData.productName}
+                onChange={handleChange}
+                placeholder="Enter product name"
+                disabled={loading}
+                required
+                maxLength={255}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <Row>
+          {ingredients && (
+            <Col md={6}>
+              <FormGroup className="mb-3">
+                <FormLabel>Ingredient *</FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="ingredientId"
+                  value={
+                    ingredients.data
+                      .map((ingredient) => ({
+                        value: ingredient.ingredientId,
+                        label: `${ingredient.ingredientId} - ${ingredient.ingredientName}`,
+                      }))
+                      .find((opt) => opt.value === formData.ingredientId) ||
+                    null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      ingredientId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={ingredients.data.map((ingredient) => ({
+                    value: ingredient.ingredientId,
+                    label: `${ingredient.ingredientId} - ${ingredient.ingredientName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder="Select an ingredient"
+                />
+              </FormGroup>
+            </Col>
+          )}
+
+          {suppliers && (
+            <Col md={6}>
+              <FormGroup className="mb-3">
+                <FormLabel>Supplier *</FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="supplierId"
+                  value={
+                    suppliers.data
+                      .map((supplier) => ({
+                        value: supplier.supplierId,
+                        label: `${supplier.supplierId} - ${supplier.supplierName}`,
+                      }))
+                      .find((opt) => opt.value === formData.supplierId) || null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      supplierId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={suppliers.data.map((supplier) => ({
+                    value: supplier.supplierId,
+                    label: `${supplier.supplierId} - ${supplier.supplierName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder="Select a supplier"
+                />
+              </FormGroup>
+            </Col>
+          )}
+        </Row>
+
+        <Row>
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Category</FormLabel>
+              <FormControl
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                placeholder="Enter category"
+                disabled={loading}
+                maxLength={100}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Manufacturer</FormLabel>
+              <FormControl
+                type="text"
+                name="manufacturer"
+                value={formData.manufacturer}
+                onChange={handleChange}
+                placeholder="Enter manufacturer"
+                disabled={loading}
+                maxLength={255}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Unit *</FormLabel>
+              <FormControl
+                type="text"
+                name="unit"
+                value={formData.unit}
+                onChange={handleChange}
+                placeholder="kg, g, ml, l"
+                disabled={loading}
+                required
+                maxLength={50}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Specification</FormLabel>
+              <FormControl
+                type="text"
+                name="specification"
+                value={formData.specification}
+                onChange={handleChange}
+                placeholder="Enter specification"
+                disabled={loading}
+                maxLength={100}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={4}>
+            <FormGroup className="mb-3">
+              <FormLabel>Unit Price *</FormLabel>
+              <FormControl
+                type="number"
+                step="0.01"
+                name="unitPrice"
+                value={formData.unitPrice}
+                onChange={handleChange}
+                placeholder="120000"
+                disabled={loading}
+                required
+              />
+              <Form.Text className="text-muted">Price per unit (VNĐ)</Form.Text>
+            </FormGroup>
+          </Col>
+
+          <Col md={4}>
+            <FormGroup className="mb-3">
+              <FormLabel>Price Per 1 *</FormLabel>
+              <FormControl
+                type="number"
+                step="0.01"
+                name="pricePer1"
+                value={formData.pricePer1}
+                onChange={handleChange}
+                placeholder="120000"
+                disabled={loading}
+                required
+              />
+              <Form.Text className="text-muted">
+                Price per single item (VNĐ)
+              </Form.Text>
+            </FormGroup>
+          </Col>
+
+          <Col md={4}>
+            <FormGroup className="mb-3">
+              <FormLabel>New Price</FormLabel>
+              <FormControl
+                type="number"
+                step="0.01"
+                name="newPrice"
+                value={formData.newPrice}
+                onChange={handleChange}
+                placeholder="0"
+                disabled={loading}
+              />
+              <Form.Text className="text-muted">
+                Promotional price (VNĐ)
+              </Form.Text>
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Effective From *</FormLabel>
+              <FormControl
+                type="date"
+                name="effectiveFrom"
+                value={formData.effectiveFrom}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
+            </FormGroup>
+          </Col>
+
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Effective To *</FormLabel>
+              <FormControl
+                type="date"
+                name="effectiveTo"
+                value={formData.effectiveTo}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormLabel>Promotion</FormLabel>
+              <FormControl
+                type="text"
+                name="promotion"
+                value={formData.promotion}
+                onChange={handleChange}
+                placeholder="Enter promotion details"
+                disabled={loading}
+                maxLength={1}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col md={6}>
+            <FormGroup className="mb-3">
+              <FormCheck
+                type="checkbox"
+                name="active"
+                label="Active"
+                checked={formData.active}
+                onChange={handleChange}
+                disabled={loading}
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+
+        <div className="d-flex gap-2 justify-content-end mt-4">
+          <Button variant="secondary" onClick={handleCancel} disabled={loading}>
+            {dict.action?.cancel || 'Cancel'}
+          </Button>
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading
+              ? dict.action?.saving || 'Saving...'
+              : dict.action?.save || 'Save'}
+          </Button>
+        </div>
+      </Form>
+    </>
+  )
+}
+```
+
+#### components/Page/SupplierPrice/SupplierPricesList.tsx
+*Language: TypeScript | Size: 12491 bytes*
+
+```typescript
+'use client'
+
+// components/Page/SupplierPrice/SupplierPricesList.tsx
+
+import React, { useEffect, useState } from 'react'
+import {
+  Button,
+  Table,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Alert,
+  Badge,
+  FormControl,
+  InputGroup,
+  Row,
+  Col,
+  Form,
+} from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faPlus,
+  faEllipsisVertical,
+  faSearch,
+  faFilter,
+} from '@fortawesome/free-solid-svg-icons'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { supplierPriceApi } from '@/services/supplier-price.service'
+import { SupplierPrice } from '@/models/supplier-price'
+import useDictionary from '@/locales/dictionary-hook'
+import Pagination from '@/components/Pagination/Pagination'
+
+import { format, formatDate, parse } from 'date-fns'
+
+// Helper functions
+const formatDateInput = (dateString: string) => {
+  if (!dateString) return ''
+  try {
+    console.log('Parsing date string:', dateString)
+    const date = new Date(dateString)
+    const fomartDate = format(date, 'dd/MM/yyyy')
+    console.log('Formatted date:', fomartDate)
+    return formatDate.toString() // Vietnamese format
+  } catch {
+    return dateString
+  }
+}
+
+const parseDateInput = (dateString: string) => {
+  if (!dateString) return ''
+  try {
+    const date = parse(dateString, 'dd/MM/yyyy', new Date())
+    return format(date, 'yyyy-MM-dd') // Convert to ISO format for backend
+  } catch {
+    return dateString
+  }
+}
+
+interface SupplierPricesListProps {
+  ingredientId?: string
+  supplierId?: string
+}
+
+export default function SupplierPricesList({
+  ingredientId,
+  supplierId,
+}: SupplierPricesListProps) {
+  const [prices, setPrices] = useState<SupplierPrice[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>('')
+  const [meta, setMeta] = useState<any>(null)
+  const [sortBy, setSortBy] = useState('id')
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+
+  // Search states
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [dateFrom, setDateFrom] = useState<string>('')
+  const [dateTo, setDateTo] = useState<string>('')
+  const [showFilters, setShowFilters] = useState(true)
+
+  const router = useRouter()
+  const dict = useDictionary()
+  const searchParams = useSearchParams()
+
+  // Get query params
+  const page = parseInt(searchParams.get('page') || '1')
+  const pageSize = parseInt(searchParams.get('per_page') || '20')
+  const search = searchParams.get('search') || ''
+  const effectiveFrom = searchParams.get('effective_from') || ''
+  const effectiveTo = searchParams.get('effective_to') || ''
+
+  useEffect(() => {
+    // Initialize date inputs from URL params
+    setSearchQuery(search)
+    setDateFrom(effectiveFrom)
+    setDateTo(effectiveTo)
+
+    loadPrices()
+  }, [page, pageSize, search, effectiveFrom, effectiveTo])
+
+  const loadPrices = async () => {
+    try {
+      setLoading(true)
+      setError('')
+
+      let data
+      if (ingredientId) {
+        data = await supplierPriceApi.getByIngredient(ingredientId)
+        setPrices(data)
+      } else if (supplierId) {
+        data = await supplierPriceApi.getBySupplier(supplierId)
+        setPrices(data)
+      } else {
+        const param = {
+          page,
+          pageSize,
+          search,
+          sortBy,
+          sortDir,
+          effectiveFrom,
+          effectiveTo,
+        }
+        const response = await supplierPriceApi.getAll(param)
+        setPrices(response.data)
+        setMeta(response.meta)
+      }
+    } catch (err) {
+      setError('Failed to load supplier prices')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this supplier price?')) {
+      return
+    }
+
+    try {
+      await supplierPriceApi.delete(id)
+      await loadPrices()
+    } catch (err) {
+      setError('Failed to delete supplier price')
+      console.error(err)
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-'
+    return new Date(dateString).toLocaleDateString('vi-VN')
+  }
+
+  const formatCurrency = (amount: number) => {
+    return amount?.toLocaleString('vi-VN') + ' đ'
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const newSearchParams = new URLSearchParams()
+    newSearchParams.set('page', '1') // Reset to first page
+    newSearchParams.set('per_page', pageSize.toString())
+
+    if (searchQuery.trim()) {
+      newSearchParams.set('search', searchQuery.trim())
+    }
+
+    if (dateFrom) {
+      newSearchParams.set('effective_from', dateFrom)
+    }
+
+    if (dateTo) {
+      newSearchParams.set('effective_to', dateTo)
+    }
+
+    router.push(`/supplier-prices?${newSearchParams.toString()}`)
+  }
+
+  const handleClearFilters = () => {
+    setSearchQuery('')
+    setDateFrom('')
+    setDateTo('')
+    router.push('/supplier-prices?page=1')
+  }
+
+  if (loading) {
+    return <div className="text-center py-4">Loading...</div>
+  }
+
+  return (
+    <>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      <Row className="mb-3">
+        <Col md={12}>
+          <form onSubmit={handleSearch}>
+            {/* Main Search Bar */}
+            <Row className="mb-2">
+              <Col md={8}>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    placeholder={
+                      dict.supplierPrice?.search_placeholder ||
+                      'Search by name, supplier, ingredient...'
+                    }
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => setShowFilters(!showFilters)}
+                    title="Toggle filters"
+                  >
+                    <FontAwesomeIcon icon={faFilter} fixedWidth />
+                  </Button>
+                  <Button variant="primary" type="submit">
+                    <FontAwesomeIcon icon={faSearch} fixedWidth />
+                    {dict.common?.search || 'Search'}
+                  </Button>
+                  {(searchQuery || dateFrom || dateTo) && (
+                    <Button
+                      variant="outline-danger"
+                      onClick={handleClearFilters}
+                    >
+                      {dict.common?.clear || 'Clear'}
+                    </Button>
+                  )}
+                </InputGroup>
+              </Col>
+              <Col md={4} className="text-end">
+                <Button
+                  variant="success"
+                  onClick={() => router.push('/supplier-prices/create')}
+                >
+                  <FontAwesomeIcon icon={faPlus} fixedWidth />
+                  {dict.action?.add || 'Add New'}
+                </Button>
+              </Col>
+            </Row>
+
+            {/* Date Range Filters - Collapsible */}
+            {showFilters && (
+              <Row className="mb-2">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label className="small mb-1">
+                      {dict.supplierPrice?.effectiveFrom || 'Effective From'}
+                    </Form.Label>
+                    <FormControl
+                      type="date"
+                      value={
+                        dateFrom
+                          ? format(new Date(dateFrom), 'yyyy-MM-dd')
+                          : dateFrom
+                      }
+                      onChange={(e) => setDateFrom(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label className="small mb-1">
+                      {dict.supplierPrice?.effectiveTo || 'Effective To'}
+                    </Form.Label>
+                    <FormControl
+                      type="date"
+                      value={dateTo}
+                      onChange={(e) => setDateTo(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            )}
+          </form>
+        </Col>
+      </Row>
+
+      <Table responsive bordered hover>
+        <thead>
+          <tr className="table-light dark:table-dark">
+            <th>{dict.supplierPrice?.productID || 'ID'}</th>
+            <th>{dict.supplierPrice?.productName || 'Product Name'}</th>
+            <th>{dict.supplierPrice?.ingredient || 'Ingredient'}</th>
+            <th>{dict.supplierPrice?.category || 'Category'}</th>
+            <th>{dict.supplierPrice?.supplier || 'Supplier'}</th>
+            <th>{dict.supplierPrice?.manufacturer || 'Manufacturer'}</th>
+            <th>{dict.supplierPrice?.unit || 'Unit'}</th>
+            <th>{dict.supplierPrice?.specification || 'Specification'}</th>
+            <th className="text-end">
+              {dict.supplierPrice?.unitPrice || 'Unit Price'}
+            </th>
+            <th className="text-end">
+              {dict.supplierPrice?.pricePer1 || 'Price Per 1'}
+            </th>
+            <th>{dict.supplierPrice?.effectiveFrom || 'Effective From'}</th>
+            <th>{dict.supplierPrice?.effectiveTo || 'Effective To'}</th>
+            <th>{dict.supplierPrice?.status || 'Status'}</th>
+            <th className="text-end">
+              {dict.supplierPrice?.newPrice || 'New Price'}
+            </th>
+            <th>{dict.supplierPrice?.promotion || 'Promotion'}</th>
+            <th aria-label={dict.common?.actions || 'Actions'} />
+          </tr>
+        </thead>
+        <tbody>
+          {prices && prices.length === 0 ? (
+            <tr>
+              <td colSpan={16} className="text-center">
+                {dict.common?.no_data || 'No data available'}
+              </td>
+            </tr>
+          ) : (
+            prices.map((price) => (
+              <tr key={price.productId}>
+                <td>{price.productId}</td>
+                <td>{price.productName}</td>
+                <td>{price.ingredientName || price.ingredientId}</td>
+                <td>{price.category}</td>
+                <td>{price.supplierName || price.supplierId}</td>
+                <td>{price.manufacturer}</td>
+                <td>{price.unit}</td>
+                <td>{price.specification}</td>
+                <td className="text-end">{formatCurrency(price.unitPrice)}</td>
+                <td className="text-end">{formatCurrency(price.pricePer1)}</td>
+                <td>{formatDate(price.effectiveFrom)}</td>
+                <td>{formatDate(price.effectiveTo)}</td>
+                <td>
+                  <Badge bg={price.active ? 'success' : 'secondary'}>
+                    {price.active ? 'Active' : 'Inactive'}
+                  </Badge>
+                </td>
+                <td className="text-end">
+                  {price.newPrice ? formatCurrency(price.newPrice) : '-'}
+                </td>
+                <td>{price.promotion || '-'}</td>
+                <td>
+                  <Dropdown align="end">
+                    <DropdownToggle
+                      as="button"
+                      bsPrefix="btn"
+                      className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
+                      id={`action-${price.productId}`}
+                    >
+                      <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
+                    </DropdownToggle>
+
+                    <DropdownMenu>
+                      <DropdownItem
+                        onClick={() =>
+                          router.push(
+                            `/supplier-prices/${price.productId}/edit`,
+                          )
+                        }
+                      >
+                        {dict.action?.edit || 'Edit'}
+                      </DropdownItem>
+                      <DropdownItem
+                        className="text-danger"
+                        onClick={() => handleDelete(price.productId)}
+                      >
+                        {dict.action?.delete || 'Delete'}
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </Table>
+
+      {meta && <Pagination meta={meta} />}
+    </>
+  )
+}
+```
+
 ### components/Pagination/
 
 #### components/Pagination/Paginate.tsx
@@ -7451,7 +8649,7 @@ export const getDictionary = async () => {
 ### locales/en/
 
 #### locales/en/lang.json
-*Language: JSON | Size: 13427 bytes*
+*Language: JSON | Size: 15092 bytes*
 
 ```json
 {
@@ -7495,9 +8693,11 @@ export const getDictionary = async () => {
     "submit": "Submit",
     "submitting": "Submitting...",
     "reset": "Reset",
-    "cancel":"Cancel",
-    "save":"Save",
-    "saving":"Saving..."
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "add": "Add",
+    "confirm": "Confirm"
   },
   "theme": {
     "light": "Light",
@@ -7714,6 +8914,7 @@ export const getDictionary = async () => {
   },
   "sidebar": {
     "items": {
+      "order": "Order",
       "dashboard": "Dashboard",
       "ingredients": "Ingredients",
       "kitchens": "Kitchens",
@@ -7804,8 +9005,7 @@ export const getDictionary = async () => {
     "error_update": "Failed to update ingredient",
     "success_create": "Ingredient created successfully",
     "success_update": "Ingredient updated successfully",
-    "edit":"Edit"
-  
+    "edit": "Edit"
   },
   "kitchens": {
     "title": "Kitchen Management",
@@ -7866,6 +9066,30 @@ export const getDictionary = async () => {
     "error_load": "Failed to load suppliers",
     "error_delete": "Failed to delete supplier"
   },
+  "orders":{
+    "title": "Order Management",
+    "create_title": "Create Order",
+    "create_description": "Fill in the details below to create a new order.",
+    "edit_title": "Edit Order",
+    "edit_description": "Update the details of the order below.",
+    "id": "Order ID",
+    "kitchen": "Kitchen",
+    "dish": "Dish",
+    "quantity": "Quantity",
+    "order_date": "Order Date",
+    "status": "Status",
+    "loading": "Loading...",
+    "no_data": "No orders found",
+    "confirm_delete": "Are you sure you want to delete this order?",
+    "error_load": "Failed to load orders",
+    "error_delete": "Failed to delete order",
+    "error_create": "Failed to create order",
+    "error_update": "Failed to update order",
+    "success_create": "Order created successfully",
+    "success_update": "Order updated successfully",
+    "select_kitchen": "Select Kitchen",
+    "select_dish": "Select Dish"
+  },
   "recipe_standards": {
     "add": "Add Recipe Standard",
     "dishId": "Dish Id",
@@ -7891,7 +9115,28 @@ export const getDictionary = async () => {
     "edit_title": "Edit Recipe Standard",
     "edit_description": "Update the details of the recipe standard below."
   },
+  "supplierPrice": {
+    "productID": "ID",
+    "productName": "Product Name",
+    "ingredient": "Ingredient",
+    "category": "Category",
+    "supplier": "Supplier",
+    "manufacturer": "Manufacturer",
+    "unit": "Unit",
+    "specification": "Specification",
+    "unitPrice": "Unit Price",
+    "pricePer1": "Price Per 1",
+    "effectiveFrom": "Effective From",
+    "effectiveTo": "Effective To",
+    "status": "Status",
+    "newPrice": "New Price",
+    "promotion": "Promotion",
+    "search_placeholder": "Search by product name, ingredient, supplier...",
+    "description": "Manage supplier prices for ingredients",
+    "loading": "Loading supplier prices..."
+  },
   "common": {
+    "clear": "Clear",
     "active": "Active",
     "inactive": "Inactive",
     "loading": "Loading...",
@@ -7923,7 +9168,7 @@ export const getDictionary = async () => {
 ### locales/vi/
 
 #### locales/vi/lang.json
-*Language: JSON | Size: 15588 bytes*
+*Language: JSON | Size: 17249 bytes*
 
 ```json
 {
@@ -7969,7 +9214,9 @@ export const getDictionary = async () => {
     "reset": "Đặt lại",
     "cancel": "Hủy",
     "save": "Lưu",
-    "saving": "Đang lưu..."
+    "saving": "Đang lưu...",
+    "add": "Thêm mới",
+    "confirm": "Xác nhận"
   },
   "theme": {
     "light": "Sáng",
@@ -8202,6 +9449,7 @@ export const getDictionary = async () => {
   },
   "sidebar": {
     "items": {
+      "order": "Lên đơn món ăn",
       "dashboard": "Bảng điều khiển",
       "ingredients": "Nguyên liệu",
       "kitchens": "Bếp",
@@ -8274,6 +9522,24 @@ export const getDictionary = async () => {
       "by_dish": "Theo món ăn",
       "by_ingredient": "Theo nguyên liệu"
     }
+  },
+  "orders": {
+    "title": "Quản lý đơn hàng",
+    "add_new": "Tạo đơn hàng mới",
+    "id": "Mã đơn hàng",
+    "kitchen": "Bếp",
+    "order_date": "Ngày đặt hàng",
+    "status": "Trạng thái",
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy đơn hàng",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa đơn hàng này?",
+    "error_load": "Không thể tải danh sách đơn hàng",
+    "error_delete": "Không thể xóa đơn hàng",
+    "error_create": "Không thể tạo đơn hàng",
+    "error_update": "Không thể cập nhật đơn hàng",
+    "success_create": "Tạo đơn hàng thành công",
+    "success_update": "Cập nhật đơn hàng thành công",
+    "view_details": "Xem chi tiết đơn hàng"
   },
 
   "ingredients": {
@@ -8379,7 +9645,28 @@ export const getDictionary = async () => {
     "edit_title": "Chỉnh sửa định mức công thức",
     "edit_description": "Cập nhật thông tin định mức công thức bên dưới."
   },
+  "supplierPrice": {
+    "productID": "Mã giá",
+    "productName": "Tên sản phẩm",
+    "ingredient": "Nguyên liệu",
+    "category": "Danh mục",
+    "supplier": "Nhà cung cấp",
+    "manufacturer": "Nhà sản xuất",
+    "unit": "Đơn vị",
+    "specification": "Quy cách",
+    "unitPrice": "Đơn giá",
+    "pricePer1": "Giá cho 1 đơn vị",
+    "effectiveFrom": "Có hiệu lực từ",
+    "effectiveTo": "Có hiệu lực đến",
+    "status": "Trạng thái",
+    "newPrice": "Giá mới",
+    "promotion": "Khuyến mãi",
+    "search_placeholder": "Tìm kiếm theo tên sản phẩm, nguyên liệu, nhà cung cấp...",
+    "description": "Quản lý giá nhà cung cấp cho nguyên liệu",
+    "loading": "Đang tải..."
+  },
   "common": {
+    "clear": "Xóa",
     "active": "Hoạt động",
     "inactive": "Không hoạt động",
     "loading": "Đang tải...",
@@ -8454,49 +9741,40 @@ export interface EggGroup {
 ```
 
 #### models/index.ts
-*Language: TypeScript | Size: 722 bytes*
+*Language: TypeScript | Size: 753 bytes*
 
 ```typescript
 // Ingredient Models
-export type { 
-  Ingredient, 
-  CreateIngredientInput, 
-  UpdateIngredientInput 
+export type {
+  Ingredient,
+  CreateIngredientInput,
+  UpdateIngredientInput,
 } from './ingredient'
 
 // Kitchen Models
-export type { 
-  Kitchen, 
-  CreateKitchenInput, 
-  UpdateKitchenInput 
-} from './kitchen'
+export type { Kitchen, CreateKitchenInput, UpdateKitchenInput } from './kitchen'
 
 // Dish Models
-export type { 
-  Dish, 
-  CreateDishInput, 
-  UpdateDishInput 
-} from './dish'
+export type { Dish, CreateDishInput, UpdateDishInput } from './dish'
 
 // Supplier Models
-export type { 
-  Supplier, 
-  CreateSupplierInput, 
-  UpdateSupplierInput 
+export type {
+  Supplier,
+  CreateSupplierInput,
+  UpdateSupplierInput,
 } from './supplier'
 
 // Recipe Standard Models
-export type { 
-  RecipeStandard, 
-  CreateRecipeStandardInput, 
-  UpdateRecipeStandardInput 
+export type {
+  RecipeStandard,
+  CreateRecipeStandardInput,
+  UpdateRecipeStandardInput,
 } from './recipe_standard'
 
 // Resource Models
-export type { 
-  Resource, 
-  ResourceCollection 
-} from './resource'
+export type { Resource, ResourceCollection } from './resource'
+
+// export { MenuCard, MenuCardCreateRequest } from './menu_card'
 
 export { newResource } from './resource'
 ```
@@ -8558,6 +9836,68 @@ export interface UpdateKitchenInput {
   address?: string
   phone?: string
   active?: boolean
+}
+```
+
+#### models/menu_card.ts
+*Language: TypeScript | Size: 1113 bytes*
+
+```typescript
+// File: src/types/menu-card.ts
+
+export interface MenuCard {
+  menuCardId: string
+  menuCardName: string
+  createdDate?: string
+  kitchenId: string
+  kitchenName?: string
+  createdById: string
+  createdByName?: string
+  status: 'DRAFT' | 'APPROVED' | 'CANCELLED'
+  note?: string
+  createdAt: string
+  modifiedDate: string
+  details: MenuCardDetail[]
+}
+
+export interface MenuCardDetail {
+  detailId: string
+  dishId: string
+  dishName: string
+  servings: number
+  note?: string
+  ingredients: MenuCardDetailIngredient[]
+}
+
+export interface MenuCardDetailIngredient {
+  id: string
+  ingredientId: string
+  ingredientName: string
+  standard: number
+  unit: string
+  note?: string
+}
+
+export interface MenuCardCreateRequest {
+  menuCardName: string
+  createdDate?: string
+  kitchenId: string
+  note?: string
+  details: MenuCardDetailRequest[]
+}
+
+export interface MenuCardDetailRequest {
+  dishId: string
+  servings: number
+  note?: string
+  ingredients?: MenuCardDetailIngredientRequest[]
+}
+
+export interface MenuCardDetailIngredientRequest {
+  ingredientId: string
+  standard: number
+  unit: string
+  note?: string
 }
 ```
 
@@ -8689,6 +10029,87 @@ export const newResource = <T>(
       total,
     },
   })
+```
+
+#### models/supplier-price.ts
+*Language: TypeScript | Size: 1442 bytes*
+
+```typescript
+// models/supplier_price.ts
+
+export interface SupplierPrice {
+  productId: number
+  productName: string
+  ingredientId: string
+  ingredientName: string
+  category: string
+  supplierId: string
+  supplierName: string
+  manufacturer: string
+  unit: string
+  specification: string
+  unitPrice: number
+  pricePer1: number
+  effectiveFrom: string
+  effectiveTo: string
+  active: boolean
+  newPrice: number
+  promotion: string
+
+  // Optional populated fields
+  ingredient?: {
+    ingredientId: string
+    ingredientName: string
+  }
+  supplier?: {
+    supplierId: string
+    supplierName: string
+  }
+}
+
+export interface CreateSupplierPriceInput {
+  productName: string
+  ingredientId: string
+  category: string
+  supplierId: string
+  manufacturer: string
+  unit: string
+  specification: string
+  unitPrice: number
+  pricePer1: number
+  effectiveFrom: string
+  effectiveTo: string
+  active: boolean
+  newPrice?: number
+  promotion?: string
+}
+
+export interface UpdateSupplierPriceInput {
+  productName?: string
+  category?: string
+  manufacturer?: string
+  unit?: string
+  specification?: string
+  unitPrice?: number
+  pricePer1?: number
+  effectiveFrom?: string
+  effectiveTo?: string
+  active?: boolean
+  newPrice?: number
+  promotion?: string
+}
+
+export interface SupplierPriceListResponse {
+  data: SupplierPrice[]
+  meta: {
+    total: number
+    from: number
+    to: number
+    per_page: number
+    last_page: number
+    current_page: number
+  }
+}
 ```
 
 #### models/supplier.ts
@@ -8852,75 +10273,111 @@ export const dishApi = {
 ```
 
 #### services/index.ts
-*Language: TypeScript | Size: 3052 bytes*
+*Language: TypeScript | Size: 3258 bytes*
 
 ```typescript
 import { apiClient } from '@/utils/api_client'
-import { 
-  Ingredient, CreateIngredientInput, UpdateIngredientInput,
-  Kitchen, CreateKitchenInput, UpdateKitchenInput,
-  Dish, CreateDishInput, UpdateDishInput,
-  Supplier, CreateSupplierInput, UpdateSupplierInput,
-  RecipeStandard, CreateRecipeStandardInput, UpdateRecipeStandardInput
+import {
+  Ingredient,
+  CreateIngredientInput,
+  UpdateIngredientInput,
+  Kitchen,
+  CreateKitchenInput,
+  UpdateKitchenInput,
+  Dish,
+  CreateDishInput,
+  UpdateDishInput,
+  Supplier,
+  CreateSupplierInput,
+  UpdateSupplierInput,
+  RecipeStandard,
+  CreateRecipeStandardInput,
+  UpdateRecipeStandardInput,
 } from '@/models'
 import { ResourceCollection } from '@/models/resource'
-import {recipeStandardApi} from './recipe-standard'
+import { recipeStandardApi } from './recipe-standard'
+export { supplierPriceApi } from './supplier-price.service'
+
 import exp from 'constants'
 
 // Ingredients API
 export const ingredientApi = {
-  getAll: (queryString: string = '') => 
+  getAll: (queryString: string = '') =>
     apiClient<ResourceCollection<Ingredient>>(`/api/ingredients${queryString}`),
-  getById: (id: string) => 
-    apiClient<Ingredient>(`/api/ingredients/${id}`),
-  create: (data: CreateIngredientInput) => 
-    apiClient<Ingredient>('/api/ingredients', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: UpdateIngredientInput) => 
-    apiClient<Ingredient>(`/api/ingredients/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
-    apiClient<{ message: string }>(`/api/ingredients/${id}`, { method: 'DELETE' }),
+  getById: (id: string) => apiClient<Ingredient>(`/api/ingredients/${id}`),
+  create: (data: CreateIngredientInput) =>
+    apiClient<Ingredient>('/api/ingredients', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: string, data: UpdateIngredientInput) =>
+    apiClient<Ingredient>(`/api/ingredients/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: string) =>
+    apiClient<{ message: string }>(`/api/ingredients/${id}`, {
+      method: 'DELETE',
+    }),
 }
 
 // Kitchens API
 export const kitchenApi = {
-  getAll: (queryString: string = '') => 
+  getAll: (queryString: string = '') =>
     apiClient<ResourceCollection<Kitchen>>(`/api/kitchens${queryString}`),
-  getById: (id: string) => 
-    apiClient<Kitchen>(`/api/kitchens/${id}`),
-  create: (data: CreateKitchenInput) => 
-    apiClient<Kitchen>('/api/kitchens', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: UpdateKitchenInput) => 
-    apiClient<Kitchen>(`/api/kitchens/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
+  getById: (id: string) => apiClient<Kitchen>(`/api/kitchens/${id}`),
+  create: (data: CreateKitchenInput) =>
+    apiClient<Kitchen>('/api/kitchens', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: string, data: UpdateKitchenInput) =>
+    apiClient<Kitchen>(`/api/kitchens/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: string) =>
     apiClient<{ message: string }>(`/api/kitchens/${id}`, { method: 'DELETE' }),
 }
 
 // Dishes API with pagination support
 export const dishApi = {
-  getAll: (queryString: string = '') => 
+  getAll: (queryString: string = '') =>
     apiClient<ResourceCollection<Dish>>(`/api/dishes${queryString}`),
-  getById: (id: string) => 
-    apiClient<Dish>(`/api/dishes/${id}`),
-  create: (data: CreateDishInput) => 
-    apiClient<Dish>('/api/dishes', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: UpdateDishInput) => 
-    apiClient<Dish>(`/api/dishes/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
+  getById: (id: string) => apiClient<Dish>(`/api/dishes/${id}`),
+  create: (data: CreateDishInput) =>
+    apiClient<Dish>('/api/dishes', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: string, data: UpdateDishInput) =>
+    apiClient<Dish>(`/api/dishes/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: string) =>
     apiClient<{ message: string }>(`/api/dishes/${id}`, { method: 'DELETE' }),
 }
 
 // Suppliers API
 export const supplierApi = {
-  getAll: (queryString: string = '') => 
+  getAll: (queryString: string = '') =>
     apiClient<ResourceCollection<Supplier>>(`/api/suppliers${queryString}`),
-  getById: (id: string) => 
-    apiClient<Supplier>(`/api/suppliers/${id}`),
-  create: (data: CreateSupplierInput) => 
-    apiClient<Supplier>('/api/suppliers', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: UpdateSupplierInput) => 
-    apiClient<Supplier>(`/api/suppliers/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  delete: (id: string) => 
-    apiClient<{ message: string }>(`/api/suppliers/${id}`, { method: 'DELETE' }),
+  getById: (id: string) => apiClient<Supplier>(`/api/suppliers/${id}`),
+  create: (data: CreateSupplierInput) =>
+    apiClient<Supplier>('/api/suppliers', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: string, data: UpdateSupplierInput) =>
+    apiClient<Supplier>(`/api/suppliers/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: string) =>
+    apiClient<{ message: string }>(`/api/suppliers/${id}`, {
+      method: 'DELETE',
+    }),
 }
 
 export { recipeStandardApi }
@@ -8958,6 +10415,52 @@ export const ingredientApi = {
 
   delete: async (id: string): Promise<{ message: string }> => {
     return apiClient<{ message: string }>(`/api/ingredients/${id}`, {
+      method: 'DELETE',
+    })
+  },
+}
+```
+
+#### services/menu-card.ts
+*Language: TypeScript | Size: 1183 bytes*
+
+```typescript
+// File: src/lib/api/menu-card.ts
+
+import { apiClient } from '@/utils/api_client'
+import type { MenuCard, MenuCardCreateRequest } from '@/models/menu_card'
+
+export const menuCardApi = {
+  getAll: async (): Promise<MenuCard[]> => {
+    return apiClient<MenuCard[]>('/api/menu-cards')
+  },
+
+  getById: async (id: string): Promise<MenuCard> => {
+    return apiClient<MenuCard>(`/api/menu-cards/${id}`)
+  },
+
+  create: async (data: MenuCardCreateRequest): Promise<MenuCard> => {
+    return apiClient<MenuCard>('/api/menu-cards', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  },
+
+  //   update: async (id: string, data: UpdateMenuCardInput): Promise<MenuCard> => {
+  //     return apiClient<MenuCard>(`/api/menu-cardss/${id}`, {
+  //       method: 'PUT',
+  //       body: JSON.stringify(data),
+  //     })
+  //   },
+
+  delete: async (id: string): Promise<{ message: string }> => {
+    return apiClient<{ message: string }>(`/api/menu-cards/${id}`, {
+      method: 'DELETE',
+    })
+  },
+
+  approve: async (id: string): Promise<{ message: string }> => {
+    return apiClient<{ message: string }>(`/api/menu-cards/${id}/approve`, {
       method: 'DELETE',
     })
   },
@@ -9040,6 +10543,119 @@ export const recipeStandardApi = {
     await apiClient(`${BASE_URL}/${id}`, {
       method: 'DELETE',
     })
+  },
+}
+```
+
+#### services/supplier-price.service.ts
+*Language: TypeScript | Size: 2878 bytes*
+
+```typescript
+// services/supplier-price.service.ts
+
+import { apiClient } from '@/utils/api_client'
+import {
+  SupplierPrice,
+  CreateSupplierPriceInput,
+  UpdateSupplierPriceInput,
+  SupplierPriceListResponse,
+} from '@/models/supplier-price'
+
+const BASE_URL = '/api/supplier-prices'
+
+export const supplierPriceApi = {
+  /**
+   * Get all supplier prices with pagination and search
+   */
+  async getAll(params?: {
+    page?: number
+    pageSize?: number
+    search?: string
+    sortBy?: string
+    sortDir?: 'asc' | 'desc'
+    effectiveFrom?: string
+    effectiveTo?: string
+  }): Promise<SupplierPriceListResponse> {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append('page', params.page.toString())
+    if (params?.pageSize)
+      queryParams.append('per_page', params.pageSize.toString())
+    if (params?.search) queryParams.append('search', params.search)
+    if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
+    if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
+    if (params?.effectiveFrom)
+      queryParams.append('effective_from', params.effectiveFrom)
+    if (params?.effectiveTo)
+      queryParams.append('effective_to', params.effectiveTo)
+
+    const url = `${BASE_URL}?${queryParams.toString()}`
+    return await apiClient<SupplierPriceListResponse>(url)
+  },
+
+  /**
+   * Get supplier price by ID
+   */
+  async getById(id: number): Promise<SupplierPrice> {
+    return await apiClient<SupplierPrice>(`${BASE_URL}/${id}`)
+  },
+
+  /**
+   * Get supplier prices by ingredient ID
+   */
+  async getByIngredient(ingredientId: string): Promise<SupplierPrice[]> {
+    return await apiClient<SupplierPrice[]>(
+      `${BASE_URL}/ingredient/${ingredientId}`,
+    )
+  },
+
+  /**
+   * Get supplier prices by supplier ID
+   */
+  async getBySupplier(supplierId: string): Promise<SupplierPrice[]> {
+    return await apiClient<SupplierPrice[]>(
+      `${BASE_URL}/supplier/${supplierId}`,
+    )
+  },
+
+  /**
+   * Create new supplier price
+   */
+  async create(data: CreateSupplierPriceInput): Promise<SupplierPrice> {
+    return await apiClient<SupplierPrice>(BASE_URL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  },
+
+  /**
+   * Update existing supplier price
+   */
+  async update(
+    id: number,
+    data: UpdateSupplierPriceInput,
+  ): Promise<SupplierPrice> {
+    return await apiClient<SupplierPrice>(`${BASE_URL}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    })
+  },
+
+  /**
+   * Delete supplier price
+   */
+  async delete(id: number): Promise<void> {
+    return await apiClient(`${BASE_URL}/${id}`, {
+      method: 'DELETE',
+    })
+  },
+
+  /**
+   * Get active prices for an ingredient
+   */
+  async getActivePrices(ingredientId: string): Promise<SupplierPrice[]> {
+    return await apiClient<SupplierPrice[]>(
+      `${BASE_URL}/ingredient/${ingredientId}/active`,
+    )
   },
 }
 ```
@@ -9464,7 +11080,7 @@ export type SearchParams = {
 ### utils/
 
 #### utils/api_client.ts
-*Language: TypeScript | Size: 2859 bytes*
+*Language: TypeScript | Size: 2143 bytes*
 
 ```typescript
 'use server'
@@ -9502,14 +11118,12 @@ async function apiClient<T>(
 
   const { requiresAuth = true, ...fetchOptions } = options
 
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...fetchOptions.headers,
-  }
+  const headers = new Headers(fetchOptions.headers as HeadersInit)
+  headers.set('Content-Type', 'application/json')
 
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
-    }
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
 
   const url = `${API_BASE_URL}${endpoint}`
   try {
@@ -9521,11 +11135,11 @@ async function apiClient<T>(
     if (!response.ok) {
       if (response.status === 401) {
         // Token expired, try to refresh
-        const refreshed = await refreshToken()
-        if (refreshed) {
-          // Retry the request with new token
-          return apiClient(endpoint, options)
-        }
+        // const refreshed = await refreshToken()
+        // if (refreshed) {
+        //   // Retry the request with new token
+        //   return apiClient(endpoint, options)
+        // }
         // Redirect to login
         window.location.href = '/login'
         throw new ApiError(401, 'Unauthorized')
@@ -9552,38 +11166,7 @@ async function apiClient<T>(
   }
 }
 
-async function refreshToken(): Promise<boolean> {
-  try {
-    const cookieStore = cookies()
-const refreshToken = cookieStore.get('refresh_token')?.value
-    if (!refreshToken) {
-      return false
-    }
 
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ refresh_token: refreshToken }),
-    })
-
-    if (!response.ok) {
-      return false
-    }
-
-    const data = await response.json()
-    console.log('Token refreshed:', data)
-    cookieStore.set('access_token', data.token)
-    if (data.expire) {
-      cookieStore.set('token_expire', data.expire)
-    }
-
-    return true
-  } catch {
-    return false
-  }
-}
 
 export { apiClient, ApiError }
 ```
