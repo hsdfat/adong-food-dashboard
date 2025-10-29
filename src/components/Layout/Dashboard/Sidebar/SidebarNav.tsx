@@ -74,7 +74,7 @@ export default async function SidebarNav() {
         <SidebarNavItem href="/supplier-prices">
           {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
         </SidebarNavItem>
-        <SidebarNavItem href="/orders">
+        {/* <SidebarNavItem href="/orders">
           {dict.sidebar.items.orders}
         </SidebarNavItem>
         <SidebarNavItem href="/receiving">
@@ -82,13 +82,13 @@ export default async function SidebarNav() {
         </SidebarNavItem>
         <SidebarNavItem href="/inventory">
           {dict.sidebar.items.inventory || 'Stock Levels'}
-        </SidebarNavItem>
+        </SidebarNavItem> */}
       </SidebarNavGroup>
 
-      <SidebarNavItem icon={faClipboardList} href="/reports">
+      {/* <SidebarNavItem icon={faClipboardList} href="/reports">
         {dict.sidebar.items.reports}
-      </SidebarNavItem>
-
+      </SidebarNavItem> */}
+{/* 
       <SidebarNavTitle>{dict.sidebar.items.theme}</SidebarNavTitle>
       <SidebarNavItem icon={faDroplet} href="#">{dict.sidebar.items.colors}</SidebarNavItem>
       <SidebarNavItem icon={faPencil} href="#">{dict.sidebar.items.typography}</SidebarNavItem>
@@ -102,7 +102,7 @@ export default async function SidebarNav() {
         <SidebarNavItem icon={faBug} href="#">{dict.sidebar.items.error500}</SidebarNavItem>
       </SidebarNavGroup>
 
-      <SidebarNavItem icon={faFileLines} href="#">{dict.sidebar.items.docs}</SidebarNavItem>
+      <SidebarNavItem icon={faFileLines} href="#">{dict.sidebar.items.docs}</SidebarNavItem> */}
     </ul>
   )
 }

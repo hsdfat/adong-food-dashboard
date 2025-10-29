@@ -33,6 +33,8 @@
     }
   },
   "action": {
+    "quick_action": "Quick Action",
+    "view": "View",
     "info": "Info",
     "edit": "Edit",
     "delete": "Delete",
@@ -51,6 +53,8 @@
     "auto": "Auto"
   },
   "dashboard": {
+    "title": "A Dong Food",
+    "welcome": "Hello",
     "featured": {
       "user": "Users",
       "income": "Income",
@@ -413,6 +417,7 @@
     "error_delete": "Failed to delete supplier"
   },
   "orders":{
+    "create": "Create Order",
     "title": "Order Management",
     "create_title": "Create Order",
     "create_description": "Fill in the details below to create a new order.",

@@ -33,6 +33,8 @@
     "rows_per_page": "Số dòng mỗi trang"
   },
   "action": {
+    "quick_action": "Hành động nhanh",
+    "view": "View",
     "info": "Thông tin",
     "edit": "Sửa",
     "delete": "Xóa",
@@ -51,6 +53,8 @@
     "auto": "Tự động"
   },
   "dashboard": {
+    "title": "Á Đông Food",
+    "welcome": "Xin chào",
     "featured": {
       "user": "Người dùng",
       "income": "Thu nhập",
@@ -351,6 +355,7 @@
     }
   },
   "orders": {
+    "create": "Tạo đơn hàng",
     "title": "Quản lý đơn hàng",
     "add_new": "Tạo đơn hàng mới",
     "id": "Mã đơn hàng",
