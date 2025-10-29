@@ -16,6 +16,7 @@ import {
   InputGroup,
   Badge,
   Modal,
+  FormCheck,
 } from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -44,7 +45,7 @@ interface Dish {
 }
 
 interface OrderDishItem {
-  id: string // Unique ID for the order item
+  id: string
   monanId: string
   tenMonAn: string
   soSuat: number
@@ -53,9 +54,18 @@ interface OrderDishItem {
     tenNguyenLieu: string
     donViTinh: string
     dinhMuc: number
-    soLuong: number // Tính toán từ dinhMuc * soSuat
+    soLuong: number
   }[]
-  isEditing?: boolean
+}
+
+interface SupplementaryFoodItem {
+  id: string
+  nguyenLieuId: string
+  tenNguyenLieu: string
+  donViTinh: string
+  dinhMuc: number
+  soLuong: number
+  ghiChu?: string
 }
 
 interface OrderFormProps {
@@ -81,20 +91,33 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   // Dishes in order
   const [orderDishes, setOrderDishes] = useState<OrderDishItem[]>([])
 
+  // Supplementary foods (NEW)
+  const [supplementaryFoods, setSupplementaryFoods] = useState<
+    SupplementaryFoodItem[]
+  >([])
+
   // Modal for adding dishes
   const [showDishModal, setShowDishModal] = useState(false)
   const [availableDishes, setAvailableDishes] = useState<Dish[]>([])
   const [searchDish, setSearchDish] = useState('')
-  const [selectedDish, setSelectedDish] = useState<Dish | null>(null)
+  const [selectedDishes, setSelectedDishes] = useState<string[]>([]) // Multi-select
   const [portions, setPortions] = useState(1)
 
-  // Modal for adding custom ingredient
+  // Modal for adding ingredient to dish
   const [showIngredientModal, setShowIngredientModal] = useState(false)
   const [currentDishIndex, setCurrentDishIndex] = useState<number | null>(null)
   const [availableIngredients, setAvailableIngredients] = useState<any[]>([])
   const [searchIngredient, setSearchIngredient] = useState('')
-  const [selectedIngredient, setSelectedIngredient] = useState<any>(null)
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]) // Multi-select
   const [customAmount, setCustomAmount] = useState(0)
+
+  // Modal for adding supplementary foods (NEW)
+  const [showSupplementaryModal, setShowSupplementaryModal] = useState(false)
+  const [
+    selectedSupplementaryIngredients,
+    setSelectedSupplementaryIngredients,
+  ] = useState<string[]>([])
+  const [supplementaryAmount, setSupplementaryAmount] = useState(0)
 
   // Load available dishes
   useEffect(() => {
@@ -105,8 +128,6 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   const loadDishes = async () => {
     try {
       // TODO: Replace with actual API call
-      // const response = await dishApi.getAll()
-      // Mock data
       const mockDishes: Dish[] = [
         {
           dishId: 'MA001',
@@ -178,8 +199,6 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   const loadIngredients = async () => {
     try {
       // TODO: Replace with actual API call
-      // const response = await ingredientApi.getAll()
-      // Mock data
       const mockIngredients = [
         {
           nguyenLieuId: 'NL008',
@@ -193,6 +212,8 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           tenNguyenLieu: 'Nước mắm',
           donViTinh: 'lít',
         },
+        { nguyenLieuId: 'NL012', tenNguyenLieu: 'Hành tím', donViTinh: 'kg' },
+        { nguyenLieuId: 'NL013', tenNguyenLieu: 'Gừng', donViTinh: 'kg' },
       ]
       setAvailableIngredients(mockIngredients)
     } catch (err) {
@@ -200,27 +221,30 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     }
   }
 
-  // Add dish to order
-  const handleAddDish = () => {
-    if (!selectedDish || portions <= 0) {
+  // Add multiple dishes to order
+  const handleAddDishes = () => {
+    if (selectedDishes.length === 0 || portions <= 0) {
       alert('Vui lòng chọn món ăn và nhập số suất hợp lệ')
       return
     }
 
-    const newOrderDish: OrderDishItem = {
-      id: `${Date.now()}-${Math.random()}`,
-      monanId: selectedDish.dishId,
-      tenMonAn: selectedDish.dishName,
-      soSuat: portions,
-      ingredients: selectedDish.ingredients.map((ing) => ({
-        ...ing,
-        soLuong: ing.dinhMuc * portions,
-      })),
-    }
+    const newDishes: OrderDishItem[] = selectedDishes.map((dishId) => {
+      const dish = availableDishes.find((d) => d.dishId === dishId)!
+      return {
+        id: `${Date.now()}-${Math.random()}`,
+        monanId: dish.dishId,
+        tenMonAn: dish.dishName,
+        soSuat: portions,
+        ingredients: dish.ingredients.map((ing) => ({
+          ...ing,
+          soLuong: ing.dinhMuc * portions,
+        })),
+      }
+    })
 
-    setOrderDishes([...orderDishes, newOrderDish])
+    setOrderDishes([...orderDishes, ...newDishes])
     setShowDishModal(false)
-    setSelectedDish(null)
+    setSelectedDishes([])
     setPortions(1)
     setSearchDish('')
   }
@@ -278,6 +302,35 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     )
   }
 
+  // Update định mức (NEW)
+  const handleUpdateDinhMuc = (
+    dishId: string,
+    ingredientId: string,
+    newDinhMuc: number,
+  ) => {
+    if (newDinhMuc < 0) return
+
+    setOrderDishes(
+      orderDishes.map((dish) => {
+        if (dish.id === dishId) {
+          return {
+            ...dish,
+            ingredients: dish.ingredients.map((ing) =>
+              ing.nguyenLieuId === ingredientId
+                ? {
+                    ...ing,
+                    dinhMuc: newDinhMuc,
+                    soLuong: newDinhMuc * dish.soSuat,
+                  }
+                : ing,
+            ),
+          }
+        }
+        return dish
+      }),
+    )
+  }
+
   // Remove ingredient from dish
   const handleRemoveIngredient = (dishId: string, ingredientId: string) => {
     setOrderDishes(
@@ -295,44 +348,129 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     )
   }
 
-  // Add custom ingredient
-  const handleAddCustomIngredient = () => {
-    if (currentDishIndex === null || !selectedIngredient || customAmount <= 0) {
+  // Add multiple custom ingredients to dish
+  const handleAddCustomIngredients = () => {
+    if (
+      currentDishIndex === null ||
+      selectedIngredients.length === 0 ||
+      customAmount <= 0
+    ) {
       alert('Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ')
       return
     }
 
     const dish = orderDishes[currentDishIndex]
-    const existingIngredient = dish.ingredients.find(
-      (ing) => ing.nguyenLieuId === selectedIngredient.nguyenLieuId,
-    )
+    const newIngredients = selectedIngredients
+      .map((ingId) => {
+        const ingredient = availableIngredients.find(
+          (ing) => ing.nguyenLieuId === ingId,
+        )
+        if (!ingredient) return null
 
-    if (existingIngredient) {
-      alert('Nguyên liệu này đã có trong món ăn')
+        const exists = dish.ingredients.find(
+          (ing) => ing.nguyenLieuId === ingId,
+        )
+        if (exists) return null
+
+        return {
+          nguyenLieuId: ingredient.nguyenLieuId,
+          tenNguyenLieu: ingredient.tenNguyenLieu,
+          donViTinh: ingredient.donViTinh,
+          dinhMuc: 0,
+          soLuong: customAmount,
+        }
+      })
+      .filter((ing) => ing !== null) as any[]
+
+    if (newIngredients.length === 0) {
+      alert('Tất cả nguyên liệu đã có trong món ăn')
       return
     }
 
     const updatedDishes = [...orderDishes]
     updatedDishes[currentDishIndex] = {
       ...dish,
-      ingredients: [
-        ...dish.ingredients,
-        {
-          nguyenLieuId: selectedIngredient.nguyenLieuId,
-          tenNguyenLieu: selectedIngredient.tenNguyenLieu,
-          donViTinh: selectedIngredient.donViTinh,
-          dinhMuc: 0, // Custom ingredient has no standard portion
-          soLuong: customAmount,
-        },
-      ],
+      ingredients: [...dish.ingredients, ...newIngredients],
     }
 
     setOrderDishes(updatedDishes)
     setShowIngredientModal(false)
-    setSelectedIngredient(null)
+    setSelectedIngredients([])
     setCustomAmount(0)
     setCurrentDishIndex(null)
     setSearchIngredient('')
+  }
+
+  // Add multiple supplementary foods (NEW)
+  const handleAddSupplementaryFoods = () => {
+    if (
+      selectedSupplementaryIngredients.length === 0 ||
+      supplementaryAmount <= 0
+    ) {
+      alert('Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ')
+      return
+    }
+
+    const newSupplementaryFoods: SupplementaryFoodItem[] =
+      selectedSupplementaryIngredients
+        .map((ingId) => {
+          const ingredient = availableIngredients.find(
+            (ing) => ing.nguyenLieuId === ingId,
+          )
+          if (!ingredient) return null
+
+          return {
+            id: `${Date.now()}-${Math.random()}`,
+            nguyenLieuId: ingredient.nguyenLieuId,
+            tenNguyenLieu: ingredient.tenNguyenLieu,
+            donViTinh: ingredient.donViTinh,
+            dinhMuc: 0,
+            soLuong: supplementaryAmount,
+            ghiChu: '',
+          }
+        })
+        .filter((item) => item !== null) as SupplementaryFoodItem[]
+
+    setSupplementaryFoods([...supplementaryFoods, ...newSupplementaryFoods])
+    setShowSupplementaryModal(false)
+    setSelectedSupplementaryIngredients([])
+    setSupplementaryAmount(0)
+  }
+
+  // Update supplementary food amount
+  const handleUpdateSupplementaryAmount = (id: string, newAmount: number) => {
+    if (newAmount < 0) return
+    setSupplementaryFoods(
+      supplementaryFoods.map((item) =>
+        item.id === id ? { ...item, soLuong: newAmount } : item,
+      ),
+    )
+  }
+
+  // Update supplementary food định mức (NEW)
+  const handleUpdateSupplementaryDinhMuc = (id: string, newDinhMuc: number) => {
+    if (newDinhMuc < 0) return
+    setSupplementaryFoods(
+      supplementaryFoods.map((item) =>
+        item.id === id ? { ...item, dinhMuc: newDinhMuc } : item,
+      ),
+    )
+  }
+
+  // Update supplementary food note
+  const handleUpdateSupplementaryNote = (id: string, note: string) => {
+    setSupplementaryFoods(
+      supplementaryFoods.map((item) =>
+        item.id === id ? { ...item, ghiChu: note } : item,
+      ),
+    )
+  }
+
+  // Remove supplementary food
+  const handleRemoveSupplementaryFood = (id: string) => {
+    if (confirm('Bạn có chắc muốn xóa thực phẩm bổ sung này?')) {
+      setSupplementaryFoods(supplementaryFoods.filter((item) => item.id !== id))
+    }
   }
 
   // Submit form
@@ -349,8 +487,8 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
       return
     }
 
-    if (orderDishes.length === 0) {
-      setError('Vui lòng thêm ít nhất một món ăn')
+    if (orderDishes.length === 0 && supplementaryFoods.length === 0) {
+      setError('Vui lòng thêm ít nhất một món ăn hoặc thực phẩm bổ sung')
       return
     }
 
@@ -359,7 +497,6 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     setSuccess('')
 
     try {
-      // Prepare data for API
       const orderData = {
         phieuLenDonId,
         bepId,
@@ -375,7 +512,16 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             tenNguyenLieu: ing.tenNguyenLieu,
             soLuong: ing.soLuong,
             donViTinh: ing.donViTinh,
+            dinhMuc: ing.dinhMuc,
           })),
+        })),
+        thucPhamBoSung: supplementaryFoods.map((item) => ({
+          nguyenLieuId: item.nguyenLieuId,
+          tenNguyenLieu: item.tenNguyenLieu,
+          soLuong: item.soLuong,
+          donViTinh: item.donViTinh,
+          dinhMuc: item.dinhMuc,
+          ghiChu: item.ghiChu,
         })),
       }
 
@@ -386,7 +532,6 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
       setSuccess('Tạo phiếu lên đơn thành công!')
 
-      // Redirect after success
       setTimeout(() => {
         router.push('/orders')
       }, 1500)
@@ -408,7 +553,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     ing.tenNguyenLieu.toLowerCase().includes(searchIngredient.toLowerCase()),
   )
 
-  // Calculate total ingredients across all dishes
+  // Calculate total ingredients
   const getTotalIngredients = () => {
     const totals: {
       [key: string]: {
@@ -418,6 +563,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
       }
     } = {}
 
+    // From dishes
     orderDishes.forEach((dish) => {
       dish.ingredients.forEach((ing) => {
         if (totals[ing.nguyenLieuId]) {
@@ -430,6 +576,19 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           }
         }
       })
+    })
+
+    // From supplementary foods
+    supplementaryFoods.forEach((item) => {
+      if (totals[item.nguyenLieuId]) {
+        totals[item.nguyenLieuId].soLuong += item.soLuong
+      } else {
+        totals[item.nguyenLieuId] = {
+          tenNguyenLieu: item.tenNguyenLieu,
+          soLuong: item.soLuong,
+          donViTinh: item.donViTinh,
+        }
+      }
     })
 
     return Object.entries(totals).map(([id, data]) => ({
@@ -608,9 +767,10 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                         <Table size="sm" bordered>
                           <thead className="table-light">
                             <tr>
-                              <th style={{ width: '40%' }}>Tên nguyên liệu</th>
-                              <th style={{ width: '20%' }}>Định mức</th>
+                              <th style={{ width: '30%' }}>Tên nguyên liệu</th>
+                              <th style={{ width: '20%' }}>Định mức/suất</th>
                               <th style={{ width: '25%' }}>Số lượng</th>
+                              <th style={{ width: '10%' }}>ĐVT</th>
                               <th
                                 style={{ width: '15%' }}
                                 className="text-center"
@@ -624,30 +784,38 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                               <tr key={ing.nguyenLieuId}>
                                 <td>{ing.tenNguyenLieu}</td>
                                 <td>
-                                  {ing.dinhMuc > 0
-                                    ? `${ing.dinhMuc} ${ing.donViTinh}/suất`
-                                    : '-'}
+                                  <FormControl
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    value={ing.dinhMuc}
+                                    onChange={(e) =>
+                                      handleUpdateDinhMuc(
+                                        dish.id,
+                                        ing.nguyenLieuId,
+                                        parseFloat(e.target.value) || 0,
+                                      )
+                                    }
+                                    size="sm"
+                                  />
                                 </td>
                                 <td>
-                                  <InputGroup size="sm">
-                                    <FormControl
-                                      type="number"
-                                      step="0.01"
-                                      min="0"
-                                      value={ing.soLuong}
-                                      onChange={(e) =>
-                                        handleUpdateIngredientAmount(
-                                          dish.id,
-                                          ing.nguyenLieuId,
-                                          parseFloat(e.target.value) || 0,
-                                        )
-                                      }
-                                    />
-                                    <InputGroup.Text>
-                                      {ing.donViTinh}
-                                    </InputGroup.Text>
-                                  </InputGroup>
+                                  <FormControl
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    value={ing.soLuong}
+                                    onChange={(e) =>
+                                      handleUpdateIngredientAmount(
+                                        dish.id,
+                                        ing.nguyenLieuId,
+                                        parseFloat(e.target.value) || 0,
+                                      )
+                                    }
+                                    size="sm"
+                                  />
                                 </td>
+                                <td>{ing.donViTinh}</td>
                                 <td className="text-center">
                                   <Button
                                     variant="link"
@@ -676,8 +844,109 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           </CardBody>
         </Card>
 
+        {/* Supplementary Foods (NEW SECTION) */}
+        <Card className="mb-4">
+          <CardBody>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h5 className="mb-0">Thực phẩm bổ sung</h5>
+              <Button
+                variant="success"
+                size="sm"
+                onClick={() => setShowSupplementaryModal(true)}
+              >
+                <FontAwesomeIcon icon={faPlus} className="me-2" />
+                Thêm thực phẩm
+              </Button>
+            </div>
+
+            {supplementaryFoods.length === 0 ? (
+              <Alert variant="info">
+                Chưa có thực phẩm bổ sung. Nhấn &quot;Thêm thực phẩm&quot; để
+                thêm các nguyên liệu cần mua thêm.
+              </Alert>
+            ) : (
+              <Table striped bordered hover>
+                <thead className="table-light">
+                  <tr>
+                    <th style={{ width: '25%' }}>Tên nguyên liệu</th>
+                    <th style={{ width: '15%' }}>Định mức</th>
+                    <th style={{ width: '20%' }}>Số lượng</th>
+                    <th style={{ width: '10%' }}>ĐVT</th>
+                    <th style={{ width: '20%' }}>Ghi chú</th>
+                    <th style={{ width: '10%' }} className="text-center">
+                      Xóa
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {supplementaryFoods.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.tenNguyenLieu}</td>
+                      <td>
+                        <FormControl
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={item.dinhMuc}
+                          onChange={(e) =>
+                            handleUpdateSupplementaryDinhMuc(
+                              item.id,
+                              parseFloat(e.target.value) || 0,
+                            )
+                          }
+                          size="sm"
+                        />
+                      </td>
+                      <td>
+                        <FormControl
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={item.soLuong}
+                          onChange={(e) =>
+                            handleUpdateSupplementaryAmount(
+                              item.id,
+                              parseFloat(e.target.value) || 0,
+                            )
+                          }
+                          size="sm"
+                        />
+                      </td>
+                      <td>{item.donViTinh}</td>
+                      <td>
+                        <FormControl
+                          type="text"
+                          value={item.ghiChu || ''}
+                          onChange={(e) =>
+                            handleUpdateSupplementaryNote(
+                              item.id,
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Ghi chú..."
+                          size="sm"
+                        />
+                      </td>
+                      <td className="text-center">
+                        <Button
+                          variant="link"
+                          size="sm"
+                          className="text-danger p-0"
+                          onClick={() => handleRemoveSupplementaryFood(item.id)}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </CardBody>
+        </Card>
+
         {/* Total Ingredients Summary */}
-        {orderDishes.length > 0 && (
+        {(orderDishes.length > 0 || supplementaryFoods.length > 0) && (
           <Card className="mb-4">
             <CardBody>
               <h5 className="mb-3">Tổng hợp nguyên liệu</h5>
@@ -738,12 +1007,12 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
         </div>
       </Form>
 
-      {/* Modal: Add Dish */}
+      {/* Modal: Add Dishes (Multi-select) */}
       <Modal
         show={showDishModal}
         onHide={() => {
           setShowDishModal(false)
-          setSelectedDish(null)
+          setSelectedDishes([])
           setPortions(1)
           setSearchDish('')
         }}
@@ -771,33 +1040,66 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             {filteredDishes.length === 0 ? (
               <Alert variant="info">Không tìm thấy món ăn</Alert>
             ) : (
-              <div className="list-group">
+              <div>
                 {filteredDishes.map((dish) => (
-                  <button
+                  <div
                     key={dish.dishId}
-                    type="button"
-                    className={`list-group-item list-group-item-action ${
-                      selectedDish?.dishId === dish.dishId ? 'active' : ''
+                    className={`border rounded p-3 mb-2 ${
+                      selectedDishes.includes(dish.dishId)
+                        ? 'bg-primary text-white'
+                        : ''
                     }`}
-                    onClick={() => setSelectedDish(dish)}
+                    style={{ cursor: 'pointer' }}
                   >
-                    <div className="d-flex justify-content-between">
-                      <strong>{dish.dishName}</strong>
-                      <Badge bg="secondary">{dish.dishId}</Badge>
-                    </div>
-                    <small className="text-muted">
-                      {dish.ingredients.length} nguyên liệu
-                    </small>
-                  </button>
+                    <FormCheck
+                      type="checkbox"
+                      id={`dish-${dish.dishId}`}
+                      label={
+                        <div>
+                          <div className="d-flex justify-content-between">
+                            <strong>{dish.dishName}</strong>
+                            <Badge
+                              bg={
+                                selectedDishes.includes(dish.dishId)
+                                  ? 'light'
+                                  : 'secondary'
+                              }
+                              text={
+                                selectedDishes.includes(dish.dishId)
+                                  ? 'dark'
+                                  : 'white'
+                              }
+                            >
+                              {dish.dishId}
+                            </Badge>
+                          </div>
+                          <small>{dish.ingredients.length} nguyên liệu</small>
+                        </div>
+                      }
+                      checked={selectedDishes.includes(dish.dishId)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedDishes([...selectedDishes, dish.dishId])
+                        } else {
+                          setSelectedDishes(
+                            selectedDishes.filter((id) => id !== dish.dishId),
+                          )
+                        }
+                      }}
+                    />
+                  </div>
                 ))}
               </div>
             )}
           </div>
 
-          {selectedDish && (
+          {selectedDishes.length > 0 && (
             <div className="mt-3">
+              <Alert variant="success">
+                Đã chọn {selectedDishes.length} món
+              </Alert>
               <FormGroup>
-                <FormLabel>Số suất:</FormLabel>
+                <FormLabel>Số suất (áp dụng cho tất cả món đã chọn):</FormLabel>
                 <FormControl
                   type="number"
                   min="1"
@@ -805,17 +1107,6 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                   onChange={(e) => setPortions(parseInt(e.target.value) || 1)}
                 />
               </FormGroup>
-
-              <div className="mt-3">
-                <strong>Nguyên liệu trong món:</strong>
-                <ul className="mt-2">
-                  {selectedDish.ingredients.map((ing) => (
-                    <li key={ing.nguyenLieuId}>
-                      {ing.tenNguyenLieu}: {ing.dinhMuc} {ing.donViTinh}/suất
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           )}
         </Modal.Body>
@@ -824,7 +1115,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             variant="secondary"
             onClick={() => {
               setShowDishModal(false)
-              setSelectedDish(null)
+              setSelectedDishes([])
               setPortions(1)
               setSearchDish('')
             }}
@@ -833,20 +1124,20 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           </Button>
           <Button
             variant="primary"
-            onClick={handleAddDish}
-            disabled={!selectedDish}
+            onClick={handleAddDishes}
+            disabled={selectedDishes.length === 0}
           >
-            Thêm món
+            Thêm {selectedDishes.length} món
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Modal: Add Custom Ingredient */}
+      {/* Modal: Add Ingredients to Dish (Multi-select) */}
       <Modal
         show={showIngredientModal}
         onHide={() => {
           setShowIngredientModal(false)
-          setSelectedIngredient(null)
+          setSelectedIngredients([])
           setCustomAmount(0)
           setCurrentDishIndex(null)
           setSearchIngredient('')
@@ -854,7 +1145,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Thêm nguyên liệu</Modal.Title>
+          <Modal.Title>Thêm nguyên liệu vào món</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <FormGroup className="mb-3">
@@ -875,33 +1166,69 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             {filteredIngredients.length === 0 ? (
               <Alert variant="info">Không tìm thấy nguyên liệu</Alert>
             ) : (
-              <div className="list-group">
+              <div>
                 {filteredIngredients.map((ing) => (
-                  <button
+                  <div
                     key={ing.nguyenLieuId}
-                    type="button"
-                    className={`list-group-item list-group-item-action ${
-                      selectedIngredient?.nguyenLieuId === ing.nguyenLieuId
-                        ? 'active'
+                    className={`border rounded p-2 mb-2 ${
+                      selectedIngredients.includes(ing.nguyenLieuId)
+                        ? 'bg-primary text-white'
                         : ''
                     }`}
-                    onClick={() => setSelectedIngredient(ing)}
+                    style={{ cursor: 'pointer' }}
                   >
-                    <div className="d-flex justify-content-between">
-                      <span>{ing.tenNguyenLieu}</span>
-                      <Badge bg="secondary">{ing.donViTinh}</Badge>
-                    </div>
-                  </button>
+                    <FormCheck
+                      type="checkbox"
+                      id={`ing-${ing.nguyenLieuId}`}
+                      label={
+                        <div className="d-flex justify-content-between w-100">
+                          <span>{ing.tenNguyenLieu}</span>
+                          <Badge
+                            bg={
+                              selectedIngredients.includes(ing.nguyenLieuId)
+                                ? 'light'
+                                : 'secondary'
+                            }
+                            text={
+                              selectedIngredients.includes(ing.nguyenLieuId)
+                                ? 'dark'
+                                : 'white'
+                            }
+                          >
+                            {ing.donViTinh}
+                          </Badge>
+                        </div>
+                      }
+                      checked={selectedIngredients.includes(ing.nguyenLieuId)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedIngredients([
+                            ...selectedIngredients,
+                            ing.nguyenLieuId,
+                          ])
+                        } else {
+                          setSelectedIngredients(
+                            selectedIngredients.filter(
+                              (id) => id !== ing.nguyenLieuId,
+                            ),
+                          )
+                        }
+                      }}
+                    />
+                  </div>
                 ))}
               </div>
             )}
           </div>
 
-          {selectedIngredient && (
+          {selectedIngredients.length > 0 && (
             <div className="mt-3">
+              <Alert variant="success">
+                Đã chọn {selectedIngredients.length} nguyên liệu
+              </Alert>
               <FormGroup>
                 <FormLabel>
-                  Số lượng ({selectedIngredient.donViTinh}):
+                  Số lượng (áp dụng cho tất cả nguyên liệu đã chọn):
                 </FormLabel>
                 <FormControl
                   type="number"
@@ -921,7 +1248,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             variant="secondary"
             onClick={() => {
               setShowIngredientModal(false)
-              setSelectedIngredient(null)
+              setSelectedIngredients([])
               setCustomAmount(0)
               setCurrentDishIndex(null)
               setSearchIngredient('')
@@ -931,10 +1258,151 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           </Button>
           <Button
             variant="primary"
-            onClick={handleAddCustomIngredient}
-            disabled={!selectedIngredient || customAmount <= 0}
+            onClick={handleAddCustomIngredients}
+            disabled={selectedIngredients.length === 0 || customAmount <= 0}
           >
-            Thêm nguyên liệu
+            Thêm {selectedIngredients.length} nguyên liệu
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal: Add Supplementary Foods (Multi-select) */}
+      <Modal
+        show={showSupplementaryModal}
+        onHide={() => {
+          setShowSupplementaryModal(false)
+          setSelectedSupplementaryIngredients([])
+          setSupplementaryAmount(0)
+        }}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Thêm thực phẩm bổ sung</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup className="mb-3">
+            <InputGroup>
+              <InputGroup.Text>
+                <FontAwesomeIcon icon={faSearch} />
+              </InputGroup.Text>
+              <FormControl
+                type="text"
+                placeholder="Tìm kiếm nguyên liệu..."
+                value={searchIngredient}
+                onChange={(e) => setSearchIngredient(e.target.value)}
+              />
+            </InputGroup>
+          </FormGroup>
+
+          <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+            {filteredIngredients.length === 0 ? (
+              <Alert variant="info">Không tìm thấy nguyên liệu</Alert>
+            ) : (
+              <div>
+                {filteredIngredients.map((ing) => (
+                  <div
+                    key={ing.nguyenLieuId}
+                    className={`border rounded p-2 mb-2 ${
+                      selectedSupplementaryIngredients.includes(
+                        ing.nguyenLieuId,
+                      )
+                        ? 'bg-success text-white'
+                        : ''
+                    }`}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <FormCheck
+                      type="checkbox"
+                      id={`supp-${ing.nguyenLieuId}`}
+                      label={
+                        <div className="d-flex justify-content-between w-100">
+                          <span>{ing.tenNguyenLieu}</span>
+                          <Badge
+                            bg={
+                              selectedSupplementaryIngredients.includes(
+                                ing.nguyenLieuId,
+                              )
+                                ? 'light'
+                                : 'secondary'
+                            }
+                            text={
+                              selectedSupplementaryIngredients.includes(
+                                ing.nguyenLieuId,
+                              )
+                                ? 'dark'
+                                : 'white'
+                            }
+                          >
+                            {ing.donViTinh}
+                          </Badge>
+                        </div>
+                      }
+                      checked={selectedSupplementaryIngredients.includes(
+                        ing.nguyenLieuId,
+                      )}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedSupplementaryIngredients([
+                            ...selectedSupplementaryIngredients,
+                            ing.nguyenLieuId,
+                          ])
+                        } else {
+                          setSelectedSupplementaryIngredients(
+                            selectedSupplementaryIngredients.filter(
+                              (id) => id !== ing.nguyenLieuId,
+                            ),
+                          )
+                        }
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {selectedSupplementaryIngredients.length > 0 && (
+            <div className="mt-3">
+              <Alert variant="success">
+                Đã chọn {selectedSupplementaryIngredients.length} nguyên liệu
+              </Alert>
+              <FormGroup>
+                <FormLabel>
+                  Số lượng (áp dụng cho tất cả nguyên liệu đã chọn):
+                </FormLabel>
+                <FormControl
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={supplementaryAmount}
+                  onChange={(e) =>
+                    setSupplementaryAmount(parseFloat(e.target.value) || 0)
+                  }
+                />
+              </FormGroup>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowSupplementaryModal(false)
+              setSelectedSupplementaryIngredients([])
+              setSupplementaryAmount(0)
+            }}
+          >
+            Đóng
+          </Button>
+          <Button
+            variant="success"
+            onClick={handleAddSupplementaryFoods}
+            disabled={
+              selectedSupplementaryIngredients.length === 0 ||
+              supplementaryAmount <= 0
+            }
+          >
+            Thêm {selectedSupplementaryIngredients.length} thực phẩm
           </Button>
         </Modal.Footer>
       </Modal>
