@@ -85,8 +85,14 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   // Order header
   const [phieuLenDonId, setPhieuLenDonId] = useState('')
   const [bepId, setBepId] = useState('')
+  const [tenBep, setTenBep] = useState('')
   const [ngayLen, setNgayLen] = useState(new Date().toISOString().split('T')[0])
   const [ghiChu, setGhiChu] = useState('')
+
+  // Kitchen selection modal
+  const [showKitchenModal, setShowKitchenModal] = useState(false)
+  const [availableKitchens, setAvailableKitchens] = useState<any[]>([])
+  const [searchKitchen, setSearchKitchen] = useState('')
 
   // Dishes in order
   const [orderDishes, setOrderDishes] = useState<OrderDishItem[]>([])
@@ -123,7 +129,38 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   useEffect(() => {
     loadDishes()
     loadIngredients()
+    loadKitchens()
+    generateOrderId()
   }, [])
+
+  // Generate order ID based on timestamp
+  const generateOrderId = () => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    const hours = String(now.getHours()).padStart(2, '0')
+    const minutes = String(now.getMinutes()).padStart(2, '0')
+    const seconds = String(now.getSeconds()).padStart(2, '0')
+
+    const orderId = `PLD${year}${month}${day}${hours}${minutes}${seconds}`
+    setPhieuLenDonId(orderId)
+  }
+
+  const loadKitchens = async () => {
+    try {
+      // TODO: Replace with actual API call
+      const mockKitchens = [
+        { bepId: 'BEP001', tenBep: 'Bếp Chính', moTa: 'Bếp trung tâm' },
+        { bepId: 'BEP002', tenBep: 'Bếp Phụ 1', moTa: 'Bếp tầng 2' },
+        { bepId: 'BEP003', tenBep: 'Bếp Phụ 2', moTa: 'Bếp tầng 3' },
+        { bepId: 'BEP004', tenBep: 'Bếp Ngoài', moTa: 'Bếp khu vực ngoài' },
+      ]
+      setAvailableKitchens(mockKitchens)
+    } catch (err) {
+      console.error('Failed to load kitchens:', err)
+    }
+  }
 
   const loadDishes = async () => {
     try {
@@ -553,6 +590,21 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     ing.tenNguyenLieu.toLowerCase().includes(searchIngredient.toLowerCase()),
   )
 
+  // Filter kitchens by search
+  const filteredKitchens = availableKitchens.filter(
+    (kitchen) =>
+      kitchen.tenBep.toLowerCase().includes(searchKitchen.toLowerCase()) ||
+      kitchen.bepId.toLowerCase().includes(searchKitchen.toLowerCase()),
+  )
+
+  // Select kitchen
+  const handleSelectKitchen = (kitchen: any) => {
+    setBepId(kitchen.bepId)
+    setTenBep(kitchen.tenBep)
+    setShowKitchenModal(false)
+    setSearchKitchen('')
+  }
+
   // Calculate total ingredients
   const getTotalIngredients = () => {
     const totals: {
@@ -622,13 +674,25 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                   <FormLabel>
                     Mã phiếu lên đơn <span className="text-danger">*</span>
                   </FormLabel>
-                  <FormControl
-                    type="text"
-                    value={phieuLenDonId}
-                    onChange={(e) => setPhieuLenDonId(e.target.value)}
-                    placeholder="Ví dụ: PLD001"
-                    required
-                  />
+                  <InputGroup>
+                    <FormControl
+                      type="text"
+                      value={phieuLenDonId}
+                      onChange={(e) => setPhieuLenDonId(e.target.value)}
+                      placeholder="Ví dụ: PLD001"
+                      required
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      onClick={generateOrderId}
+                      title="Tạo mã tự động"
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Button>
+                  </InputGroup>
+                  <Form.Text className="text-muted">
+                    Mã tự động theo thời gian, có thể chỉnh sửa
+                  </Form.Text>
                 </FormGroup>
               </Col>
               <Col md={6}>
@@ -636,13 +700,28 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                   <FormLabel>
                     Bếp <span className="text-danger">*</span>
                   </FormLabel>
-                  <FormControl
-                    type="text"
-                    value={bepId}
-                    onChange={(e) => setBepId(e.target.value)}
-                    placeholder="Ví dụ: BEP001"
-                    required
-                  />
+                  <InputGroup>
+                    <FormControl
+                      type="text"
+                      value={tenBep || bepId}
+                      placeholder="Chọn bếp..."
+                      readOnly
+                      required
+                      style={{ cursor: 'pointer', backgroundColor: '#fff' }}
+                      onClick={() => setShowKitchenModal(true)}
+                    />
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => setShowKitchenModal(true)}
+                    >
+                      <FontAwesomeIcon icon={faSearch} />
+                    </Button>
+                  </InputGroup>
+                  {bepId && (
+                    <Form.Text className="text-muted">
+                      Mã bếp: {bepId}
+                    </Form.Text>
+                  )}
                 </FormGroup>
               </Col>
             </Row>
@@ -1006,6 +1085,86 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           </Button>
         </div>
       </Form>
+
+      {/* Modal: Select Kitchen */}
+      <Modal
+        show={showKitchenModal}
+        onHide={() => {
+          setShowKitchenModal(false)
+          setSearchKitchen('')
+        }}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Chọn bếp</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup className="mb-3">
+            <InputGroup>
+              <InputGroup.Text>
+                <FontAwesomeIcon icon={faSearch} />
+              </InputGroup.Text>
+              <FormControl
+                type="text"
+                placeholder="Tìm kiếm bếp..."
+                value={searchKitchen}
+                onChange={(e) => setSearchKitchen(e.target.value)}
+              />
+            </InputGroup>
+          </FormGroup>
+
+          <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            {filteredKitchens.length === 0 ? (
+              <Alert variant="info">Không tìm thấy bếp</Alert>
+            ) : (
+              <div className="list-group">
+                {filteredKitchens.map((kitchen) => (
+                  <button
+                    key={kitchen.bepId}
+                    type="button"
+                    className={`list-group-item list-group-item-action ${
+                      bepId === kitchen.bepId ? 'active' : ''
+                    }`}
+                    onClick={() => handleSelectKitchen(kitchen)}
+                  >
+                    <div className="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 className="mb-1">{kitchen.tenBep}</h6>
+                        <small
+                          className={
+                            bepId === kitchen.bepId
+                              ? 'text-white'
+                              : 'text-muted'
+                          }
+                        >
+                          {kitchen.moTa}
+                        </small>
+                      </div>
+                      <Badge
+                        bg={bepId === kitchen.bepId ? 'light' : 'primary'}
+                        text={bepId === kitchen.bepId ? 'dark' : 'white'}
+                      >
+                        {kitchen.bepId}
+                      </Badge>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowKitchenModal(false)
+              setSearchKitchen('')
+            }}
+          >
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Modal: Add Dishes (Multi-select) */}
       <Modal
