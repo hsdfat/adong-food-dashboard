@@ -222,14 +222,14 @@ export default function SupplierPricesList({
                   </Button>
                   <Button variant="primary" type="submit">
                     <FontAwesomeIcon icon={faSearch} fixedWidth />
-                    {dict.action?.search || 'Search'}
+                    {dict.common?.search || 'Search'}
                   </Button>
                   {(searchQuery || dateFrom || dateTo) && (
                     <Button
                       variant="outline-danger"
                       onClick={handleClearFilters}
                     >
-                      {dict.action?.clear || 'Clear'}
+                      {dict.common?.clear || 'Clear'}
                     </Button>
                   )}
                 </InputGroup>

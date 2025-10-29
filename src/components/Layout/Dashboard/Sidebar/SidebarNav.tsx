@@ -65,9 +65,9 @@ export default async function SidebarNav() {
         <SidebarNavItem href="/recipe-standards">
           {dict.sidebar.items.recipe_standards}
         </SidebarNavItem>
-        <SidebarNavItem href="/recipe-standards/by-dish">
+        {/* <SidebarNavItem href="/recipe-standards/by-dish">
           {dict.sidebar.items.by_dish || 'By Dish'}
-        </SidebarNavItem>
+        </SidebarNavItem> */}
       </SidebarNavGroup>
 
       <SidebarNavGroup toggleIcon={faBoxes} toggleText={dict.sidebar.items.inventory_management || 'Inventory'}>

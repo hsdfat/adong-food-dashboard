@@ -457,6 +457,7 @@
     "loading": "Loading supplier prices..."
   },
   "common": {
+    "clear": "Clear",
     "active": "Active",
     "inactive": "Inactive",
     "loading": "Loading...",
