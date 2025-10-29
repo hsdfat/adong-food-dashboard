@@ -24,7 +24,7 @@ export const supplierPriceApi = {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
     if (params?.pageSize)
-      queryParams.append('pageSize', params.pageSize.toString())
+      queryParams.append('per_page', params.pageSize.toString())
     if (params?.search) queryParams.append('search', params.search)
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
     if (params?.sortDir) queryParams.append('sortDir', params.sortDir)

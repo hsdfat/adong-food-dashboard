@@ -24,6 +24,7 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup -g 1001 nodejs && \
     adduser -S nextjs -u 1001
 
+    
 # Set working directory
 
 # Copy public assets

@@ -23,7 +23,7 @@ import {
   faEllipsisVertical,
   faSearch,
 } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import useDictionary from '@/locales/dictionary-hook'
@@ -41,19 +41,25 @@ export default function SupplierPricesList({
   const [prices, setPrices] = useState<SupplierPrice[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
-  const [search, setSearch] = useState('')
+  const [meta, setMeta] = useState<any>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+  // const [pageSize, setPageSize] = useState(20)
   const [sortBy, setSortBy] = useState('id')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
-
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
   const dict = useDictionary()
+  const searchParams = useSearchParams()
+
+  // Get query params
+  const page = parseInt(searchParams.get('page') || '1')
+  const pageSize = parseInt(searchParams.get('per_page') || '20')
+  const search = searchParams.get('search') || ''
 
   useEffect(() => {
     loadPrices()
-  }, [ingredientId, supplierId, currentPage, pageSize, search, sortBy, sortDir])
+  }, [page, pageSize, search])
 
   const loadPrices = async () => {
     try {
@@ -70,15 +76,16 @@ export default function SupplierPricesList({
         setPrices(data)
         setTotalPages(1)
       } else {
-        const response = await supplierPriceApi.getAll({
-          page: currentPage,
+        const param = {
+          page,
           pageSize,
           search,
           sortBy,
           sortDir,
-        })
+        }
+        const response = await supplierPriceApi.getAll(param)
         setPrices(response.data)
-        setTotalPages(response.totalPages)
+        setMeta(response.meta)
       }
     } catch (err) {
       setError('Failed to load supplier prices')
@@ -102,12 +109,6 @@ export default function SupplierPricesList({
     }
   }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    setCurrentPage(1)
-    loadPrices()
-  }
-
   const formatDate = (dateString: string) => {
     if (!dateString) return '-'
     return new Date(dateString).toLocaleDateString('vi-VN')
@@ -120,6 +121,21 @@ export default function SupplierPricesList({
   if (loading) {
     return <div className="text-center py-4">Loading...</div>
   }
+
+  const handleSearch = (e: React.FormEvent) => {
+      e.preventDefault()
+  
+      const newSearchParams = new URLSearchParams(searchParams)
+      newSearchParams.set('page', '1') // Reset to first page
+  
+      if (searchQuery.trim()) {
+        newSearchParams.set('search', searchQuery.trim())
+      } else {
+        newSearchParams.delete('search')
+      }
+  
+      router.push(`/supplier-prices?${newSearchParams.toString()}`)
+    }
 
   return (
     <>
@@ -135,9 +151,8 @@ export default function SupplierPricesList({
             <InputGroup>
               <FormControl
                 type="text"
-                placeholder="Search by product name, ingredient ID, supplier ID..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                placeholder={dict.supplierPrice?.search_placeholder}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Button variant="primary" type="submit">
                 <FontAwesomeIcon icon={faSearch} fixedWidth />
@@ -160,22 +175,28 @@ export default function SupplierPricesList({
       <Table responsive bordered hover>
         <thead>
           <tr className="table-light dark:table-dark">
-            <th>ID</th>
-            <th>Product Name</th>
-            <th>Ingredient</th>
-            <th>Category</th>
-            <th>Supplier</th>
-            <th>Manufacturer</th>
-            <th>Unit</th>
-            <th>Specification</th>
-            <th className="text-end">Unit Price</th>
-            <th className="text-end">Price Per 1</th>
-            <th>Effective From</th>
-            <th>Effective To</th>
-            <th>Status</th>
-            <th className="text-end">New Price</th>
-            <th>Promotion</th>
-            <th aria-label="Actions" />
+            <th>{dict.supplierPrice?.productID || 'ID'}</th>
+            <th>{dict.supplierPrice?.productName || 'Product Name'}</th>
+            <th>{dict.supplierPrice?.ingredient || 'Ingredient'}</th>
+            <th>{dict.supplierPrice?.category || 'Category'}</th>
+            <th>{dict.supplierPrice?.supplier || 'Supplier'}</th>
+            <th>{dict.supplierPrice?.manufacturer || 'Manufacturer'}</th>
+            <th>{dict.supplierPrice?.unit || 'Unit'}</th>
+            <th>{dict.supplierPrice?.specification || 'Specification'}</th>
+            <th className="text-end">
+              {dict.supplierPrice?.unitPrice || 'Unit Price'}
+            </th>
+            <th className="text-end">
+              {dict.supplierPrice?.pricePer1 || 'Price Per 1'}
+            </th>
+            <th>{dict.supplierPrice?.effectiveFrom || 'Effective From'}</th>
+            <th>{dict.supplierPrice?.effectiveTo || 'Effective To'}</th>
+            <th>{dict.supplierPrice?.status || 'Status'}</th>
+            <th className="text-end">
+              {dict.supplierPrice?.newPrice || 'New Price'}
+            </th>
+            <th>{dict.supplierPrice?.promotion || 'Promotion'}</th>
+            <th aria-label={dict.common?.actions || 'Actions'} />
           </tr>
         </thead>
         <tbody>
@@ -187,12 +208,10 @@ export default function SupplierPricesList({
             </tr>
           ) : (
             prices.map((price) => (
-              <tr key={price.id}>
-                <td>{price.id}</td>
+              <tr key={price.productId}>
+                <td>{price.productId}</td>
                 <td>{price.productName}</td>
-                <td>
-                  {price.ingredientName || price.ingredientId}
-                </td>
+                <td>{price.ingredientName || price.ingredientId}</td>
                 <td>{price.category}</td>
                 <td>{price.supplierName || price.supplierId}</td>
                 <td>{price.manufacturer}</td>
@@ -217,7 +236,7 @@ export default function SupplierPricesList({
                       as="button"
                       bsPrefix="btn"
                       className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
-                      id={`action-${price.id}`}
+                      id={`action-${price.productId}`}
                     >
                       <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
                     </DropdownToggle>
@@ -225,14 +244,16 @@ export default function SupplierPricesList({
                     <DropdownMenu>
                       <DropdownItem
                         onClick={() =>
-                          router.push(`/supplier-prices/${price.id}/edit`)
+                          router.push(
+                            `/supplier-prices/${price.productId}/edit`,
+                          )
                         }
                       >
                         {dict.action?.edit || 'Edit'}
                       </DropdownItem>
                       <DropdownItem
                         className="text-danger"
-                        onClick={() => handleDelete(price.id)}
+                        onClick={() => handleDelete(price.productId)}
                       >
                         {dict.action?.delete || 'Delete'}
                       </DropdownItem>
@@ -245,18 +266,7 @@ export default function SupplierPricesList({
         </tbody>
       </Table>
 
-      {!ingredientId && !supplierId && totalPages > 1 && (
-        <Pagination
-          meta={{
-            from: (currentPage - 1) * pageSize + 1,
-            to: Math.min(currentPage * pageSize, prices.length),
-            total: prices.length,
-            current_page: currentPage,
-            last_page: totalPages,
-            per_page: pageSize,
-          }}
-        />
-      )}
+      {meta && <Pagination meta={meta} />}
     </>
   )
 }

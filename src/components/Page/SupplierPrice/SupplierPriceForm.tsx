@@ -177,7 +177,7 @@ export default function SupplierPriceForm({
           newPrice: submitData.newPrice,
           promotion: submitData.promotion,
         }
-        await supplierPriceApi.update(supplierPrice.id, updateData)
+        await supplierPriceApi.update(supplierPrice.productId, updateData)
         setSuccess(
           dict.common?.success_update || 'Supplier price updated successfully',
         )

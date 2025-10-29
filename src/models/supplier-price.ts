@@ -1,7 +1,7 @@
 // models/supplier_price.ts
 
 export interface SupplierPrice {
-  id: number
+  productId: number
   productName: string
   ingredientId: string
   ingredientName: string
@@ -64,8 +64,12 @@ export interface UpdateSupplierPriceInput {
 
 export interface SupplierPriceListResponse {
   data: SupplierPrice[]
-  page: number
-  pageSize: number
-  totalItems: number
-  totalPages: number
+  meta: {
+    total: number
+    from: number
+    to: number
+    per_page: number
+    last_page: number
+    current_page: number
+  }
 }

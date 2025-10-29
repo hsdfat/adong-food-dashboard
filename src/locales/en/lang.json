@@ -436,6 +436,26 @@
     "edit_title": "Edit Recipe Standard",
     "edit_description": "Update the details of the recipe standard below."
   },
+  "supplierPrice": {
+    "productID": "ID",
+    "productName": "Product Name",
+    "ingredient": "Ingredient",
+    "category": "Category",
+    "supplier": "Supplier",
+    "manufacturer": "Manufacturer",
+    "unit": "Unit",
+    "specification": "Specification",
+    "unitPrice": "Unit Price",
+    "pricePer1": "Price Per 1",
+    "effectiveFrom": "Effective From",
+    "effectiveTo": "Effective To",
+    "status": "Status",
+    "newPrice": "New Price",
+    "promotion": "Promotion",
+    "search_placeholder": "Search by product name, ingredient, supplier...",
+    "description": "Manage supplier prices for ingredients",
+    "loading": "Loading supplier prices..."
+  },
   "common": {
     "active": "Active",
     "inactive": "Inactive",
