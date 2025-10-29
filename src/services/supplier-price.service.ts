@@ -20,6 +20,8 @@ export const supplierPriceApi = {
     search?: string
     sortBy?: string
     sortDir?: 'asc' | 'desc'
+    effectiveFrom?: string
+    effectiveTo?: string
   }): Promise<SupplierPriceListResponse> {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
@@ -28,6 +30,10 @@ export const supplierPriceApi = {
     if (params?.search) queryParams.append('search', params.search)
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
     if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
+    if (params?.effectiveFrom)
+      queryParams.append('effective_from', params.effectiveFrom)
+    if (params?.effectiveTo)
+      queryParams.append('effective_to', params.effectiveTo)
 
     const url = `${BASE_URL}?${queryParams.toString()}`
     return await apiClient<SupplierPriceListResponse>(url)

@@ -16,18 +16,46 @@ import {
   InputGroup,
   Row,
   Col,
+  Form,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPlus,
   faEllipsisVertical,
   faSearch,
+  faFilter,
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
+
+import { format, formatDate, parse } from 'date-fns'
+
+// Helper functions
+const formatDateInput = (dateString: string) => {
+  if (!dateString) return ''
+  try {
+    console.log('Parsing date string:', dateString)
+    const date = new Date(dateString)
+    const fomartDate = format(date, 'dd/MM/yyyy')
+    console.log('Formatted date:', fomartDate)
+    return formatDate.toString() // Vietnamese format
+  } catch {
+    return dateString
+  }
+}
+
+const parseDateInput = (dateString: string) => {
+  if (!dateString) return ''
+  try {
+    const date = parse(dateString, 'dd/MM/yyyy', new Date())
+    return format(date, 'yyyy-MM-dd') // Convert to ISO format for backend
+  } catch {
+    return dateString
+  }
+}
 
 interface SupplierPricesListProps {
   ingredientId?: string
@@ -42,12 +70,15 @@ export default function SupplierPricesList({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [meta, setMeta] = useState<any>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  // const [pageSize, setPageSize] = useState(20)
   const [sortBy, setSortBy] = useState('id')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+
+  // Search states
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [dateFrom, setDateFrom] = useState<string>('')
+  const [dateTo, setDateTo] = useState<string>('')
+  const [showFilters, setShowFilters] = useState(true)
+
   const router = useRouter()
   const dict = useDictionary()
   const searchParams = useSearchParams()
@@ -56,10 +87,17 @@ export default function SupplierPricesList({
   const page = parseInt(searchParams.get('page') || '1')
   const pageSize = parseInt(searchParams.get('per_page') || '20')
   const search = searchParams.get('search') || ''
+  const effectiveFrom = searchParams.get('effective_from') || ''
+  const effectiveTo = searchParams.get('effective_to') || ''
 
   useEffect(() => {
+    // Initialize date inputs from URL params
+    setSearchQuery(search)
+    setDateFrom(effectiveFrom)
+    setDateTo(effectiveTo)
+
     loadPrices()
-  }, [page, pageSize, search])
+  }, [page, pageSize, search, effectiveFrom, effectiveTo])
 
   const loadPrices = async () => {
     try {
@@ -70,11 +108,9 @@ export default function SupplierPricesList({
       if (ingredientId) {
         data = await supplierPriceApi.getByIngredient(ingredientId)
         setPrices(data)
-        setTotalPages(1)
       } else if (supplierId) {
         data = await supplierPriceApi.getBySupplier(supplierId)
         setPrices(data)
-        setTotalPages(1)
       } else {
         const param = {
           page,
@@ -82,6 +118,8 @@ export default function SupplierPricesList({
           search,
           sortBy,
           sortDir,
+          effectiveFrom,
+          effectiveTo,
         }
         const response = await supplierPriceApi.getAll(param)
         setPrices(response.data)
@@ -118,24 +156,38 @@ export default function SupplierPricesList({
     return amount?.toLocaleString('vi-VN') + ' đ'
   }
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const newSearchParams = new URLSearchParams()
+    newSearchParams.set('page', '1') // Reset to first page
+    newSearchParams.set('per_page', pageSize.toString())
+
+    if (searchQuery.trim()) {
+      newSearchParams.set('search', searchQuery.trim())
+    }
+
+    if (dateFrom) {
+      newSearchParams.set('effective_from', dateFrom)
+    }
+
+    if (dateTo) {
+      newSearchParams.set('effective_to', dateTo)
+    }
+
+    router.push(`/supplier-prices?${newSearchParams.toString()}`)
+  }
+
+  const handleClearFilters = () => {
+    setSearchQuery('')
+    setDateFrom('')
+    setDateTo('')
+    router.push('/supplier-prices?page=1')
+  }
+
   if (loading) {
     return <div className="text-center py-4">Loading...</div>
   }
-
-  const handleSearch = (e: React.FormEvent) => {
-      e.preventDefault()
-  
-      const newSearchParams = new URLSearchParams(searchParams)
-      newSearchParams.set('page', '1') // Reset to first page
-  
-      if (searchQuery.trim()) {
-        newSearchParams.set('search', searchQuery.trim())
-      } else {
-        newSearchParams.delete('search')
-      }
-  
-      router.push(`/supplier-prices?${newSearchParams.toString()}`)
-    }
 
   return (
     <>
@@ -146,29 +198,87 @@ export default function SupplierPricesList({
       )}
 
       <Row className="mb-3">
-        <Col md={8}>
+        <Col md={12}>
           <form onSubmit={handleSearch}>
-            <InputGroup>
-              <FormControl
-                type="text"
-                placeholder={dict.supplierPrice?.search_placeholder}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Button variant="primary" type="submit">
-                <FontAwesomeIcon icon={faSearch} fixedWidth />
-                Search
-              </Button>
-            </InputGroup>
+            {/* Main Search Bar */}
+            <Row className="mb-2">
+              <Col md={8}>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    placeholder={
+                      dict.supplierPrice?.search_placeholder ||
+                      'Search by name, supplier, ingredient...'
+                    }
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => setShowFilters(!showFilters)}
+                    title="Toggle filters"
+                  >
+                    <FontAwesomeIcon icon={faFilter} fixedWidth />
+                  </Button>
+                  <Button variant="primary" type="submit">
+                    <FontAwesomeIcon icon={faSearch} fixedWidth />
+                    {dict.action?.search || 'Search'}
+                  </Button>
+                  {(searchQuery || dateFrom || dateTo) && (
+                    <Button
+                      variant="outline-danger"
+                      onClick={handleClearFilters}
+                    >
+                      {dict.action?.clear || 'Clear'}
+                    </Button>
+                  )}
+                </InputGroup>
+              </Col>
+              <Col md={4} className="text-end">
+                <Button
+                  variant="success"
+                  onClick={() => router.push('/supplier-prices/create')}
+                >
+                  <FontAwesomeIcon icon={faPlus} fixedWidth />
+                  {dict.action?.add || 'Add New'}
+                </Button>
+              </Col>
+            </Row>
+
+            {/* Date Range Filters - Collapsible */}
+            {showFilters && (
+              <Row className="mb-2">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label className="small mb-1">
+                      {dict.supplierPrice?.effectiveFrom || 'Effective From'}
+                    </Form.Label>
+                    <FormControl
+                      type="date"
+                      value={
+                        dateFrom
+                          ? format(new Date(dateFrom), 'yyyy-MM-dd')
+                          : dateFrom
+                      }
+                      onChange={(e) => setDateFrom(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label className="small mb-1">
+                      {dict.supplierPrice?.effectiveTo || 'Effective To'}
+                    </Form.Label>
+                    <FormControl
+                      type="date"
+                      value={dateTo}
+                      onChange={(e) => setDateTo(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            )}
           </form>
-        </Col>
-        <Col md={4} className="text-end">
-          <Button
-            variant="success"
-            onClick={() => router.push('/supplier-prices/create')}
-          >
-            <FontAwesomeIcon icon={faPlus} fixedWidth />
-            {dict.action?.add || 'Add New'}
-          </Button>
         </Col>
       </Row>
 
