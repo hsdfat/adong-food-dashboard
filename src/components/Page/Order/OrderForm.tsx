@@ -64,6 +64,7 @@ interface SupplementaryFoodItem {
   tenNguyenLieu: string
   donViTinh: string
   dinhMuc: number
+  soSuat: number // Number of portions/servings
   soLuong: number
   ghiChu?: string
 }
@@ -117,13 +118,13 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]) // Multi-select
   const [customAmount, setCustomAmount] = useState(0)
 
-  // Modal for adding supplementary foods (NEW)
+  // Modal for adding supplementary foods (NEW) - CHANGED: Default to 1
   const [showSupplementaryModal, setShowSupplementaryModal] = useState(false)
   const [
     selectedSupplementaryIngredients,
     setSelectedSupplementaryIngredients,
   ] = useState<string[]>([])
-  const [supplementaryAmount, setSupplementaryAmount] = useState(0)
+  const [supplementaryAmount, setSupplementaryAmount] = useState(1)
 
   // Load available dishes
   useEffect(() => {
@@ -132,6 +133,15 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     loadKitchens()
     generateOrderId()
   }, [])
+
+  // Note: Component will auto re-render when orderDishes or supplementaryFoods change
+  // because getTotalIngredients() is called in the render, not in useEffect
+
+  // Format number for display - removes trailing zeros
+  const formatNumber = (num: number): string => {
+    const rounded = Math.round(num * 100) / 100
+    return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
+  }
 
   // Generate order ID based on timestamp
   const generateOrderId = () => {
@@ -241,16 +251,44 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           nguyenLieuId: 'NL008',
           tenNguyenLieu: 'Dầu ăn',
           donViTinh: 'lít',
+          dinhMuc: 0.5,
         },
-        { nguyenLieuId: 'NL009', tenNguyenLieu: 'Muối', donViTinh: 'kg' },
-        { nguyenLieuId: 'NL010', tenNguyenLieu: 'Đường', donViTinh: 'kg' },
+        {
+          nguyenLieuId: 'NL009',
+          tenNguyenLieu: 'Muối',
+          donViTinh: 'kg',
+          dinhMuc: 0.1,
+        },
+        {
+          nguyenLieuId: 'NL010',
+          tenNguyenLieu: 'Đường',
+          donViTinh: 'kg',
+          dinhMuc: 0.2,
+        },
         {
           nguyenLieuId: 'NL011',
           tenNguyenLieu: 'Nước mắm',
           donViTinh: 'lít',
+          dinhMuc: 0.3,
         },
-        { nguyenLieuId: 'NL012', tenNguyenLieu: 'Hành tím', donViTinh: 'kg' },
-        { nguyenLieuId: 'NL013', tenNguyenLieu: 'Gừng', donViTinh: 'kg' },
+        {
+          nguyenLieuId: 'NL012',
+          tenNguyenLieu: 'Hành tím',
+          donViTinh: 'kg',
+          dinhMuc: 0.15,
+        },
+        {
+          nguyenLieuId: 'NL013',
+          tenNguyenLieu: 'Gừng',
+          donViTinh: 'kg',
+          dinhMuc: 0.05,
+        },
+        {
+          nguyenLieuId: 'NL004',
+          tenNguyenLieu: 'Thịt ba chỉ',
+          donViTinh: 'kg',
+          dinhMuc: 0.8,
+        },
       ]
       setAvailableIngredients(mockIngredients)
     } catch (err) {
@@ -305,33 +343,8 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             soSuat: newPortions,
             ingredients: dish.ingredients.map((ing) => ({
               ...ing,
-              soLuong: ing.dinhMuc * newPortions,
+              soLuong: Math.round(ing.dinhMuc * newPortions * 100) / 100,
             })),
-          }
-        }
-        return dish
-      }),
-    )
-  }
-
-  // Update ingredient amount
-  const handleUpdateIngredientAmount = (
-    dishId: string,
-    ingredientId: string,
-    newAmount: number,
-  ) => {
-    if (newAmount < 0) return
-
-    setOrderDishes(
-      orderDishes.map((dish) => {
-        if (dish.id === dishId) {
-          return {
-            ...dish,
-            ingredients: dish.ingredients.map((ing) =>
-              ing.nguyenLieuId === ingredientId
-                ? { ...ing, soLuong: newAmount }
-                : ing,
-            ),
           }
         }
         return dish
@@ -347,6 +360,9 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   ) => {
     if (newDinhMuc < 0) return
 
+    // Round to 2 decimals to avoid floating point issues
+    const roundedDinhMuc = Math.round(newDinhMuc * 100) / 100
+
     setOrderDishes(
       orderDishes.map((dish) => {
         if (dish.id === dishId) {
@@ -356,8 +372,9 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
               ing.nguyenLieuId === ingredientId
                 ? {
                     ...ing,
-                    dinhMuc: newDinhMuc,
-                    soLuong: newDinhMuc * dish.soSuat,
+                    dinhMuc: roundedDinhMuc,
+                    soLuong:
+                      Math.round(roundedDinhMuc * dish.soSuat * 100) / 100,
                   }
                 : ing,
             ),
@@ -438,7 +455,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     setSearchIngredient('')
   }
 
-  // Add multiple supplementary foods (NEW)
+  // Add multiple supplementary foods (NEW) - CHANGED: Reset to default value 1, use dinhMuc from ingredient
   const handleAddSupplementaryFoods = () => {
     if (
       selectedSupplementaryIngredients.length === 0 ||
@@ -456,13 +473,18 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           )
           if (!ingredient) return null
 
+          // Use dinhMuc from ingredient, calculate soLuong = dinhMuc * supplementaryAmount
+          const dinhMuc = ingredient.dinhMuc || 0
+          const soLuong = Math.round(dinhMuc * supplementaryAmount * 100) / 100
+
           return {
             id: `${Date.now()}-${Math.random()}`,
             nguyenLieuId: ingredient.nguyenLieuId,
             tenNguyenLieu: ingredient.tenNguyenLieu,
             donViTinh: ingredient.donViTinh,
-            dinhMuc: 0,
-            soLuong: supplementaryAmount,
+            dinhMuc: dinhMuc,
+            soSuat: supplementaryAmount,
+            soLuong: soLuong,
             ghiChu: '',
           }
         })
@@ -471,26 +493,56 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     setSupplementaryFoods([...supplementaryFoods, ...newSupplementaryFoods])
     setShowSupplementaryModal(false)
     setSelectedSupplementaryIngredients([])
-    setSupplementaryAmount(0)
+    setSupplementaryAmount(1) // CHANGED: Reset to 1 instead of 0
   }
 
-  // Update supplementary food amount
-  const handleUpdateSupplementaryAmount = (id: string, newAmount: number) => {
-    if (newAmount < 0) return
+  // Update supplementary food định mức (NEW) - Auto recalculate soLuong based on soSuat
+  const handleUpdateSupplementaryDinhMuc = (id: string, newDinhMuc: number) => {
+    if (newDinhMuc < 0) return
+
+    // Round to 2 decimals
+    const roundedDinhMuc = Math.round(newDinhMuc * 100) / 100
+
     setSupplementaryFoods(
-      supplementaryFoods.map((item) =>
-        item.id === id ? { ...item, soLuong: newAmount } : item,
-      ),
+      supplementaryFoods.map((item) => {
+        if (item.id === id) {
+          // Recalculate soLuong = dinhMuc * soSuat
+          const newSoLuong =
+            Math.round(roundedDinhMuc * item.soSuat * 100) / 100
+
+          return {
+            ...item,
+            dinhMuc: roundedDinhMuc,
+            soLuong: newSoLuong,
+          }
+        }
+        return item
+      }),
     )
   }
 
-  // Update supplementary food định mức (NEW)
-  const handleUpdateSupplementaryDinhMuc = (id: string, newDinhMuc: number) => {
-    if (newDinhMuc < 0) return
+  // Update supplementary food soSuat (NEW) - Auto recalculate soLuong
+  const handleUpdateSupplementarySoSuat = (id: string, newSoSuat: number) => {
+    if (newSoSuat <= 0) return
+
+    // Round to 2 decimals
+    const roundedSoSuat = Math.round(newSoSuat * 100) / 100
+
     setSupplementaryFoods(
-      supplementaryFoods.map((item) =>
-        item.id === id ? { ...item, dinhMuc: newDinhMuc } : item,
-      ),
+      supplementaryFoods.map((item) => {
+        if (item.id === id) {
+          // Recalculate soLuong = dinhMuc * soSuat
+          const newSoLuong =
+            Math.round(item.dinhMuc * roundedSoSuat * 100) / 100
+
+          return {
+            ...item,
+            soSuat: roundedSoSuat,
+            soLuong: newSoLuong,
+          }
+        }
+        return item
+      }),
     )
   }
 
@@ -558,6 +610,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           soLuong: item.soLuong,
           donViTinh: item.donViTinh,
           dinhMuc: item.dinhMuc,
+          soSuat: item.soSuat,
           ghiChu: item.ghiChu,
         })),
       }
@@ -605,7 +658,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     setSearchKitchen('')
   }
 
-  // Calculate total ingredients
+  // Calculate total ingredients - AUTO-UPDATES when orderDishes or supplementaryFoods change
   const getTotalIngredients = () => {
     const totals: {
       [key: string]: {
@@ -630,7 +683,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
       })
     })
 
-    // From supplementary foods
+    // From supplementary foods - AUTO-UPDATES
     supplementaryFoods.forEach((item) => {
       if (totals[item.nguyenLieuId]) {
         totals[item.nguyenLieuId].soLuong += item.soLuong
@@ -643,9 +696,21 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
       }
     })
 
+    // Round numbers to avoid too many decimals
+    const roundNumber = (num: number): number => {
+      // If number is very small, keep more precision
+      if (num < 0.01) return Math.round(num * 10000) / 10000
+      // If number is small, keep 2 decimals
+      if (num < 1) return Math.round(num * 100) / 100
+      // For normal numbers, keep 2 decimals
+      return Math.round(num * 100) / 100
+    }
+
     return Object.entries(totals).map(([id, data]) => ({
       nguyenLieuId: id,
-      ...data,
+      tenNguyenLieu: data.tenNguyenLieu,
+      soLuong: roundNumber(data.soLuong),
+      donViTinh: data.donViTinh,
     }))
   }
 
@@ -884,14 +949,13 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                                     step="0.01"
                                     min="0"
                                     value={ing.soLuong}
-                                    onChange={(e) =>
-                                      handleUpdateIngredientAmount(
-                                        dish.id,
-                                        ing.nguyenLieuId,
-                                        parseFloat(e.target.value) || 0,
-                                      )
-                                    }
+                                    readOnly
                                     size="sm"
+                                    style={{
+                                      backgroundColor: '#f8f9fa',
+                                      cursor: 'not-allowed',
+                                    }}
+                                    title="Số lượng tự động = Định mức × Số suất"
                                   />
                                 </td>
                                 <td>{ing.donViTinh}</td>
@@ -947,12 +1011,13 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
               <Table striped bordered hover>
                 <thead className="table-light">
                   <tr>
-                    <th style={{ width: '25%' }}>Tên nguyên liệu</th>
-                    <th style={{ width: '15%' }}>Định mức</th>
-                    <th style={{ width: '20%' }}>Số lượng</th>
-                    <th style={{ width: '10%' }}>ĐVT</th>
+                    <th style={{ width: '20%' }}>Tên nguyên liệu</th>
+                    <th style={{ width: '12%' }}>Định mức/suất</th>
+                    <th style={{ width: '12%' }}>Số suất</th>
+                    <th style={{ width: '15%' }}>Số lượng</th>
+                    <th style={{ width: '8%' }}>ĐVT</th>
                     <th style={{ width: '20%' }}>Ghi chú</th>
-                    <th style={{ width: '10%' }} className="text-center">
+                    <th style={{ width: '8%' }} className="text-center">
                       Xóa
                     </th>
                   </tr>
@@ -980,15 +1045,30 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                         <FormControl
                           type="number"
                           step="0.01"
-                          min="0"
-                          value={item.soLuong}
+                          min="0.01"
+                          value={item.soSuat}
                           onChange={(e) =>
-                            handleUpdateSupplementaryAmount(
+                            handleUpdateSupplementarySoSuat(
                               item.id,
-                              parseFloat(e.target.value) || 0,
+                              parseFloat(e.target.value) || 1,
                             )
                           }
                           size="sm"
+                        />
+                      </td>
+                      <td>
+                        <FormControl
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={item.soLuong}
+                          readOnly
+                          size="sm"
+                          style={{
+                            backgroundColor: '#f8f9fa',
+                            cursor: 'not-allowed',
+                          }}
+                          title="Số lượng tự động = Định mức × Số suất"
                         />
                       </td>
                       <td>{item.donViTinh}</td>
@@ -1024,7 +1104,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
           </CardBody>
         </Card>
 
-        {/* Total Ingredients Summary */}
+        {/* Total Ingredients Summary - AUTO-UPDATES */}
         {(orderDishes.length > 0 || supplementaryFoods.length > 0) && (
           <Card className="mb-4">
             <CardBody>
@@ -1044,7 +1124,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                       <td>{ing.nguyenLieuId}</td>
                       <td>{ing.tenNguyenLieu}</td>
                       <td className="text-end">
-                        <strong>{ing.soLuong.toFixed(2)}</strong>
+                        <strong>{formatNumber(ing.soLuong)}</strong>
                       </td>
                       <td>{ing.donViTinh}</td>
                     </tr>
@@ -1425,13 +1505,13 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal: Add Supplementary Foods (Multi-select) */}
+      {/* Modal: Add Supplementary Foods (Multi-select) - UPDATED DEFAULT */}
       <Modal
         show={showSupplementaryModal}
         onHide={() => {
           setShowSupplementaryModal(false)
           setSelectedSupplementaryIngredients([])
-          setSupplementaryAmount(0)
+          setSupplementaryAmount(1) // CHANGED: Reset to 1
         }}
         size="lg"
       >
@@ -1527,15 +1607,18 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
               </Alert>
               <FormGroup>
                 <FormLabel>
-                  Số lượng (áp dụng cho tất cả nguyên liệu đã chọn):
+                  Số suất (áp dụng cho tất cả nguyên liệu đã chọn):
                 </FormLabel>
+                <Form.Text className="text-muted d-block mb-2">
+                  Số lượng sẽ được tính tự động: Định mức × Số suất
+                </Form.Text>
                 <FormControl
                   type="number"
                   step="0.01"
-                  min="0"
+                  min="0.01"
                   value={supplementaryAmount}
                   onChange={(e) =>
-                    setSupplementaryAmount(parseFloat(e.target.value) || 0)
+                    setSupplementaryAmount(parseFloat(e.target.value) || 1)
                   }
                 />
               </FormGroup>
@@ -1548,7 +1631,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             onClick={() => {
               setShowSupplementaryModal(false)
               setSelectedSupplementaryIngredients([])
-              setSupplementaryAmount(0)
+              setSupplementaryAmount(1) // CHANGED: Reset to 1
             }}
           >
             Đóng
