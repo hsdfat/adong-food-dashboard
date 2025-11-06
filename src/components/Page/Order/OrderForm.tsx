@@ -78,7 +78,7 @@ interface OrderFormProps {
   isEdit?: boolean
 }
 
-export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
+export default function OrderForm({ orderId: existingOrderId, isEdit = false }: OrderFormProps) {
   const router = useRouter()
   const dict = useDictionary()
 
@@ -88,7 +88,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   const [success, setSuccess] = useState('')
 
   // Order header
-  const [phieuLenDonId, setPhieuLenDonId] = useState('')
+  const [orderId, setOrderId] = useState('')
   const [bepId, setBepId] = useState('')
   const [tenBep, setTenBep] = useState('')
   const [ngayLen, setNgayLen] = useState(new Date().toISOString().split('T')[0])
@@ -158,8 +158,8 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     const minutes = String(now.getMinutes()).padStart(2, '0')
     const seconds = String(now.getSeconds()).padStart(2, '0')
 
-    const orderId = `PLD${year}${month}${day}${hours}${minutes}${seconds}`
-    setPhieuLenDonId(orderId)
+    const generatedOrderId = `PLD${year}${month}${day}${hours}${minutes}${seconds}`
+    setOrderId(generatedOrderId)
   }
 
   const loadKitchens = async () => {
@@ -484,7 +484,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!phieuLenDonId.trim()) {
+    if (!orderId.trim()) {
       setError('Vui lòng nhập mã phiếu lên đơn')
       return
     }
@@ -505,6 +505,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
     try {
       const orderData: CreateOrderInput = {
+        orderId: orderId,
         kitchenId: bepId,
         orderDate: ngayLen,
         note: ghiChu,
@@ -658,8 +659,8 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                   <InputGroup>
                     <FormControl
                       type="text"
-                      value={phieuLenDonId}
-                      onChange={(e) => setPhieuLenDonId(e.target.value)}
+                      value={orderId}
+                      onChange={(e) => setOrderId(e.target.value)}
                       placeholder="Ví dụ: PLD001"
                       required
                     />

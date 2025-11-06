@@ -120,6 +120,7 @@ export interface OrderSupplementaryDTO {
 
 // Create Order Input
 export interface CreateOrderInput {
+  orderId: string
   kitchenId: string
   orderDate: string
   note?: string
