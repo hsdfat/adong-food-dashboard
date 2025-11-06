@@ -12,6 +12,7 @@ import {
 } from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import useDictionary from '@/locales/dictionary-hook'
+import { orderApi } from '@/services'
 
 interface IngredientSummaryItem {
   ingredientId: string
@@ -22,7 +23,7 @@ interface IngredientSummaryItem {
 }
 
 interface IngredientSummaryResponse {
-  orderId: number
+  orderId: number | string
   ingredients: IngredientSummaryItem[]
 }
 
@@ -30,7 +31,7 @@ export default function IngredientSummary() {
   const params = useParams()
   const router = useRouter()
   const dict = useDictionary()
-  const orderId = params?.id ? parseInt(params.id as string) : null
+  const orderId = params?.id ? (params.id as string) : null
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -40,6 +41,7 @@ export default function IngredientSummary() {
     if (orderId) {
       loadSummary()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId])
 
   const loadSummary = async () => {
@@ -49,14 +51,7 @@ export default function IngredientSummary() {
       setLoading(true)
       setError('')
 
-      const response = await fetch(`/api/orders/${orderId}/ingredients/summary`)
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || `HTTP Error: ${response.status}`)
-      }
-
-      const data = await response.json()
+      const data = await orderApi.getIngredientsSummary(orderId)
 
       // Handle both wrapped { data: {...} } and unwrapped response structures
       const summaryData = (data.data || data) as IngredientSummaryResponse
