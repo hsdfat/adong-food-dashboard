@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button, FormSelect, FormControl } from 'react-bootstrap'
+import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button, FormSelect, FormControl, Modal, InputGroup } from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
@@ -30,6 +30,12 @@ export default function OrderDetailPage() {
   const [filterByIngredient, setFilterByIngredient] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState('')
+
+  // Supplier selection modal (similar to OrderForm kitchen select)
+  const [showSupplierModal, setShowSupplierModal] = useState(false)
+  const [activeIngredientId, setActiveIngredientId] = useState<string>('')
+  const [activeIngredientName, setActiveIngredientName] = useState<string>('')
+  const [supplierSearch, setSupplierSearch] = useState<string>('')
 
   useEffect(() => {
     if (orderId) {
@@ -409,7 +415,7 @@ export default function OrderDetailPage() {
                   <th>{dict.orders?.columns?.ingredient_name || 'Ingredient Name'}</th>
                   <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
                   <th>{dict.orders?.columns?.unit || 'Unit'}</th>
-                  <th style={{ minWidth: '300px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
+                  <th style={{ minWidth: '320px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
                   <th className="text-end" style={{ width: '140px' }}>Price</th>
                 </tr>
               </thead>
@@ -417,13 +423,6 @@ export default function OrderDetailPage() {
                 {ingredientSummary.map((ing: IngredientSummaryRow) => {
                   const prices = pricesByIngredient[ing.ingredientId] || []
                   const selected = selectedSupplierByIngredient[ing.ingredientId] ?? ''
-                  const filter = (filterByIngredient[ing.ingredientId] || '').toLowerCase()
-                  const filteredPrices = filter
-                    ? prices.filter((p: SupplierPrice) =>
-                        (p.supplierName || '').toLowerCase().includes(filter) ||
-                        (p.productName || '').toLowerCase().includes(filter),
-                      )
-                    : prices
                   const selectedPrice = prices.find((p: SupplierPrice) => p.productId === selected)
                   return (
                     <tr key={ing.ingredientId}>
@@ -434,41 +433,30 @@ export default function OrderDetailPage() {
                       <td className="text-end"><strong>{formatNumber(ing.quantity)}</strong></td>
                       <td>{ing.unit}</td>
                       <td>
-                        <div className="mb-1">
-                          <div className="input-group input-group-sm">
-                            <span className="input-group-text">
-                              <FontAwesomeIcon icon={faSearch} />
-                            </span>
-                            <FormControl
-                              size="sm"
-                              placeholder="Search supplier..."
-                              value={filterByIngredient[ing.ingredientId] || ''}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                handleFilterChange(ing.ingredientId, e.target.value)
-                              }
-                              disabled={prices.length === 0}
-                            />
-                          </div>
-                        </div>
-                        <FormSelect
-                          size="sm"
-                          value={selected}
-                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleSelectSupplier(ing.ingredientId, e.target.value)}
-                          disabled={prices.length === 0}
-                        >
-                          <option value="">
-                            {prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
-                          </option>
-                          {filteredPrices.map((p: SupplierPrice) => (
-                            <option key={p.productId} value={p.productId}>
-                              {p.supplierName} - {formatNumber(p.pricePer1)} / {p.unit || ing.unit}
-                            </option>
-                          ))}
-                        </FormSelect>
+                        <InputGroup size="sm">
+                          <FormControl
+                            readOnly
+                            placeholder={prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
+                            value={selectedPrice ? `${selectedPrice.supplierName} ${selectedPrice.productName ? '- ' + selectedPrice.productName : ''}` : ''}
+                          />
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            disabled={prices.length === 0}
+                            onClick={() => {
+                              setActiveIngredientId(ing.ingredientId)
+                              setActiveIngredientName(ing.ingredientName)
+                              setSupplierSearch('')
+                              setShowSupplierModal(true)
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faSearch} />
+                          </Button>
+                        </InputGroup>
                       </td>
                       <td className="text-end">
                         {selectedPrice ? (
-                          <strong>{formatNumber(selectedPrice.pricePer1)}</strong>
+                          <strong>{formatNumber(selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice)}</strong>
                         ) : (
                           <span className="text-muted">-</span>
                         )}
@@ -480,6 +468,95 @@ export default function OrderDetailPage() {
             </Table>
           )}
         </div>
+
+        {/* Modal: Select Supplier per Ingredient */}
+        <Modal
+          show={showSupplierModal}
+          onHide={() => {
+            setShowSupplierModal(false)
+            setSupplierSearch('')
+          }}
+          size="lg"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {dict.orders?.labels?.select || 'Select'} {dict.orders?.columns?.supplier || 'Supplier'}
+              {activeIngredientName ? ` - ${activeIngredientName}` : ''}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="mb-3">
+              <InputGroup>
+                <InputGroup.Text>
+                  <FontAwesomeIcon icon={faSearch} />
+                </InputGroup.Text>
+                <FormControl
+                  type="text"
+                  placeholder={dict.orders?.labels?.search || 'Search...'}
+                  value={supplierSearch}
+                  onChange={(e) => setSupplierSearch(e.target.value)}
+                />
+              </InputGroup>
+            </div>
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              {activeIngredientId ? (
+                (() => {
+                  const allPrices = pricesByIngredient[activeIngredientId] || []
+                  const list = supplierSearch
+                    ? allPrices.filter((p) =>
+                        (p.supplierName || '').toLowerCase().includes(supplierSearch.toLowerCase()) ||
+                        (p.productName || '').toLowerCase().includes(supplierSearch.toLowerCase()),
+                      )
+                    : allPrices
+                  if (list.length === 0) {
+                    return <Alert variant="info">{dict.orders?.labels?.no_supplier_price || 'No active supplier price'}</Alert>
+                  }
+                  const current = selectedSupplierByIngredient[activeIngredientId] ?? ''
+                  return (
+                    <div className="list-group">
+                      {list.map((p) => (
+                        <button
+                          key={p.productId}
+                          type="button"
+                          className={`list-group-item list-group-item-action ${current === p.productId ? 'active' : ''}`}
+                          onClick={() => {
+                            handleSelectSupplier(activeIngredientId, String(p.productId))
+                            setShowSupplierModal(false)
+                          }}
+                        >
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div>
+                              <div className="fw-bold">{p.supplierName}</div>
+                              <small className={current === p.productId ? 'text-white-50' : 'text-muted'}>
+                                {p.productName || '-'} • {p.unit || ''}
+                              </small>
+                            </div>
+                            <Badge bg={current === p.productId ? 'light' : 'primary'} text={current === p.productId ? 'dark' : 'white'}>
+                              {formatNumber((p.pricePer1 && p.pricePer1 > 0 ? p.pricePer1 : p.unitPrice) || 0)}
+                            </Badge>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )
+                })()
+              ) : (
+                <Alert variant="info">{dict.orders?.labels?.select || 'Select'} ingredient</Alert>
+              )}
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowSupplierModal(false)
+                setSupplierSearch('')
+              }}
+            >
+              {dict.orders?.labels?.close || 'Close'}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </CardBody>
     </Card>
   )
