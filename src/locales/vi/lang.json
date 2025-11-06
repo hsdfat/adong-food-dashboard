@@ -404,7 +404,10 @@
       "portions": "Số khẩu phần",
       "ingredients": "Nguyên liệu",
       "note": "Ghi chú",
-      "ingredient": "Nguyên liệu"
+      "ingredient": "Nguyên liệu",
+      "supplier": "Nhà cung cấp",
+      "price": "Đơn giá",
+      "total_price": "Thành tiền"
     },
     "labels": {
       "order_information": "Thông tin đơn hàng",
@@ -416,7 +419,27 @@
       "supplementary": "bổ sung",
       "no_ingredients_text": "Không có nguyên liệu",
       "order_not_found": "Không tìm thấy đơn hàng",
-      "portion": "khẩu phần"
+      "portion": "khẩu phần",
+      "select": "Chọn",
+      "search": "Tìm kiếm...",
+      "close": "Đóng",
+      "no_supplier_price": "Không có giá nhà cung cấp đang hoạt động",
+      "select_supplier_required": "Vui lòng chọn nhà cung cấp cho nguyên liệu này trước",
+      "supplier_requests_title": "Yêu cầu nhà cung cấp",
+      "supplier_requests_subtitle": "Danh sách yêu cầu nhà cung cấp cho đơn hàng này",
+      "view_order": "Xem đơn hàng",
+      "no_supplier_requests": "Không có yêu cầu nhà cung cấp cho đơn hàng này.",
+      "view_supplier_requests": "Xem yêu cầu nhà cung cấp",
+      "copy_to_clipboard_success": "Đã sao chép nội dung tin nhắn",
+      "copy_to_clipboard_error": "Không thể sao chép nội dung. Vui lòng thử lại.",
+      "zalo": "Zalo"
+    ,
+    "supplier_saved_one": "Đã lưu yêu cầu nhà cung cấp cho 1 nguyên liệu",
+    "supplier_saved_bulk": "Đã lưu yêu cầu nhà cung cấp cho các nguyên liệu đã chọn",
+    "supplier_save_failed": "Lưu thất bại",
+    "supplier_save_none_selected": "Chưa chọn nhà cung cấp nào để lưu",
+    "save_all_selected": "Lưu tất cả đã chọn",
+    "saving": "Đang lưu..."
     }
   },
 

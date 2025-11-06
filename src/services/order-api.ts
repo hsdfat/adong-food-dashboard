@@ -138,5 +138,35 @@ export const orderApi = {
       method: 'DELETE',
     })
   },
+
+  /**
+   * Create supplier requests for an order
+   * POST /api/orders/{orderId}/supplier-requests
+   */
+  async createSupplierRequests(
+    orderId: number | string,
+    data: {
+      supplierId: string
+      ingredients: Array<{
+        ingredientId: string
+        quantity: number
+        unit: string
+        unitPrice: number
+      }>
+    },
+  ): Promise<any> {
+    return await apiClient<any>(`${BASE_URL}/${orderId}/supplier-requests`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  },
+
+  /**
+   * Get supplier requests for an order
+   * GET /api/orders/{orderId}/supplier-requests
+   */
+  async getSupplierRequests(orderId: number | string): Promise<any[]> {
+    return await apiClient<any[]>(`${BASE_URL}/${orderId}/supplier-requests`)
+  },
 }
 

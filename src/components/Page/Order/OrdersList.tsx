@@ -584,6 +584,14 @@ export default function OrdersList() {
                             {dict.orders?.labels?.view_ingredients_summary || 'View Ingredients Summary'}
                           </DropdownItem>
                           <DropdownItem
+                            onClick={() =>
+                              router.push(`/orders/${order.orderId}/supplier-requests`)
+                            }
+                          >
+                            <FontAwesomeIcon icon={faEye} className="me-2" />
+                            {'View Supplier Requests'}
+                          </DropdownItem>
+                          <DropdownItem
                             onClick={() => handleDelete(order.orderId)}
                             className="text-danger"
                           >

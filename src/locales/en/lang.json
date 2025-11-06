@@ -466,7 +466,10 @@
       "portions": "Portions",
       "ingredients": "Ingredients",
       "note": "Note",
-      "ingredient": "Ingredient"
+      "ingredient": "Ingredient",
+      "supplier": "Supplier",
+      "price": "Price",
+      "total_price": "Total Price"
     },
     "labels": {
       "order_information": "Order Information",
@@ -478,7 +481,27 @@
       "supplementary": "supplementary",
       "no_ingredients_text": "No ingredients",
       "order_not_found": "Order not found",
-      "portion": "portion"
+      "portion": "portion",
+      "select": "Select",
+      "search": "Search...",
+      "close": "Close",
+      "no_supplier_price": "No active supplier price",
+      "select_supplier_required": "Please select a supplier for this ingredient first",
+      "supplier_requests_title": "Supplier Requests",
+      "supplier_requests_subtitle": "List of supplier requests for this order",
+      "view_order": "View Order",
+      "no_supplier_requests": "No supplier requests found for this order.",
+      "view_supplier_requests": "View Supplier Requests",
+      "copy_to_clipboard_success": "Copied message to clipboard",
+      "copy_to_clipboard_error": "Failed to copy message. Please try again.",
+      "zalo": "Zalo"
+    ,
+    "supplier_saved_one": "Saved supplier request for 1 ingredient",
+    "supplier_saved_bulk": "Saved supplier requests for selected ingredients",
+    "supplier_save_failed": "Failed to save",
+    "supplier_save_none_selected": "No supplier selected to save",
+    "save_all_selected": "Save all selected",
+    "saving": "Saving..."
     }
   },
   "recipe_standards": {

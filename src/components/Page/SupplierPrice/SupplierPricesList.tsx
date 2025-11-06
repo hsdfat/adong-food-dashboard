@@ -328,9 +328,9 @@ export default function SupplierPricesList({
                 <td>{price.unit}</td>
                 <td>{price.specification}</td>
                 <td className="text-end">{formatCurrency(price.unitPrice)}</td>
-                <td className="text-end">{formatCurrency(price.pricePer1)}</td>
-                <td>{formatDate(price.effectiveFrom)}</td>
-                <td>{formatDate(price.effectiveTo)}</td>
+                <td className="text-end">{formatCurrency(price.pricePer1 || 0)}</td>
+                <td>{formatDate(price.effectiveFrom || '')}</td>
+                <td>{formatDate(price.effectiveTo || '')}</td>
                 <td>
                   <Badge bg={price.active ? 'success' : 'secondary'}>
                     {price.active ? 'Active' : 'Inactive'}

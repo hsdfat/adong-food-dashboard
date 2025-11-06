@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faList, faSave, faSearch, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
+import StatusToast from '@/components/Common/StatusToast'
 
 export default function OrderDetailPage() {
   const params = useParams()
@@ -29,7 +30,9 @@ export default function OrderDetailPage() {
   const [selectedSupplierByIngredient, setSelectedSupplierByIngredient] = useState<Record<string, number | ''>>({})
   const [filterByIngredient, setFilterByIngredient] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
+  const [savingRow, setSavingRow] = useState<string>('')
   const [saveSuccess, setSaveSuccess] = useState('')
+  const [saveError, setSaveError] = useState('')
 
   // Supplier selection modal (similar to OrderForm kitchen select)
   const [showSupplierModal, setShowSupplierModal] = useState(false)
@@ -169,19 +172,102 @@ export default function OrderDetailPage() {
     setFilterByIngredient((prev) => ({ ...prev, [ingredientId]: value }))
   }
 
-  const handleSaveSelections = async () => {
+  const handleSaveSelectionsLocal = () => {
     if (!orderId) return
+    const key = `order_supplier_selection_${orderId}`
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(key, JSON.stringify(selectedSupplierByIngredient))
+    }
+  }
+
+  // Save one ingredient selection to backend
+  const handleSaveRow = async (ingredientId: string) => {
+    if (!orderId) return
+    setSaveError('')
+    try {
+      const prices = pricesByIngredient[ingredientId] || []
+      const selectedProductId = selectedSupplierByIngredient[ingredientId]
+      const selectedPrice = prices.find((p) => p.productId === selectedProductId)
+      if (!selectedPrice) {
+        setSaveError(dict.orders?.labels?.select_supplier_required || 'Please select a supplier for this ingredient first')
+        return
+      }
+      const row = ingredientSummary.find((r) => r.ingredientId === ingredientId)
+      if (!row) return
+      setSavingRow(ingredientId)
+      await orderApi.createSupplierRequests(orderId, {
+        supplierId: selectedPrice.supplierId,
+        ingredients: [
+          {
+            ingredientId: ingredientId,
+            quantity: row.quantity,
+            unit: row.unit,
+            unitPrice: (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice) || 0,
+          },
+        ],
+      })
+      handleSaveSelectionsLocal()
+      setSaveSuccess(dict.orders?.labels?.supplier_saved_one || 'Saved supplier request for 1 ingredient')
+    } catch (e: any) {
+      setSaveError(e?.message || dict.orders?.labels?.supplier_save_failed || 'Failed to save')
+    } finally {
+      setSavingRow('')
+      setSaving(false)
+      setTimeout(() => {
+        setSaveSuccess('')
+        setSaveError('')
+      }, 2000)
+    }
+  }
+
+  // Save all selected suppliers grouped by supplierId
+  const handleSaveAll = async () => {
+    if (!orderId) return
+    setSaveError('')
     try {
       setSaving(true)
-      setSaveSuccess('')
-      const key = `order_supplier_selection_${orderId}`
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(selectedSupplierByIngredient))
+      // Build map supplierId -> ingredients[]
+      const grouped: Record<string, { ingredientId: string; quantity: number; unit: string; unitPrice: number }[]> = {}
+      for (const ing of ingredientSummary) {
+        const selectedProductId = selectedSupplierByIngredient[ing.ingredientId]
+        if (!selectedProductId) continue
+        const prices = pricesByIngredient[ing.ingredientId] || []
+        const selectedPrice = prices.find((p) => p.productId === selectedProductId)
+        if (!selectedPrice) continue
+        const unitPrice = (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice) || 0
+        if (!grouped[selectedPrice.supplierId]) grouped[selectedPrice.supplierId] = []
+        grouped[selectedPrice.supplierId].push({
+          ingredientId: ing.ingredientId,
+          quantity: ing.quantity,
+          unit: ing.unit,
+          unitPrice: unitPrice,
+        })
       }
-      setSaveSuccess('Selections saved')
+
+      const supplierIds = Object.keys(grouped)
+      if (supplierIds.length === 0) {
+        setSaveError(dict.orders?.labels?.supplier_save_none_selected || 'No supplier selected to save')
+        return
+      }
+
+      // Send one request per supplier
+      for (const sid of supplierIds) {
+        await orderApi.createSupplierRequests(orderId, {
+          supplierId: sid,
+          ingredients: grouped[sid],
+        })
+      }
+
+      handleSaveSelectionsLocal()
+      setSaveSuccess(dict.orders?.labels?.supplier_saved_bulk || 'Saved supplier requests for selected ingredients')
+    } catch (e: any) {
+      setSaveError(e?.message || dict.orders?.labels?.supplier_save_failed || 'Failed to save')
     } finally {
       setSaving(false)
-      setTimeout(() => setSaveSuccess(''), 2000)
+      setTimeout(() => {
+        setSaveSuccess('')
+        setSaveError('')
+      }, 2500)
     }
   }
 
@@ -238,11 +324,18 @@ export default function OrderDetailPage() {
         </div>
       </CardHeader>
       <CardBody>
-        {saveSuccess && (
-          <Alert variant="success" className="mb-3" onClose={() => setSaveSuccess('')} dismissible>
-            {saveSuccess}
-          </Alert>
-        )}
+        <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 2000, minWidth: 280 }}>
+          {Boolean(saveSuccess) && (
+            <Alert variant="success" dismissible onClose={() => setSaveSuccess('')}>
+              {saveSuccess}
+            </Alert>
+          )}
+          {Boolean(saveError) && (
+            <Alert variant="danger" dismissible onClose={() => setSaveError('')}>
+              {saveError}
+            </Alert>
+          )}
+        </div>
         {/* Order Info */}
         <div className="mb-4">
           <h5>{dict.orders?.labels?.order_information || 'Order Information'}</h5>
@@ -386,16 +479,16 @@ export default function OrderDetailPage() {
         <div className="mb-4">
           <div className="d-flex justify-content-between align-items-center mb-2">
             <h5 className="mb-0">{dict.orders?.ingredient_summary || 'Ingredient Summary'}</h5>
-            <Button variant="success" size="sm" onClick={handleSaveSelections} disabled={saving}>
+            <Button variant="success" size="sm" onClick={handleSaveAll} disabled={saving}>
               {saving ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Saving...
+                  {dict.orders?.labels?.saving || 'Saving...'}
                 </>
               ) : (
                 <>
                   <FontAwesomeIcon icon={faSave} className="me-2" />
-                  Save selections
+                  {dict.orders?.labels?.save_all_selected || 'Save all selected'}
                 </>
               )}
             </Button>
@@ -415,10 +508,10 @@ export default function OrderDetailPage() {
                   <th>{dict.orders?.columns?.ingredient_name || 'Ingredient Name'}</th>
                   <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
                   <th>{dict.orders?.columns?.unit || 'Unit'}</th>
-                  <th style={{ minWidth: '320px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
-                  <th className="text-end" style={{ width: '140px' }}>Price</th>
-                  <th className="text-end" style={{ width: '160px' }}>Total Price</th>
-                  <th style={{ width: '140px' }}>Actions</th>
+                  <th style={{ minWidth: '360px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
+                  <th className="text-end" style={{ width: '140px' }}>{dict.orders?.columns?.price || 'Price'}</th>
+                  <th className="text-end" style={{ width: '160px' }}>{dict.orders?.columns?.total_price || 'Total Price'}</th>
+                  <th style={{ width: '200px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -453,8 +546,22 @@ export default function OrderDetailPage() {
                               setSupplierSearch('')
                               setShowSupplierModal(true)
                             }}
+                            title={dict.orders?.labels?.select || 'Select'}
                           >
                             <FontAwesomeIcon icon={faSearch} />
+                          </Button>
+                          <Button
+                            variant="success"
+                            size="sm"
+                            disabled={!selectedPrice || savingRow === ing.ingredientId}
+                            onClick={() => handleSaveRow(ing.ingredientId)}
+                            title={dict.common?.save || 'Save'}
+                          >
+                            {savingRow === ing.ingredientId ? (
+                              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            ) : (
+                              <FontAwesomeIcon icon={faSave} />
+                            )}
                           </Button>
                         </InputGroup>
                       </td>
@@ -477,7 +584,7 @@ export default function OrderDetailPage() {
                           <Button
                             variant="outline-secondary"
                             size="sm"
-                            onClick={() => {}}
+                            onClick={() => { }}
                             title="Actions"
                           >
                             <FontAwesomeIcon icon={faEllipsis} />
@@ -527,9 +634,9 @@ export default function OrderDetailPage() {
                   const allPrices = pricesByIngredient[activeIngredientId] || []
                   const list = supplierSearch
                     ? allPrices.filter((p) =>
-                        (p.supplierName || '').toLowerCase().includes(supplierSearch.toLowerCase()) ||
-                        (p.productName || '').toLowerCase().includes(supplierSearch.toLowerCase()),
-                      )
+                      (p.supplierName || '').toLowerCase().includes(supplierSearch.toLowerCase()) ||
+                      (p.productName || '').toLowerCase().includes(supplierSearch.toLowerCase()),
+                    )
                     : allPrices
                   if (list.length === 0) {
                     return <Alert variant="info">{dict.orders?.labels?.no_supplier_price || 'No active supplier price'}</Alert>
