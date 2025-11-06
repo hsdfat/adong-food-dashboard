@@ -58,11 +58,27 @@ export default function OrderDetailPage() {
     try {
       setSummaryLoading(true)
       const res = await orderApi.getIngredientsSummary(id)
-      const summaryData = (res?.data || res)?.ingredients || []
-      const normalized = summaryData.map((ing: any) => ({
+
+      // Support multiple response shapes:
+      // 1) Array<{ ingredientId, ingredientName, unit, totalQuantity }>
+      // 2) { ingredients: [...] }
+      // 3) { data: [...] } or { data: { ingredients: [...] } }
+      const unwrap = (val: any) => (val?.data !== undefined ? val.data : val)
+      const raw = unwrap(res)
+
+      let items: any[] = []
+      if (Array.isArray(raw)) {
+        items = raw
+      } else if (Array.isArray(raw?.ingredients)) {
+        items = raw.ingredients
+      } else if (Array.isArray(raw?.data)) {
+        items = raw.data
+      }
+
+      const normalized = items.map((ing: any) => ({
         ingredientId: ing.ingredientId,
         ingredientName: ing.ingredientName,
-        quantity: ing.quantity,
+        quantity: ing.totalQuantity ?? ing.quantity ?? 0,
         unit: ing.unit,
       }))
       setIngredientSummary(normalized)

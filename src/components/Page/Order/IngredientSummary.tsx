@@ -53,24 +53,40 @@ export default function IngredientSummary() {
 
       const data = await orderApi.getIngredientsSummary(orderId)
 
-      // Handle both wrapped { data: {...} } and unwrapped response structures
-      const summaryData = (data.data || data) as IngredientSummaryResponse
-
-      // Ensure orderId is set if not present in response
-      if (!summaryData) {
-        throw new Error('Invalid response format from server')
+      // Normalize various possible response shapes
+      let normalized: IngredientSummaryResponse = {
+        orderId: orderId,
+        ingredients: [],
       }
 
-      if (!summaryData.orderId && orderId) {
-        summaryData.orderId = orderId
+      const unwrap = (val: any) => (val?.data !== undefined ? val.data : val)
+      const raw = unwrap(data)
+
+      if (Array.isArray(raw)) {
+        // API returns an array of ingredients directly
+        normalized.ingredients = raw.map((ing: any) => ({
+          ingredientId: ing.ingredientId,
+          ingredientName: ing.ingredientName,
+          quantity: ing.totalQuantity ?? ing.quantity ?? 0,
+          unit: ing.unit,
+          standardPerPortion: ing.standardPerPortion,
+        }))
+      } else if (raw && Array.isArray(raw.ingredients)) {
+        // API returns { orderId?, ingredients: [...] }
+        normalized.orderId = raw.orderId ?? orderId
+        normalized.ingredients = raw.ingredients.map((ing: any) => ({
+          ingredientId: ing.ingredientId,
+          ingredientName: ing.ingredientName,
+          quantity: ing.totalQuantity ?? ing.quantity ?? 0,
+          unit: ing.unit,
+          standardPerPortion: ing.standardPerPortion,
+        }))
+      } else {
+        // Unknown shape
+        normalized.ingredients = []
       }
 
-      // Ensure ingredients array exists
-      if (!summaryData.ingredients) {
-        summaryData.ingredients = []
-      }
-
-      setSummary(summaryData)
+      setSummary(normalized)
     } catch (err: any) {
       console.error('Error loading ingredients summary:', err)
       setError(
