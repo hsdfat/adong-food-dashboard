@@ -1,13 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button } from 'react-bootstrap'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button, FormSelect } from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import useDictionary from '@/locales/dictionary-hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faList } from '@fortawesome/free-solid-svg-icons'
+import { supplierPriceApi } from '@/services/supplier-price.service'
+import { SupplierPrice } from '@/models/supplier-price'
 
 export default function OrderDetailPage() {
   const params = useParams()
@@ -18,6 +20,13 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [order, setOrder] = useState<OrderDTO | null>(null)
+
+  // Ingredient summary + supplier prices
+  const [summaryLoading, setSummaryLoading] = useState(false)
+  type IngredientSummaryRow = { ingredientId: string; ingredientName: string; quantity: number; unit: string }
+  const [ingredientSummary, setIngredientSummary] = useState<IngredientSummaryRow[]>([])
+  const [pricesByIngredient, setPricesByIngredient] = useState<Record<string, SupplierPrice[]>>({})
+  const [selectedSupplierByIngredient, setSelectedSupplierByIngredient] = useState<Record<string, number | ''>>({})
 
   useEffect(() => {
     if (orderId) {
@@ -35,11 +44,49 @@ export default function OrderDetailPage() {
 
       const data = await orderApi.getById(orderId)
       setOrder(data)
+      // After order loads, also load ingredient summary
+      await loadIngredientSummary(orderId as string)
     } catch (err: any) {
       setError(err.message || 'Failed to load order')
       console.error(err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadIngredientSummary = async (id: string | number) => {
+    try {
+      setSummaryLoading(true)
+      const res = await orderApi.getIngredientsSummary(id)
+      const summaryData = (res?.data || res)?.ingredients || []
+      const normalized = summaryData.map((ing: any) => ({
+        ingredientId: ing.ingredientId,
+        ingredientName: ing.ingredientName,
+        quantity: ing.quantity,
+        unit: ing.unit,
+      }))
+      setIngredientSummary(normalized)
+
+      // Preload active prices for each ingredient in parallel
+      const uniqueIds = Array.from(new Set(normalized.map((i: any) => i.ingredientId)))
+      const priceResults = await Promise.all(
+        uniqueIds.map(async (ingId) => {
+          try {
+            const prices = await supplierPriceApi.getActivePrices(ingId)
+            return [ingId, prices] as [string, SupplierPrice[]]
+          } catch (e) {
+            console.error('Failed to load prices for', ingId, e)
+            return [ingId, []] as [string, SupplierPrice[]]
+          }
+        }),
+      )
+      const map: Record<string, SupplierPrice[]> = {}
+      priceResults.forEach(([ingId, prices]) => {
+        map[ingId] = prices
+      })
+      setPricesByIngredient(map)
+    } finally {
+      setSummaryLoading(false)
     }
   }
 
@@ -58,6 +105,11 @@ export default function OrderDetailPage() {
   const formatNumber = (num: number): string => {
     const rounded = Math.round(num * 100) / 100
     return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
+  }
+
+  const handleSelectSupplier = (ingredientId: string, productIdStr: string) => {
+    const productId = productIdStr ? parseInt(productIdStr, 10) : ''
+    setSelectedSupplierByIngredient((prev: Record<string, number | ''>) => ({ ...prev, [ingredientId]: productId }))
   }
 
   if (loading) {
@@ -251,6 +303,64 @@ export default function OrderDetailPage() {
             </Table>
           </div>
         )}
+
+        {/* Ingredient Summary with Supplier Selection */}
+        <div className="mb-4">
+          <h5>{dict.orders?.ingredient_summary || 'Ingredient Summary'}</h5>
+          {summaryLoading ? (
+            <div className="py-3 text-center">
+              <Spinner animation="border" className="me-2" />
+              {dict.orders?.loading || 'Loading...'}
+            </div>
+          ) : ingredientSummary.length === 0 ? (
+            <Alert variant="info">{dict.orders?.no_ingredients || 'No ingredients found for this order'}</Alert>
+          ) : (
+            <Table striped bordered hover responsive>
+              <thead className="table-light">
+                <tr>
+                  <th>{dict.orders?.columns?.ingredient_id || 'Ingredient ID'}</th>
+                  <th>{dict.orders?.columns?.ingredient_name || 'Ingredient Name'}</th>
+                  <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
+                  <th>{dict.orders?.columns?.unit || 'Unit'}</th>
+                  <th style={{ minWidth: '260px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ingredientSummary.map((ing: IngredientSummaryRow) => {
+                  const prices = pricesByIngredient[ing.ingredientId] || []
+                  const selected = selectedSupplierByIngredient[ing.ingredientId] ?? ''
+                  return (
+                    <tr key={ing.ingredientId}>
+                      <td>
+                        <Badge bg="secondary">{ing.ingredientId}</Badge>
+                      </td>
+                      <td><strong>{ing.ingredientName}</strong></td>
+                      <td className="text-end"><strong>{formatNumber(ing.quantity)}</strong></td>
+                      <td>{ing.unit}</td>
+                      <td>
+                        <FormSelect
+                          size="sm"
+                          value={selected}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleSelectSupplier(ing.ingredientId, e.target.value)}
+                          disabled={prices.length === 0}
+                        >
+                          <option value="">
+                            {prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
+                          </option>
+                          {prices.map((p: SupplierPrice) => (
+                            <option key={p.productId} value={p.productId}>
+                              {p.supplierName} - {formatNumber(p.pricePer1)} / {p.unit || ing.unit}
+                            </option>
+                          ))}
+                        </FormSelect>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          )}
+        </div>
       </CardBody>
     </Card>
   )
