@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button, FormSelect } from 'react-bootstrap'
+import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button, FormSelect, FormControl } from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import useDictionary from '@/locales/dictionary-hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faList } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faList, faSave, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 
@@ -27,6 +27,9 @@ export default function OrderDetailPage() {
   const [ingredientSummary, setIngredientSummary] = useState<IngredientSummaryRow[]>([])
   const [pricesByIngredient, setPricesByIngredient] = useState<Record<string, SupplierPrice[]>>({})
   const [selectedSupplierByIngredient, setSelectedSupplierByIngredient] = useState<Record<string, number | ''>>({})
+  const [filterByIngredient, setFilterByIngredient] = useState<Record<string, string>>({})
+  const [saving, setSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState('')
 
   useEffect(() => {
     if (orderId) {
@@ -116,6 +119,19 @@ export default function OrderDetailPage() {
         map[ingId] = prices
       })
       setPricesByIngredient(map)
+      // Load any saved selections from localStorage
+      try {
+        const key = `order_supplier_selection_${id}`
+        const saved = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null
+        if (saved) {
+          const parsed = JSON.parse(saved)
+          if (parsed && typeof parsed === 'object') {
+            setSelectedSupplierByIngredient(parsed)
+          }
+        }
+      } catch (e) {
+        // ignore localStorage errors
+      }
     } finally {
       setSummaryLoading(false)
     }
@@ -141,6 +157,26 @@ export default function OrderDetailPage() {
   const handleSelectSupplier = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
     setSelectedSupplierByIngredient((prev: Record<string, number | ''>) => ({ ...prev, [ingredientId]: productId }))
+  }
+
+  const handleFilterChange = (ingredientId: string, value: string) => {
+    setFilterByIngredient((prev) => ({ ...prev, [ingredientId]: value }))
+  }
+
+  const handleSaveSelections = async () => {
+    if (!orderId) return
+    try {
+      setSaving(true)
+      setSaveSuccess('')
+      const key = `order_supplier_selection_${orderId}`
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(selectedSupplierByIngredient))
+      }
+      setSaveSuccess('Selections saved')
+    } finally {
+      setSaving(false)
+      setTimeout(() => setSaveSuccess(''), 2000)
+    }
   }
 
   if (loading) {
@@ -196,6 +232,11 @@ export default function OrderDetailPage() {
         </div>
       </CardHeader>
       <CardBody>
+        {saveSuccess && (
+          <Alert variant="success" className="mb-3" onClose={() => setSaveSuccess('')} dismissible>
+            {saveSuccess}
+          </Alert>
+        )}
         {/* Order Info */}
         <div className="mb-4">
           <h5>{dict.orders?.labels?.order_information || 'Order Information'}</h5>
@@ -337,7 +378,22 @@ export default function OrderDetailPage() {
 
         {/* Ingredient Summary with Supplier Selection */}
         <div className="mb-4">
-          <h5>{dict.orders?.ingredient_summary || 'Ingredient Summary'}</h5>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <h5 className="mb-0">{dict.orders?.ingredient_summary || 'Ingredient Summary'}</h5>
+            <Button variant="success" size="sm" onClick={handleSaveSelections} disabled={saving}>
+              {saving ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faSave} className="me-2" />
+                  Save selections
+                </>
+              )}
+            </Button>
+          </div>
           {summaryLoading ? (
             <div className="py-3 text-center">
               <Spinner animation="border" className="me-2" />
@@ -353,13 +409,22 @@ export default function OrderDetailPage() {
                   <th>{dict.orders?.columns?.ingredient_name || 'Ingredient Name'}</th>
                   <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
                   <th>{dict.orders?.columns?.unit || 'Unit'}</th>
-                  <th style={{ minWidth: '260px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
+                  <th style={{ minWidth: '300px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
+                  <th className="text-end" style={{ width: '140px' }}>Price</th>
                 </tr>
               </thead>
               <tbody>
                 {ingredientSummary.map((ing: IngredientSummaryRow) => {
                   const prices = pricesByIngredient[ing.ingredientId] || []
                   const selected = selectedSupplierByIngredient[ing.ingredientId] ?? ''
+                  const filter = (filterByIngredient[ing.ingredientId] || '').toLowerCase()
+                  const filteredPrices = filter
+                    ? prices.filter((p: SupplierPrice) =>
+                        (p.supplierName || '').toLowerCase().includes(filter) ||
+                        (p.productName || '').toLowerCase().includes(filter),
+                      )
+                    : prices
+                  const selectedPrice = prices.find((p: SupplierPrice) => p.productId === selected)
                   return (
                     <tr key={ing.ingredientId}>
                       <td>
@@ -369,6 +434,22 @@ export default function OrderDetailPage() {
                       <td className="text-end"><strong>{formatNumber(ing.quantity)}</strong></td>
                       <td>{ing.unit}</td>
                       <td>
+                        <div className="mb-1">
+                          <div className="input-group input-group-sm">
+                            <span className="input-group-text">
+                              <FontAwesomeIcon icon={faSearch} />
+                            </span>
+                            <FormControl
+                              size="sm"
+                              placeholder="Search supplier..."
+                              value={filterByIngredient[ing.ingredientId] || ''}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                handleFilterChange(ing.ingredientId, e.target.value)
+                              }
+                              disabled={prices.length === 0}
+                            />
+                          </div>
+                        </div>
                         <FormSelect
                           size="sm"
                           value={selected}
@@ -378,12 +459,19 @@ export default function OrderDetailPage() {
                           <option value="">
                             {prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
                           </option>
-                          {prices.map((p: SupplierPrice) => (
+                          {filteredPrices.map((p: SupplierPrice) => (
                             <option key={p.productId} value={p.productId}>
                               {p.supplierName} - {formatNumber(p.pricePer1)} / {p.unit || ing.unit}
                             </option>
                           ))}
                         </FormSelect>
+                      </td>
+                      <td className="text-end">
+                        {selectedPrice ? (
+                          <strong>{formatNumber(selectedPrice.pricePer1)}</strong>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
                       </td>
                     </tr>
                   )
