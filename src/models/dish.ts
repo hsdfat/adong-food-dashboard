@@ -4,7 +4,7 @@ export interface Dish {
   cookingMethod: string
   group: string
   description: string
-  active: boolean
+  active?: boolean | null
   createdDate: string
   modifiedDate: string
 }

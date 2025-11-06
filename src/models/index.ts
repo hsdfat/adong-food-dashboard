@@ -25,6 +25,27 @@ export type {
   UpdateRecipeStandardInput,
 } from './recipe_standard'
 
+// Order Models
+export type {
+  Order,
+  OrderDetail,
+  OrderIngredient,
+  OrderSupplementaryFood,
+  OrderDTO,
+  OrderDetailDTO,
+  OrderIngredientDTO,
+  OrderSupplementaryDTO,
+  CreateOrderInput,
+  CreateOrderDetailInput,
+  CreateOrderIngredientInput,
+  CreateOrderSupplementaryFoodInput,
+  UpdateOrderInput,
+  UpdateOrderDetailInput,
+  UpdateOrderIngredientInput,
+  UpdateOrderSupplementaryFoodInput,
+  GetOrdersParams,
+} from './order'
+
 // Resource Models
 export type { Resource, ResourceCollection } from './resource'
 

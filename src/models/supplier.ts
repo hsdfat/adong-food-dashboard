@@ -5,7 +5,7 @@ export interface Supplier {
   address: string
   phone: string
   email: string
-  active: boolean
+  active?: boolean | null
   createdDate: string
   modifiedDate: string
 }

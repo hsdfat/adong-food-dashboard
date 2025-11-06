@@ -3,9 +3,9 @@ import { apiClient } from '@/utils/api_client'
 import { 
   RecipeStandard, 
   CreateRecipeStandardInput, 
-  UpdateRecipeStandardInput,
-  RecipeStandardsResponse 
+  UpdateRecipeStandardInput
 } from '@/models/recipe_standard'
+import { ResourceCollection } from '@/models/resource'
 
 const BASE_URL = '/api/recipe-standards'
 
@@ -13,14 +13,14 @@ export const recipeStandardApi = {
   // Get all recipe standards with pagination and search
   getAll: async (params?: {
     page?: number
-    pageSize?: number
+    per_page?: number
     search?: string
     sortBy?: string
     sortDir?: 'asc' | 'desc'
-  }): Promise<RecipeStandard[]> => {
+  }): Promise<ResourceCollection<RecipeStandard>> => {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
-    if (params?.pageSize) queryParams.append('pageSize', params.pageSize.toString())
+    if (params?.per_page) queryParams.append('per_page', params.per_page.toString())
     if (params?.search) queryParams.append('search', params.search)
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
     if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
@@ -29,8 +29,7 @@ export const recipeStandardApi = {
       ? `${BASE_URL}?${queryParams.toString()}`
       : BASE_URL
 
-    const response = await apiClient<RecipeStandardsResponse>(url)
-    return response.data
+    return await apiClient<ResourceCollection<RecipeStandard>>(url)
   },
 
   // Get recipe standard by ID
@@ -40,11 +39,10 @@ export const recipeStandardApi = {
   },
 
   // Get recipe standards by dish ID
-  getByDish: async (dishId: string): Promise<RecipeStandard[]> => {
-    const response = await apiClient<RecipeStandardsResponse>(
+  getByDish: async (dishId: string): Promise<ResourceCollection<RecipeStandard>> => {
+    return await apiClient<ResourceCollection<RecipeStandard>>(
       `${BASE_URL}/dish/${dishId}`,
     )
-    return response.data
   },
 
   // Create new recipe standard

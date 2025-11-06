@@ -19,8 +19,7 @@ import {
 import { ResourceCollection } from '@/models/resource'
 import { recipeStandardApi } from './recipe-standard'
 export { supplierPriceApi } from './supplier-price.service'
-
-import exp from 'constants'
+export { orderApi } from './order-api'
 
 // Ingredients API
 export const ingredientApi = {

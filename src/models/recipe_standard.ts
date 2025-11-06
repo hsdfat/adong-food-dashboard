@@ -6,15 +6,16 @@ export interface RecipeStandard {
   standardId: number
   dishId: string
   ingredientId: string
-  dishName: string
-  ingredientName: string
+  dishName?: string
+  ingredientName?: string
   unit: string
   standardPer1: number
   note?: string
   amount?: number
   updatedById?: string
-  createdDate?: Date
-  modifiedDate?: Date
+  updatedByName?: string
+  createdDate: string
+  modifiedDate: string
   // Relations
   dish?: Dish
   ingredient?: Ingredient
@@ -38,9 +39,4 @@ export interface UpdateRecipeStandardInput {
   updatedById?: string
 }
 
-export interface RecipeStandardsResponse {
-  data: RecipeStandard[]
-  total: number
-  page: number
-  pageSize: number
-}
+// RecipeStandardsResponse is now ResourceCollection<RecipeStandard>

@@ -13,9 +13,9 @@ export interface SupplierPrice {
   specification: string
   unitPrice: number
   pricePer1: number
-  effectiveFrom: string
-  effectiveTo: string
-  active: boolean
+  effectiveFrom?: string | null
+  effectiveTo?: string | null
+  active?: boolean | null
   newPrice: number
   promotion: string
 
@@ -40,9 +40,9 @@ export interface CreateSupplierPriceInput {
   specification: string
   unitPrice: number
   pricePer1: number
-  effectiveFrom: string
-  effectiveTo: string
-  active: boolean
+  effectiveFrom?: string | null
+  effectiveTo?: string | null
+  active?: boolean | null
   newPrice?: number
   promotion?: string
 }

@@ -39,10 +39,10 @@ export default function RecipeStandardsList({
     try {
       setLoading(true)
       setError('')
-      const data = dishId
+      const response = dishId
         ? await recipeStandardApi.getByDish(dishId)
         : await recipeStandardApi.getAll()
-      setStandards(data)
+      setStandards(response.data)
     } catch (err) {
       setError('Failed to load recipe standards')
       console.error(err)

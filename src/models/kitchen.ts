@@ -3,7 +3,7 @@ export interface Kitchen {
   kitchenName: string
   address: string
   phone: string
-  active: boolean
+  active?: boolean | null
   createdDate: string
   modifiedDate: string
 }

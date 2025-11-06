@@ -29,19 +29,23 @@ import {
   faSearch,
 } from '@fortawesome/free-solid-svg-icons'
 import useDictionary from '@/locales/dictionary-hook'
+import { kitchenApi, dishApi, ingredientApi, recipeStandardApi, orderApi } from '@/services'
+import { Kitchen, RecipeStandard } from '@/models'
+import { Dish as DishModel, Ingredient as IngredientModel } from '@/models'
+import { CreateOrderInput } from '@/models/order'
 
-// Types
-interface Ingredient {
+// Types - Local interfaces for order form data
+interface OrderIngredient {
   nguyenLieuId: string
   tenNguyenLieu: string
   donViTinh: string
   dinhMuc: number
 }
 
-interface Dish {
+interface OrderDish {
   dishId: string
   dishName: string
-  ingredients: Ingredient[]
+  ingredients: OrderIngredient[]
 }
 
 interface OrderDishItem {
@@ -92,7 +96,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
   // Kitchen selection modal
   const [showKitchenModal, setShowKitchenModal] = useState(false)
-  const [availableKitchens, setAvailableKitchens] = useState<any[]>([])
+  const [availableKitchens, setAvailableKitchens] = useState<Kitchen[]>([])
   const [searchKitchen, setSearchKitchen] = useState('')
 
   // Dishes in order
@@ -105,7 +109,8 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
   // Modal for adding dishes
   const [showDishModal, setShowDishModal] = useState(false)
-  const [availableDishes, setAvailableDishes] = useState<Dish[]>([])
+  const [availableDishes, setAvailableDishes] = useState<DishModel[]>([])
+  const [dishRecipeStandards, setDishRecipeStandards] = useState<Map<string, RecipeStandard[]>>(new Map())
   const [searchDish, setSearchDish] = useState('')
   const [selectedDishes, setSelectedDishes] = useState<string[]>([]) // Multi-select
   const [portions, setPortions] = useState(1)
@@ -113,7 +118,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
   // Modal for adding ingredient to dish
   const [showIngredientModal, setShowIngredientModal] = useState(false)
   const [currentDishIndex, setCurrentDishIndex] = useState<number | null>(null)
-  const [availableIngredients, setAvailableIngredients] = useState<any[]>([])
+  const [availableIngredients, setAvailableIngredients] = useState<IngredientModel[]>([])
   const [searchIngredient, setSearchIngredient] = useState('')
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]) // Multi-select
   const [customAmount, setCustomAmount] = useState(0)
@@ -159,140 +164,45 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
   const loadKitchens = async () => {
     try {
-      // TODO: Replace with actual API call
-      const mockKitchens = [
-        { bepId: 'BEP001', tenBep: 'Bếp Chính', moTa: 'Bếp trung tâm' },
-        { bepId: 'BEP002', tenBep: 'Bếp Phụ 1', moTa: 'Bếp tầng 2' },
-        { bepId: 'BEP003', tenBep: 'Bếp Phụ 2', moTa: 'Bếp tầng 3' },
-        { bepId: 'BEP004', tenBep: 'Bếp Ngoài', moTa: 'Bếp khu vực ngoài' },
-      ]
-      setAvailableKitchens(mockKitchens)
+      const response = await kitchenApi.getAll('?per_page=100')
+      setAvailableKitchens(response.data || [])
     } catch (err) {
       console.error('Failed to load kitchens:', err)
+      setError('Không thể tải danh sách bếp')
     }
   }
 
   const loadDishes = async () => {
     try {
-      // TODO: Replace with actual API call
-      const mockDishes: Dish[] = [
-        {
-          dishId: 'MA001',
-          dishName: 'Canh chua cá',
-          ingredients: [
-            {
-              nguyenLieuId: 'NL001',
-              tenNguyenLieu: 'Cá lóc',
-              donViTinh: 'kg',
-              dinhMuc: 0.5,
-            },
-            {
-              nguyenLieuId: 'NL002',
-              tenNguyenLieu: 'Cà chua',
-              donViTinh: 'kg',
-              dinhMuc: 0.2,
-            },
-            {
-              nguyenLieuId: 'NL003',
-              tenNguyenLieu: 'Dứa',
-              donViTinh: 'kg',
-              dinhMuc: 0.15,
-            },
-          ],
-        },
-        {
-          dishId: 'MA002',
-          dishName: 'Thịt kho tàu',
-          ingredients: [
-            {
-              nguyenLieuId: 'NL004',
-              tenNguyenLieu: 'Thịt ba chỉ',
-              donViTinh: 'kg',
-              dinhMuc: 0.8,
-            },
-            {
-              nguyenLieuId: 'NL005',
-              tenNguyenLieu: 'Trứng',
-              donViTinh: 'quả',
-              dinhMuc: 10,
-            },
-          ],
-        },
-        {
-          dishId: 'MA003',
-          dishName: 'Rau muống xào tỏi',
-          ingredients: [
-            {
-              nguyenLieuId: 'NL006',
-              tenNguyenLieu: 'Rau muống',
-              donViTinh: 'kg',
-              dinhMuc: 1.5,
-            },
-            {
-              nguyenLieuId: 'NL007',
-              tenNguyenLieu: 'Tỏi',
-              donViTinh: 'kg',
-              dinhMuc: 0.05,
-            },
-          ],
-        },
-      ]
-      setAvailableDishes(mockDishes)
+      const response = await dishApi.getAll('?per_page=100')
+      const dishes = response.data || []
+      setAvailableDishes(dishes)
+
+      // Load recipe standards for all dishes
+      const recipeStandardsMap = new Map<string, RecipeStandard[]>()
+      for (const dish of dishes) {
+        try {
+          const recipeResponse = await recipeStandardApi.getByDish(dish.dishId)
+          recipeStandardsMap.set(dish.dishId, recipeResponse.data || [])
+        } catch (err) {
+          console.error(`Failed to load recipe standards for dish ${dish.dishId}:`, err)
+          recipeStandardsMap.set(dish.dishId, [])
+        }
+      }
+      setDishRecipeStandards(recipeStandardsMap)
     } catch (err) {
       console.error('Failed to load dishes:', err)
+      setError('Không thể tải danh sách món ăn')
     }
   }
 
   const loadIngredients = async () => {
     try {
-      // TODO: Replace with actual API call
-      const mockIngredients = [
-        {
-          nguyenLieuId: 'NL008',
-          tenNguyenLieu: 'Dầu ăn',
-          donViTinh: 'lít',
-          dinhMuc: 0.5,
-        },
-        {
-          nguyenLieuId: 'NL009',
-          tenNguyenLieu: 'Muối',
-          donViTinh: 'kg',
-          dinhMuc: 0.1,
-        },
-        {
-          nguyenLieuId: 'NL010',
-          tenNguyenLieu: 'Đường',
-          donViTinh: 'kg',
-          dinhMuc: 0.2,
-        },
-        {
-          nguyenLieuId: 'NL011',
-          tenNguyenLieu: 'Nước mắm',
-          donViTinh: 'lít',
-          dinhMuc: 0.3,
-        },
-        {
-          nguyenLieuId: 'NL012',
-          tenNguyenLieu: 'Hành tím',
-          donViTinh: 'kg',
-          dinhMuc: 0.15,
-        },
-        {
-          nguyenLieuId: 'NL013',
-          tenNguyenLieu: 'Gừng',
-          donViTinh: 'kg',
-          dinhMuc: 0.05,
-        },
-        {
-          nguyenLieuId: 'NL004',
-          tenNguyenLieu: 'Thịt ba chỉ',
-          donViTinh: 'kg',
-          dinhMuc: 0.8,
-        },
-      ]
-      setAvailableIngredients(mockIngredients)
+      const response = await ingredientApi.getAll('?per_page=100')
+      setAvailableIngredients(response.data || [])
     } catch (err) {
       console.error('Failed to load ingredients:', err)
+      setError('Không thể tải danh sách nguyên liệu')
     }
   }
 
@@ -305,15 +215,23 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
     const newDishes: OrderDishItem[] = selectedDishes.map((dishId) => {
       const dish = availableDishes.find((d) => d.dishId === dishId)!
+      const recipeStandards = dishRecipeStandards.get(dishId) || []
+
+      // Convert recipe standards to ingredients format
+      const ingredients = recipeStandards.map((rs) => ({
+        nguyenLieuId: rs.ingredientId,
+        tenNguyenLieu: rs.ingredientName || '',
+        donViTinh: rs.unit,
+        dinhMuc: rs.standardPer1,
+        soLuong: rs.standardPer1 * portions,
+      }))
+
       return {
         id: `${Date.now()}-${Math.random()}`,
         monanId: dish.dishId,
         tenMonAn: dish.dishName,
         soSuat: portions,
-        ingredients: dish.ingredients.map((ing) => ({
-          ...ing,
-          soLuong: ing.dinhMuc * portions,
-        })),
+        ingredients,
       }
     })
 
@@ -371,11 +289,11 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
             ingredients: dish.ingredients.map((ing) =>
               ing.nguyenLieuId === ingredientId
                 ? {
-                    ...ing,
-                    dinhMuc: roundedDinhMuc,
-                    soLuong:
-                      Math.round(roundedDinhMuc * dish.soSuat * 100) / 100,
-                  }
+                  ...ing,
+                  dinhMuc: roundedDinhMuc,
+                  soLuong:
+                    Math.round(roundedDinhMuc * dish.soSuat * 100) / 100,
+                }
                 : ing,
             ),
           }
@@ -417,7 +335,7 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     const newIngredients = selectedIngredients
       .map((ingId) => {
         const ingredient = availableIngredients.find(
-          (ing) => ing.nguyenLieuId === ingId,
+          (ing) => ing.ingredientId === ingId,
         )
         if (!ingredient) return null
 
@@ -427,9 +345,9 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
         if (exists) return null
 
         return {
-          nguyenLieuId: ingredient.nguyenLieuId,
-          tenNguyenLieu: ingredient.tenNguyenLieu,
-          donViTinh: ingredient.donViTinh,
+          nguyenLieuId: ingredient.ingredientId,
+          tenNguyenLieu: ingredient.ingredientName,
+          donViTinh: ingredient.unit,
           dinhMuc: 0,
           soLuong: customAmount,
         }
@@ -469,19 +387,19 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
       selectedSupplementaryIngredients
         .map((ingId) => {
           const ingredient = availableIngredients.find(
-            (ing) => ing.nguyenLieuId === ingId,
+            (ing) => ing.ingredientId === ingId,
           )
           if (!ingredient) return null
 
-          // Use dinhMuc from ingredient, calculate soLuong = dinhMuc * supplementaryAmount
-          const dinhMuc = ingredient.dinhMuc || 0
+          // Default dinhMuc to 0 for supplementary foods (user can edit)
+          const dinhMuc = 0
           const soLuong = Math.round(dinhMuc * supplementaryAmount * 100) / 100
 
           return {
             id: `${Date.now()}-${Math.random()}`,
-            nguyenLieuId: ingredient.nguyenLieuId,
-            tenNguyenLieu: ingredient.tenNguyenLieu,
-            donViTinh: ingredient.donViTinh,
+            nguyenLieuId: ingredient.ingredientId,
+            tenNguyenLieu: ingredient.ingredientName,
+            donViTinh: ingredient.unit,
             dinhMuc: dinhMuc,
             soSuat: supplementaryAmount,
             soLuong: soLuong,
@@ -586,48 +504,46 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
     setSuccess('')
 
     try {
-      const orderData = {
-        phieuLenDonId,
-        bepId,
-        ngayLen: new Date(ngayLen),
-        ghiChu,
-        trangThai: 'Chờ xử lý',
-        chiTiet: orderDishes.map((dish) => ({
-          monanId: dish.monanId,
-          tenMonAn: dish.tenMonAn,
-          soSuat: dish.soSuat,
-          listNguyenLieu: dish.ingredients.map((ing) => ({
-            nguyenLieuId: ing.nguyenLieuId,
-            tenNguyenLieu: ing.tenNguyenLieu,
-            soLuong: ing.soLuong,
-            donViTinh: ing.donViTinh,
-            dinhMuc: ing.dinhMuc,
+      const orderData: CreateOrderInput = {
+        kitchenId: bepId,
+        orderDate: ngayLen,
+        note: ghiChu,
+        status: 'Pending',
+        details: orderDishes.map((dish) => ({
+          dishId: dish.monanId,
+          portions: dish.soSuat,
+          note: '',
+          ingredients: dish.ingredients.map((ing) => ({
+            ingredientId: ing.nguyenLieuId,
+            quantity: ing.soLuong,
+            unit: ing.donViTinh,
+            standardPerPortion: ing.dinhMuc,
           })),
         })),
-        thucPhamBoSung: supplementaryFoods.map((item) => ({
-          nguyenLieuId: item.nguyenLieuId,
-          tenNguyenLieu: item.tenNguyenLieu,
-          soLuong: item.soLuong,
-          donViTinh: item.donViTinh,
-          dinhMuc: item.dinhMuc,
-          soSuat: item.soSuat,
-          ghiChu: item.ghiChu,
+        supplementaryFoods: supplementaryFoods.map((item) => ({
+          ingredientId: item.nguyenLieuId,
+          quantity: item.soLuong,
+          unit: item.donViTinh,
+          standardPerPortion: item.dinhMuc,
+          portions: item.soSuat,
+          note: item.ghiChu || '',
         })),
       }
 
-      console.log('Order data to submit:', orderData)
-
-      // TODO: Replace with actual API call
-      // await orderApi.create(orderData)
+      const createdOrder = await orderApi.create(orderData)
 
       setSuccess('Tạo phiếu lên đơn thành công!')
 
+      // Redirect to order detail page with the new order ID
       setTimeout(() => {
-        router.push('/orders')
+        router.push(`/orders/${createdOrder.orderId}`)
       }, 1500)
     } catch (err: any) {
-      setError(err.message || 'Có lỗi xảy ra khi tạo phiếu lên đơn')
+      const errorMessage = err.message || 'Có lỗi xảy ra khi tạo phiếu lên đơn'
+      setError(errorMessage)
       console.error(err)
+      // Ensure error alert is visible
+      setSuccess('')
     } finally {
       setLoading(false)
     }
@@ -640,20 +556,20 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
 
   // Filter ingredients by search
   const filteredIngredients = availableIngredients.filter((ing) =>
-    ing.tenNguyenLieu.toLowerCase().includes(searchIngredient.toLowerCase()),
+    ing.ingredientName.toLowerCase().includes(searchIngredient.toLowerCase()),
   )
 
   // Filter kitchens by search
   const filteredKitchens = availableKitchens.filter(
     (kitchen) =>
-      kitchen.tenBep.toLowerCase().includes(searchKitchen.toLowerCase()) ||
-      kitchen.bepId.toLowerCase().includes(searchKitchen.toLowerCase()),
+      kitchen.kitchenName.toLowerCase().includes(searchKitchen.toLowerCase()) ||
+      kitchen.kitchenId.toLowerCase().includes(searchKitchen.toLowerCase()),
   )
 
   // Select kitchen
-  const handleSelectKitchen = (kitchen: any) => {
-    setBepId(kitchen.bepId)
-    setTenBep(kitchen.tenBep)
+  const handleSelectKitchen = (kitchen: Kitchen) => {
+    setBepId(kitchen.kitchenId)
+    setTenBep(kitchen.kitchenName)
     setShowKitchenModal(false)
     setSearchKitchen('')
   }
@@ -1200,31 +1116,30 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
               <div className="list-group">
                 {filteredKitchens.map((kitchen) => (
                   <button
-                    key={kitchen.bepId}
+                    key={kitchen.kitchenId}
                     type="button"
-                    className={`list-group-item list-group-item-action ${
-                      bepId === kitchen.bepId ? 'active' : ''
-                    }`}
+                    className={`list-group-item list-group-item-action ${bepId === kitchen.kitchenId ? 'active' : ''
+                      }`}
                     onClick={() => handleSelectKitchen(kitchen)}
                   >
                     <div className="d-flex justify-content-between align-items-start">
                       <div>
-                        <h6 className="mb-1">{kitchen.tenBep}</h6>
+                        <h6 className="mb-1">{kitchen.kitchenName}</h6>
                         <small
                           className={
-                            bepId === kitchen.bepId
+                            bepId === kitchen.kitchenId
                               ? 'text-white'
                               : 'text-muted'
                           }
                         >
-                          {kitchen.moTa}
+                          {kitchen.address}
                         </small>
                       </div>
                       <Badge
-                        bg={bepId === kitchen.bepId ? 'light' : 'primary'}
-                        text={bepId === kitchen.bepId ? 'dark' : 'white'}
+                        bg={bepId === kitchen.kitchenId ? 'light' : 'primary'}
+                        text={bepId === kitchen.kitchenId ? 'dark' : 'white'}
                       >
-                        {kitchen.bepId}
+                        {kitchen.kitchenId}
                       </Badge>
                     </div>
                   </button>
@@ -1283,11 +1198,10 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                 {filteredDishes.map((dish) => (
                   <div
                     key={dish.dishId}
-                    className={`border rounded p-3 mb-2 ${
-                      selectedDishes.includes(dish.dishId)
-                        ? 'bg-primary text-white'
-                        : ''
-                    }`}
+                    className={`border rounded p-3 mb-2 ${selectedDishes.includes(dish.dishId)
+                      ? 'bg-primary text-white'
+                      : ''
+                      }`}
                     style={{ cursor: 'pointer' }}
                   >
                     <FormCheck
@@ -1312,7 +1226,10 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
                               {dish.dishId}
                             </Badge>
                           </div>
-                          <small>{dish.ingredients.length} nguyên liệu</small>
+                          <small>
+                            {dishRecipeStandards.get(dish.dishId)?.length || 0}{' '}
+                            nguyên liệu
+                          </small>
                         </div>
                       }
                       checked={selectedDishes.includes(dish.dishId)}
@@ -1408,47 +1325,46 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
               <div>
                 {filteredIngredients.map((ing) => (
                   <div
-                    key={ing.nguyenLieuId}
-                    className={`border rounded p-2 mb-2 ${
-                      selectedIngredients.includes(ing.nguyenLieuId)
-                        ? 'bg-primary text-white'
-                        : ''
-                    }`}
+                    key={ing.ingredientId}
+                    className={`border rounded p-2 mb-2 ${selectedIngredients.includes(ing.ingredientId)
+                      ? 'bg-primary text-white'
+                      : ''
+                      }`}
                     style={{ cursor: 'pointer' }}
                   >
                     <FormCheck
                       type="checkbox"
-                      id={`ing-${ing.nguyenLieuId}`}
+                      id={`ing-${ing.ingredientId}`}
                       label={
                         <div className="d-flex justify-content-between w-100">
-                          <span>{ing.tenNguyenLieu}</span>
+                          <span>{ing.ingredientName}</span>
                           <Badge
                             bg={
-                              selectedIngredients.includes(ing.nguyenLieuId)
+                              selectedIngredients.includes(ing.ingredientId)
                                 ? 'light'
                                 : 'secondary'
                             }
                             text={
-                              selectedIngredients.includes(ing.nguyenLieuId)
+                              selectedIngredients.includes(ing.ingredientId)
                                 ? 'dark'
                                 : 'white'
                             }
                           >
-                            {ing.donViTinh}
+                            {ing.unit}
                           </Badge>
                         </div>
                       }
-                      checked={selectedIngredients.includes(ing.nguyenLieuId)}
+                      checked={selectedIngredients.includes(ing.ingredientId)}
                       onChange={(e) => {
                         if (e.target.checked) {
                           setSelectedIngredients([
                             ...selectedIngredients,
-                            ing.nguyenLieuId,
+                            ing.ingredientId,
                           ])
                         } else {
                           setSelectedIngredients(
                             selectedIngredients.filter(
-                              (id) => id !== ing.nguyenLieuId,
+                              (id) => id !== ing.ingredientId,
                             ),
                           )
                         }
@@ -1540,55 +1456,54 @@ export default function OrderForm({ orderId, isEdit = false }: OrderFormProps) {
               <div>
                 {filteredIngredients.map((ing) => (
                   <div
-                    key={ing.nguyenLieuId}
-                    className={`border rounded p-2 mb-2 ${
-                      selectedSupplementaryIngredients.includes(
-                        ing.nguyenLieuId,
-                      )
-                        ? 'bg-success text-white'
-                        : ''
-                    }`}
+                    key={ing.ingredientId}
+                    className={`border rounded p-2 mb-2 ${selectedSupplementaryIngredients.includes(
+                      ing.ingredientId,
+                    )
+                      ? 'bg-success text-white'
+                      : ''
+                      }`}
                     style={{ cursor: 'pointer' }}
                   >
                     <FormCheck
                       type="checkbox"
-                      id={`supp-${ing.nguyenLieuId}`}
+                      id={`supp-${ing.ingredientId}`}
                       label={
                         <div className="d-flex justify-content-between w-100">
-                          <span>{ing.tenNguyenLieu}</span>
+                          <span>{ing.ingredientName}</span>
                           <Badge
                             bg={
                               selectedSupplementaryIngredients.includes(
-                                ing.nguyenLieuId,
+                                ing.ingredientId,
                               )
                                 ? 'light'
                                 : 'secondary'
                             }
                             text={
                               selectedSupplementaryIngredients.includes(
-                                ing.nguyenLieuId,
+                                ing.ingredientId,
                               )
                                 ? 'dark'
                                 : 'white'
                             }
                           >
-                            {ing.donViTinh}
+                            {ing.unit}
                           </Badge>
                         </div>
                       }
                       checked={selectedSupplementaryIngredients.includes(
-                        ing.nguyenLieuId,
+                        ing.ingredientId,
                       )}
                       onChange={(e) => {
                         if (e.target.checked) {
                           setSelectedSupplementaryIngredients([
                             ...selectedSupplementaryIngredients,
-                            ing.nguyenLieuId,
+                            ing.ingredientId,
                           ])
                         } else {
                           setSelectedSupplementaryIngredients(
                             selectedSupplementaryIngredients.filter(
-                              (id) => id !== ing.nguyenLieuId,
+                              (id) => id !== ing.ingredientId,
                             ),
                           )
                         }

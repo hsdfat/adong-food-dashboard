@@ -16,7 +16,7 @@ export const supplierPriceApi = {
    */
   async getAll(params?: {
     page?: number
-    pageSize?: number
+    per_page?: number
     search?: string
     sortBy?: string
     sortDir?: 'asc' | 'desc'
@@ -25,8 +25,8 @@ export const supplierPriceApi = {
   }): Promise<SupplierPriceListResponse> {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
-    if (params?.pageSize)
-      queryParams.append('per_page', params.pageSize.toString())
+    if (params?.per_page)
+      queryParams.append('per_page', params.per_page.toString())
     if (params?.search) queryParams.append('search', params.search)
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
     if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
