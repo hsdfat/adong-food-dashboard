@@ -13,7 +13,7 @@ export default function OrderDetailPage() {
   const params = useParams()
   const router = useRouter()
   const dict = useDictionary()
-  const orderId = params?.id ? parseInt(params.id as string) : null
+  const orderId = params?.id ? (params.id as string) : null
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -23,6 +23,7 @@ export default function OrderDetailPage() {
     if (orderId) {
       loadOrder()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId])
 
   const loadOrder = async () => {
@@ -99,7 +100,7 @@ export default function OrderDetailPage() {
           <div className="d-flex gap-2">
             <Button
               variant="outline-primary"
-              onClick={() => router.push(`/orders/${order.orderId}/ingredients/summary`)}
+              onClick={() => router.push(`/orders/${orderId}/ingredients/summary`)}
             >
               <FontAwesomeIcon icon={faList} className="me-2" />
               {dict.orders?.labels?.view_ingredients_summary || 'View Ingredients Summary'}

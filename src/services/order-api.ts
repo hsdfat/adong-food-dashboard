@@ -39,7 +39,7 @@ export const orderApi = {
   /**
    * Get order by ID
    */
-  async getById(id: number): Promise<OrderDTO> {
+  async getById(id: number | string): Promise<OrderDTO> {
     return await apiClient<OrderDTO>(`${BASE_URL}/${id}`)
   },
 
@@ -47,7 +47,7 @@ export const orderApi = {
    * Get ingredients summary for an order
    */
   async getIngredientsSummary(
-    id: number,
+    id: number | string,
     params?: {
       kitchen_id?: string
       status?: string
@@ -76,7 +76,7 @@ export const orderApi = {
    * Get ingredient summary for a specific ingredient in an order
    */
   async getIngredientSummary(
-    orderId: number,
+    orderId: number | string,
     ingredientId: string,
     params?: {
       kitchen_id?: string
@@ -112,7 +112,7 @@ export const orderApi = {
   /**
    * Update existing order
    */
-  async update(id: number, data: UpdateOrderInput): Promise<OrderDTO> {
+  async update(id: number | string, data: UpdateOrderInput): Promise<OrderDTO> {
     return await apiClient<OrderDTO>(`${BASE_URL}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -123,7 +123,7 @@ export const orderApi = {
    * Update order status only (PATCH)
    * PATCH /api/orders/{orderId}/status
    */
-  async updateStatus(id: number, status: string): Promise<OrderDTO> {
+  async updateStatus(id: number | string, status: string): Promise<OrderDTO> {
     return await apiClient<OrderDTO>(`${BASE_URL}/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status: status }),
@@ -133,7 +133,7 @@ export const orderApi = {
   /**
    * Delete order
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: number | string): Promise<void> {
     return await apiClient(`${BASE_URL}/${id}`, {
       method: 'DELETE',
     })
