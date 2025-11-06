@@ -83,13 +83,28 @@ export default function OrderDetailPage() {
       }))
       setIngredientSummary(normalized)
 
-      // Preload active prices for each ingredient in parallel
+      // Preload supplier prices for each ingredient in parallel
       const uniqueIds = Array.from(new Set(normalized.map((i: any) => i.ingredientId)))
       const priceResults = await Promise.all(
         uniqueIds.map(async (ingId) => {
           try {
-            const prices = await supplierPriceApi.getActivePrices(ingId)
-            return [ingId, prices] as [string, SupplierPrice[]]
+            const response = await supplierPriceApi.getByIngredient(ingId)
+            // Handle response that might be wrapped in data property or be a direct array
+            // API might return: { data: [...] } or directly [...]
+            let prices: any = response
+            if (response && typeof response === 'object' && 'data' in response) {
+              prices = response.data
+            }
+            // Ensure it's an array
+            const priceArray = Array.isArray(prices) ? prices : []
+            // Filter for active prices if the API returns all prices
+            // Only filter if active field exists, otherwise include all
+            const activePrices = priceArray.filter((p: SupplierPrice) => {
+              if (p.active === undefined || p.active === null) return true
+              return p.active !== false
+            })
+            console.log(`Loaded ${activePrices.length} supplier prices for ingredient ${ingId}`)
+            return [ingId, activePrices] as [string, SupplierPrice[]]
           } catch (e) {
             console.error('Failed to load prices for', ingId, e)
             return [ingId, []] as [string, SupplierPrice[]]
