@@ -7,7 +7,7 @@ import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import useDictionary from '@/locales/dictionary-hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faList, faSave, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faList, faSave, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 
@@ -417,6 +417,8 @@ export default function OrderDetailPage() {
                   <th>{dict.orders?.columns?.unit || 'Unit'}</th>
                   <th style={{ minWidth: '320px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
                   <th className="text-end" style={{ width: '140px' }}>Price</th>
+                  <th className="text-end" style={{ width: '160px' }}>Total Price</th>
+                  <th style={{ width: '140px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -424,6 +426,8 @@ export default function OrderDetailPage() {
                   const prices = pricesByIngredient[ing.ingredientId] || []
                   const selected = selectedSupplierByIngredient[ing.ingredientId] ?? ''
                   const selectedPrice = prices.find((p: SupplierPrice) => p.productId === selected)
+                  const unitPrice = selectedPrice ? ((selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0) ? selectedPrice.pricePer1 : selectedPrice.unitPrice) : 0
+                  const totalPrice = unitPrice * (ing.quantity || 0)
                   return (
                     <tr key={ing.ingredientId}>
                       <td>
@@ -439,6 +443,24 @@ export default function OrderDetailPage() {
                             placeholder={prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
                             value={selectedPrice ? `${selectedPrice.supplierName} ${selectedPrice.productName ? '- ' + selectedPrice.productName : ''}` : ''}
                           />
+                        </InputGroup>
+                      </td>
+                      <td className="text-end">
+                        {selectedPrice ? (
+                          <strong>{formatNumber(unitPrice)}</strong>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
+                      </td>
+                      <td className="text-end">
+                        {selectedPrice ? (
+                          <strong>{formatNumber(totalPrice)}</strong>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
+                      </td>
+                      <td>
+                        <div className="d-flex gap-2">
                           <Button
                             variant="outline-primary"
                             size="sm"
@@ -450,16 +472,19 @@ export default function OrderDetailPage() {
                               setShowSupplierModal(true)
                             }}
                           >
-                            <FontAwesomeIcon icon={faSearch} />
+                            <FontAwesomeIcon icon={faSearch} className="me-1" />
+                            Select
                           </Button>
-                        </InputGroup>
-                      </td>
-                      <td className="text-end">
-                        {selectedPrice ? (
-                          <strong>{formatNumber(selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice)}</strong>
-                        ) : (
-                          <span className="text-muted">-</span>
-                        )}
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            disabled={!selected}
+                            onClick={() => handleSelectSupplier(ing.ingredientId, '')}
+                          >
+                            <FontAwesomeIcon icon={faTimes} className="me-1" />
+                            Clear
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   )
