@@ -7,7 +7,7 @@ import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import useDictionary from '@/locales/dictionary-hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faList, faSave, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faList, faSave, faSearch, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 
@@ -443,6 +443,19 @@ export default function OrderDetailPage() {
                             placeholder={prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
                             value={selectedPrice ? `${selectedPrice.supplierName} ${selectedPrice.productName ? '- ' + selectedPrice.productName : ''}` : ''}
                           />
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            disabled={prices.length === 0}
+                            onClick={() => {
+                              setActiveIngredientId(ing.ingredientId)
+                              setActiveIngredientName(ing.ingredientName)
+                              setSupplierSearch('')
+                              setShowSupplierModal(true)
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faSearch} />
+                          </Button>
                         </InputGroup>
                       </td>
                       <td className="text-end">
@@ -462,27 +475,12 @@ export default function OrderDetailPage() {
                       <td>
                         <div className="d-flex gap-2">
                           <Button
-                            variant="outline-primary"
-                            size="sm"
-                            disabled={prices.length === 0}
-                            onClick={() => {
-                              setActiveIngredientId(ing.ingredientId)
-                              setActiveIngredientName(ing.ingredientName)
-                              setSupplierSearch('')
-                              setShowSupplierModal(true)
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faSearch} className="me-1" />
-                            Select
-                          </Button>
-                          <Button
                             variant="outline-secondary"
                             size="sm"
-                            disabled={!selected}
-                            onClick={() => handleSelectSupplier(ing.ingredientId, '')}
+                            onClick={() => {}}
+                            title="Actions"
                           >
-                            <FontAwesomeIcon icon={faTimes} className="me-1" />
-                            Clear
+                            <FontAwesomeIcon icon={faEllipsis} />
                           </Button>
                         </div>
                       </td>
