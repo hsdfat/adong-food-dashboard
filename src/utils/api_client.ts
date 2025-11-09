@@ -6,6 +6,39 @@ import { redirect } from 'next/navigation'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:18080'
 
+/**
+ * API Response format (snake_case)
+ * Note: API uses snake_case, but we convert to camelCase internally
+ */
+interface AuthApiResponse {
+  code: number
+  success: boolean
+  data: {
+    access_token: string
+    refresh_token: string
+    access_token_expires_at: number // Unix timestamp in seconds
+    refresh_token_expires_at?: number // Unix timestamp in seconds
+    token_type: string
+    user?: {
+      id: string
+      username: string
+      email: string
+      role: string
+    }
+  }
+}
+
+/**
+ * Converts Unix timestamp to milliseconds
+ * API returns timestamps in seconds, but JavaScript uses milliseconds
+ */
+function convertUnixTimestampToMs(timestamp: number | string): number {
+  const num = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp
+  // If timestamp is less than 1e12, it's likely in seconds (not milliseconds)
+  // Multiply by 1000 to convert to milliseconds
+  return num < 1e12 ? num * 1000 : num
+}
+
 interface RequestOptions extends RequestInit {
   requiresAuth?: boolean
 }
@@ -31,19 +64,39 @@ async function refreshToken(refreshToken: string): Promise<{ accessToken: string
     })
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unknown error')
+      console.error('[API] ❌ Token refresh failed (api_client):', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+        reason: 'REFRESH_API_ERROR'
+      })
       return null
     }
 
-    const data = await response.json()
+    const data: AuthApiResponse = await response.json()
+    const expiresAt = data.data?.access_token_expires_at
+      ? convertUnixTimestampToMs(data.data.access_token_expires_at) // seconds -> milliseconds
+      : Date.now() + 3600000
+    const expiresIn = Math.round((expiresAt - Date.now()) / 1000 / 60)
+    
+    console.log('[API] ✅ Token refresh successful (api_client):', {
+      newExpiresIn: `${expiresIn} minutes`,
+      newExpiresAt: new Date(expiresAt).toISOString(),
+      hasNewRefreshToken: !!data.data?.refresh_token
+    })
+    
+    // Map API response (snake_case) to internal format (camelCase)
     return {
       accessToken: data.data?.access_token || '',
       refreshToken: data.data?.refresh_token || refreshToken,
-      expiresAt: data.data?.access_token_expires_at
-        ? new Date(data.data.access_token_expires_at).getTime()
-        : Date.now() + 3600000
+      expiresAt
     }
   } catch (error) {
-    console.error('Failed to refresh token:', error)
+    console.error('[API] ❌ Token refresh exception (api_client):', {
+      error: error instanceof Error ? error.message : String(error),
+      reason: 'REFRESH_NETWORK_ERROR'
+    })
     return null
   }
 }
@@ -55,12 +108,21 @@ async function apiClient<T>(
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    console.log('No session found')
+    console.log('[API] 🚪 No session found - redirecting to login:', {
+      endpoint,
+      reason: 'NO_SESSION'
+    })
     redirect('/login')
   }
 
   // Check if session has error (refresh failed)
   if ((session as any).error === 'RefreshAccessTokenError') {
+    console.log('[API] 🚪 Session error detected - redirecting to login:', {
+      endpoint,
+      userId: session.user?.id,
+      username: session.user?.username,
+      reason: 'REFRESH_ACCESS_TOKEN_ERROR'
+    })
     redirect('/login')
   }
 
@@ -87,6 +149,13 @@ async function apiClient<T>(
 
     if (!response.ok) {
       if (response.status === 401) {
+        console.log('[API] 🔄 401 Unauthorized - attempting token refresh:', {
+          endpoint,
+          userId: session.user?.id,
+          username: session.user?.username,
+          reason: 'TOKEN_EXPIRED_OR_INVALID'
+        })
+        
         // Token expired, try to refresh
         const refreshTokenValue = session?.refreshToken
 
@@ -94,6 +163,11 @@ async function apiClient<T>(
           const refreshed = await refreshToken(refreshTokenValue)
 
           if (refreshed) {
+            console.log('[API] ✅ Token refreshed successfully - retrying request:', {
+              endpoint,
+              newExpiresAt: new Date(refreshed.expiresAt).toISOString()
+            })
+            
             // Retry the request with new token
             const newHeaders = new Headers(fetchOptions.headers as HeadersInit)
             newHeaders.set('Content-Type', 'application/json')
@@ -105,6 +179,7 @@ async function apiClient<T>(
             })
 
             if (retryResponse.ok) {
+              console.log('[API] ✅ Retry request successful:', { endpoint })
               const contentType = retryResponse.headers.get('content-type')
               if (contentType && contentType.includes('application/json')) {
                 return retryResponse.json()
@@ -114,14 +189,26 @@ async function apiClient<T>(
 
             // If retry still fails with 401, redirect to login
             if (retryResponse.status === 401) {
+              console.log('[API] 🚪 Retry still failed with 401 - redirecting to login:', {
+                endpoint,
+                reason: 'RETRY_STILL_401'
+              })
               redirect('/login')
             }
           } else {
             // Refresh failed, redirect to login
+            console.log('[API] 🚪 Token refresh failed - redirecting to login:', {
+              endpoint,
+              reason: 'REFRESH_FAILED'
+            })
             redirect('/login')
           }
         } else {
           // No refresh token available, redirect to login
+          console.log('[API] 🚪 No refresh token available - redirecting to login:', {
+            endpoint,
+            reason: 'NO_REFRESH_TOKEN'
+          })
           redirect('/login')
         }
 

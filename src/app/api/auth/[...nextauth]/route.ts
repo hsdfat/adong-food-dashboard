@@ -3,7 +3,7 @@ import { authOptions } from '@/app/api/auth/option'
 
 declare module 'next-auth' {
   interface User {
-    id: number;
+    id: string | number; // API returns id as string (e.g., "NV001")
     username: string;
     name: string;
     email: string;

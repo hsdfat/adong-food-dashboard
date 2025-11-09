@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Form,
   Button,
@@ -86,6 +86,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false }: 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const isSubmittingRef = useRef(false) // Ref to prevent duplicate submissions
 
   // Order header
   const [orderId, setOrderId] = useState('')
@@ -484,18 +485,29 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false }: 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Prevent multiple submissions using ref (more reliable than state)
+    if (isSubmittingRef.current || loading) {
+      console.warn('[OrderForm] Form submission already in progress, ignoring duplicate submit')
+      return
+    }
+
+    isSubmittingRef.current = true
+
     if (!orderId.trim()) {
       setError('Vui lòng nhập mã phiếu lên đơn')
+      isSubmittingRef.current = false
       return
     }
 
     if (!bepId.trim()) {
       setError('Vui lòng chọn bếp')
+      isSubmittingRef.current = false
       return
     }
 
     if (orderDishes.length === 0 && supplementaryFoods.length === 0) {
       setError('Vui lòng thêm ít nhất một món ăn hoặc thực phẩm bổ sung')
+      isSubmittingRef.current = false
       return
     }
 
@@ -547,6 +559,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false }: 
       setSuccess('')
     } finally {
       setLoading(false)
+      isSubmittingRef.current = false
     }
   }
 
