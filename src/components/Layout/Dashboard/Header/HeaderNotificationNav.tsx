@@ -25,8 +25,10 @@ import React, { PropsWithChildren } from 'react'
 import Image from 'next/image'
 import HeaderLocale from '@/components/Layout/Dashboard/Header/HeaderLocale'
 import { getDictionary, getLocale } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 import HeaderTheme from '@/components/Layout/Dashboard/Header/HeaderTheme'
 import { getPreferredTheme } from '@/themes/theme'
+import Cookies from 'js-cookie'
 
 type ItemWithIconProps = {
   icon: IconDefinition;
@@ -44,7 +46,8 @@ const ItemWithIcon = (props: ItemWithIconProps) => {
 }
 
 export default async function HeaderNotificationNav() {
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
   return (
     <Nav>
       <NavItem className="d-none d-sm-block">
@@ -361,7 +364,7 @@ export default async function HeaderNotificationNav() {
         </Dropdown>
       </NavItem>
       <NavItem>
-        <HeaderLocale currentLocale={getLocale()} />
+        <HeaderLocale currentLocale={getLocale(Cookies.get('locale'))} />
       </NavItem>
       <NavItem>
         <HeaderTheme currentPreferredTheme={getPreferredTheme()} />

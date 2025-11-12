@@ -15,6 +15,9 @@ import {
   RecipeStandard,
   CreateRecipeStandardInput,
   UpdateRecipeStandardInput,
+  KitchenFavoriteSupplier,
+  CreateKitchenFavoriteSupplierInput,
+  UpdateKitchenFavoriteSupplierInput,
 } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import { recipeStandardApi } from './recipe-standard'
@@ -102,3 +105,25 @@ export const supplierApi = {
 }
 
 export { recipeStandardApi }
+
+// Kitchen Favorite Suppliers API
+export const kitchenFavoriteSupplierApi = {
+  getAll: (kitchenId: string, queryString: string = '') =>
+    apiClient<ResourceCollection<KitchenFavoriteSupplier>>(`/api/kitchens/${kitchenId}/favorite-suppliers${queryString}`),
+  getById: (kitchenId: string, favoriteId: string) =>
+    apiClient<KitchenFavoriteSupplier>(`/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`),
+  create: (kitchenId: string, data: CreateKitchenFavoriteSupplierInput) =>
+    apiClient<KitchenFavoriteSupplier>(`/api/kitchens/${kitchenId}/favorite-suppliers`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (kitchenId: string, favoriteId: string, data: UpdateKitchenFavoriteSupplierInput) =>
+    apiClient<KitchenFavoriteSupplier>(`/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (kitchenId: string, favoriteId: string) =>
+    apiClient<{ message: string }>(`/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`, {
+      method: 'DELETE',
+    }),
+}

@@ -29,6 +29,7 @@ import HeaderLogout from '@/components/Layout/Dashboard/Header/HeaderLogout'
 import { authOptions } from '@/app/api/auth/option'
 import { getServerSession } from 'next-auth'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 type ItemWithIconProps = {
   icon: IconDefinition;
@@ -47,7 +48,8 @@ const ItemWithIcon = (props: ItemWithIconProps) => {
 
 export default async function HeaderProfileNav() {
   const session = await getServerSession(authOptions)
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
 
   return (
     <Nav>

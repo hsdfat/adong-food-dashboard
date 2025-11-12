@@ -3,23 +3,13 @@
 import React, { useEffect, useState } from 'react'
 import {
   Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Table,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Alert,
-  Badge,
   FormControl,
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPlus,
-  faEllipsisVertical,
   faSearch,
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -28,6 +18,8 @@ import { Supplier } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
+import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
 export default function SupplieresList() {
   const [suppliersData, setSupplieresData] =
@@ -38,6 +30,7 @@ export default function SupplieresList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const dict = useDictionary()
+  const { addNotification } = useNotification()
 
   // Get query params
   const page = parseInt(searchParams.get('page') || '1')
@@ -74,10 +67,13 @@ export default function SupplieresList() {
   }
 
   const handleDelete = async (id: string) => {
+    const supplier = suppliersData?.data?.find(item => item.supplierId === id)
+    const supplierName = supplier?.supplierName || 'this supplier'
+    
     if (
       !confirm(
         dict.suppliers?.confirm_delete ||
-          'Are you sure you want to delete this supplier?',
+          `Are you sure you want to delete ${supplierName}?`,
       )
     ) {
       return
@@ -85,8 +81,18 @@ export default function SupplieresList() {
 
     try {
       await supplierApi.delete(id)
+      addNotification({
+        type: 'success',
+        title: 'Success',
+        message: `${supplierName} has been deleted successfully.`,
+      })
       loadSupplieres()
     } catch (err) {
+      addNotification({
+        type: 'error',
+        title: 'Error',
+        message: `Failed to delete ${supplierName}. Please try again.`,
+      })
       setError(dict.suppliers?.error_delete || 'Failed to delete supplier')
       console.error(err)
     }
@@ -115,22 +121,92 @@ export default function SupplieresList() {
     router.push(`/suppliers?${newSearchParams.toString()}`)
   }
 
+  // Define table columns
+  const columns: TableColumn[] = [
+    {
+      key: 'supplierId',
+      label: dict.suppliers?.id || 'ID',
+      align: 'left',
+    },
+    {
+      key: 'supplierName',
+      label: dict.suppliers?.name || 'Supplier Name',
+      align: 'left',
+    },
+    {
+      key: 'address',
+      label: dict.suppliers?.address || 'Address',
+      align: 'left',
+      render: (value) => value || '-',
+    },
+    {
+      key: 'phone',
+      label: dict.suppliers?.phone || 'Phone',
+      align: 'left',
+      render: (value) => value || '-',
+    },
+    {
+      key: 'zaloLink',
+      label: dict.suppliers?.zalo_link || 'Zalo Link',
+      align: 'left',
+      render: (value) => value || '-',
+    },
+    {
+      key: 'createdDate',
+      label: dict.common?.created_date || 'Created Date',
+      align: 'center',
+      render: (value) => new Date(value).toLocaleDateString(),
+    },
+  ]
+
+  // Define table actions
+  const actions: TableAction[] = [
+    {
+      label: dict.action?.edit || 'Edit',
+      onClick: async (supplier) => {
+        router.push(`/suppliers/${supplier.supplierId}/edit`)
+      },
+    },
+    {
+      label: dict.action?.delete || 'Delete',
+      onClick: async (supplier) => {
+        await handleDelete(supplier.supplierId)
+      },
+      variant: 'danger',
+      loadingLabel: 'Deleting...',
+    },
+  ]
+
+  const handleActionSuccess = (action: string, row: any) => {
+    if (action === 'Edit') {
+      addNotification({
+        type: 'info',
+        title: 'Navigation',
+        message: `Redirecting to edit ${row.supplierName || 'supplier'}...`,
+      })
+    }
+  }
+
+  const handleActionError = (action: string, row: any, error: any) => {
+    addNotification({
+      type: 'error',
+      title: 'Action Failed',
+      message: `Failed to ${action.toLowerCase()} ${row.supplierName || 'item'}. Please try again.`,
+    })
+  }
+
   if (loading) {
     return (
-      <Card>
-        <CardBody>
-          <div className="text-center py-4">
-            {dict.suppliers?.loading || 'Loading...'}
-          </div>
-        </CardBody>
-      </Card>
+      <div className="text-center py-4">
+        {dict.suppliers?.loading || 'Loading...'}
+      </div>
     )
   }
 
   return (
-    <Card>
-      <CardHeader className="d-flex justify-content-between align-items-center">
-        <span>{dict.suppliers?.title || 'Supplier Management'}</span>
+    <>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4 className="mb-0">{dict.suppliers?.title || 'Supplier Management'}</h4>
         <Button
           variant="primary"
           size="sm"
@@ -139,109 +215,50 @@ export default function SupplieresList() {
           <FontAwesomeIcon icon={faPlus} className="me-2" />
           {dict.suppliers?.add_new || 'Add New Supplier'}
         </Button>
-      </CardHeader>
-      <CardBody>
-        {error && (
-          <Alert variant="danger" dismissible onClose={() => setError('')}>
-            {error}
-          </Alert>
-        )}
+      </div>
 
-        {/* Search Bar */}
-        <form onSubmit={handleSearch} className="mb-3">
-          <InputGroup>
-            <FormControl
-              type="text"
-              placeholder={dict.common?.search || 'Search suppliers...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button variant="primary" type="submit">
-              <FontAwesomeIcon icon={faSearch} className="me-2" />
-              {dict.common?.search || 'Search'}
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Search Bar */}
+      <form onSubmit={handleSearch} className="mb-3">
+        <InputGroup>
+          <FormControl
+            type="text"
+            placeholder={dict.common?.search || 'Search suppliers...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Button variant="primary" type="submit">
+            <FontAwesomeIcon icon={faSearch} className="me-2" />
+            {dict.common?.search || 'Search'}
+          </Button>
+          {search && (
+            <Button variant="secondary" onClick={handleClearSearch}>
+              Clear
             </Button>
-            {search && (
-              <Button variant="secondary" onClick={handleClearSearch}>
-                Clear
-              </Button>
-            )}
-          </InputGroup>
-        </form>
+          )}
+        </InputGroup>
+      </form>
 
-        {/* Table */}
-        <div className="table-responsive">
-          <Table hover>
-            <thead>
-              <tr>
-                <th>{dict.suppliers?.id || 'ID'}</th>
-                <th>{dict.suppliers?.name || 'Supplier Name'}</th>
-                <th>{dict.suppliers?.address || 'Address'}</th>
-                <th>{dict.suppliers?.phone || 'Phone'}</th>
-                <th>{dict.suppliers?.zalo_link || 'Phone'}</th>
-                <th>{dict.common?.created_date || 'Created Date'}</th>
-                <th aria-label="Action" />
-              </tr>
-            </thead>
-            <tbody>
-              {suppliersData &&
-              suppliersData.data &&
-              suppliersData.data.length > 0 ? (
-                suppliersData.data.map((supplier) => (
-                  <tr key={supplier.supplierId}>
-                    <td>{supplier.supplierId}</td>
-                    <td>{supplier.supplierName}</td>
-                    <td>{supplier.address || '-'}</td>
-                    <td>{supplier.phone || '-'}</td>
-                    <td>{supplier.zaloLink || '-'}</td>
-                    <td>
-                      {new Date(supplier.createdDate).toLocaleDateString()}
-                    </td>
-                    <td className="text-end">
-                      <Dropdown align="end">
-                        <DropdownToggle
-                          as="button"
-                          className="btn btn-transparent btn-sm p-0"
-                          bsPrefix="none"
-                        >
-                          <FontAwesomeIcon icon={faEllipsisVertical} />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <DropdownItem
-                            onClick={() =>
-                              router.push(
-                                `/suppliers/${supplier.supplierId}/edit`,
-                              )
-                            }
-                          >
-                            {dict.action?.edit || 'Edit'}
-                          </DropdownItem>
-                          <DropdownItem
-                            onClick={() => handleDelete(supplier.supplierId)}
-                            className="text-danger"
-                          >
-                            {dict.action?.delete || 'Delete'}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="text-center py-4">
-                    {dict.suppliers?.no_data || 'No suppliers found'}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
-        </div>
+      {/* Table */}
+      <MasterDataTable
+        data={suppliersData?.data || []}
+        columns={columns}
+        actions={actions}
+        loading={loading}
+        emptyMessage={dict.suppliers?.no_data || 'No suppliers found'}
+        onActionSuccess={handleActionSuccess}
+        onActionError={handleActionError}
+      />
 
-        {/* Pagination */}
-        {suppliersData && suppliersData.meta && (
-          <Pagination meta={suppliersData.meta} />
-        )}
-      </CardBody>
-    </Card>
+      {/* Pagination */}
+      {suppliersData && suppliersData.meta && (
+        <Pagination meta={suppliersData.meta} />
+      )}
+    </>
   )
 }

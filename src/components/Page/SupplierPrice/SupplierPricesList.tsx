@@ -5,13 +5,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   Button,
-  Table,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Alert,
-  Badge,
   FormControl,
   InputGroup,
   Row,
@@ -21,7 +15,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPlus,
-  faEllipsisVertical,
   faSearch,
   faFilter,
 } from '@fortawesome/free-solid-svg-icons'
@@ -30,6 +23,8 @@ import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
+import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
 import { format, formatDate, parse } from 'date-fns'
 
@@ -82,6 +77,7 @@ export default function SupplierPricesList({
   const router = useRouter()
   const dict = useDictionary()
   const searchParams = useSearchParams()
+  const { addNotification } = useNotification()
 
   // Get query params
   const page = parseInt(searchParams.get('page') || '1')
@@ -134,14 +130,27 @@ export default function SupplierPricesList({
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this supplier price?')) {
+    const price = prices.find(item => item.productId === id)
+    const productName = price?.productName || `product ${id}`
+    
+    if (!confirm(`Are you sure you want to delete ${productName}?`)) {
       return
     }
 
     try {
       await supplierPriceApi.delete(id)
+      addNotification({
+        type: 'success',
+        title: 'Success',
+        message: `${productName} has been deleted successfully.`,
+      })
       await loadPrices()
     } catch (err) {
+      addNotification({
+        type: 'error',
+        title: 'Error',
+        message: `Failed to delete ${productName}. Please try again.`,
+      })
       setError('Failed to delete supplier price')
       console.error(err)
     }
@@ -185,198 +194,228 @@ export default function SupplierPricesList({
     router.push('/supplier-prices?page=1')
   }
 
+  // Define table columns
+  const columns: TableColumn[] = [
+    {
+      key: 'productId',
+      label: dict.supplierPrice?.productID || 'ID',
+      align: 'left',
+    },
+    {
+      key: 'productName',
+      label: dict.supplierPrice?.productName || 'Product Name',
+      align: 'left',
+    },
+    {
+      key: 'ingredientName',
+      label: dict.supplierPrice?.ingredient || 'Ingredient',
+      align: 'left',
+      render: (value, row) => value || row.ingredientId || '-',
+    },
+    {
+      key: 'category',
+      label: dict.supplierPrice?.category || 'Category',
+      align: 'left',
+    },
+    {
+      key: 'supplierName',
+      label: dict.supplierPrice?.supplier || 'Supplier',
+      align: 'left',
+      render: (value, row) => value || row.supplierId || '-',
+    },
+    {
+      key: 'manufacturer',
+      label: dict.supplierPrice?.manufacturer || 'Manufacturer',
+      align: 'left',
+    },
+    {
+      key: 'unit',
+      label: dict.supplierPrice?.unit || 'Unit',
+      align: 'center',
+    },
+    {
+      key: 'specification',
+      label: dict.supplierPrice?.specification || 'Specification',
+      align: 'left',
+    },
+    {
+      key: 'unitPrice',
+      label: dict.supplierPrice?.unitPrice || 'Unit Price',
+      align: 'right',
+      render: (value) => formatCurrency(value),
+    },
+    {
+      key: 'pricePer1',
+      label: dict.supplierPrice?.pricePer1 || 'Price Per 1',
+      align: 'right',
+      render: (value) => formatCurrency(value || 0),
+    },
+    {
+      key: 'effectiveFrom',
+      label: dict.supplierPrice?.effectiveFrom || 'Effective From',
+      align: 'center',
+      render: (value) => formatDate(value || ''),
+    },
+    {
+      key: 'effectiveTo',
+      label: dict.supplierPrice?.effectiveTo || 'Effective To',
+      align: 'center',
+      render: (value) => formatDate(value || ''),
+    },
+    {
+      key: 'active',
+      label: dict.supplierPrice?.status || 'Status',
+      align: 'center',
+    },
+    {
+      key: 'newPrice',
+      label: dict.supplierPrice?.newPrice || 'New Price',
+      align: 'right',
+      render: (value) => value ? formatCurrency(value) : '-',
+    },
+    {
+      key: 'promotion',
+      label: dict.supplierPrice?.promotion || 'Promotion',
+      align: 'left',
+      render: (value) => value || '-',
+    },
+  ]
+
+  // Define table actions
+  const actions: TableAction[] = [
+    {
+      label: dict.action?.edit || 'Edit',
+      onClick: async (price) => {
+        router.push(`/supplier-prices/${price.productId}/edit`)
+      },
+    },
+    {
+      label: dict.action?.delete || 'Delete',
+      onClick: async (price) => {
+        await handleDelete(price.productId)
+      },
+      variant: 'danger',
+      loadingLabel: 'Deleting...',
+    },
+  ]
+
+  const handleActionSuccess = (action: string, row: any) => {
+    if (action === 'Edit') {
+      addNotification({
+        type: 'info',
+        title: 'Navigation',
+        message: `Redirecting to edit ${row.productName || 'product'}...`,
+      })
+    }
+  }
+
+  const handleActionError = (action: string, row: any, error: any) => {
+    addNotification({
+      type: 'error',
+      title: 'Action Failed',
+      message: `Failed to ${action.toLowerCase()} ${row.productName || 'item'}. Please try again.`,
+    })
+  }
+
   if (loading) {
     return <div className="text-center py-4">Loading...</div>
   }
 
   return (
     <>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4 className="mb-0">{dict.supplierPrice?.title || 'Supplier Price Management'}</h4>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => router.push('/supplier-prices/create')}
+        >
+          <FontAwesomeIcon icon={faPlus} className="me-2" />
+          {dict.supplierPrice?.add || 'Add New'}
+        </Button>
+      </div>
+
       {error && (
         <Alert variant="danger" dismissible onClose={() => setError('')}>
           {error}
         </Alert>
       )}
 
-      <Row className="mb-3">
-        <Col md={12}>
-          <form onSubmit={handleSearch}>
-            {/* Main Search Bar */}
-            <Row className="mb-2">
-              <Col md={8}>
-                <InputGroup>
-                  <FormControl
-                    type="text"
-                    placeholder={
-                      dict.supplierPrice?.search_placeholder ||
-                      'Search by name, supplier, ingredient...'
-                    }
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <Button
-                    variant="outline-secondary"
-                    onClick={() => setShowFilters(!showFilters)}
-                    title="Toggle filters"
-                  >
-                    <FontAwesomeIcon icon={faFilter} fixedWidth />
-                  </Button>
-                  <Button variant="primary" type="submit">
-                    <FontAwesomeIcon icon={faSearch} fixedWidth />
-                    {dict.common?.search || 'Search'}
-                  </Button>
-                  {(searchQuery || dateFrom || dateTo) && (
-                    <Button
-                      variant="outline-danger"
-                      onClick={handleClearFilters}
-                    >
-                      {dict.common?.clear || 'Clear'}
-                    </Button>
-                  )}
-                </InputGroup>
-              </Col>
-              <Col md={4} className="text-end">
-                <Button
-                  variant="success"
-                  onClick={() => router.push('/supplier-prices/create')}
-                >
-                  <FontAwesomeIcon icon={faPlus} fixedWidth />
-                  {dict.action?.add || 'Add New'}
+      {/* Search and Filter Bar */}
+      <form onSubmit={handleSearch} className="mb-3">
+        <Row>
+          <Col md={8}>
+            <InputGroup>
+              <FormControl
+                type="text"
+                placeholder={dict.common?.search || 'Search supplier prices...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Button variant="primary" type="submit">
+                <FontAwesomeIcon icon={faSearch} className="me-2" />
+                {dict.common?.search || 'Search'}
+              </Button>
+              {(searchQuery || dateFrom || dateTo) && (
+                <Button variant="outline-danger" onClick={handleClearFilters}>
+                  {dict.common?.clear || 'Clear'}
                 </Button>
-              </Col>
-            </Row>
+              )}
+            </InputGroup>
+          </Col>
+          <Col md={4} className="text-end">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <FontAwesomeIcon icon={faFilter} className="me-2" />
+              {dict.common?.filter || 'Filter'}
+            </Button>
+          </Col>
+        </Row>
 
-            {/* Date Range Filters - Collapsible */}
-            {showFilters && (
-              <Row className="mb-2">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label className="small mb-1">
-                      {dict.supplierPrice?.effectiveFrom || 'Effective From'}
-                    </Form.Label>
-                    <FormControl
-                      type="date"
-                      value={
-                        dateFrom
-                          ? format(new Date(dateFrom), 'yyyy-MM-dd')
-                          : dateFrom
-                      }
-                      onChange={(e) => setDateFrom(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label className="small mb-1">
-                      {dict.supplierPrice?.effectiveTo || 'Effective To'}
-                    </Form.Label>
-                    <FormControl
-                      type="date"
-                      value={dateTo}
-                      onChange={(e) => setDateTo(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-            )}
-          </form>
-        </Col>
-      </Row>
+        {/* Date Filters */}
+        {showFilters && (
+          <Row className="mt-3">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>
+                  {dict.supplierPrice?.effectiveFrom || 'Effective From'}
+                </Form.Label>
+                <FormControl
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>
+                  {dict.supplierPrice?.effectiveTo || 'Effective To'}
+                </Form.Label>
+                <FormControl
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        )}
+      </form>
 
-      <Table responsive bordered hover>
-        <thead>
-          <tr className="table-light dark:table-dark">
-            <th>{dict.supplierPrice?.productID || 'ID'}</th>
-            <th>{dict.supplierPrice?.productName || 'Product Name'}</th>
-            <th>{dict.supplierPrice?.ingredient || 'Ingredient'}</th>
-            <th>{dict.supplierPrice?.category || 'Category'}</th>
-            <th>{dict.supplierPrice?.supplier || 'Supplier'}</th>
-            <th>{dict.supplierPrice?.manufacturer || 'Manufacturer'}</th>
-            <th>{dict.supplierPrice?.unit || 'Unit'}</th>
-            <th>{dict.supplierPrice?.specification || 'Specification'}</th>
-            <th className="text-end">
-              {dict.supplierPrice?.unitPrice || 'Unit Price'}
-            </th>
-            <th className="text-end">
-              {dict.supplierPrice?.pricePer1 || 'Price Per 1'}
-            </th>
-            <th>{dict.supplierPrice?.effectiveFrom || 'Effective From'}</th>
-            <th>{dict.supplierPrice?.effectiveTo || 'Effective To'}</th>
-            <th>{dict.supplierPrice?.status || 'Status'}</th>
-            <th className="text-end">
-              {dict.supplierPrice?.newPrice || 'New Price'}
-            </th>
-            <th>{dict.supplierPrice?.promotion || 'Promotion'}</th>
-            <th aria-label={dict.common?.actions || 'Actions'} />
-          </tr>
-        </thead>
-        <tbody>
-          {prices && prices.length === 0 ? (
-            <tr>
-              <td colSpan={16} className="text-center">
-                {dict.common?.no_data || 'No data available'}
-              </td>
-            </tr>
-          ) : (
-            prices.map((price) => (
-              <tr key={price.productId}>
-                <td>{price.productId}</td>
-                <td>{price.productName}</td>
-                <td>{price.ingredientName || price.ingredientId}</td>
-                <td>{price.category}</td>
-                <td>{price.supplierName || price.supplierId}</td>
-                <td>{price.manufacturer}</td>
-                <td>{price.unit}</td>
-                <td>{price.specification}</td>
-                <td className="text-end">{formatCurrency(price.unitPrice)}</td>
-                <td className="text-end">{formatCurrency(price.pricePer1 || 0)}</td>
-                <td>{formatDate(price.effectiveFrom || '')}</td>
-                <td>{formatDate(price.effectiveTo || '')}</td>
-                <td>
-                  <Badge bg={price.active ? 'success' : 'secondary'}>
-                    {price.active ? 'Active' : 'Inactive'}
-                  </Badge>
-                </td>
-                <td className="text-end">
-                  {price.newPrice ? formatCurrency(price.newPrice) : '-'}
-                </td>
-                <td>{price.promotion || '-'}</td>
-                <td>
-                  <Dropdown align="end">
-                    <DropdownToggle
-                      as="button"
-                      bsPrefix="btn"
-                      className="btn-link rounded-0 text-black-50 dark:text-gray-500 shadow-none p-0"
-                      id={`action-${price.productId}`}
-                    >
-                      <FontAwesomeIcon fixedWidth icon={faEllipsisVertical} />
-                    </DropdownToggle>
-
-                    <DropdownMenu>
-                      <DropdownItem
-                        onClick={() =>
-                          router.push(
-                            `/supplier-prices/${price.productId}/edit`,
-                          )
-                        }
-                      >
-                        {dict.action?.edit || 'Edit'}
-                      </DropdownItem>
-                      <DropdownItem
-                        className="text-danger"
-                        onClick={() => handleDelete(price.productId)}
-                      >
-                        {dict.action?.delete || 'Delete'}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
+      <MasterDataTable
+        data={prices || []}
+        columns={columns}
+        actions={actions}
+        loading={loading}
+        emptyMessage={dict.common?.no_data || 'No data available'}
+        onActionSuccess={handleActionSuccess}
+        onActionError={handleActionError}
+      />
 
       {meta && <Pagination meta={meta} />}
     </>
   )
-}

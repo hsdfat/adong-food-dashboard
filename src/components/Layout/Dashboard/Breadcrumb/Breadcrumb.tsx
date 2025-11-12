@@ -1,8 +1,10 @@
 import { Breadcrumb as BSBreadcrumb, BreadcrumbItem } from 'react-bootstrap'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 export default async function Breadcrumb() {
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
   return (
     <BSBreadcrumb listProps={{ className: 'mb-0 align-items-center' }}>
       <BreadcrumbItem

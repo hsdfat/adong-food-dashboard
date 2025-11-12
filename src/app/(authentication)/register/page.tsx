@@ -3,9 +3,11 @@ import {
 } from 'react-bootstrap'
 import Register from '@/app/(authentication)/register/register'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 export default async function Page() {
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
 
   return (
     <Row className="justify-content-center">

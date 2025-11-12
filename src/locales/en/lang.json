@@ -270,6 +270,7 @@
       "kitchens": "Kitchens",
       "dishes": "Dishes",
       "suppliers": "Suppliers",
+      "kitchen_favorite_suppliers": "Favorite Suppliers",
       "users": "Users",
       "recipe_standards": "Recipe Standards",
       "orders": "Orders",
@@ -373,7 +374,14 @@
     "error_create": "Failed to create kitchen",
     "error_update": "Failed to update kitchen",
     "success_create": "Kitchen created successfully",
-    "success_update": "Kitchen updated successfully"
+    "success_update": "Kitchen updated successfully",
+    "favorite_suppliers": "Kitchen Favorite Suppliers",
+    "add_favorite": "Add Favorite Supplier",
+    "view_favorite_suppliers": "Favorite Suppliers",
+    "kitchen": "Kitchen",
+    "notes": "Notes",
+    "notes_placeholder": "Add notes about this supplier...",
+    "no_favorites": "No favorite suppliers found"
   },
   "dishes": {
     "title": "Dish Management",
@@ -557,6 +565,7 @@
     "no_data": "No data available",
     "cancel": "Cancel",
     "save": "Save",
+    "create": "Create",
     "search": "Search",
     "filter": "Filter",
     "export": "Export",
@@ -567,10 +576,12 @@
     "created_date": "Created Date",
     "success_update": "Updated successfully",
     "success_create": "Created successfully",
-    "error_update": "Failed to update",
     "error_create": "Failed to create",
+    "error_update": "Failed to update",
     "save_error": "Failed to save data",
-    "load_error": "Failed to load data"
+    "load_error": "Failed to load data",
+    "optional": "Optional",
+    "created_by": "Created by"
   },
   "validation": {
     "required_field": "This field is required",

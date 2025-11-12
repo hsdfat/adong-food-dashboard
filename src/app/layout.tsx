@@ -10,6 +10,7 @@ import getTheme from '@/themes/theme'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import Script from 'next/script'
+import { cookies } from 'next/headers'
 
 // You change this configuration value to false so that the Font Awesome core SVG library
 // will not try and insert <style> elements into the <head> of the page.
@@ -22,7 +23,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const dictionary = await getDictionary()
+  const cookieStore = cookies()
+  const localeCookie = cookieStore.get('locale')?.value
+  const dictionary = await getDictionary(localeCookie)
 
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? ''
   const vercelAnalytics = process.env.NEXT_PUBLIC_VERCEL_ANALYTICS === 'true'

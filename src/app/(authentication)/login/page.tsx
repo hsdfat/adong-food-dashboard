@@ -3,10 +3,12 @@ import Link from 'next/link'
 import LoginForm from '@/app/(authentication)/login/login'
 import { SearchParams } from '@/types/next'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 export default async function Page({ searchParams }: { searchParams: SearchParams }) {
   const { callbackUrl } = searchParams
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
 
   const getCallbackUrl = () => {
     if (!callbackUrl) {

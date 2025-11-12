@@ -4,9 +4,11 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 export default async function DashboardPage() {
-  const dict = await getDictionary()
+  const localeCookie = await getServerLocale()
+  const dict = await getDictionary(localeCookie)
 
   return (
     <div>

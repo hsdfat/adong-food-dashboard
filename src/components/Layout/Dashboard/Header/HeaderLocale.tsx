@@ -1,7 +1,7 @@
 'use client'
 
 import Cookies from 'js-cookie'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Dropdown, DropdownItem, DropdownMenu, DropdownToggle, NavLink,
@@ -12,6 +12,11 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 export default function HeaderLocale({ currentLocale }: { currentLocale: string }) {
   const [locale, setLocale] = useState(currentLocale)
   const router = useRouter()
+
+  // Sync state with prop when it changes (after page refresh)
+  useEffect(() => {
+    setLocale(currentLocale)
+  }, [currentLocale])
 
   const changeLocale = (loc: string) => {
     Cookies.set('locale', loc)

@@ -11,11 +11,16 @@ type Locale = keyof typeof dictionaries
 
 export const getLocales = () => Object.keys(dictionaries) as Array<Locale>
 
-export const getLocale = (): Locale => {
+export const getLocale = (localeCookie?: string): Locale => {
   // Check if running in browser
   if (typeof window !== 'undefined') {
-    const localeCookie = Cookies.get('locale')
+    const cookie = localeCookie || Cookies.get('locale')
     
+    if (cookie && getLocales().includes(cookie as Locale)) {
+      return cookie as Locale
+    }
+  } else {
+    // Server-side: check cookies from headers
     if (localeCookie && getLocales().includes(localeCookie as Locale)) {
       return localeCookie as Locale
     }
@@ -25,7 +30,7 @@ export const getLocale = (): Locale => {
   return defaultLocale
 }
 
-export const getDictionary = async () => {
-  const locale = getLocale()
+export const getDictionary = async (localeCookie?: string) => {
+  const locale = getLocale(localeCookie)
   return dictionaries[locale]()
 }

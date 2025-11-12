@@ -17,6 +17,8 @@ export type {
   CreateSupplierInput,
   UpdateSupplierInput,
 } from './supplier'
+export * from './supplier'
+export * from './kitchen-favorite-supplier'
 
 // Recipe Standard Models
 export type {

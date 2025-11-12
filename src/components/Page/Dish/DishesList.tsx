@@ -3,23 +3,13 @@
 import React, { useEffect, useState } from 'react'
 import {
   Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Table,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Alert,
-  Badge,
   FormControl,
   InputGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPlus,
-  faEllipsisVertical,
   faSearch,
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -28,6 +18,8 @@ import { Dish } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
+import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
 export default function DishesList() {
   const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(
@@ -39,6 +31,7 @@ export default function DishesList() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const dict = useDictionary()
+  const { addNotification } = useNotification()
 
   // Get query params
   const page = parseInt(searchParams.get('page') || '1')
@@ -75,10 +68,13 @@ export default function DishesList() {
   }
 
   const handleDelete = async (id: string) => {
+    const dish = dishesData?.data?.find(item => item.dishId === id)
+    const dishName = dish?.dishName || 'this dish'
+    
     if (
       !confirm(
         dict.dishes?.confirm_delete ||
-          'Are you sure you want to delete this dish?',
+          `Are you sure you want to delete ${dishName}?`,
       )
     ) {
       return
@@ -86,8 +82,18 @@ export default function DishesList() {
 
     try {
       await dishApi.delete(id)
+      addNotification({
+        type: 'success',
+        title: 'Success',
+        message: `${dishName} has been deleted successfully.`,
+      })
       loadDishes()
     } catch (err) {
+      addNotification({
+        type: 'error',
+        title: 'Error',
+        message: `Failed to delete ${dishName}. Please try again.`,
+      })
       setError(dict.dishes?.error_delete || 'Failed to delete dish')
       console.error(err)
     }
@@ -116,22 +122,90 @@ export default function DishesList() {
     router.push(`/dishes?${newSearchParams.toString()}`)
   }
 
+  // Define table columns
+  const columns: TableColumn[] = [
+    {
+      key: 'dishId',
+      label: dict.dishes?.id || 'Dish ID',
+      align: 'left',
+    },
+    {
+      key: 'dishName',
+      label: dict.dishes?.name || 'Dish Name',
+      align: 'left',
+    },
+    {
+      key: 'cookingMethod',
+      label: dict.dishes?.cooking_method || 'Cooking Method',
+      align: 'left',
+    },
+    {
+      key: 'active',
+      label: dict.dishes?.status || 'Status',
+      align: 'center',
+    },
+  ]
+
+  // Define table actions
+  const actions: TableAction[] = [
+    {
+      label: dict.dishes?.recipe_standards || 'Recipe Standards',
+      onClick: async (dish) => {
+        router.push(`/dishes/${dish.dishId}/recipe-standard`)
+      },
+    },
+    {
+      label: dict.action?.edit || 'Edit',
+      onClick: async (dish) => {
+        router.push(`/dishes/${dish.dishId}/edit`)
+      },
+    },
+    {
+      label: dict.action?.delete || 'Delete',
+      onClick: async (dish) => {
+        await handleDelete(dish.dishId)
+      },
+      variant: 'danger',
+      loadingLabel: 'Deleting...',
+    },
+  ]
+
+  const handleActionSuccess = (action: string, row: any) => {
+    if (action === 'Edit') {
+      addNotification({
+        type: 'info',
+        title: 'Navigation',
+        message: `Redirecting to edit ${row.dishName || 'dish'}...`,
+      })
+    } else if (action === 'Recipe Standards') {
+      addNotification({
+        type: 'info',
+        title: 'Navigation',
+        message: `Redirecting to recipe standards for ${row.dishName || 'dish'}...`,
+      })
+    }
+  }
+
+  const handleActionError = (action: string, row: any, error: any) => {
+    addNotification({
+      type: 'error',
+      title: 'Action Failed',
+      message: `Failed to ${action.toLowerCase()} ${row.dishName || 'item'}. Please try again.`,
+    })
+  }
+
   if (loading) {
     return (
-      <Card>
-        <CardBody>
-          <div className="text-center py-4">
-            {dict.dishes?.loading || 'Loading...'}
-          </div>
-        </CardBody>
-      </Card>
+      <div className="text-center py-4">
+        {dict.dishes?.loading || 'Loading...'}
+      </div>
     )
   }
 
   return (
-    <Card>
-      <CardHeader className="d-flex justify-content-between align-items-center">
-        <span>{dict.dishes?.title || 'Dish Management'}</span>
+    <>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4 className="mb-0">{dict.dishes?.title || 'Dish Management'}</h4>
         <Button
           variant="primary"
           size="sm"
@@ -140,115 +214,48 @@ export default function DishesList() {
           <FontAwesomeIcon icon={faPlus} className="me-2" />
           {dict.dishes?.add_new || 'Add New Dish'}
         </Button>
-      </CardHeader>
-      <CardBody>
-        {error && (
-          <Alert variant="danger" dismissible onClose={() => setError('')}>
-            {error}
-          </Alert>
-        )}
+      </div>
 
-        {/* Search Bar */}
-        <form onSubmit={handleSearch} className="mb-3">
-          <InputGroup>
-            <FormControl
-              type="text"
-              placeholder={dict.common?.search || 'Search dishes...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button variant="primary" type="submit">
-              <FontAwesomeIcon icon={faSearch} className="me-2" />
-              {dict.common?.search || 'Search'}
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {/* Search Bar */}
+      <form onSubmit={handleSearch} className="mb-3">
+        <InputGroup>
+          <FormControl
+            type="text"
+            placeholder={dict.common?.search || 'Search dishes...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Button variant="primary" type="submit">
+            <FontAwesomeIcon icon={faSearch} className="me-2" />
+            {dict.common?.search || 'Search'}
+          </Button>
+          {search && (
+            <Button variant="secondary" onClick={handleClearSearch}>
+              Clear
             </Button>
-            {search && (
-              <Button variant="secondary" onClick={handleClearSearch}>
-                Clear
-              </Button>
-            )}
-          </InputGroup>
-        </form>
+          )}
+        </InputGroup>
+      </form>
 
-        {/* Table */}
-        <div className="table-responsive">
-          <Table hover>
-            <thead>
-              <tr>
-                <th>{dict.dishes?.id || 'Dish ID'}</th>
-                <th>{dict.dishes?.name || 'Dish Name'}</th>
-                <th>{dict.dishes?.cooking_method || 'Cooking Method'}</th>
-                <th>{dict.dishes?.status || 'Status'}</th>
-                <th className="text-end">
-                  {dict.common?.actions || 'Actions'}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {dishesData && dishesData.data && dishesData.data.length > 0 ? (
-                dishesData.data.map((dish) => (
-                  <tr key={dish.dishId}>
-                    <td>{dish.dishId}</td>
-                    <td>{dish.dishName}</td>
-                    <td>{dish.cookingMethod}</td>
-                    <td>
-                      <Badge bg={dish.active ? 'success' : 'secondary'}>
-                        {dish.active
-                          ? dict.common?.active || 'Active'
-                          : dict.common?.inactive || 'Inactive'}
-                      </Badge>
-                    </td>
-                    <td className="text-end">
-                      <Dropdown align="end">
-                        <DropdownToggle
-                          as="button"
-                          className="btn btn-transparent btn-sm p-0"
-                          bsPrefix="none"
-                        >
-                          <FontAwesomeIcon icon={faEllipsisVertical} />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <DropdownItem
-                            onClick={() =>
-                              router.push(
-                                `/dishes/${dish.dishId}/recipe-standard`,
-                              )
-                            }
-                          >
-                            {dict.dishes?.recipe_standards ||
-                              'Recipe Standards'}
-                          </DropdownItem>
-                          <DropdownItem
-                            onClick={() =>
-                              router.push(`/dishes/${dish.dishId}/edit`)
-                            }
-                          >
-                            {dict.action?.edit || 'Edit'}
-                          </DropdownItem>
-                          <DropdownItem
-                            onClick={() => handleDelete(dish.dishId)}
-                            className="text-danger"
-                          >
-                            {dict.action?.delete || 'Delete'}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="text-center py-4">
-                    {dict.dishes?.no_data || 'No dishes found'}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
-        </div>
+      {/* Table */}
+      <MasterDataTable
+        data={dishesData?.data || []}
+        columns={columns}
+        actions={actions}
+        loading={loading}
+        emptyMessage={dict.dishes?.no_data || 'No dishes found'}
+        onActionSuccess={handleActionSuccess}
+        onActionError={handleActionError}
+      />
 
-        {/* Pagination */}
-        {dishesData && dishesData.meta && <Pagination meta={dishesData.meta} />}
-      </CardBody>
-    </Card>
+      {/* Pagination */}
+      {dishesData && dishesData.meta && <Pagination meta={dishesData.meta} />}
+    </>
   )
 }

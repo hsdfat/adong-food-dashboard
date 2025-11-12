@@ -17,12 +17,14 @@ import {
   faBoxes,
   faTruck,
   faClipboardList,
+  faHeart,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import { Badge } from 'react-bootstrap'
 import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
 import SidebarNavItem from '@/components/Layout/Dashboard/Sidebar/SidebarNavItem'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 const SidebarNavTitle = (props: PropsWithChildren) => {
   const { children } = props
@@ -33,7 +35,8 @@ const SidebarNavTitle = (props: PropsWithChildren) => {
 }
 
 export default async function SidebarNav() {
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
 
   return (
     <ul className="list-unstyled">
@@ -55,9 +58,6 @@ export default async function SidebarNav() {
         </SidebarNavItem>
         <SidebarNavItem href="/suppliers">
           {dict.sidebar.items.suppliers}
-        </SidebarNavItem>
-        <SidebarNavItem href="/users">
-          {dict.sidebar.items.users}
         </SidebarNavItem>
       </SidebarNavGroup>
 

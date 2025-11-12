@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "34a661f1-abe9-432b-92cf-8f1f825ea5e2",
+		"_postman_id": "f5119143-4bda-4455-a43e-e403e77e9291",
 		"name": "Adong Food Management API - Complete",
 		"description": "Complete API collection for Adong Food Management System with authentication, pagination, search, and sorting capabilities",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -309,7 +309,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tennguyenlieu\": \"Cà chua\",\n    \"donvi\": \"kg\",\n    \"dongia\": 25000,\n    \"mota\": \"Cà chua tươi\"\n}"
+							"raw": "{\n    \"tennguyenlieu\": \"CÃ  chua\",\n    \"donvi\": \"kg\",\n    \"dongia\": 25000,\n    \"mota\": \"CÃ  chua tÆ°Æ¡i\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/ingredients",
@@ -346,7 +346,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tennguyenlieu\": \"Cà chua bi\",\n    \"donvi\": \"kg\",\n    \"dongia\": 30000,\n    \"mota\": \"Cà chua bi tươi\"\n}"
+							"raw": "{\n    \"tennguyenlieu\": \"CÃ  chua bi\",\n    \"donvi\": \"kg\",\n    \"dongia\": 30000,\n    \"mota\": \"CÃ  chua bi tÆ°Æ¡i\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/ingredients/:id",
@@ -512,7 +512,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tenbep\": \"Bếp Chính\",\n    \"vitri\": \"Tầng 1\",\n    \"mota\": \"Bếp chính phục vụ toàn bộ nhà hàng\"\n}"
+							"raw": "{\n    \"tenbep\": \"Báº¿p ChÃ­nh\",\n    \"vitri\": \"Táº§ng 1\",\n    \"mota\": \"Báº¿p chÃ­nh phá»¥c vá»¥ toÃ n bá»™ nhÃ  hÃ ng\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/kitchens",
@@ -549,7 +549,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tenbep\": \"Bếp Chính - Cập nhật\",\n    \"vitri\": \"Tầng 1\",\n    \"mota\": \"Bếp chính đã được nâng cấp\"\n}"
+							"raw": "{\n    \"tenbep\": \"Báº¿p ChÃ­nh - Cáº­p nháº­t\",\n    \"vitri\": \"Táº§ng 1\",\n    \"mota\": \"Báº¿p chÃ­nh Ä‘Ã£ Ä‘Æ°á»£c nÃ¢ng cáº¥p\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/kitchens/:id",
@@ -598,6 +598,229 @@
 							"variable": [
 								{
 									"key": "id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Kitchen Favorite Suppliers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/kitchens/:id/favorite-suppliers?page=1&page_size=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kitchens",
+								":id",
+								"favorite-suppliers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BP001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Kitchen Favorite Supplier by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/kitchens/:id/favorite-suppliers/:favoriteId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kitchens",
+								":id",
+								"favorite-suppliers",
+								":favoriteId"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BP001"
+								},
+								{
+									"key": "favoriteId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Kitchen Favorite Supplier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supplier_id\": \"NCC001\",\n    \"ingredient_id\": \"NL001\",\n    \"priority_order\": 1,\n    \"notes\": \"Nhà cung cấp chất lượng tốt, giao hàng đúng hạn\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kitchens/:id/favorite-suppliers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kitchens",
+								":id",
+								"favorite-suppliers"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BP001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Kitchen Favorite Supplier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supplier_id\": \"NCC001\",\n    \"ingredient_id\": \"NL001\",\n    \"priority_order\": 2,\n    \"notes\": \"Cập nhật thứ tự ưu tiên\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kitchens/:id/favorite-suppliers/:favoriteId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kitchens",
+								":id",
+								"favorite-suppliers",
+								":favoriteId"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BP001"
+								},
+								{
+									"key": "favoriteId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Kitchen Favorite Supplier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/kitchens/:id/favorite-suppliers/:favoriteId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kitchens",
+								":id",
+								"favorite-suppliers",
+								":favoriteId"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BP001"
+								},
+								{
+									"key": "favoriteId",
+									"value": "1"
 								}
 							]
 						}
@@ -715,7 +938,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userid\": \"user123\",\n    \"password\": \"password123\",\n    \"hovaten\": \"Nguyễn Văn A\",\n    \"email\": \"nguyenvana@example.com\",\n    \"sodienthoai\": \"0123456789\",\n    \"role\": \"user\"\n}"
+							"raw": "{\n    \"userid\": \"user123\",\n    \"password\": \"password123\",\n    \"hovaten\": \"Nguyá»…n VÄƒn A\",\n    \"email\": \"nguyenvana@example.com\",\n    \"sodienthoai\": \"0123456789\",\n    \"role\": \"user\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/users",
@@ -752,7 +975,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"hovaten\": \"Nguyễn Văn A (Updated)\",\n    \"email\": \"nguyenvana.updated@example.com\",\n    \"sodienthoai\": \"0987654321\",\n    \"role\": \"user\"\n}"
+							"raw": "{\n    \"hovaten\": \"Nguyá»…n VÄƒn A (Updated)\",\n    \"email\": \"nguyenvana.updated@example.com\",\n    \"sodienthoai\": \"0987654321\",\n    \"role\": \"user\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/users/:id",
@@ -918,7 +1141,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tenmonan\": \"Phở Bò\",\n    \"loaimonan\": \"Món chính\",\n    \"dongia\": 50000,\n    \"mota\": \"Phở bò truyền thống Hà Nội\"\n}"
+							"raw": "{\n    \"tenmonan\": \"Phá»Ÿ BÃ²\",\n    \"loaimonan\": \"MÃ³n chÃ­nh\",\n    \"dongia\": 50000,\n    \"mota\": \"Phá»Ÿ bÃ² truyá»n thá»‘ng HÃ  Ná»™i\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/dishes",
@@ -955,7 +1178,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tenmonan\": \"Phở Bò Đặc Biệt\",\n    \"loaimonan\": \"Món chính\",\n    \"dongia\": 60000,\n    \"mota\": \"Phở bò đặc biệt với nhiều thịt\"\n}"
+							"raw": "{\n    \"tenmonan\": \"Phá»Ÿ BÃ² Äáº·c Biá»‡t\",\n    \"loaimonan\": \"MÃ³n chÃ­nh\",\n    \"dongia\": 60000,\n    \"mota\": \"Phá»Ÿ bÃ² Ä‘áº·c biá»‡t vá»›i nhiá»u thá»‹t\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/dishes/:id",
@@ -1466,7 +1689,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"kitchenId\": \"BEP001\",\n  \"orderDate\": \"2025-11-04\",\n  \"note\": \"Sample order created from samples.sql data\",\n  \"status\": \"Pending\",\n  \"createdByUserId\": \"USR002\",\n  \"details\": [\n    {\n      \"dishId\": \"PHO001\",\n      \"portions\": 30,\n      \"note\": \"Phở bò cho nhân viên văn phòng\",\n      \"ingredients\": [\n        {\n          \"ingredientId\": \"ING001\",\n          \"quantity\": 3.6,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.12\n        },\n        {\n          \"ingredientId\": \"ING002\",\n          \"quantity\": 2.4,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.08\n        },\n        {\n          \"ingredientId\": \"ING003\",\n          \"quantity\": 0.6,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.02\n        }\n      ]\n    },\n    {\n      \"dishId\": \"GOI001\",\n      \"portions\": 20,\n      \"note\": \"Gỏi cuốn khai vị\",\n      \"ingredients\": [\n        {\n          \"ingredientId\": \"ING005\",\n          \"quantity\": 1.0,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.05\n        },\n        {\n          \"ingredientId\": \"ING007\",\n          \"quantity\": 4.0,\n          \"unit\": \"bó\",\n          \"standardPerPortion\": 0.2\n        },\n        {\n          \"ingredientId\": \"ING008\",\n          \"quantity\": 1.0,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.05\n        }\n      ]\n    }\n  ],\n  \"supplementaryFoods\": [\n    {\n      \"ingredientId\": \"ING003\",\n      \"quantity\": 0.2,\n      \"unit\": \"kg\",\n      \"standardPerPortion\": 0,\n      \"portions\": 0,\n      \"note\": \"Thêm hành lá dự phòng\"\n    }\n  ]\n}"
+							"raw": "{\n  \"kitchenId\": \"BEP001\",\n  \"orderDate\": \"2025-11-04\",\n  \"note\": \"Sample order created from samples.sql data\",\n  \"status\": \"Pending\",\n  \"createdByUserId\": \"USR002\",\n  \"details\": [\n    {\n      \"dishId\": \"PHO001\",\n      \"portions\": 30,\n      \"note\": \"Phá»Ÿ bÃ² cho nhÃ¢n viÃªn vÄƒn phÃ²ng\",\n      \"ingredients\": [\n        {\n          \"ingredientId\": \"ING001\",\n          \"quantity\": 3.6,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.12\n        },\n        {\n          \"ingredientId\": \"ING002\",\n          \"quantity\": 2.4,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.08\n        },\n        {\n          \"ingredientId\": \"ING003\",\n          \"quantity\": 0.6,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.02\n        }\n      ]\n    },\n    {\n      \"dishId\": \"GOI001\",\n      \"portions\": 20,\n      \"note\": \"Gá»i cuá»‘n khai vá»‹\",\n      \"ingredients\": [\n        {\n          \"ingredientId\": \"ING005\",\n          \"quantity\": 1.0,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.05\n        },\n        {\n          \"ingredientId\": \"ING007\",\n          \"quantity\": 4.0,\n          \"unit\": \"bÃ³\",\n          \"standardPerPortion\": 0.2\n        },\n        {\n          \"ingredientId\": \"ING008\",\n          \"quantity\": 1.0,\n          \"unit\": \"kg\",\n          \"standardPerPortion\": 0.05\n        }\n      ]\n    }\n  ],\n  \"supplementaryFoods\": [\n    {\n      \"ingredientId\": \"ING003\",\n      \"quantity\": 0.2,\n      \"unit\": \"kg\",\n      \"standardPerPortion\": 0,\n      \"portions\": 0,\n      \"note\": \"ThÃªm hÃ nh lÃ¡ dá»± phÃ²ng\"\n    }\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/orders",
@@ -1503,7 +1726,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tenmonan\": \"Phở Bò Đặc Biệt\",\n    \"loaimonan\": \"Món chính\",\n    \"dongia\": 60000,\n    \"mota\": \"Phở bò đặc biệt với nhiều thịt\"\n}"
+							"raw": "{\n    \"tenmonan\": \"Phá»Ÿ BÃ² Äáº·c Biá»‡t\",\n    \"loaimonan\": \"MÃ³n chÃ­nh\",\n    \"dongia\": 60000,\n    \"mota\": \"Phá»Ÿ bÃ² Ä‘áº·c biá»‡t vá»›i nhiá»u thá»‹t\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/dishes/:id",
@@ -2214,7 +2437,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tennhacungcap\": \"Công ty TNHH ABC\",\n    \"diachi\": \"123 Đường ABC, Hà Nội\",\n    \"sodienthoai\": \"0241234567\",\n    \"email\": \"contact@abc.com\"\n}"
+							"raw": "{\n    \"tennhacungcap\": \"CÃ´ng ty TNHH ABC\",\n    \"diachi\": \"123 ÄÆ°á»ng ABC, HÃ  Ná»™i\",\n    \"sodienthoai\": \"0241234567\",\n    \"email\": \"contact@abc.com\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/suppliers",
@@ -2251,7 +2474,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tennhacungcap\": \"Công ty TNHH ABC (Updated)\",\n    \"diachi\": \"456 Đường XYZ, Hà Nội\",\n    \"sodienthoai\": \"0247654321\",\n    \"email\": \"info@abc.com\"\n}"
+							"raw": "{\n    \"tennhacungcap\": \"CÃ´ng ty TNHH ABC (Updated)\",\n    \"diachi\": \"456 ÄÆ°á»ng XYZ, HÃ  Ná»™i\",\n    \"sodienthoai\": \"0247654321\",\n    \"email\": \"info@abc.com\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/suppliers/:id",

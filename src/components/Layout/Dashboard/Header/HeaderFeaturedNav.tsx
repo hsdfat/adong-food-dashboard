@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { Nav, NavItem, NavLink } from 'react-bootstrap'
 import { getDictionary } from '@/locales/dictionary'
+import { getServerLocale } from '@/locales/server-utils'
 
 export default async function HeaderFeaturedNav() {
-  const dict = await getDictionary()
+  const locale = await getServerLocale()
+  const dict = await getDictionary(locale)
   return (
     <Nav>
       <NavItem>
