@@ -11,6 +11,9 @@ import {
   Row,
   Col,
   Form,
+  Card,
+  CardBody,
+  CardHeader,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -322,18 +325,19 @@ export default function SupplierPricesList({
   }
 
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="mb-0">{dict.supplierPrice?.title || 'Supplier Price Management'}</h4>
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
+        <h4 className="mb-0">Supplier Price Management</h4>
         <Button
           variant="primary"
           size="sm"
           onClick={() => router.push('/supplier-prices/create')}
         >
           <FontAwesomeIcon icon={faPlus} className="me-2" />
-          {dict.supplierPrice?.add || 'Add New'}
+          Add New
         </Button>
-      </div>
+      </CardHeader>
+      <CardBody>
 
       {error && (
         <Alert variant="danger" dismissible onClose={() => setError('')}>
@@ -417,5 +421,7 @@ export default function SupplierPricesList({
       />
 
       {meta && <Pagination meta={meta} />}
-    </>
+      </CardBody>
+    </Card>
   )
+}

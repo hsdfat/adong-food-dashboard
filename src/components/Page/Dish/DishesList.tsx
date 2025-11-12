@@ -6,6 +6,9 @@ import {
   Alert,
   FormControl,
   InputGroup,
+  Card,
+  CardBody,
+  CardHeader,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -196,15 +199,19 @@ export default function DishesList() {
 
   if (loading) {
     return (
-      <div className="text-center py-4">
-        {dict.dishes?.loading || 'Loading...'}
-      </div>
+      <Card>
+        <CardBody>
+          <div className="text-center py-4">
+            {dict.dishes?.loading || 'Loading...'}
+          </div>
+        </CardBody>
+      </Card>
     )
   }
 
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
         <h4 className="mb-0">{dict.dishes?.title || 'Dish Management'}</h4>
         <Button
           variant="primary"
@@ -214,48 +221,49 @@ export default function DishesList() {
           <FontAwesomeIcon icon={faPlus} className="me-2" />
           {dict.dishes?.add_new || 'Add New Dish'}
         </Button>
-      </div>
+      </CardHeader>
+      <CardBody>
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')}>
+            {error}
+          </Alert>
+        )}
 
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Search Bar */}
-      <form onSubmit={handleSearch} className="mb-3">
-        <InputGroup>
-          <FormControl
-            type="text"
-            placeholder={dict.common?.search || 'Search dishes...'}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Button variant="primary" type="submit">
-            <FontAwesomeIcon icon={faSearch} className="me-2" />
-            {dict.common?.search || 'Search'}
-          </Button>
-          {search && (
-            <Button variant="secondary" onClick={handleClearSearch}>
-              Clear
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="mb-3">
+          <InputGroup>
+            <FormControl
+              type="text"
+              placeholder={dict.common?.search || 'Search dishes...'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button variant="primary" type="submit">
+              <FontAwesomeIcon icon={faSearch} className="me-2" />
+              {dict.common?.search || 'Search'}
             </Button>
-          )}
-        </InputGroup>
-      </form>
+            {search && (
+              <Button variant="secondary" onClick={handleClearSearch}>
+                Clear
+              </Button>
+            )}
+          </InputGroup>
+        </form>
 
-      {/* Table */}
-      <MasterDataTable
-        data={dishesData?.data || []}
-        columns={columns}
-        actions={actions}
-        loading={loading}
-        emptyMessage={dict.dishes?.no_data || 'No dishes found'}
-        onActionSuccess={handleActionSuccess}
-        onActionError={handleActionError}
-      />
+        {/* Table */}
+        <MasterDataTable
+          data={dishesData?.data || []}
+          columns={columns}
+          actions={actions}
+          loading={loading}
+          emptyMessage={dict.dishes?.no_data || 'No dishes found'}
+          onActionSuccess={handleActionSuccess}
+          onActionError={handleActionError}
+        />
 
-      {/* Pagination */}
-      {dishesData && dishesData.meta && <Pagination meta={dishesData.meta} />}
-    </>
+        {/* Pagination */}
+        {dishesData && dishesData.meta && <Pagination meta={dishesData.meta} />}
+      </CardBody>
+    </Card>
   )
 }

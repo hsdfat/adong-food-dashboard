@@ -6,6 +6,9 @@ import {
   Alert,
   FormControl,
   InputGroup,
+  Card,
+  CardBody,
+  CardHeader,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -196,15 +199,19 @@ export default function IngredientesList() {
 
   if (loading) {
     return (
-      <div className="text-center py-4">
-        {dict.ingredients?.loading || 'Loading...'}
-      </div>
+      <Card>
+        <CardBody>
+          <div className="text-center py-4">
+            {dict.ingredients?.loading || 'Loading...'}
+          </div>
+        </CardBody>
+      </Card>
     )
   }
 
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <Card>
+      <CardHeader className="d-flex justify-content-between align-items-center">
         <h4 className="mb-0">{dict.ingredients?.title || 'Ingredient Management'}</h4>
         <Button
           variant="primary"
@@ -214,7 +221,8 @@ export default function IngredientesList() {
           <FontAwesomeIcon icon={faPlus} className="me-2" />
           {dict.ingredients?.add_new || 'Add New Ingredient'}
         </Button>
-      </div>
+      </CardHeader>
+      <CardBody>
 
       {error && (
         <Alert variant="danger" dismissible onClose={() => setError('')}>
@@ -258,6 +266,7 @@ export default function IngredientesList() {
       {ingredientsData && ingredientsData.meta && (
         <Pagination meta={ingredientsData.meta} />
       )}
-    </>
+      </CardBody>
+    </Card>
   )
 }

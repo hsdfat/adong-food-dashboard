@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import {
   Button,
   Card,
@@ -40,7 +40,7 @@ import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
-export default function OrdersList() {
+function OrdersList() {
   const [ordersData, setOrdersData] =
     useState<ResourceCollection<OrderDTO> | null>(null)
   const [loading, setLoading] = useState(true)
@@ -53,6 +53,8 @@ export default function OrdersList() {
   const [editedStatuses, setEditedStatuses] = useState<Record<number, string>>({})
   const [savingStatuses, setSavingStatuses] = useState<Record<number, boolean>>({})
   const hasInitializedDefaults = useRef(false)
+  const editedStatusesRef = useRef(editedStatuses)
+  editedStatusesRef.current = editedStatuses
   const router = useRouter()
   const searchParams = useSearchParams()
   const dict = useDictionary()
@@ -65,7 +67,7 @@ export default function OrdersList() {
   const toDate = searchParams.get('to_date') || ''
 
   // Calculate default dates (latest week: 7 days ago to today)
-  const getDefaultDateRange = () => {
+  const getDefaultDateRange = useCallback(() => {
     const today = new Date()
     const weekAgo = new Date()
     weekAgo.setDate(today.getDate() - 7)
@@ -74,7 +76,7 @@ export default function OrdersList() {
       from: weekAgo.toISOString().split('T')[0],
       to: today.toISOString().split('T')[0],
     }
-  }
+  }, [])
 
   // Initialize default dates if not in URL (only once on mount)
   useEffect(() => {
@@ -95,15 +97,7 @@ export default function OrdersList() {
     }
   }, [searchParams, router])
 
-  useEffect(() => {
-    setSearchQuery(search)
-    const defaults = getDefaultDateRange()
-    setDateFrom(fromDate || defaults.from)
-    setDateTo(toDate || defaults.to)
-    loadOrders()
-  }, [page, perPage, search, fromDate, toDate])
-
-  const loadOrders = async (preserveEditedStatuses = false) => {
+  const loadOrders = useCallback(async (preserveEditedStatuses = false) => {
     try {
       setLoading(true)
       setError('')
@@ -132,10 +126,10 @@ export default function OrdersList() {
           // Remove edited statuses for orders that are no longer in the current page
           const currentOrderIds = new Set(data.data.map((o) => o.orderId))
           const newEditedStatuses: Record<number, string> = {}
-          Object.keys(editedStatuses).forEach((orderIdStr) => {
+          Object.keys(editedStatusesRef.current).forEach((orderIdStr) => {
             const orderId = parseInt(orderIdStr)
             if (currentOrderIds.has(orderId)) {
-              newEditedStatuses[orderId] = editedStatuses[orderId]
+              newEditedStatuses[orderId] = editedStatusesRef.current[orderId]
             }
           })
           setEditedStatuses(newEditedStatuses)
@@ -147,9 +141,17 @@ export default function OrdersList() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, perPage, search, fromDate, toDate, dict.orders?.error_load])
 
-  const handleDelete = async (id: number) => {
+  useEffect(() => {
+    setSearchQuery(search)
+    const defaults = getDefaultDateRange()
+    setDateFrom(fromDate || defaults.from)
+    setDateTo(toDate || defaults.to)
+    loadOrders()
+  }, [page, perPage, search, fromDate, toDate, getDefaultDateRange, loadOrders])
+
+  const handleDelete = useCallback(async (id: number) => {
     if (
       !confirm(
         dict.orders?.confirm_delete ||
@@ -166,9 +168,9 @@ export default function OrdersList() {
       setError(dict.orders?.error_delete || 'Failed to delete order')
       console.error(err)
     }
-  }
+  }, [dict.orders?.confirm_delete, dict.orders?.error_delete, loadOrders])
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault()
 
     const newSearchParams = new URLSearchParams(searchParams)
@@ -193,9 +195,9 @@ export default function OrdersList() {
     }
 
     router.push(`/orders?${newSearchParams.toString()}`)
-  }
+  }, [searchParams, searchQuery, dateFrom, dateTo, router])
 
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setSearchQuery('')
     setDateFrom('')
     setDateTo('')
@@ -205,9 +207,9 @@ export default function OrdersList() {
     newSearchParams.delete('from_date')
     newSearchParams.delete('to_date')
     router.push(`/orders?${newSearchParams.toString()}`)
-  }
+  }, [searchParams, router])
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useCallback((status: string) => {
     const statusLower = status.toLowerCase()
     if (statusLower === 'pending') {
       return <Badge bg="warning">Pending</Badge>
@@ -217,9 +219,9 @@ export default function OrdersList() {
       return <Badge bg="danger">{status}</Badge>
     }
     return <Badge bg="secondary">{status}</Badge>
-  }
+  }, [])
 
-  const getStatusBadgeColor = (status: string): string => {
+  const getStatusBadgeColor = useCallback((status: string): string => {
     const statusLower = status.toLowerCase()
     if (statusLower === 'pending') {
       return 'warning'
@@ -229,9 +231,9 @@ export default function OrdersList() {
       return 'danger'
     }
     return 'secondary'
-  }
+  }, [])
 
-  const getStatusBackgroundColor = (status: string): string => {
+  const getStatusBackgroundColor = useCallback((status: string): string => {
     const statusLower = status.toLowerCase()
     if (statusLower === 'pending') {
       return '#ffc107' // Bootstrap warning color
@@ -241,17 +243,17 @@ export default function OrdersList() {
       return '#dc3545' // Bootstrap danger color
     }
     return '#6c757d' // Bootstrap secondary color
-  }
+  }, [])
 
-  const getStatusTextColor = (status: string): string => {
+  const getStatusTextColor = useCallback((status: string): string => {
     const statusLower = status.toLowerCase()
     if (statusLower === 'pending') {
       return '#000000' // Black text for warning background
     }
     return '#ffffff' // White text for other backgrounds
-  }
+  }, [])
 
-  const getStatusBorderColor = (status: string): string => {
+  const getStatusBorderColor = useCallback((status: string): string => {
     const statusLower = status.toLowerCase()
     if (statusLower === 'pending') {
       return '#ffc107'
@@ -261,9 +263,9 @@ export default function OrdersList() {
       return '#dc3545'
     }
     return '#6c757d'
-  }
+  }, [])
 
-  const handleStatusChange = (orderId: number, newStatus: string) => {
+  const handleStatusChange = useCallback((orderId: number, newStatus: string) => {
     const originalStatus = originalStatuses[orderId] || ''
     if (newStatus === originalStatus) {
       // Revert to original - remove from edited statuses
@@ -277,9 +279,9 @@ export default function OrdersList() {
         [orderId]: newStatus,
       })
     }
-  }
+  }, [originalStatuses, editedStatuses])
 
-  const handleSaveStatus = async (orderId: number) => {
+  const handleSaveStatus = useCallback(async (orderId: number) => {
     const newStatus = editedStatuses[orderId]
     if (!newStatus) return
 
@@ -306,25 +308,25 @@ export default function OrdersList() {
     } finally {
       setSavingStatuses({ ...savingStatuses, [orderId]: false })
     }
-  }
+  }, [editedStatuses, savingStatuses, originalStatuses, dict.orders?.error_update, loadOrders])
 
-  const handleDiscardStatus = (orderId: number) => {
+  const handleDiscardStatus = useCallback((orderId: number) => {
     // Remove from edited statuses to revert
     const newEditedStatuses = { ...editedStatuses }
     delete newEditedStatuses[orderId]
     setEditedStatuses(newEditedStatuses)
-  }
+  }, [editedStatuses])
 
-  const isStatusChanged = (orderId: number): boolean => {
+  const isStatusChanged = useCallback((orderId: number): boolean => {
     return orderId in editedStatuses
-  }
+  }, [editedStatuses])
 
-  const getCurrentStatus = (orderId: number, originalStatus: string): string => {
+  const getCurrentStatus = useCallback((orderId: number, originalStatus: string): string => {
     return editedStatuses[orderId] || originalStatus
-  }
+  }, [editedStatuses])
 
   // Common order statuses - ensure all statuses from orders are included
-  const getAllStatuses = (): string[] => {
+  const allStatuses = useMemo((): string[] => {
     const statusSet = new Set<string>()
     // Add common statuses
     const commonStatuses = ['Pending', 'Approved', 'Completed', 'Cancelled', 'Rejected']
@@ -340,7 +342,7 @@ export default function OrdersList() {
     }
 
     return Array.from(statusSet).sort()
-  }
+  }, [ordersData?.data])
 
   if (loading) {
     return (
@@ -503,7 +505,7 @@ export default function OrdersList() {
                           }}
                           disabled={savingStatuses[order.orderId]}
                         >
-                          {getAllStatuses().map((status) => (
+                          {allStatuses.map((status) => (
                             <option key={status} value={status}>
                               {status}
                             </option>
@@ -618,4 +620,6 @@ export default function OrdersList() {
     </Card>
   )
 }
+
+export default React.memo(OrdersList)
 

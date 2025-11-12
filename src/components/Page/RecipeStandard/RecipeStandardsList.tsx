@@ -195,7 +195,7 @@ export default function RecipeStandardsList({
           onClick={() => router.push('/recipe-standards/create')}
         >
           <FontAwesomeIcon icon={faPlus} className="me-2" />
-          {dict.recipe_standards.add || 'Add New'}
+          {dict.recipe_standards?.add_new || 'Add New Recipe Standard'}
         </Button>
       </div>
 
