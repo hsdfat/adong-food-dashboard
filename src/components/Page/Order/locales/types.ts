@@ -129,6 +129,7 @@ export interface OrderDictionary {
     add: string
     to: string
     total: string
+    save: string
   },
   orders: {
     labels: {
@@ -139,6 +140,34 @@ export interface OrderDictionary {
       zalo: string
       copy_to_clipboard_success: string
       no_supplier_requests: string
+      view_ingredients_summary: string
+      order_not_found: string
+      order_information: string
+      order_details: string
+      portion: string
+      no_ingredients_text: string
+      supplementary_foods: string
+      saving: string
+      save_all_selected: string
+      no_supplier_price: string
+      select: string
+      search: string
+      close: string
+    }
+    columns: {
+      order_id: string
+      note: string
+      dish: string
+      portions: string
+      ingredients: string
+      ingredient: string
+      quantity: string
+      unit: string
+      supplier: string
+      price: string
+      total_price: string
+      ingredient_id: string
+      ingredient_name: string
     }
     table_headers: {
       selection_id: string
@@ -159,6 +188,8 @@ export interface OrderDictionary {
       rejected: string
     }
     loading: string
+    ingredient_summary: string
+    no_ingredients: string
     zalo_message: {
       header: string
       ingredients_list: string
