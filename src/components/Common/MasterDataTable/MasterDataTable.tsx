@@ -124,7 +124,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
     } else if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
       cellContent = new Date(value).toLocaleDateString()
     } else {
-      cellContent = value
+      // Convert unknown value to string for display
+      cellContent = String(value)
     }
 
     return cellContent
@@ -286,8 +287,9 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {data.map((row: { id?: string | number; key?: string | number }, index) => {
-          const rowKey = row.id || row.key || index;
+        {data.map((row, index) => {
+          const rowWithId = row as { id?: string | number; key?: string | number };
+          const rowKey = rowWithId.id || rowWithId.key || index;
           return (
           <tr key={rowKey}>
             {columns.map((column, colIndex) => {

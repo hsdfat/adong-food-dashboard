@@ -55,8 +55,8 @@ export default function SingleSelectionModal<
   emptyMessage = 'Không tìm thấy kết quả',
   closeLabel = 'Đóng',
   getItemName = (item) => item.name,
-  getItemSubtitle = (item) => item.subtitle,
-  getItemBadge = (item) => item.badge,
+  getItemSubtitle = (item) => item.subtitle || '',
+  getItemBadge = (item) => item.badge || '',
   renderItem,
   size = 'lg',
 }: SingleSelectionModalProps<T>) {

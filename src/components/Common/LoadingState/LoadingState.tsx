@@ -21,12 +21,15 @@ const LoadingState: React.FC<LoadingStateProps> = ({
     : `text-center py-4 ${className}`
   const style = fullHeight ? { minHeight: '400px' } : {}
 
+  // Spinner only accepts 'sm' | undefined, so map 'lg' to undefined (default size)
+  const spinnerSize = size === 'lg' ? undefined : size;
+
   return (
     <div className={containerClass} style={style}>
       <div>
         <Spinner
           animation="border"
-          size={size}
+          size={spinnerSize}
           role="status"
           aria-hidden="true"
           className="me-2"
