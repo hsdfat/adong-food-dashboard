@@ -28,6 +28,12 @@ export interface SupplierPrice {
     supplierId: string
     supplierName: string
   }
+
+  // Best supplier suggestion fields (from API)
+  totalCost?: number
+  isBestSupplier?: boolean
+  isFavorite?: boolean
+  isLowestPrice?: boolean
 }
 
 export interface CreateSupplierPriceInput {

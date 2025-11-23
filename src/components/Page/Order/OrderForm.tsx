@@ -4,32 +4,17 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import {
   Form,
   Button,
-  Card,
-  CardBody,
+  Alert,
+  Spinner,
   FormGroup,
   FormLabel,
   FormControl,
-  Alert,
-  Table,
-  Row,
-  Col,
-  InputGroup,
-  Badge,
-  Modal,
-  FormCheck,
-  FormSelect,
-  Spinner,
 } from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faPlus,
-  faTrash,
-  faEdit,
   faSave,
   faTimes,
-  faSearch,
-  faSync,
 } from '@fortawesome/free-solid-svg-icons'
 import useDictionary from '@/locales/dictionary-hook'
 import {
@@ -46,6 +31,10 @@ import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
+import OrderHeaderForm from './components/OrderHeaderForm'
+import DishList from './components/DishList'
+import SupplementaryFoodList from './components/SupplementaryFoodList'
+import TotalIngredientsSummary from './components/TotalIngredientsSummary'
 
 // ==================== TYPE DEFINITIONS ====================
 
@@ -188,6 +177,9 @@ export default function OrderForm({
   >({})
   const [availableSuppliersByIngredient, setAvailableSuppliersByIngredient] =
     useState<Record<string, SupplierPrice[]>>({})
+  const [bestSupplierByIngredient, setBestSupplierByIngredient] = useState<
+    Record<string, BestSupplier | null>
+  >({})
 
   // ==================== INITIALIZATION ====================
 
@@ -344,6 +336,7 @@ export default function OrderForm({
           tempOrderId || orderId,
           {
             ingredients: ingredientsPayload,
+            kitchenId: bepId || undefined,
           },
         )
 
@@ -353,16 +346,20 @@ export default function OrderForm({
       // Process best suppliers
       const newSelections: Record<string, number> = {}
       const newAvailableSuppliers: Record<string, SupplierPrice[]> = {}
+      const newBestSuppliers: Record<string, BestSupplier | null> = {}
 
       for (const ingData of data.ingredients) {
         const ingId = ingData.ingredientId
 
-        // If there's a best supplier, set it as selected and create supplier data
+        // Store best supplier info
+        newBestSuppliers[ingId] = ingData.bestSupplier || null
+
+        // Create supplier data from bestSupplier info if available
+        let bestSupplierData: SupplierPrice | null = null
         if (ingData.bestSupplier) {
           newSelections[ingId] = ingData.bestSupplier.productId
 
-          // Create supplier data from bestSupplier info
-          const bestSupplierData: SupplierPrice = {
+          bestSupplierData = {
             productId: ingData.bestSupplier.productId,
             productName: ingData.bestSupplier.productName,
             ingredientId: ingId,
@@ -384,11 +381,14 @@ export default function OrderForm({
               : ingData.bestSupplier.isLowestPrice
                 ? 'Giá tốt nhất'
                 : '',
+            totalCost: ingData.bestSupplier.totalCost,
+            isBestSupplier: true,
+            isFavorite: ingData.bestSupplier.isFavorite,
+            isLowestPrice: ingData.bestSupplier.isLowestPrice,
+          }
           }
 
-          newAvailableSuppliers[ingId] = [bestSupplierData]
-        } else {
-          // Load all available suppliers for this ingredient if no best supplier
+        // Load all available suppliers for this ingredient
           try {
             const suppliersResponse =
               await supplierPriceApi.getByIngredient(ingId)
@@ -406,14 +406,34 @@ export default function OrderForm({
 
             // Filter active suppliers
             const activeSuppliers = suppliers.filter((s) => s.active !== false)
+
+          // If we have a best supplier, ensure it's in the list and mark it
+          if (bestSupplierData) {
+            // Check if best supplier already exists in the list
+            const existingIndex = activeSuppliers.findIndex(
+              (s) => s.productId === bestSupplierData!.productId,
+            )
+
+            if (existingIndex >= 0) {
+              // Update existing supplier with best supplier info
+              activeSuppliers[existingIndex] = {
+                ...activeSuppliers[existingIndex],
+                ...bestSupplierData,
+              }
+            } else {
+              // Add best supplier to the beginning of the list
+              activeSuppliers.unshift(bestSupplierData)
+            }
+          }
+
             newAvailableSuppliers[ingId] = activeSuppliers
           } catch (err) {
             console.error(
               `Failed to load suppliers for ingredient ${ingId}:`,
               err,
             )
-            newAvailableSuppliers[ingId] = []
-          }
+          // If we have a best supplier but failed to load others, still show the best supplier
+          newAvailableSuppliers[ingId] = bestSupplierData ? [bestSupplierData] : []
         }
       }
 
@@ -424,6 +444,7 @@ export default function OrderForm({
       }))
 
       setAvailableSuppliersByIngredient(newAvailableSuppliers)
+      setBestSupplierByIngredient(newBestSuppliers)
 
       console.log('Best suppliers loaded:', {
         totalIngredients: data.ingredients.length,
@@ -437,14 +458,14 @@ export default function OrderForm({
     }
   }
 
-  // Auto-load best suppliers when ingredients change
+  // Auto-load best suppliers when ingredients or kitchen change
   useEffect(() => {
     const totalIngredients = calculateTotalIngredients()
-    if (totalIngredients.length > 0 && orderId) {
+    if (totalIngredients.length > 0 && orderId && bepId) {
       loadBestSuppliers()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderDishes, supplementaryFoods, orderId])
+  }, [orderDishes, supplementaryFoods, orderId, bepId])
 
   const handleSupplierChange = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
@@ -918,476 +939,54 @@ export default function OrderForm({
         )}
 
         {/* Order Header */}
-        <Card className="mb-4">
-          <CardBody>
-            <h5 className="mb-3">Thông tin phiếu lên đơn</h5>
-            <Row>
-              <Col md={6}>
-                <FormGroup className="mb-3">
-                  <FormLabel>Mã phiếu lên đơn *</FormLabel>
-                  <FormControl
-                    type="text"
-                    value={orderId}
-                    onChange={(e) => setOrderId(e.target.value)}
-                    required
-                    disabled
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={6}>
-                <FormGroup className="mb-3">
-                  <FormLabel>Ngày lên đơn *</FormLabel>
-                  <FormControl
-                    type="date"
-                    value={ngayLen}
-                    onChange={(e) => setNgayLen(e.target.value)}
-                    required
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col md={6}>
-                <FormGroup className="mb-3">
-                  <FormLabel>Bếp *</FormLabel>
-                  <InputGroup>
-                    <FormControl
-                      type="text"
-                      value={tenBep}
-                      placeholder="Chọn bếp..."
-                      readOnly
-                      required
-                    />
-                    <Button
-                      variant="outline-primary"
-                      onClick={() => setShowKitchenModal(true)}
-                    >
-                      <FontAwesomeIcon icon={faSearch} />
-                    </Button>
-                  </InputGroup>
-                </FormGroup>
-              </Col>
-              <Col md={6}>
-                <FormGroup className="mb-3">
-                  <FormLabel>Ghi chú</FormLabel>
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    value={ghiChu}
-                    onChange={(e) => setGhiChu(e.target.value)}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
+        <OrderHeaderForm
+          orderId={orderId}
+          ngayLen={ngayLen}
+          tenBep={tenBep}
+          ghiChu={ghiChu}
+          onOrderIdChange={setOrderId}
+          onDateChange={setNgayLen}
+          onKitchenSelect={() => setShowKitchenModal(true)}
+          onNoteChange={setGhiChu}
+        />
 
         {/* Dishes Section */}
-        <Card className="mb-4">
-          <CardBody>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5 className="mb-0">Danh sách món ăn</h5>
-              <Button variant="primary" onClick={() => setShowDishModal(true)}>
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                Thêm món ăn
-              </Button>
-            </div>
-
-            {orderDishes.length === 0 ? (
-              <Alert variant="info">
-                Chưa có món ăn nào. Nhấn "Thêm món ăn" để bắt đầu.
-              </Alert>
-            ) : (
-              <div className="table-responsive">
-                <Table striped bordered hover>
-                  <thead>
-                    <tr>
-                      <th style={{ width: '5%' }}>#</th>
-                      <th style={{ width: '25%' }}>Món ăn</th>
-                      <th style={{ width: '10%' }}>Số suất</th>
-                      <th style={{ width: '50%' }}>Nguyên liệu</th>
-                      <th style={{ width: '10%' }}>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orderDishes.map((dish, index) => (
-                      <tr key={dish.id}>
-                        <td>{index + 1}</td>
-                        <td>
-                          <strong>{dish.tenMonAn}</strong>
-                          <br />
-                          <small className="text-muted">{dish.monanId}</small>
-                        </td>
-                        <td>
-                          <FormControl
-                            type="number"
-                            min="1"
-                            value={dish.soSuat}
-                            onChange={(e) =>
-                              handleUpdatePortions(
-                                dish.id,
-                                parseInt(e.target.value) || 1,
-                              )
-                            }
-                            size="sm"
-                          />
-                        </td>
-                        <td>
-                          {dish.ingredients.length === 0 ? (
-                            <small className="text-muted">
-                              Chưa có nguyên liệu
-                            </small>
-                          ) : (
-                            <Table size="sm" className="mb-0">
-                              <tbody>
-                                {dish.ingredients.map((ing) => (
-                                  <tr key={ing.nguyenLieuId}>
-                                    <td style={{ width: '40%' }}>
-                                      {ing.tenNguyenLieu}
-                                      <br />
-                                      <small className="text-muted">
-                                        {ing.nguyenLieuId}
-                                      </small>
-                                    </td>
-                                    <td style={{ width: '20%' }}>
-                                      <FormControl
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        value={ing.dinhMuc}
-                                        onChange={(e) =>
-                                          handleUpdateDinhMuc(
-                                            dish.id,
-                                            ing.nguyenLieuId,
-                                            parseFloat(e.target.value) || 0,
-                                          )
-                                        }
-                                        size="sm"
-                                      />
-                                      <small className="text-muted">
-                                        {ing.donViTinh}/suất
-                                      </small>
-                                    </td>
-                                    <td style={{ width: '30%' }}>
-                                      <strong>
-                                        {formatNumber(ing.soLuong)}
-                                      </strong>{' '}
-                                      {ing.donViTinh}
-                                    </td>
-                                    <td style={{ width: '10%' }}>
-                                      <Button
-                                        variant="danger"
-                                        size="sm"
-                                        onClick={() =>
-                                          handleRemoveIngredient(
-                                            dish.id,
-                                            ing.nguyenLieuId,
-                                          )
-                                        }
-                                      >
-                                        <FontAwesomeIcon icon={faTrash} />
-                                      </Button>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </Table>
-                          )}
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="mt-2"
-                            onClick={() => {
-                              setCurrentDishIndex(index)
-                              setShowIngredientModal(true)
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faPlus} className="me-1" />
-                            Thêm nguyên liệu
-                          </Button>
-                        </td>
-                        <td>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => handleRemoveDish(dish.id)}
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </div>
-            )}
-          </CardBody>
-        </Card>
+        <DishList
+          dishes={orderDishes}
+          onAddDish={() => setShowDishModal(true)}
+          onPortionsChange={handleUpdatePortions}
+          onDinhMucChange={handleUpdateDinhMuc}
+          onRemoveIngredient={handleRemoveIngredient}
+          onAddIngredient={(index) => {
+            setCurrentDishIndex(index)
+            setShowIngredientModal(true)
+          }}
+          onRemoveDish={handleRemoveDish}
+          formatNumber={formatNumber}
+        />
 
         {/* Supplementary Foods Section */}
-        <Card className="mb-4">
-          <CardBody>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5 className="mb-0">Thực phẩm bổ sung</h5>
-              <Button
-                variant="success"
-                onClick={() => setShowSupplementaryModal(true)}
-              >
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                Thêm thực phẩm bổ sung
-              </Button>
-            </div>
-
-            {supplementaryFoods.length === 0 ? (
-              <Alert variant="info">
-                Chưa có thực phẩm bổ sung. Nhấn "Thêm thực phẩm bổ sung" để thêm
-                mới.
-              </Alert>
-            ) : (
-              <div className="table-responsive">
-                <Table striped bordered hover>
-                  <thead>
-                    <tr>
-                      <th style={{ width: '5%' }}>#</th>
-                      <th style={{ width: '25%' }}>Nguyên liệu</th>
-                      <th style={{ width: '15%' }}>Định mức</th>
-                      <th style={{ width: '10%' }}>Số suất</th>
-                      <th style={{ width: '15%' }}>Số lượng</th>
-                      <th style={{ width: '20%' }}>Ghi chú</th>
-                      <th style={{ width: '10%' }}>Thao tác</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {supplementaryFoods.map((item, index) => (
-                      <tr key={item.id}>
-                        <td>{index + 1}</td>
-                        <td>
-                          <strong>{item.tenNguyenLieu}</strong>
-                          <br />
-                          <small className="text-muted">
-                            {item.nguyenLieuId}
-                          </small>
-                        </td>
-                        <td>
-                          <FormControl
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={item.dinhMuc}
-                            onChange={(e) =>
-                              handleUpdateSupplementaryDinhMuc(
-                                item.id,
-                                parseFloat(e.target.value) || 0,
-                              )
-                            }
-                            size="sm"
-                          />
-                          <small className="text-muted">
-                            {item.donViTinh}/suất
-                          </small>
-                        </td>
-                        <td>
-                          <FormControl
-                            type="number"
-                            min="1"
-                            value={item.soSuat}
-                            onChange={(e) =>
-                              handleUpdateSupplementarySoSuat(
-                                item.id,
-                                parseInt(e.target.value) || 1,
-                              )
-                            }
-                            size="sm"
-                          />
-                        </td>
-                        <td>
-                          <strong>{formatNumber(item.soLuong)}</strong>{' '}
-                          {item.donViTinh}
-                        </td>
-                        <td>
-                          <FormControl
-                            type="text"
-                            value={item.ghiChu || ''}
-                            onChange={(e) =>
-                              handleUpdateSupplementaryNote(
-                                item.id,
-                                e.target.value,
-                              )
-                            }
-                            size="sm"
-                            placeholder="Ghi chú..."
-                          />
-                        </td>
-                        <td>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() =>
-                              handleRemoveSupplementaryFood(item.id)
-                            }
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </div>
-            )}
-          </CardBody>
-        </Card>
+        <SupplementaryFoodList
+          items={supplementaryFoods}
+          onAdd={() => setShowSupplementaryModal(true)}
+          onDinhMucChange={handleUpdateSupplementaryDinhMuc}
+          onSoSuatChange={handleUpdateSupplementarySoSuat}
+          onNoteChange={handleUpdateSupplementaryNote}
+          onRemove={handleRemoveSupplementaryFood}
+          formatNumber={formatNumber}
+        />
 
         {/* Total Ingredients Summary with Supplier Selection */}
-        {totalIngredients.length > 0 && (
-          <Card className="mb-4">
-            <CardBody>
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="mb-0">
-                  Tổng hợp nguyên liệu & Chọn nhà cung cấp
-                </h5>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => loadBestSuppliers()}
-                  disabled={loadingBestSuppliers}
-                >
-                  {loadingBestSuppliers ? (
-                    <>
-                      <Spinner animation="border" size="sm" className="me-2" />
-                      Đang tải...
-                    </>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon icon={faSync} className="me-2" />
-                      Làm mới đề xuất
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              <div className="table-responsive">
-                <Table striped bordered hover>
-                  <thead>
-                    <tr>
-                      <th style={{ width: '5%' }}>#</th>
-                      <th style={{ width: '30%' }}>Nguyên liệu</th>
-                      <th style={{ width: '15%' }}>Số lượng</th>
-                      <th style={{ width: '50%' }}>Nhà cung cấp</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {totalIngredients.map((ing, index) => {
-                      const suppliers =
-                        availableSuppliersByIngredient[ing.ingredientId] || []
-                      const selectedProductId =
-                        supplierSelections[ing.ingredientId]
-                      const selectedSupplier = suppliers.find(
-                        (s) => s.productId === selectedProductId,
-                      )
-
-                      return (
-                        <tr key={ing.ingredientId}>
-                          <td>{index + 1}</td>
-                          <td>
-                            <strong>{ing.ingredientName}</strong>
-                            <br />
-                            <small className="text-muted">
-                              {ing.ingredientId}
-                            </small>
-                          </td>
-                          <td>
-                            <strong>{formatNumber(ing.totalQuantity)}</strong>{' '}
-                            {ing.unit}
-                          </td>
-                          <td>
-                            {loadingBestSuppliers ? (
-                              <div className="text-center">
-                                <Spinner animation="border" size="sm" />
-                              </div>
-                            ) : suppliers.length === 0 ? (
-                              <Alert variant="warning" className="mb-0 py-2">
-                                Không có nhà cung cấp
-                              </Alert>
-                            ) : (
-                              <div>
-                                <FormSelect
-                                  value={selectedProductId || ''}
-                                  onChange={(e) =>
-                                    handleSupplierChange(
-                                      ing.ingredientId,
-                                      e.target.value,
-                                    )
-                                  }
-                                  size="sm"
-                                >
-                                  <option value="">
-                                    -- Chọn nhà cung cấp --
-                                  </option>
-                                  {suppliers.map((supplier) => (
-                                    <option
-                                      key={supplier.productId}
-                                      value={supplier.productId}
-                                    >
-                                      {supplier.supplierName} -{' '}
-                                      {supplier.productName} (
-                                      {formatNumber(supplier.unitPrice)} đ/
-                                      {supplier.unit})
-                                      {supplier.promotion &&
-                                        ` - ${supplier.promotion}`}
-                                    </option>
-                                  ))}
-                                </FormSelect>
-                                {selectedSupplier && (
-                                  <div className="mt-2">
-                                    <small className="text-muted">
-                                      <strong>Chi tiết:</strong>{' '}
-                                      {selectedSupplier.supplierName} (
-                                      {selectedSupplier.supplierId})
-                                      <br />
-                                      <strong>Sản phẩm:</strong>{' '}
-                                      {selectedSupplier.productName}
-                                      <br />
-                                      <strong>Đơn giá:</strong>{' '}
-                                      {formatNumber(selectedSupplier.unitPrice)}{' '}
-                                      đ/{selectedSupplier.unit}
-                                      <br />
-                                      <strong>Tổng tiền:</strong>{' '}
-                                      {formatNumber(
-                                        selectedSupplier.unitPrice *
-                                          ing.totalQuantity,
-                                      )}{' '}
-                                      đ
-                                      {selectedSupplier.specification && (
-                                        <>
-                                          <br />
-                                          <strong>Quy cách:</strong>{' '}
-                                          {selectedSupplier.specification}
-                                        </>
-                                      )}
-                                      {selectedSupplier.promotion && (
-                                        <>
-                                          <br />
-                                          <Badge bg="success">
-                                            {selectedSupplier.promotion}
-                                          </Badge>
-                                        </>
-                                      )}
-                                    </small>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-              </div>
-            </CardBody>
-          </Card>
-        )}
+        <TotalIngredientsSummary
+          ingredients={totalIngredients}
+          loading={loadingBestSuppliers}
+          availableSuppliers={availableSuppliersByIngredient}
+          supplierSelections={supplierSelections}
+          bestSuppliers={bestSupplierByIngredient}
+          onRefresh={() => loadBestSuppliers()}
+          onSupplierChange={handleSupplierChange}
+          formatNumber={formatNumber}
+        />
 
         {/* Action Buttons */}
         <div className="d-flex gap-2">

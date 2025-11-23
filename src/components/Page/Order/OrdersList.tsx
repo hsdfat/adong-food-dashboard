@@ -6,31 +6,12 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Table,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Alert,
-  FormControl,
-  InputGroup,
-  FormSelect,
-  Row,
-  Col,
-  Form,
   Spinner,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPlus,
-  faEllipsisVertical,
-  faSearch,
-  faEye,
-  faTrash,
-  faSave,
-  faXmark,
-  faFilter,
-  faCalendar,
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { orderApi } from '@/services'
@@ -38,6 +19,8 @@ import { OrderDTO } from '@/models/order'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
+import OrderFilters from './components/OrderFilters'
+import OrderTable from './components/OrderTable'
 
 // ==================== TYPE DEFINITIONS ====================
 
@@ -436,124 +419,6 @@ function OrdersList() {
 
   // ==================== RENDER HELPERS ====================
 
-  const renderStatusSelect = useCallback(
-    (order: OrderDTO) => {
-      const orderId = String(order.orderId)
-      const currentStatus = getCurrentStatus(orderId)
-      const colors = getStatusColors(currentStatus)
-      const isChanged = isStatusChanged(orderId)
-      const isSaving = isSavingStatus(orderId)
-
-      return (
-        <div className="d-flex align-items-center gap-2">
-          <FormSelect
-            size="sm"
-            value={currentStatus}
-            onChange={(e) => handleStatusChange(orderId, e.target.value)}
-            disabled={isSaving}
-            style={{
-              minWidth: '120px',
-              backgroundColor: colors.bg,
-              color: colors.text,
-              borderColor: colors.border,
-            }}
-          >
-            {allStatuses.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </FormSelect>
-
-          {isChanged && (
-            <div className="d-flex gap-1">
-              <Button
-                variant="success"
-                size="sm"
-                onClick={() => handleSaveStatus(orderId)}
-                disabled={isSaving}
-                title="Lưu"
-              >
-                {isSaving ? (
-                  <Spinner animation="border" size="sm" />
-                ) : (
-                  <FontAwesomeIcon icon={faSave} />
-                )}
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => handleDiscardStatus(orderId)}
-                disabled={isSaving}
-                title="Hủy"
-              >
-                <FontAwesomeIcon icon={faXmark} />
-              </Button>
-            </div>
-          )}
-        </div>
-      )
-    },
-    [
-      allStatuses,
-      getCurrentStatus,
-      isStatusChanged,
-      isSavingStatus,
-      handleStatusChange,
-      handleSaveStatus,
-      handleDiscardStatus,
-    ],
-  )
-
-  const renderActions = useCallback(
-    (order: OrderDTO) => {
-      const orderId = String(order.orderId)
-
-      return (
-        <Dropdown>
-          <DropdownToggle
-            variant="link"
-            className="text-decoration-none"
-            title="Actions"
-          >
-            <FontAwesomeIcon icon={faEllipsisVertical} />
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem onClick={() => router.push(`/orders/${orderId}`)}>
-              <FontAwesomeIcon icon={faEye} className="me-2" />
-              Xem chi tiết
-            </DropdownItem>
-            <DropdownItem
-              onClick={() =>
-                router.push(`/orders/${orderId}/ingredients/summary`)
-              }
-            >
-              <FontAwesomeIcon icon={faEye} className="me-2" />
-              Tổng hợp nguyên liệu
-            </DropdownItem>
-            <DropdownItem
-              onClick={() =>
-                router.push(`/orders/${orderId}/supplier-requests`)
-              }
-            >
-              <FontAwesomeIcon icon={faEye} className="me-2" />
-              Yêu cầu nhà cung cấp
-            </DropdownItem>
-            <DropdownItem disabled className="dropdown-divider" />
-            <DropdownItem
-              onClick={() => handleDelete(orderId)}
-              className="text-danger"
-            >
-              <FontAwesomeIcon icon={faTrash} className="me-2" />
-              Xóa
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      )
-    },
-    [router, handleDelete],
-  )
-
   // ==================== RENDER ====================
 
   if (loading && !ordersData) {
@@ -595,160 +460,63 @@ function OrdersList() {
         )}
 
         {/* Search and Filters */}
-        <Form onSubmit={handleSearch} className="mb-4">
-          <Row className="g-2 mb-2">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label className="small mb-1">Tìm kiếm</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FontAwesomeIcon icon={faSearch} />
-                  </InputGroup.Text>
-                  <FormControl
-                    type="text"
-                    placeholder="Tìm theo mã đơn, bếp, người tạo..."
-                    value={filters.searchQuery}
-                    onChange={(e) =>
-                      updateFilter('searchQuery', e.target.value)
-                    }
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-            <Col md={6} className="d-flex align-items-end gap-2">
-              <Button
-                variant="outline-secondary"
-                onClick={toggleFilters}
-                className="mb-0"
-              >
-                <FontAwesomeIcon icon={faFilter} className="me-2" />
-                {filters.showFilters ? 'Ẩn' : 'Hiện'} bộ lọc
-              </Button>
-              {hasActiveFilters && (
-                <Button
-                  variant="outline-secondary"
-                  onClick={handleClearFilters}
-                  className="mb-0"
-                >
-                  Xóa bộ lọc
-                </Button>
-              )}
-              <Button variant="primary" type="submit" className="mb-0">
-                <FontAwesomeIcon icon={faSearch} className="me-2" />
-                Tìm kiếm
-              </Button>
-            </Col>
-          </Row>
-
-          {/* Date Range Filters */}
-          {filters.showFilters && (
-            <Row className="g-2">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="small mb-1">
-                    <FontAwesomeIcon icon={faCalendar} className="me-1" />
-                    Từ ngày
-                  </Form.Label>
-                  <FormControl
-                    type="date"
-                    value={filters.dateFrom}
-                    onChange={(e) => updateFilter('dateFrom', e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="small mb-1">
-                    <FontAwesomeIcon icon={faCalendar} className="me-1" />
-                    Đến ngày
-                  </Form.Label>
-                  <FormControl
-                    type="date"
-                    value={filters.dateTo}
-                    onChange={(e) => updateFilter('dateTo', e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          )}
-        </Form>
+        <OrderFilters
+          filters={filters}
+          hasActiveFilters={hasActiveFilters}
+          onFilterChange={updateFilter}
+          onSearch={handleSearch}
+          onClearFilters={handleClearFilters}
+          onToggleFilters={toggleFilters}
+        />
 
         {/* Orders Table */}
         {ordersData?.data && ordersData.data.length > 0 ? (
           <>
-            <div className="table-responsive">
-              <Table striped bordered hover>
-                <thead className="table-light">
-                  <tr>
-                    <th className="table-priority-column">Mã đơn hàng</th>
-                    <th className="table-priority-column">Bếp</th>
-                    <th className="table-non-priority-column">Ngày lên đơn</th>
-                    <th className="table-non-priority-column">Trạng thái</th>
-                    <th className="table-non-priority-column">Người tạo</th>
-                    <th className="table-non-priority-column">Chi tiết</th>
-                    <th className="text-center table-non-priority-column">
-                      Thao tác
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ordersData.data.map((order) => (
-                    <tr key={order.orderId}>
-                      <td className="table-priority-column">
-                        <strong>#{order.orderId}</strong>
-                      </td>
-                      <td className="table-priority-column">
-                        <div>
-                          <div>{order.kitchenName}</div>
-                          <small className="text-muted">
-                            {order.kitchenId}
-                          </small>
-                        </div>
-                      </td>
-                      <td className="table-non-priority-column">
-                        {new Date(order.orderDate).toLocaleDateString('vi-VN')}
-                      </td>
-                      <td className="table-non-priority-column">
-                        {renderStatusSelect(order)}
-                      </td>
-                      <td className="table-non-priority-column">
-                        <div>
-                          <div>{order.createdByName}</div>
-                          <small className="text-muted">
-                            {order.createdByUserId}
-                          </small>
-                        </div>
-                      </td>
-                      <td className="table-non-priority-column">
-                        <div>
-                          {order.details?.length || 0} món ăn
-                          {order.supplementaries &&
-                            order.supplementaries.length > 0 && (
-                              <div className="text-muted small">
-                                + {order.supplementaries.length} thực phẩm bổ
-                                sung
-                              </div>
-                            )}
-                        </div>
-                      </td>
-                      <td className="text-center table-non-priority-column">
-                        {renderActions(order)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
+            <OrderTable
+              orders={ordersData.data}
+              allStatuses={allStatuses}
+              hasActiveFilters={hasActiveFilters}
+              getCurrentStatus={getCurrentStatus}
+              isStatusChanged={isStatusChanged}
+              isSavingStatus={isSavingStatus}
+              getStatusColors={getStatusColors}
+              onStatusChange={handleStatusChange}
+              onSaveStatus={handleSaveStatus}
+              onDiscardStatus={handleDiscardStatus}
+              onView={(orderId) => router.push(`/orders/${orderId}`)}
+              onViewIngredients={(orderId) =>
+                router.push(`/orders/${orderId}/ingredients/summary`)
+              }
+              onViewSupplierRequests={(orderId) =>
+                router.push(`/orders/${orderId}/supplier-requests`)
+              }
+              onDelete={handleDelete}
+            />
 
             {/* Pagination */}
             {ordersData.meta && <Pagination meta={ordersData.meta} />}
           </>
         ) : (
-          <Alert variant="info" className="mb-0">
-            {hasActiveFilters
-              ? 'Không tìm thấy đơn hàng nào phù hợp với bộ lọc.'
-              : 'Chưa có đơn hàng nào.'}
-          </Alert>
+          <OrderTable
+            orders={[]}
+            allStatuses={allStatuses}
+            hasActiveFilters={hasActiveFilters}
+            getCurrentStatus={getCurrentStatus}
+            isStatusChanged={isStatusChanged}
+            isSavingStatus={isSavingStatus}
+            getStatusColors={getStatusColors}
+            onStatusChange={handleStatusChange}
+            onSaveStatus={handleSaveStatus}
+            onDiscardStatus={handleDiscardStatus}
+            onView={(orderId) => router.push(`/orders/${orderId}`)}
+            onViewIngredients={(orderId) =>
+              router.push(`/orders/${orderId}/ingredients/summary`)
+            }
+            onViewSupplierRequests={(orderId) =>
+              router.push(`/orders/${orderId}/supplier-requests`)
+            }
+            onDelete={handleDelete}
+          />
         )}
       </CardBody>
     </Card>

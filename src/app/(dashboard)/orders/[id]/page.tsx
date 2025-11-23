@@ -276,19 +276,12 @@ export default function OrderDetailPage() {
       }))
       setIngredientSummary(normalized)
 
-      // Get best suppliers from API
+      // Get best suppliers from API (using GET for existing order)
       let bestSuppliersData: any = null
       try {
-        const ingredientsPayload = normalized.map((ing) => ({
-          ingredientId: ing.ingredientId,
-          ingredientName: ing.ingredientName,
-          totalQuantity: ing.quantity,
-          unit: ing.unit,
-        }))
-
-        const bestSuppliersResponse = await orderApi.getBestSuppliers(id, {
-          ingredients: ingredientsPayload,
-        })
+        const bestSuppliersResponse = await orderApi.getBestSuppliersByOrderId(
+          id,
+        )
 
         bestSuppliersData = bestSuppliersResponse
         console.log('Best suppliers API response:', bestSuppliersData)
@@ -349,6 +342,10 @@ export default function OrderDetailPage() {
                     : bestSupplierInfo.bestSupplier.isLowestPrice
                       ? 'Giá tốt nhất'
                       : '',
+                  totalCost: bestSupplierInfo.bestSupplier.totalCost,
+                  isBestSupplier: true,
+                  isFavorite: bestSupplierInfo.bestSupplier.isFavorite,
+                  isLowestPrice: bestSupplierInfo.bestSupplier.isLowestPrice,
                 }
                 // Use the best supplier data as the primary option
                 priceArray = [bestSupplierData, ...priceArray]
@@ -1158,9 +1155,22 @@ export default function OrderDetailPage() {
                             )}
                           </Button>
                         </InputGroup>
-                        {isBestSelected && (
-                          <div className="mt-1">
-                            <Badge bg="success">Best Supplier</Badge>
+                        {selectedPrice && (
+                          <div className="mt-1 d-flex gap-1 flex-wrap">
+                            {isBestSelected && (
+                              <Badge bg="success">⭐ Đề xuất tốt nhất</Badge>
+                            )}
+                            {selectedPrice.isFavorite && (
+                              <Badge bg="danger">❤️ Yêu thích</Badge>
+                            )}
+                            {selectedPrice.isLowestPrice && (
+                              <Badge bg="success">💰 Giá tốt nhất</Badge>
+                            )}
+                            {selectedPrice.promotion &&
+                              !selectedPrice.isFavorite &&
+                              !selectedPrice.isLowestPrice && (
+                                <Badge bg="info">{selectedPrice.promotion}</Badge>
+                              )}
                           </div>
                         )}
                       </td>
@@ -1275,9 +1285,15 @@ export default function OrderDetailPage() {
                   >
                     <div className="d-flex justify-content-between align-items-center">
                       <div>
-                        <div className="fw-bold d-flex align-items-center gap-2">
+                        <div className="fw-bold d-flex align-items-center gap-2 flex-wrap">
                           {p.supplierName}
-                          {isBest && <Badge bg="success">Best</Badge>}
+                          {isBest && <Badge bg="success">⭐ Đề xuất</Badge>}
+                          {p.isFavorite && (
+                            <Badge bg="danger">❤️ Yêu thích</Badge>
+                          )}
+                          {p.isLowestPrice && (
+                            <Badge bg="success">💰 Giá tốt nhất</Badge>
+                          )}
                         </div>
                         <small
                           className={

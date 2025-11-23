@@ -179,7 +179,20 @@ export const orderApi = {
   },
 
   /**
-   * Get best suppliers for order ingredients
+   * Get best suppliers for order ingredients (for existing orders)
+   * GET /api/orders/{orderId}/best-suppliers
+   */
+  async getBestSuppliersByOrderId(orderId: number | string): Promise<any> {
+    return await apiClient<unknown>(
+      `${BASE_URL}/${orderId}/best-suppliers`,
+      {
+        method: 'GET',
+      },
+    )
+  },
+
+  /**
+   * Get best suppliers for order ingredients (for new orders or when ingredients need to be sent)
    * POST /api/orders/{orderId}/best-suppliers
    */
   async getBestSuppliers(
@@ -191,6 +204,7 @@ export const orderApi = {
         totalQuantity: number
         unit: string
       }>
+      kitchenId?: string
     },
   ): Promise<any> {
     return await apiClient<unknown>(`${BASE_URL}/${orderId}/best-suppliers`, {
