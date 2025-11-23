@@ -9,7 +9,8 @@ export default async function Page() {
   return (
     <Card>
       <CardHeader>
-        {dict.sidebar.items?.kitchen_favorite_suppliers || 'Kitchen Favorite Suppliers'}
+        {dict.sidebar.items?.kitchen_favorite_suppliers ||
+          'Kitchen Favorite Suppliers'}
       </CardHeader>
       <CardBody>
         <KitchenFavoriteSuppliersList />

@@ -51,5 +51,3 @@ export const LoadingStateCard: React.FC<LoadingStateProps> = ({
 }
 
 export default LoadingState
-
-

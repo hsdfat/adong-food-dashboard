@@ -6,7 +6,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 export interface ActionButtonProps {
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link'
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'danger'
+    | 'warning'
+    | 'info'
+    | 'light'
+    | 'dark'
+    | 'link'
   size?: 'sm' | 'lg'
   loading?: boolean
   disabled?: boolean
@@ -52,11 +61,9 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         />
       )}
       {icon && !loading && <FontAwesomeIcon icon={icon} className="me-2" />}
-      {loading ? (loadingLabel || 'Loading...') : children}
+      {loading ? loadingLabel || 'Loading...' : children}
     </Button>
   )
 }
 
 export default ActionButton
-
-

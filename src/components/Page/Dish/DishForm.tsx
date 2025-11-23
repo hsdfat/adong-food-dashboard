@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
 import useDictionary from '@/locales/dictionary-hook'
-import { boolean } from 'zod'
 
 interface DishFormProps {
   dish?: Dish

@@ -1,9 +1,9 @@
 // services/recipeStandardApi.ts
 import { apiClient } from '@/utils/api_client'
-import { 
-  RecipeStandard, 
-  CreateRecipeStandardInput, 
-  UpdateRecipeStandardInput
+import {
+  RecipeStandard,
+  CreateRecipeStandardInput,
+  UpdateRecipeStandardInput,
 } from '@/models/recipe_standard'
 import { ResourceCollection } from '@/models/resource'
 
@@ -20,12 +20,13 @@ export const recipeStandardApi = {
   }): Promise<ResourceCollection<RecipeStandard>> => {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
-    if (params?.per_page) queryParams.append('per_page', params.per_page.toString())
+    if (params?.per_page)
+      queryParams.append('per_page', params.per_page.toString())
     if (params?.search) queryParams.append('search', params.search)
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
     if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
 
-    const url = queryParams.toString() 
+    const url = queryParams.toString()
       ? `${BASE_URL}?${queryParams.toString()}`
       : BASE_URL
 
@@ -39,7 +40,9 @@ export const recipeStandardApi = {
   },
 
   // Get recipe standards by dish ID
-  getByDish: async (dishId: string): Promise<ResourceCollection<RecipeStandard>> => {
+  getByDish: async (
+    dishId: string,
+  ): Promise<ResourceCollection<RecipeStandard>> => {
     return await apiClient<ResourceCollection<RecipeStandard>>(
       `${BASE_URL}/dish/${dishId}`,
     )
@@ -55,7 +58,10 @@ export const recipeStandardApi = {
   },
 
   // Update recipe standard
-  update: async (id: number, data: UpdateRecipeStandardInput): Promise<RecipeStandard> => {
+  update: async (
+    id: number,
+    data: UpdateRecipeStandardInput,
+  ): Promise<RecipeStandard> => {
     const response = await apiClient<RecipeStandard>(`${BASE_URL}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),

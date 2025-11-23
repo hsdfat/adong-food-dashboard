@@ -13,9 +13,11 @@
 ## Detected Technologies
 
 ### Go (100.0% confidence)
-*Go programming language*
+
+_Go programming language_
 
 **Related files:**
+
 - common.go
 - dish.go
 - ingredient.go
@@ -24,9 +26,11 @@
 - ... and 8 more files
 
 ### CSS (100.0% confidence)
-*Cascading Style Sheets*
+
+_Cascading Style Sheets_
 
 **Related files:**
+
 - dish.go
 - ingredient.go
 - kitchen.go
@@ -35,9 +39,11 @@
 - ... and 7 more files
 
 ### Python (75.0% confidence)
-*Python programming language*
+
+_Python programming language_
 
 **Related files:**
+
 - dish.go
 - ingredient.go
 - kitchen.go
@@ -46,9 +52,11 @@
 - ... and 7 more files
 
 ### Java (65.0% confidence)
-*Java programming language*
+
+_Java programming language_
 
 **Related files:**
+
 - common.go
 - dish.go
 - ingredient.go
@@ -57,9 +65,11 @@
 - ... and 8 more files
 
 ### TypeScript (60.0% confidence)
-*TypeScript - JavaScript with static typing*
+
+_TypeScript - JavaScript with static typing_
 
 **Related files:**
+
 - dish.go
 - ingredient.go
 - kitchen.go
@@ -68,9 +78,11 @@
 - ... and 7 more files
 
 ### JavaScript (55.0% confidence)
-*JavaScript runtime and ecosystem*
+
+_JavaScript runtime and ecosystem_
 
 **Related files:**
+
 - dish.go
 - ingredient.go
 - kitchen.go
@@ -79,18 +91,22 @@
 - ... and 6 more files
 
 ### Docker (20.0% confidence)
-*Docker containerization platform*
+
+_Docker containerization platform_
 
 **Related files:**
+
 - pagination.go
 - recipe_standard_dto.go
 - supplier_price.go
 - supplier_price_dto.go
 
 ### Ruby (10.0% confidence)
-*Ruby programming language*
+
+_Ruby programming language_
 
 **Related files:**
+
 - order.go
 - pagination.go
 
@@ -115,7 +131,8 @@
 ## Source Code
 
 #### common.go
-*Language: Go | Size: 17 bytes*
+
+_Language: Go | Size: 17 bytes_
 
 ```go
 package models
@@ -124,7 +141,8 @@ package models
 ```
 
 #### dish.go
-*Language: Go | Size: 816 bytes*
+
+_Language: Go | Size: 816 bytes_
 
 ```go
 package models
@@ -149,7 +167,8 @@ func (Dish) TableName() string {
 ```
 
 #### ingredient.go
-*Language: Go | Size: 786 bytes*
+
+_Language: Go | Size: 786 bytes_
 
 ```go
 package models
@@ -173,7 +192,8 @@ func (Ingredient) TableName() string {
 ```
 
 #### kitchen.go
-*Language: Go | Size: 750 bytes*
+
+_Language: Go | Size: 750 bytes_
 
 ```go
 package models
@@ -197,7 +217,8 @@ func (Kitchen) TableName() string {
 ```
 
 #### order.go
-*Language: Go | Size: 7218 bytes*
+
+_Language: Go | Size: 7218 bytes_
 
 ```go
 // models/order.go
@@ -331,7 +352,8 @@ func (SupplierRequestDetail) TableName() string {
 ```
 
 #### order_dto.go
-*Language: Go | Size: 2131 bytes*
+
+_Language: Go | Size: 2131 bytes_
 
 ```go
 package models
@@ -388,7 +410,8 @@ type OrderSupplementaryDTO struct {
 ```
 
 #### pagination.go
-*Language: Go | Size: 2231 bytes*
+
+_Language: Go | Size: 2231 bytes_
 
 ```go
 package models
@@ -484,7 +507,8 @@ func CalculatePaginationMeta(page, perPage int, total int64) *PaginationMeta {
 ```
 
 #### recipe_standard.go
-*Language: Go | Size: 1319 bytes*
+
+_Language: Go | Size: 1319 bytes_
 
 ```go
 package models
@@ -516,7 +540,8 @@ func (RecipeStandard) TableName() string {
 ```
 
 #### recipe_standard_dto.go
-*Language: Go | Size: 1819 bytes*
+
+_Language: Go | Size: 1819 bytes_
 
 ```go
 package models
@@ -580,7 +605,8 @@ func ConvertRecipeStandardsToDTO(recipes []RecipeStandard) []RecipeStandardDTO {
 ```
 
 #### supplier.go
-*Language: Go | Size: 877 bytes*
+
+_Language: Go | Size: 877 bytes_
 
 ```go
 package models
@@ -606,7 +632,8 @@ func (Supplier) TableName() string {
 ```
 
 #### supplier_price.go
-*Language: Go | Size: 1800 bytes*
+
+_Language: Go | Size: 1800 bytes_
 
 ```go
 package models
@@ -644,7 +671,8 @@ func (SupplierPrice) TableName() string {
 ```
 
 #### supplier_price_dto.go
-*Language: Go | Size: 2175 bytes*
+
+_Language: Go | Size: 2175 bytes_
 
 ```go
 package models
@@ -714,7 +742,8 @@ func ConvertSupplierPricesToDTO(prices []SupplierPrice) []SupplierPriceDTO {
 ```
 
 #### user.go
-*Language: Go | Size: 1136 bytes*
+
+_Language: Go | Size: 1136 bytes_
 
 ```go
 package models
@@ -741,7 +770,7 @@ type User struct {
 	Active       *bool     `gorm:"column:active;default:true" json:"active"`
     CreatedDate  time.Time `gorm:"column:created_date;autoCreateTime" json:"createdDate"`
     ModifiedDate time.Time `gorm:"column:modified_date;autoUpdateTime" json:"modifiedDate"`
-	
+
 	// Relationships
 	Kitchen      *Kitchen  `gorm:"foreignKey:KitchenID;references:KitchenID" json:"kitchen,omitempty"`
 }
@@ -756,4 +785,3 @@ func (User) TableName() string {
 
 
 ```
-

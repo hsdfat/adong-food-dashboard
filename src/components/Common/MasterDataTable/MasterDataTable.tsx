@@ -12,7 +12,11 @@ import {
   ButtonGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisVertical, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEllipsisVertical,
+  faEdit,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
 
 export interface TableColumn {
   key: string
@@ -75,21 +79,25 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
     }
   }
 
-  const handleActionClick = async (action: TableAction, row: any, index: number) => {
+  const handleActionClick = async (
+    action: TableAction,
+    row: any,
+    index: number,
+  ) => {
     const actionKey = `${action.label}-${row.id || row.key || index}`
-    
+
     if (loadingActions.has(actionKey)) {
       return
     }
 
     try {
-      setLoadingActions(prev => new Set(prev).add(actionKey))
+      setLoadingActions((prev) => new Set(prev).add(actionKey))
       await action.onClick(row, index)
       onActionSuccess?.(action.label, row)
     } catch (error) {
       onActionError?.(action.label, row, error)
     } finally {
-      setLoadingActions(prev => {
+      setLoadingActions((prev) => {
         const newSet = new Set(prev)
         newSet.delete(actionKey)
         return newSet
@@ -99,10 +107,11 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
 
   const renderCell = (column: TableColumn, row: any, index: number) => {
     const value = row[column.key]
-    const isInlineActionsColumn = inlineActionsColumn === column.key && actions && actions.length > 0
-    
+    const isInlineActionsColumn =
+      inlineActionsColumn === column.key && actions && actions.length > 0
+
     let cellContent: React.ReactNode
-    
+
     if (column.render) {
       cellContent = column.render(value, row, index)
     } else if (value === null || value === undefined || value === '') {
@@ -146,17 +155,19 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
       const action = actions[0]
       const actionKey = `${action.label}-${row.id || row.key || index}`
       const isLoading = showActionLoading && loadingActions.has(actionKey)
-      
+
       // Default icon based on variant
       const defaultIcon = action.variant === 'danger' ? faTrash : faEdit
-      
+
       return (
         <button
           className={`btn btn-sm btn-${action.variant || 'primary'}`}
           onClick={() => handleActionClick(action, row, index)}
           disabled={isLoading}
-          title={isLoading ? (action.loadingLabel || 'Loading...') : action.label}
-          aria-label={isLoading ? (action.loadingLabel || 'Loading...') : action.label}
+          title={isLoading ? action.loadingLabel || 'Loading...' : action.label}
+          aria-label={
+            isLoading ? action.loadingLabel || 'Loading...' : action.label
+          }
         >
           {isLoading ? (
             <Spinner
@@ -180,18 +191,22 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
           {actions.map((action, actionIndex) => {
             const actionKey = `${action.label}-${row.id || row.key || index}`
             const isLoading = showActionLoading && loadingActions.has(actionKey)
-            
+
             // Default icon based on variant
             const defaultIcon = action.variant === 'danger' ? faTrash : faEdit
-            
+
             return (
               <button
                 key={actionIndex}
                 className={`btn btn-${action.variant || 'primary'}`}
                 onClick={() => handleActionClick(action, row, index)}
                 disabled={isLoading}
-                title={isLoading ? (action.loadingLabel || 'Loading...') : action.label}
-                aria-label={isLoading ? (action.loadingLabel || 'Loading...') : action.label}
+                title={
+                  isLoading ? action.loadingLabel || 'Loading...' : action.label
+                }
+                aria-label={
+                  isLoading ? action.loadingLabel || 'Loading...' : action.label
+                }
               >
                 {isLoading ? (
                   <Spinner
@@ -218,8 +233,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
           as="button"
           className="btn btn-transparent btn-sm p-1"
           bsPrefix="none"
-          disabled={Array.from(loadingActions).some(key => 
-            key.includes(`-${row.id || row.key || index}`)
+          disabled={Array.from(loadingActions).some((key) =>
+            key.includes(`-${row.id || row.key || index}`),
           )}
           title="More actions"
           aria-label="More actions"
@@ -230,7 +245,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
           {actions.map((action, actionIndex) => {
             const actionKey = `${action.label}-${row.id || row.key || index}`
             const isLoading = showActionLoading && loadingActions.has(actionKey)
-            
+
             return (
               <DropdownItem
                 key={actionIndex}
@@ -248,8 +263,10 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
                     className="me-2"
                   />
                 )}
-                {action.icon && !isLoading && <span className="me-2">{action.icon}</span>}
-                {isLoading ? (action.loadingLabel || 'Loading...') : action.label}
+                {action.icon && !isLoading && (
+                  <span className="me-2">{action.icon}</span>
+                )}
+                {isLoading ? action.loadingLabel || 'Loading...' : action.label}
               </DropdownItem>
             )
           })}
@@ -267,15 +284,19 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
       const action = actions[0]
       const actionKey = `${action.label}-${row.id || row.key || index}`
       const isLoading = showActionLoading && loadingActions.has(actionKey)
-      
+
       return (
         <div className="text-end">
           <button
             className={`btn btn-sm btn-${action.variant || 'primary'}`}
             onClick={() => handleActionClick(action, row, index)}
             disabled={isLoading}
-            title={isLoading ? (action.loadingLabel || 'Loading...') : action.label}
-            aria-label={isLoading ? (action.loadingLabel || 'Loading...') : action.label}
+            title={
+              isLoading ? action.loadingLabel || 'Loading...' : action.label
+            }
+            aria-label={
+              isLoading ? action.loadingLabel || 'Loading...' : action.label
+            }
           >
             {isLoading && (
               <Spinner
@@ -287,8 +308,10 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
                 className="me-1"
               />
             )}
-            {action.icon && !isLoading && <span className="me-1">{action.icon}</span>}
-            {isLoading ? (action.loadingLabel || 'Loading...') : action.label}
+            {action.icon && !isLoading && (
+              <span className="me-1">{action.icon}</span>
+            )}
+            {isLoading ? action.loadingLabel || 'Loading...' : action.label}
           </button>
         </div>
       )
@@ -301,8 +324,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
             as="button"
             className="btn btn-transparent btn-sm p-0"
             bsPrefix="none"
-            disabled={Array.from(loadingActions).some(key => 
-              key.includes(`-${row.id || row.key || index}`)
+            disabled={Array.from(loadingActions).some((key) =>
+              key.includes(`-${row.id || row.key || index}`),
             )}
             title="More actions"
             aria-label="More actions"
@@ -312,8 +335,9 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
           <DropdownMenu>
             {actions.map((action, actionIndex) => {
               const actionKey = `${action.label}-${row.id || row.key || index}`
-              const isLoading = showActionLoading && loadingActions.has(actionKey)
-              
+              const isLoading =
+                showActionLoading && loadingActions.has(actionKey)
+
               return (
                 <DropdownItem
                   key={actionIndex}
@@ -331,8 +355,12 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
                       className="me-2"
                     />
                   )}
-                  {action.icon && !isLoading && <span className="me-2">{action.icon}</span>}
-                  {isLoading ? (action.loadingLabel || 'Loading...') : action.label}
+                  {action.icon && !isLoading && (
+                    <span className="me-2">{action.icon}</span>
+                  )}
+                  {isLoading
+                    ? action.loadingLabel || 'Loading...'
+                    : action.label}
                 </DropdownItem>
               )
             })}
@@ -363,7 +391,12 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
       >
         <tbody>
           <tr>
-            <td colSpan={columns.length + (actions && !inlineActionsColumn ? 1 : 0)} className="text-center py-4">
+            <td
+              colSpan={
+                columns.length + (actions && !inlineActionsColumn ? 1 : 0)
+              }
+              className="text-center py-4"
+            >
               {emptyMessage}
             </td>
           </tr>
@@ -390,7 +423,10 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
             </th>
           ))}
           {actions && actions.length > 0 && !inlineActionsColumn && (
-            <th className="text-end table-non-priority-column" style={{ width: '60px' }}>
+            <th
+              className="text-end table-non-priority-column"
+              style={{ width: '60px' }}
+            >
               Actions
             </th>
           )}
@@ -408,7 +444,10 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
               </td>
             ))}
             {actions && actions.length > 0 && !inlineActionsColumn && (
-              <td className="text-end table-non-priority-column" style={{ width: '60px' }}>
+              <td
+                className="text-end table-non-priority-column"
+                style={{ width: '60px' }}
+              >
                 {renderActions(row, index)}
               </td>
             )}

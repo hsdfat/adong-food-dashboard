@@ -7,7 +7,10 @@ import { RecipeStandard } from '@/models/recipe_standard'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
-import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 
 interface RecipeStandardsListProps {
   dishId?: string
@@ -16,17 +19,22 @@ interface RecipeStandardsListProps {
 export default function RecipeStandardsList({
   dishId,
 }: RecipeStandardsListProps) {
-  const [standardsData, setStandardsData] = useState<ResourceCollection<RecipeStandard> | null>(null)
+  const [standardsData, setStandardsData] =
+    useState<ResourceCollection<RecipeStandard> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const router = useRouter()
   const dict = useDictionary()
 
-  const loadStandards = async (page: number, perPage: number, search: string) => {
+  const loadStandards = async (
+    page: number,
+    perPage: number,
+    search: string,
+  ) => {
     try {
       setLoading(true)
       setError('')
-      
+
       let response: ResourceCollection<RecipeStandard>
       if (dishId) {
         // When dishId is provided, get by dish (no pagination/search support in this endpoint)
@@ -71,19 +79,19 @@ export default function RecipeStandardsList({
       label: dict.recipe_standards?.dish ?? 'Dish',
       align: 'left',
       priority: true,
-      render: (value, row) => 
-        row.dish?.dishName || value || row.dishId,
+      render: (value, row) => row.dish?.dishName || value || row.dishId,
     },
     {
       key: 'ingredientName',
       label: dict.recipe_standards?.ingredient ?? 'Ingredient',
       align: 'left',
-      render: (value, row) => 
+      render: (value, row) =>
         row.ingredient?.ingredientName || value || row.ingredientId,
     },
     {
       key: 'standardPer1',
-      label: dict.recipe_standards?.standard_per_serving ?? 'Standard Per Serving',
+      label:
+        dict.recipe_standards?.standard_per_serving ?? 'Standard Per Serving',
       align: 'right',
     },
     {
@@ -118,6 +126,9 @@ export default function RecipeStandardsList({
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       loadingLabel: 'Deleting...',
+      onClick: async (standard) => {
+        await recipeStandardApi.delete(standard.standardId)
+      },
     },
   ]
 
@@ -137,7 +148,9 @@ export default function RecipeStandardsList({
       onLoadData={loadStandards}
       onDelete={handleDelete}
       onError={setError}
-      getItemName={(standard) => standard.dishName || standard.ingredientName || 'recipe standard'}
+      getItemName={(standard) =>
+        standard.dishName || standard.ingredientName || 'recipe standard'
+      }
       getItemId={(standard) => standard.standardId.toString()}
       basePath="/recipe-standards"
       dictKey="recipe_standards"

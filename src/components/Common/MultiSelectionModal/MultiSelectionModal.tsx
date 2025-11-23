@@ -1,7 +1,16 @@
 'use client'
 
 import React from 'react'
-import { Modal, Button, FormGroup, FormControl, InputGroup, Alert, Badge, FormCheck } from 'react-bootstrap'
+import {
+  Modal,
+  Button,
+  FormGroup,
+  FormControl,
+  InputGroup,
+  Alert,
+  Badge,
+  FormCheck,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
@@ -31,7 +40,11 @@ export interface MultiSelectionModalProps<T extends MultiSelectionModalItem> {
   getItemName?: (item: T) => string
   getItemSubtitle?: (item: T) => string
   getItemBadge?: (item: T) => string
-  renderItem?: (item: T, isSelected: boolean, onToggle: (checked: boolean) => void) => React.ReactNode
+  renderItem?: (
+    item: T,
+    isSelected: boolean,
+    onToggle: (checked: boolean) => void,
+  ) => React.ReactNode
   additionalFields?: React.ReactNode
   size?: 'sm' | 'lg' | 'xl'
   confirmVariant?: string
@@ -102,7 +115,9 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
                 if (renderItem) {
                   return (
                     <div key={item.id}>
-                      {renderItem(item, isSelected, (checked) => handleToggle(item.id, checked))}
+                      {renderItem(item, isSelected, (checked) =>
+                        handleToggle(item.id, checked),
+                      )}
                     </div>
                   )
                 }
@@ -166,4 +181,3 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
     </Modal>
   )
 }
-

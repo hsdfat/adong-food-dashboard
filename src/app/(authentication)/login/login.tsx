@@ -1,7 +1,13 @@
 'use client'
 
 import {
-  Alert, Button, Col, Form, FormControl, InputGroup, Row,
+  Alert,
+  Button,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  Row,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-regular-svg-icons'
@@ -72,10 +78,7 @@ export default function Login({ callbackUrl }: { callbackUrl: string }) {
       <Form action={login}>
         <InputGroup className="mb-3">
           <InputGroupText>
-            <FontAwesomeIcon
-              icon={faUser}
-              fixedWidth
-            />
+            <FontAwesomeIcon icon={faUser} fixedWidth />
           </InputGroupText>
           <FormControl
             name="username"
@@ -89,10 +92,7 @@ export default function Login({ callbackUrl }: { callbackUrl: string }) {
 
         <InputGroup className="mb-3">
           <InputGroupText>
-            <FontAwesomeIcon
-              icon={faLock}
-              fixedWidth
-            />
+            <FontAwesomeIcon icon={faLock} fixedWidth />
           </InputGroupText>
           <FormControl
             type="password"

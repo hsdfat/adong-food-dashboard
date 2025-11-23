@@ -22,7 +22,10 @@ import {
 import { PropsWithChildren } from 'react'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import {
-  faGear, faListCheck, faLock, faPowerOff,
+  faGear,
+  faListCheck,
+  faLock,
+  faPowerOff,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import HeaderLogout from '@/components/Layout/Dashboard/Header/HeaderLogout'
@@ -32,7 +35,7 @@ import { getDictionary } from '@/locales/dictionary'
 import { getServerLocale } from '@/locales/server-utils'
 
 type ItemWithIconProps = {
-  icon: IconDefinition;
+  icon: IconDefinition
 } & PropsWithChildren
 
 const ItemWithIcon = (props: ItemWithIconProps) => {
@@ -54,7 +57,12 @@ export default async function HeaderProfileNav() {
   return (
     <Nav>
       <Dropdown as={NavItem}>
-        <DropdownToggle variant="link" bsPrefix="hide-caret" className="py-0 px-2 rounded-0" id="dropdown-profile">
+        <DropdownToggle
+          variant="link"
+          bsPrefix="hide-caret"
+          className="py-0 px-2 rounded-0"
+          id="dropdown-profile"
+        >
           <div className="avatar position-relative">
             {session && (
               <Image
@@ -68,7 +76,9 @@ export default async function HeaderProfileNav() {
           </div>
         </DropdownToggle>
         <DropdownMenu className="pt-0">
-          <DropdownHeader className="fw-bold rounded-top">{dict.profile.account.title}</DropdownHeader>
+          <DropdownHeader className="fw-bold rounded-top">
+            {dict.profile.account.title}
+          </DropdownHeader>
           {/* <Link href="#" passHref legacyBehavior>
             <DropdownItem>
               <ItemWithIcon icon={faBell}>
@@ -102,16 +112,22 @@ export default async function HeaderProfileNav() {
             </DropdownItem>
           </Link> */}
 
-          <DropdownHeader className="fw-bold">{dict.profile.settings.title}</DropdownHeader>
+          <DropdownHeader className="fw-bold">
+            {dict.profile.settings.title}
+          </DropdownHeader>
 
           <Link href="#" passHref legacyBehavior>
             <DropdownItem>
-              <ItemWithIcon icon={faUser}>{dict.profile.settings.items.profile}</ItemWithIcon>
+              <ItemWithIcon icon={faUser}>
+                {dict.profile.settings.items.profile}
+              </ItemWithIcon>
             </DropdownItem>
           </Link>
           <Link href="#" passHref legacyBehavior>
             <DropdownItem>
-              <ItemWithIcon icon={faGear}>{dict.profile.settings.items.settings}</ItemWithIcon>
+              <ItemWithIcon icon={faGear}>
+                {dict.profile.settings.items.settings}
+              </ItemWithIcon>
             </DropdownItem>
           </Link>
           <Link href="#" passHref legacyBehavior>
@@ -123,7 +139,9 @@ export default async function HeaderProfileNav() {
           </Link>
           <Link href="#" passHref legacyBehavior>
             <DropdownItem>
-              <ItemWithIcon icon={faFile}>{dict.profile.settings.items.profile}</ItemWithIcon>
+              <ItemWithIcon icon={faFile}>
+                {dict.profile.settings.items.profile}
+              </ItemWithIcon>
             </DropdownItem>
           </Link>
 
@@ -136,7 +154,9 @@ export default async function HeaderProfileNav() {
           </Link> */}
           <HeaderLogout>
             <DropdownItem>
-              <ItemWithIcon icon={faPowerOff}>{dict.profile.logout}</ItemWithIcon>
+              <ItemWithIcon icon={faPowerOff}>
+                {dict.profile.logout}
+              </ItemWithIcon>
             </DropdownItem>
           </HeaderLogout>
         </DropdownMenu>

@@ -433,14 +433,13 @@
       "view_supplier_requests": "Xem yêu cầu nhà cung cấp",
       "copy_to_clipboard_success": "Đã sao chép nội dung tin nhắn",
       "copy_to_clipboard_error": "Không thể sao chép nội dung. Vui lòng thử lại.",
-      "zalo": "Zalo"
-    ,
-    "supplier_saved_one": "Đã lưu yêu cầu nhà cung cấp cho 1 nguyên liệu",
-    "supplier_saved_bulk": "Đã lưu yêu cầu nhà cung cấp cho các nguyên liệu đã chọn",
-    "supplier_save_failed": "Lưu thất bại",
-    "supplier_save_none_selected": "Chưa chọn nhà cung cấp nào để lưu",
-    "save_all_selected": "Lưu tất cả đã chọn",
-    "saving": "Đang lưu..."
+      "zalo": "Zalo",
+      "supplier_saved_one": "Đã lưu yêu cầu nhà cung cấp cho 1 nguyên liệu",
+      "supplier_saved_bulk": "Đã lưu yêu cầu nhà cung cấp cho các nguyên liệu đã chọn",
+      "supplier_save_failed": "Lưu thất bại",
+      "supplier_save_none_selected": "Chưa chọn nhà cung cấp nào để lưu",
+      "save_all_selected": "Lưu tất cả đã chọn",
+      "saving": "Đang lưu..."
     }
   },
 

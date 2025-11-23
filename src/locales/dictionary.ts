@@ -15,7 +15,7 @@ export const getLocale = (localeCookie?: string): Locale => {
   // Check if running in browser
   if (typeof window !== 'undefined') {
     const cookie = localeCookie || Cookies.get('locale')
-    
+
     if (cookie && getLocales().includes(cookie as Locale)) {
       return cookie as Locale
     }

@@ -3,7 +3,12 @@
 import React, { createContext, useContext, useState, useCallback } from 'react'
 import { Toast, ToastContainer } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faExclamationTriangle, faInfoCircle, faTimes } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCheckCircle,
+  faExclamationTriangle,
+  faInfoCircle,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons'
 
 export interface Notification {
   id: string
@@ -20,12 +25,16 @@ interface NotificationContextType {
   clearNotifications: () => void
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined)
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined,
+)
 
 export const useNotification = () => {
   const context = useContext(NotificationContext)
   if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider')
+    throw new Error(
+      'useNotification must be used within a NotificationProvider',
+    )
   }
   return context
 }
@@ -34,24 +43,29 @@ interface NotificationProviderProps {
   children: React.ReactNode
 }
 
-export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({
+  children,
+}) => {
   const [notifications, setNotifications] = useState<Notification[]>([])
 
-  const addNotification = useCallback((notification: Omit<Notification, 'id'>) => {
-    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9)
-    const newNotification = { ...notification, id }
-    
-    setNotifications(prev => [...prev, newNotification])
-    
-    // Auto-remove notification after duration (default 5 seconds)
-    const duration = notification.duration || 5000
-    setTimeout(() => {
-      removeNotification(id)
-    }, duration)
-  }, [])
+  const addNotification = useCallback(
+    (notification: Omit<Notification, 'id'>) => {
+      const id = Date.now().toString() + Math.random().toString(36).substr(2, 9)
+      const newNotification = { ...notification, id }
+
+      setNotifications((prev) => [...prev, newNotification])
+
+      // Auto-remove notification after duration (default 5 seconds)
+      const duration = notification.duration || 5000
+      setTimeout(() => {
+        removeNotification(id)
+      }, duration)
+    },
+    [],
+  )
 
   const removeNotification = useCallback((id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id))
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
   }, [])
 
   const clearNotifications = useCallback(() => {
@@ -98,8 +112,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
       }}
     >
       {children}
-      
-      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1050 }}>
+
+      <ToastContainer
+        position="top-end"
+        className="p-3"
+        style={{ zIndex: 1050 }}
+      >
         {notifications.map((notification) => (
           <Toast
             key={notification.id}
@@ -111,8 +129,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
           >
             <Toast.Header className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
-                <FontAwesomeIcon 
-                  icon={getIcon(notification.type)} 
+                <FontAwesomeIcon
+                  icon={getIcon(notification.type)}
                   className={`me-2 text-${getBgVariant(notification.type)}`}
                 />
                 <strong className="me-auto">{notification.title}</strong>

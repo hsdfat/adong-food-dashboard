@@ -1,5 +1,9 @@
 import { apiClient } from '@/utils/api_client'
-import { Ingredient, CreateIngredientInput, UpdateIngredientInput } from '@/models/ingredient'
+import {
+  Ingredient,
+  CreateIngredientInput,
+  UpdateIngredientInput,
+} from '@/models/ingredient'
 
 export const ingredientApi = {
   getAll: async (): Promise<Ingredient[]> => {
@@ -17,7 +21,10 @@ export const ingredientApi = {
     })
   },
 
-  update: async (id: string, data: UpdateIngredientInput): Promise<Ingredient> => {
+  update: async (
+    id: string,
+    data: UpdateIngredientInput,
+  ): Promise<Ingredient> => {
     return apiClient<Ingredient>(`/api/ingredients/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),

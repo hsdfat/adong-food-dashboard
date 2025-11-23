@@ -1,7 +1,15 @@
 'use client'
 
 import React from 'react'
-import { Modal, Button, FormGroup, FormControl, InputGroup, Alert, Badge } from 'react-bootstrap'
+import {
+  Modal,
+  Button,
+  FormGroup,
+  FormControl,
+  InputGroup,
+  Alert,
+  Badge,
+} from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
@@ -32,7 +40,9 @@ export interface SingleSelectionModalProps<T extends SingleSelectionModalItem> {
   size?: 'sm' | 'lg' | 'xl'
 }
 
-export default function SingleSelectionModal<T extends SingleSelectionModalItem>({
+export default function SingleSelectionModal<
+  T extends SingleSelectionModalItem,
+>({
   show,
   onHide,
   title,
@@ -88,7 +98,11 @@ export default function SingleSelectionModal<T extends SingleSelectionModalItem>
 
                 if (renderItem) {
                   return (
-                    <div key={item.id} onClick={() => handleSelect(item)} style={{ cursor: 'pointer' }}>
+                    <div
+                      key={item.id}
+                      onClick={() => handleSelect(item)}
+                      style={{ cursor: 'pointer' }}
+                    >
                       {renderItem(item, isSelected)}
                     </div>
                   )
@@ -105,7 +119,11 @@ export default function SingleSelectionModal<T extends SingleSelectionModalItem>
                       <div>
                         <h6 className="mb-1">{itemName}</h6>
                         {itemSubtitle && (
-                          <small className={isSelected ? 'text-white-50' : 'text-muted'}>
+                          <small
+                            className={
+                              isSelected ? 'text-white-50' : 'text-muted'
+                            }
+                          >
                             {itemSubtitle}
                           </small>
                         )}
@@ -134,4 +152,3 @@ export default function SingleSelectionModal<T extends SingleSelectionModalItem>
     </Modal>
   )
 }
-

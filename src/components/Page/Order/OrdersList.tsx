@@ -57,7 +57,13 @@ interface StatusState {
 // ==================== CONSTANTS ====================
 
 const DEFAULT_PER_PAGE = 10
-const COMMON_STATUSES = ['Pending', 'Approved', 'Completed', 'Cancelled', 'Rejected']
+const COMMON_STATUSES = [
+  'Pending',
+  'Approved',
+  'Completed',
+  'Cancelled',
+  'Rejected',
+]
 
 const STATUS_COLORS = {
   pending: { bg: '#ffc107', text: '#000000', border: '#ffc107' },
@@ -83,7 +89,10 @@ function getDefaultDateRange() {
 
 function getStatusColors(status: string) {
   const statusLower = status.toLowerCase()
-  return STATUS_COLORS[statusLower as keyof typeof STATUS_COLORS] || STATUS_COLORS.default
+  return (
+    STATUS_COLORS[statusLower as keyof typeof STATUS_COLORS] ||
+    STATUS_COLORS.default
+  )
 }
 
 // ==================== MAIN COMPONENT ====================
@@ -96,7 +105,8 @@ function OrdersList() {
   // ==================== STATE MANAGEMENT ====================
 
   // Data State
-  const [ordersData, setOrdersData] = useState<ResourceCollection<OrderDTO> | null>(null)
+  const [ordersData, setOrdersData] =
+    useState<ResourceCollection<OrderDTO> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -121,13 +131,18 @@ function OrdersList() {
 
   // ==================== URL PARAMS ====================
 
-  const urlParams = useMemo(() => ({
-    page: parseInt(searchParams.get('page') || '1'),
-    perPage: parseInt(searchParams.get('per_page') || String(DEFAULT_PER_PAGE)),
-    search: searchParams.get('search') || '',
-    fromDate: searchParams.get('from_date') || '',
-    toDate: searchParams.get('to_date') || '',
-  }), [searchParams])
+  const urlParams = useMemo(
+    () => ({
+      page: parseInt(searchParams.get('page') || '1'),
+      perPage: parseInt(
+        searchParams.get('per_page') || String(DEFAULT_PER_PAGE),
+      ),
+      search: searchParams.get('search') || '',
+      fromDate: searchParams.get('from_date') || '',
+      toDate: searchParams.get('to_date') || '',
+    }),
+    [searchParams],
+  )
 
   // ==================== DATA LOADING ====================
 
@@ -160,14 +175,14 @@ function OrdersList() {
           originalStatuses[order.orderId] = order.status
         })
 
-        setStatusState(prev => ({
+        setStatusState((prev) => ({
           ...prev,
           original: originalStatuses,
           // Keep only edited statuses for orders still in current page
           edited: Object.fromEntries(
             Object.entries(prev.edited).filter(([orderId]) =>
-              data.data.some(o => String(o.orderId) === orderId)
-            )
+              data.data.some((o) => String(o.orderId) === orderId),
+            ),
           ),
         }))
       }
@@ -178,7 +193,13 @@ function OrdersList() {
       setLoading(false)
       isLoadingRef.current = false
     }
-  }, [urlParams.page, urlParams.perPage, urlParams.search, urlParams.fromDate, urlParams.toDate])
+  }, [
+    urlParams.page,
+    urlParams.perPage,
+    urlParams.search,
+    urlParams.fromDate,
+    urlParams.toDate,
+  ])
 
   // ==================== INITIALIZATION ====================
 
@@ -200,7 +221,13 @@ function OrdersList() {
 
     // Load orders when URL params change
     loadOrders()
-  }, [urlParams.page, urlParams.perPage, urlParams.search, urlParams.fromDate, urlParams.toDate])
+  }, [
+    urlParams.page,
+    urlParams.perPage,
+    urlParams.search,
+    urlParams.fromDate,
+    urlParams.toDate,
+  ])
 
   // Sync filters with URL params
   useEffect(() => {
@@ -215,35 +242,38 @@ function OrdersList() {
 
   // ==================== FILTER HANDLERS ====================
 
-  const handleSearch = useCallback((e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
 
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set('page', '1') // Reset to first page
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('page', '1') // Reset to first page
 
-    if (filters.searchQuery.trim()) {
-      newParams.set('search', filters.searchQuery.trim())
-    } else {
-      newParams.delete('search')
-    }
+      if (filters.searchQuery.trim()) {
+        newParams.set('search', filters.searchQuery.trim())
+      } else {
+        newParams.delete('search')
+      }
 
-    if (filters.dateFrom) {
-      newParams.set('from_date', filters.dateFrom)
-    } else {
-      newParams.delete('from_date')
-    }
+      if (filters.dateFrom) {
+        newParams.set('from_date', filters.dateFrom)
+      } else {
+        newParams.delete('from_date')
+      }
 
-    if (filters.dateTo) {
-      newParams.set('to_date', filters.dateTo)
-    } else {
-      newParams.delete('to_date')
-    }
+      if (filters.dateTo) {
+        newParams.set('to_date', filters.dateTo)
+      } else {
+        newParams.delete('to_date')
+      }
 
-    router.push(`/orders?${newParams.toString()}`)
-  }, [filters, searchParams, router])
+      router.push(`/orders?${newParams.toString()}`)
+    },
+    [filters, searchParams, router],
+  )
 
   const handleClearFilters = useCallback(() => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       searchQuery: '',
       dateFrom: '',
@@ -259,71 +289,80 @@ function OrdersList() {
   }, [searchParams, router])
 
   const toggleFilters = useCallback(() => {
-    setFilters(prev => ({ ...prev, showFilters: !prev.showFilters }))
+    setFilters((prev) => ({ ...prev, showFilters: !prev.showFilters }))
   }, [])
 
-  const updateFilter = useCallback(<K extends keyof FilterState>(key: K, value: FilterState[K]) => {
-    setFilters(prev => ({ ...prev, [key]: value }))
-  }, [])
+  const updateFilter = useCallback(
+    <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
+      setFilters((prev) => ({ ...prev, [key]: value }))
+    },
+    [],
+  )
 
   // ==================== STATUS HANDLERS ====================
 
-  const handleStatusChange = useCallback((orderId: string, newStatus: string) => {
-    setStatusState(prev => {
-      const originalStatus = prev.original[orderId]
+  const handleStatusChange = useCallback(
+    (orderId: string, newStatus: string) => {
+      setStatusState((prev) => {
+        const originalStatus = prev.original[orderId]
 
-      if (newStatus === originalStatus) {
-        // Revert to original - remove from edited
-        const { [orderId]: _, ...remainingEdited } = prev.edited
-        return { ...prev, edited: remainingEdited }
-      } else {
-        // Status changed - add to edited
-        return {
-          ...prev,
-          edited: { ...prev.edited, [orderId]: newStatus },
-        }
-      }
-    })
-  }, [])
-
-  const handleSaveStatus = useCallback(async (orderId: string) => {
-    const newStatus = statusState.edited[orderId]
-    if (!newStatus) return
-
-    try {
-      setStatusState(prev => ({
-        ...prev,
-        saving: { ...prev.saving, [orderId]: true },
-      }))
-      setError('')
-
-      await orderApi.updateStatus(parseInt(orderId), newStatus)
-
-      // Update original status and remove from edited
-      setStatusState(prev => {
-        const { [orderId]: _, ...remainingEdited } = prev.edited
-        const { [orderId]: __, ...remainingSaving } = prev.saving
-        return {
-          original: { ...prev.original, [orderId]: newStatus },
-          edited: remainingEdited,
-          saving: remainingSaving,
+        if (newStatus === originalStatus) {
+          // Revert to original - remove from edited
+          const { [orderId]: _, ...remainingEdited } = prev.edited
+          return { ...prev, edited: remainingEdited }
+        } else {
+          // Status changed - add to edited
+          return {
+            ...prev,
+            edited: { ...prev.edited, [orderId]: newStatus },
+          }
         }
       })
+    },
+    [],
+  )
 
-      // Reload to get fresh data
-      await loadOrders()
-    } catch (err: any) {
-      console.error('[OrdersList] Status update error:', err)
-      setError(err?.message || 'Failed to update order status')
-      setStatusState(prev => ({
-        ...prev,
-        saving: { ...prev.saving, [orderId]: false },
-      }))
-    }
-  }, [statusState.edited, loadOrders])
+  const handleSaveStatus = useCallback(
+    async (orderId: string) => {
+      const newStatus = statusState.edited[orderId]
+      if (!newStatus) return
+
+      try {
+        setStatusState((prev) => ({
+          ...prev,
+          saving: { ...prev.saving, [orderId]: true },
+        }))
+        setError('')
+
+        await orderApi.updateStatus(parseInt(orderId), newStatus)
+
+        // Update original status and remove from edited
+        setStatusState((prev) => {
+          const { [orderId]: _, ...remainingEdited } = prev.edited
+          const { [orderId]: __, ...remainingSaving } = prev.saving
+          return {
+            original: { ...prev.original, [orderId]: newStatus },
+            edited: remainingEdited,
+            saving: remainingSaving,
+          }
+        })
+
+        // Reload to get fresh data
+        await loadOrders()
+      } catch (err: any) {
+        console.error('[OrdersList] Status update error:', err)
+        setError(err?.message || 'Failed to update order status')
+        setStatusState((prev) => ({
+          ...prev,
+          saving: { ...prev.saving, [orderId]: false },
+        }))
+      }
+    },
+    [statusState.edited, loadOrders],
+  )
 
   const handleDiscardStatus = useCallback((orderId: string) => {
-    setStatusState(prev => {
+    setStatusState((prev) => {
       const { [orderId]: _, ...remainingEdited } = prev.edited
       return { ...prev, edited: remainingEdited }
     })
@@ -331,19 +370,22 @@ function OrdersList() {
 
   // ==================== DELETE HANDLER ====================
 
-  const handleDelete = useCallback(async (orderId: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
-      return
-    }
+  const handleDelete = useCallback(
+    async (orderId: string) => {
+      if (!confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
+        return
+      }
 
-    try {
-      await orderApi.delete(parseInt(orderId))
-      await loadOrders()
-    } catch (err: any) {
-      console.error('[OrdersList] Delete error:', err)
-      setError(err?.message || 'Failed to delete order')
-    }
-  }, [loadOrders])
+      try {
+        await orderApi.delete(parseInt(orderId))
+        await loadOrders()
+      } catch (err: any) {
+        console.error('[OrdersList] Delete error:', err)
+        setError(err?.message || 'Failed to delete order')
+      }
+    },
+    [loadOrders],
+  )
 
   // ==================== COMPUTED VALUES ====================
 
@@ -362,30 +404,34 @@ function OrdersList() {
 
   const hasActiveFilters = useMemo(
     () => Boolean(urlParams.search || urlParams.fromDate || urlParams.toDate),
-    [urlParams.search, urlParams.fromDate, urlParams.toDate]
+    [urlParams.search, urlParams.fromDate, urlParams.toDate],
   )
 
   // ==================== HELPER FUNCTIONS ====================
 
   const getCurrentStatus = useCallback(
     (orderId: string): string => {
-      return statusState.edited[orderId] || statusState.original[orderId] || 'Pending'
+      return (
+        statusState.edited[orderId] ||
+        statusState.original[orderId] ||
+        'Pending'
+      )
     },
-    [statusState.edited, statusState.original]
+    [statusState.edited, statusState.original],
   )
 
   const isStatusChanged = useCallback(
     (orderId: string): boolean => {
       return orderId in statusState.edited
     },
-    [statusState.edited]
+    [statusState.edited],
   )
 
   const isSavingStatus = useCallback(
     (orderId: string): boolean => {
       return Boolean(statusState.saving[orderId])
     },
-    [statusState.saving]
+    [statusState.saving],
   )
 
   // ==================== RENDER HELPERS ====================
@@ -456,7 +502,7 @@ function OrdersList() {
       handleStatusChange,
       handleSaveStatus,
       handleDiscardStatus,
-    ]
+    ],
   )
 
   const renderActions = useCallback(
@@ -465,7 +511,11 @@ function OrdersList() {
 
       return (
         <Dropdown>
-          <DropdownToggle variant="link" className="text-decoration-none" title="Actions">
+          <DropdownToggle
+            variant="link"
+            className="text-decoration-none"
+            title="Actions"
+          >
             <FontAwesomeIcon icon={faEllipsisVertical} />
           </DropdownToggle>
           <DropdownMenu>
@@ -473,16 +523,27 @@ function OrdersList() {
               <FontAwesomeIcon icon={faEye} className="me-2" />
               Xem chi tiết
             </DropdownItem>
-            <DropdownItem onClick={() => router.push(`/orders/${orderId}/ingredients/summary`)}>
+            <DropdownItem
+              onClick={() =>
+                router.push(`/orders/${orderId}/ingredients/summary`)
+              }
+            >
               <FontAwesomeIcon icon={faEye} className="me-2" />
               Tổng hợp nguyên liệu
             </DropdownItem>
-            <DropdownItem onClick={() => router.push(`/orders/${orderId}/supplier-requests`)}>
+            <DropdownItem
+              onClick={() =>
+                router.push(`/orders/${orderId}/supplier-requests`)
+              }
+            >
               <FontAwesomeIcon icon={faEye} className="me-2" />
               Yêu cầu nhà cung cấp
             </DropdownItem>
             <DropdownItem disabled className="dropdown-divider" />
-            <DropdownItem onClick={() => handleDelete(orderId)} className="text-danger">
+            <DropdownItem
+              onClick={() => handleDelete(orderId)}
+              className="text-danger"
+            >
               <FontAwesomeIcon icon={faTrash} className="me-2" />
               Xóa
             </DropdownItem>
@@ -490,7 +551,7 @@ function OrdersList() {
         </Dropdown>
       )
     },
-    [router, handleDelete]
+    [router, handleDelete],
   )
 
   // ==================== RENDER ====================
@@ -516,7 +577,10 @@ function OrdersList() {
             <h4>Quản lý đơn hàng</h4>
             <div className="text-muted">Danh sách phiếu lên đơn</div>
           </div>
-          <Button variant="primary" onClick={() => router.push('/orders/create')}>
+          <Button
+            variant="primary"
+            onClick={() => router.push('/orders/create')}
+          >
             <FontAwesomeIcon icon={faPlus} className="me-2" />
             Tạo đơn hàng
           </Button>
@@ -544,18 +608,28 @@ function OrdersList() {
                     type="text"
                     placeholder="Tìm theo mã đơn, bếp, người tạo..."
                     value={filters.searchQuery}
-                    onChange={(e) => updateFilter('searchQuery', e.target.value)}
+                    onChange={(e) =>
+                      updateFilter('searchQuery', e.target.value)
+                    }
                   />
                 </InputGroup>
               </Form.Group>
             </Col>
             <Col md={6} className="d-flex align-items-end gap-2">
-              <Button variant="outline-secondary" onClick={toggleFilters} className="mb-0">
+              <Button
+                variant="outline-secondary"
+                onClick={toggleFilters}
+                className="mb-0"
+              >
                 <FontAwesomeIcon icon={faFilter} className="me-2" />
                 {filters.showFilters ? 'Ẩn' : 'Hiện'} bộ lọc
               </Button>
               {hasActiveFilters && (
-                <Button variant="outline-secondary" onClick={handleClearFilters} className="mb-0">
+                <Button
+                  variant="outline-secondary"
+                  onClick={handleClearFilters}
+                  className="mb-0"
+                >
                   Xóa bộ lọc
                 </Button>
               )}
@@ -612,7 +686,9 @@ function OrdersList() {
                     <th className="table-non-priority-column">Trạng thái</th>
                     <th className="table-non-priority-column">Người tạo</th>
                     <th className="table-non-priority-column">Chi tiết</th>
-                    <th className="text-center table-non-priority-column">Thao tác</th>
+                    <th className="text-center table-non-priority-column">
+                      Thao tác
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -624,28 +700,40 @@ function OrdersList() {
                       <td className="table-priority-column">
                         <div>
                           <div>{order.kitchenName}</div>
-                          <small className="text-muted">{order.kitchenId}</small>
+                          <small className="text-muted">
+                            {order.kitchenId}
+                          </small>
                         </div>
                       </td>
-                      <td className="table-non-priority-column">{new Date(order.orderDate).toLocaleDateString('vi-VN')}</td>
-                      <td className="table-non-priority-column">{renderStatusSelect(order)}</td>
+                      <td className="table-non-priority-column">
+                        {new Date(order.orderDate).toLocaleDateString('vi-VN')}
+                      </td>
+                      <td className="table-non-priority-column">
+                        {renderStatusSelect(order)}
+                      </td>
                       <td className="table-non-priority-column">
                         <div>
                           <div>{order.createdByName}</div>
-                          <small className="text-muted">{order.createdByUserId}</small>
+                          <small className="text-muted">
+                            {order.createdByUserId}
+                          </small>
                         </div>
                       </td>
                       <td className="table-non-priority-column">
                         <div>
                           {order.details?.length || 0} món ăn
-                          {order.supplementaries && order.supplementaries.length > 0 && (
-                            <div className="text-muted small">
-                              + {order.supplementaries.length} thực phẩm bổ sung
-                            </div>
-                          )}
+                          {order.supplementaries &&
+                            order.supplementaries.length > 0 && (
+                              <div className="text-muted small">
+                                + {order.supplementaries.length} thực phẩm bổ
+                                sung
+                              </div>
+                            )}
                         </div>
                       </td>
-                      <td className="text-center table-non-priority-column">{renderActions(order)}</td>
+                      <td className="text-center table-non-priority-column">
+                        {renderActions(order)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

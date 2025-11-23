@@ -424,7 +424,7 @@
     "error_load": "Failed to load suppliers",
     "error_delete": "Failed to delete supplier"
   },
-  "orders":{
+  "orders": {
     "create": "Create Order",
     "title": "Order Management",
     "create_title": "Create Order",
@@ -502,14 +502,13 @@
       "view_supplier_requests": "View Supplier Requests",
       "copy_to_clipboard_success": "Copied message to clipboard",
       "copy_to_clipboard_error": "Failed to copy message. Please try again.",
-      "zalo": "Zalo"
-    ,
-    "supplier_saved_one": "Saved supplier request for 1 ingredient",
-    "supplier_saved_bulk": "Saved supplier requests for selected ingredients",
-    "supplier_save_failed": "Failed to save",
-    "supplier_save_none_selected": "No supplier selected to save",
-    "save_all_selected": "Save all selected",
-    "saving": "Saving..."
+      "zalo": "Zalo",
+      "supplier_saved_one": "Saved supplier request for 1 ingredient",
+      "supplier_saved_bulk": "Saved supplier requests for selected ingredients",
+      "supplier_save_failed": "Failed to save",
+      "supplier_save_none_selected": "No supplier selected to save",
+      "save_all_selected": "Save all selected",
+      "saving": "Saving..."
     }
   },
   "recipe_standards": {

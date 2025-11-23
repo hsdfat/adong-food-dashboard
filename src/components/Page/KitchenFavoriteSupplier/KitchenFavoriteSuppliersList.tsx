@@ -42,7 +42,9 @@ interface KitchenFavoriteSuppliersListProps {
   kitchenId: string
 }
 
-export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavoriteSuppliersListProps) {
+export default function KitchenFavoriteSuppliersList({
+  kitchenId,
+}: KitchenFavoriteSuppliersListProps) {
   const [favoritesData, setFavoritesData] =
     useState<ResourceCollection<KitchenFavoriteSupplier> | null>(null)
   const [suppliersData, setSuppliersData] = useState<Supplier[]>([])
@@ -69,139 +71,146 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
     setFavoritesData({
       data: [
         {
-          "favoriteId": 1,
-          "kitchenId": "KIT001",
-          "supplierId": "SUP001",
-          "notes": "Thịt tươi chất lượng tốt",
-          "displayOrder": undefined,
-          "createdByUserId": "USR002",
-          "createdDate": "2025-11-09T10:48:38.596525Z",
-          "modifiedDate": "2025-11-09T10:48:38.596525Z",
-          "supplier": {
-            "supplierId": "SUP001",
-            "supplierName": "Công ty Thực phẩm Sạch Việt",
-            "zaloLink": "https://zalo.me/sachviet",
-            "address": "45 Đường Bến Vân Đồn, Quận 4, TP.HCM",
-            "phone": "0283567890",
-            "email": "sachviet@gmail.com",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
+          favoriteId: 1,
+          kitchenId: 'KIT001',
+          supplierId: 'SUP001',
+          notes: 'Thịt tươi chất lượng tốt',
+          displayOrder: undefined,
+          createdByUserId: 'USR002',
+          createdDate: '2025-11-09T10:48:38.596525Z',
+          modifiedDate: '2025-11-09T10:48:38.596525Z',
+          supplier: {
+            supplierId: 'SUP001',
+            supplierName: 'Công ty Thực phẩm Sạch Việt',
+            zaloLink: 'https://zalo.me/sachviet',
+            address: '45 Đường Bến Vân Đồn, Quận 4, TP.HCM',
+            phone: '0283567890',
+            email: 'sachviet@gmail.com',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
           },
-          "createdBy": {
-            "userId": "USR002",
-            "userName": "chef_k001",
-            "fullName": "Trần Thị Bình",
-            "role": "Chef",
-            "kitchenId": "KIT001",
-            "email": "binh@adongfood.vn",
-            "phone": "0901234568",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
-          }
+          createdBy: {
+            userId: 'USR002',
+            userName: 'chef_k001',
+            fullName: 'Trần Thị Bình',
+            role: 'Chef',
+            kitchenId: 'KIT001',
+            email: 'binh@adongfood.vn',
+            phone: '0901234568',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
+          },
         },
         {
-          "favoriteId": 2,
-          "kitchenId": "KIT001",
-          "supplierId": "SUP002",
-          "notes": "Tôm luôn tươi sống",
-          "displayOrder": undefined,
-          "createdByUserId": "USR002",
-          "createdDate": "2025-11-09T10:48:38.596525Z",
-          "modifiedDate": "2025-11-09T10:48:38.596525Z",
-          "supplier": {
-            "supplierId": "SUP002",
-            "supplierName": "Nhà cung cấp Hải sản Tươi Sống",
-            "zaloLink": "https://zalo.me/haisantuoisong",
-            "address": "78 Đường Đinh Tiên Hoàng, Quận Bình Thạnh, TP.HCM",
-            "phone": "0287890123",
-            "email": "haisantuoi@gmail.com",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
+          favoriteId: 2,
+          kitchenId: 'KIT001',
+          supplierId: 'SUP002',
+          notes: 'Tôm luôn tươi sống',
+          displayOrder: undefined,
+          createdByUserId: 'USR002',
+          createdDate: '2025-11-09T10:48:38.596525Z',
+          modifiedDate: '2025-11-09T10:48:38.596525Z',
+          supplier: {
+            supplierId: 'SUP002',
+            supplierName: 'Nhà cung cấp Hải sản Tươi Sống',
+            zaloLink: 'https://zalo.me/haisantuoisong',
+            address: '78 Đường Đinh Tiên Hoàng, Quận Bình Thạnh, TP.HCM',
+            phone: '0287890123',
+            email: 'haisantuoi@gmail.com',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
           },
-          "createdBy": {
-            "userId": "USR002",
-            "userName": "chef_k001",
-            "fullName": "Trần Thị Bình",
-            "role": "Chef",
-            "kitchenId": "KIT001",
-            "email": "binh@adongfood.vn",
-            "phone": "0901234568",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
-          }
+          createdBy: {
+            userId: 'USR002',
+            userName: 'chef_k001',
+            fullName: 'Trần Thị Bình',
+            role: 'Chef',
+            kitchenId: 'KIT001',
+            email: 'binh@adongfood.vn',
+            phone: '0901234568',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
+          },
         },
         {
-          "favoriteId": 3,
-          "kitchenId": "KIT001",
-          "supplierId": "SUP003",
-          "notes": "Rau sạch Đà Lạt",
-          "displayOrder": undefined,
-          "createdByUserId": "USR002",
-          "createdDate": "2025-11-09T10:48:38.596525Z",
-          "modifiedDate": "2025-11-09T10:48:38.596525Z",
-          "supplier": {
-            "supplierId": "SUP003",
-            "supplierName": "Cửa hàng Rau Củ Đà Lạt",
-            "zaloLink": "https://zalo.me/raucudalat",
-            "address": "123 Đường Lý Thường Kiệt, Quận 10, TP.HCM",
-            "phone": "0289012345",
-            "email": "raudalat@gmail.com",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
+          favoriteId: 3,
+          kitchenId: 'KIT001',
+          supplierId: 'SUP003',
+          notes: 'Rau sạch Đà Lạt',
+          displayOrder: undefined,
+          createdByUserId: 'USR002',
+          createdDate: '2025-11-09T10:48:38.596525Z',
+          modifiedDate: '2025-11-09T10:48:38.596525Z',
+          supplier: {
+            supplierId: 'SUP003',
+            supplierName: 'Cửa hàng Rau Củ Đà Lạt',
+            zaloLink: 'https://zalo.me/raucudalat',
+            address: '123 Đường Lý Thường Kiệt, Quận 10, TP.HCM',
+            phone: '0289012345',
+            email: 'raudalat@gmail.com',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
           },
-          "createdBy": {
-            "userId": "USR002",
-            "userName": "chef_k001",
-            "fullName": "Trần Thị Bình",
-            "role": "Chef",
-            "kitchenId": "KIT001",
-            "email": "binh@adongfood.vn",
-            "phone": "0901234568",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
-          }
+          createdBy: {
+            userId: 'USR002',
+            userName: 'chef_k001',
+            fullName: 'Trần Thị Bình',
+            role: 'Chef',
+            kitchenId: 'KIT001',
+            email: 'binh@adongfood.vn',
+            phone: '0901234568',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
+          },
         },
         {
-          "favoriteId": 4,
-          "kitchenId": "KIT001",
-          "supplierId": "SUP004",
-          "notes": "Nước mắm ngon",
-          "displayOrder": undefined,
-          "createdByUserId": "USR002",
-          "createdDate": "2025-11-09T10:48:38.596525Z",
-          "modifiedDate": "2025-11-09T10:48:38.596525Z",
-          "supplier": {
-            "supplierId": "SUP004",
-            "supplierName": "Công ty Gia vị Việt Nam",
-            "zaloLink": "https://zalo.me/giavivietnam",
-            "address": "567 Đường Nguyễn Tri Phương, Quận 5, TP.HCM",
-            "phone": "0281234567",
-            "email": "giavi@gmail.com",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
+          favoriteId: 4,
+          kitchenId: 'KIT001',
+          supplierId: 'SUP004',
+          notes: 'Nước mắm ngon',
+          displayOrder: undefined,
+          createdByUserId: 'USR002',
+          createdDate: '2025-11-09T10:48:38.596525Z',
+          modifiedDate: '2025-11-09T10:48:38.596525Z',
+          supplier: {
+            supplierId: 'SUP004',
+            supplierName: 'Công ty Gia vị Việt Nam',
+            zaloLink: 'https://zalo.me/giavivietnam',
+            address: '567 Đường Nguyễn Tri Phương, Quận 5, TP.HCM',
+            phone: '0281234567',
+            email: 'giavi@gmail.com',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
           },
-          "createdBy": {
-            "userId": "USR002",
-            "userName": "chef_k001",
-            "fullName": "Trần Thị Bình",
-            "role": "Chef",
-            "kitchenId": "KIT001",
-            "email": "binh@adongfood.vn",
-            "phone": "0901234568",
-            "active": true,
-            "createdDate": "2025-11-09T10:48:38.596525Z",
-            "modifiedDate": "2025-11-09T10:48:38.596525Z"
-          }
-        }
+          createdBy: {
+            userId: 'USR002',
+            userName: 'chef_k001',
+            fullName: 'Trần Thị Bình',
+            role: 'Chef',
+            kitchenId: 'KIT001',
+            email: 'binh@adongfood.vn',
+            phone: '0901234568',
+            active: true,
+            createdDate: '2025-11-09T10:48:38.596525Z',
+            modifiedDate: '2025-11-09T10:48:38.596525Z',
+          },
+        },
       ],
-      meta: { current_page: 1, last_page: 1, from: 1, to: 4, per_page: 10, total: 4 }
+      meta: {
+        current_page: 1,
+        last_page: 1,
+        from: 1,
+        to: 4,
+        per_page: 10,
+        total: 4,
+      },
     })
   }, [page, perPage, search])
 
@@ -217,11 +226,17 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
       }
 
       console.log('Loading favorites for kitchen:', kitchenId)
-      console.log('API URL:', `/api/kitchens/${kitchenId}/favorite-suppliers?${params.toString()}`)
-      
-      const data = await kitchenFavoriteSupplierApi.getAll(kitchenId, `?${params.toString()}`)
+      console.log(
+        'API URL:',
+        `/api/kitchens/${kitchenId}/favorite-suppliers?${params.toString()}`,
+      )
+
+      const data = await kitchenFavoriteSupplierApi.getAll(
+        kitchenId,
+        `?${params.toString()}`,
+      )
       console.log('API Response:', data)
-      
+
       setFavoritesData(data)
     } catch (err) {
       console.error('Error loading favorites:', err)
@@ -249,7 +264,7 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
 
     try {
       // Create favorites for each selected supplier
-      const promises = selectedSuppliers.map(supplierId => {
+      const promises = selectedSuppliers.map((supplierId) => {
         const createData = {
           supplier_ids: [supplierId],
           notes: notes || undefined,
@@ -282,7 +297,9 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
       await kitchenFavoriteSupplierApi.delete(kitchenId, favoriteId.toString())
       loadFavorites()
     } catch (err) {
-      setError(dict.kitchens?.error_delete || 'Failed to remove favorite supplier')
+      setError(
+        dict.kitchens?.error_delete || 'Failed to remove favorite supplier',
+      )
       console.error(err)
     }
   }
@@ -298,7 +315,9 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
       newSearchParams.delete('search')
     }
 
-    router.push(`/kitchens/${kitchenId}/favorite-suppliers?${newSearchParams.toString()}`)
+    router.push(
+      `/kitchens/${kitchenId}/favorite-suppliers?${newSearchParams.toString()}`,
+    )
   }
 
   const handleClearSearch = () => {
@@ -306,14 +325,16 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set('page', '1')
     newSearchParams.delete('search')
-    router.push(`/kitchens/${kitchenId}/favorite-suppliers?${newSearchParams.toString()}`)
+    router.push(
+      `/kitchens/${kitchenId}/favorite-suppliers?${newSearchParams.toString()}`,
+    )
   }
 
   const handleSupplierSelection = (supplierId: string) => {
-    setSelectedSuppliers(prev => 
-      prev.includes(supplierId) 
-        ? prev.filter(id => id !== supplierId)
-        : [...prev, supplierId]
+    setSelectedSuppliers((prev) =>
+      prev.includes(supplierId)
+        ? prev.filter((id) => id !== supplierId)
+        : [...prev, supplierId],
     )
   }
 
@@ -333,7 +354,9 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
     <>
       <Card>
         <CardHeader className="d-flex justify-content-between align-items-center">
-          <span>{dict.kitchens?.favorite_suppliers || 'Kitchen Favorite Suppliers'}</span>
+          <span>
+            {dict.kitchens?.favorite_suppliers || 'Kitchen Favorite Suppliers'}
+          </span>
           <Button
             variant="primary"
             size="sm"
@@ -355,7 +378,9 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
             <InputGroup>
               <FormControl
                 type="text"
-                placeholder={dict.common?.search || 'Search favorite suppliers...'}
+                placeholder={
+                  dict.common?.search || 'Search favorite suppliers...'
+                }
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -389,10 +414,22 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                       <td>
                         <div className="d-flex justify-content-between align-items-start">
                           <div>
-                            <div className="fw-bold">{favorite.supplier?.supplierName || favorite.supplierId}</div>
+                            <div className="fw-bold">
+                              {favorite.supplier?.supplierName ||
+                                favorite.supplierId}
+                            </div>
                             {favorite.supplier?.active !== undefined && (
-                              <Badge bg={favorite.supplier.active ? 'success' : 'secondary'} className="mt-1">
-                                {favorite.supplier.active ? (dict.common?.active || 'Active') : (dict.common?.inactive || 'Inactive')}
+                              <Badge
+                                bg={
+                                  favorite.supplier.active
+                                    ? 'success'
+                                    : 'secondary'
+                                }
+                                className="mt-1"
+                              >
+                                {favorite.supplier.active
+                                  ? dict.common?.active || 'Active'
+                                  : dict.common?.inactive || 'Inactive'}
                               </Badge>
                             )}
                           </div>
@@ -412,7 +449,10 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                       <td>
                         {favorite.supplier?.address && (
                           <div className="d-flex align-items-center">
-                            <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2 text-muted" />
+                            <FontAwesomeIcon
+                              icon={faMapMarkerAlt}
+                              className="me-2 text-muted"
+                            />
                             <span>{favorite.supplier.address}</span>
                           </div>
                         )}
@@ -421,21 +461,35 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                         <div className="small">
                           {favorite.supplier?.phone && (
                             <div className="d-flex align-items-center mb-1">
-                              <FontAwesomeIcon icon={faPhone} className="me-2 text-muted" />
+                              <FontAwesomeIcon
+                                icon={faPhone}
+                                className="me-2 text-muted"
+                              />
                               <span>{favorite.supplier.phone}</span>
                             </div>
                           )}
                           {favorite.supplier?.email && (
                             <div className="d-flex align-items-center mb-1">
-                              <FontAwesomeIcon icon={faEnvelope} className="me-2 text-muted" />
+                              <FontAwesomeIcon
+                                icon={faEnvelope}
+                                className="me-2 text-muted"
+                              />
                               <span>{favorite.supplier.email}</span>
                             </div>
                           )}
                           {favorite.supplier?.zaloLink && (
                             <div className="d-flex align-items-center">
                               <span className="me-2 text-muted">Zalo:</span>
-                              <a href={favorite.supplier.zaloLink} target="_blank" rel="noopener noreferrer" className="text-primary">
-                                {favorite.supplier.zaloLink.replace('https://zalo.me/', '')}
+                              <a
+                                href={favorite.supplier.zaloLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary"
+                              >
+                                {favorite.supplier.zaloLink.replace(
+                                  'https://zalo.me/',
+                                  '',
+                                )}
                               </a>
                             </div>
                           )}
@@ -446,7 +500,8 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                           {favorite.notes || '-'}
                           {favorite.createdBy && (
                             <div className="text-muted small mt-1">
-                              {dict.common?.created_by || 'Created by'}: {favorite.createdBy.fullName}
+                              {dict.common?.created_by || 'Created by'}:{' '}
+                              {favorite.createdBy.fullName}
                             </div>
                           )}
                         </div>
@@ -455,7 +510,9 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                         <div className="small">
                           {new Date(favorite.createdDate).toLocaleDateString()}
                           <div className="text-muted">
-                            {new Date(favorite.createdDate).toLocaleTimeString()}
+                            {new Date(
+                              favorite.createdDate,
+                            ).toLocaleTimeString()}
                           </div>
                         </div>
                       </td>
@@ -464,11 +521,18 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                 ) : (
                   <tr>
                     <td colSpan={5} className="text-center py-4">
-                      {dict.kitchens?.no_favorites || 'No favorite suppliers found'}
+                      {dict.kitchens?.no_favorites ||
+                        'No favorite suppliers found'}
                       <div className="text-muted small mt-2">
-                        Debug: favoritesData exists = {favoritesData ? 'true' : 'false'}<br/>
-                        favoritesData.data exists = {favoritesData?.data ? 'true' : 'false'}<br/>
-                        favoritesData.data.length = {favoritesData?.data?.length || 0}<br/>
+                        Debug: favoritesData exists ={' '}
+                        {favoritesData ? 'true' : 'false'}
+                        <br />
+                        favoritesData.data exists ={' '}
+                        {favoritesData?.data ? 'true' : 'false'}
+                        <br />
+                        favoritesData.data.length ={' '}
+                        {favoritesData?.data?.length || 0}
+                        <br />
                         <details>
                           <summary>Full favoritesData</summary>
                           <pre className="text-start">
@@ -489,7 +553,11 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
         </CardBody>
       </Card>
 
-      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)} size="lg">
+      <Modal
+        show={showCreateModal}
+        onHide={() => setShowCreateModal(false)}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>
             {dict.kitchens?.add_favorite || 'Add Favorite Suppliers'}
@@ -498,8 +566,14 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
         <Form onSubmit={handleCreateFavorites}>
           <Modal.Body>
             <Form.Group className="mb-3">
-              <Form.Label>{dict.suppliers?.name || 'Suppliers'} ({selectedSuppliers.length} selected)</Form.Label>
-              <div className="border rounded p-3" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+              <Form.Label>
+                {dict.suppliers?.name || 'Suppliers'} (
+                {selectedSuppliers.length} selected)
+              </Form.Label>
+              <div
+                className="border rounded p-3"
+                style={{ maxHeight: '300px', overflowY: 'auto' }}
+              >
                 {suppliersData.length > 0 ? (
                   suppliersData.map((supplier) => (
                     <Form.Check
@@ -515,7 +589,9 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                         </div>
                       }
                       checked={selectedSuppliers.includes(supplier.supplierId)}
-                      onChange={() => handleSupplierSelection(supplier.supplierId)}
+                      onChange={() =>
+                        handleSupplierSelection(supplier.supplierId)
+                      }
                       className="mb-2"
                     />
                   ))
@@ -534,10 +610,14 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
                 rows={3}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder={dict.kitchens?.notes_placeholder || 'Add notes about these suppliers...'}
+                placeholder={
+                  dict.kitchens?.notes_placeholder ||
+                  'Add notes about these suppliers...'
+                }
               />
               <Form.Text className="text-muted">
-                {dict.common?.optional || 'Optional'} - These notes will be applied to all selected suppliers
+                {dict.common?.optional || 'Optional'} - These notes will be
+                applied to all selected suppliers
               </Form.Text>
             </Form.Group>
           </Modal.Body>
@@ -552,8 +632,8 @@ export default function KitchenFavoriteSuppliersList({ kitchenId }: KitchenFavor
             >
               {dict.common?.cancel || 'Cancel'}
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               type="submit"
               disabled={selectedSuppliers.length === 0}
             >

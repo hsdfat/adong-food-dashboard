@@ -1,8 +1,6 @@
 'use client'
 
-import {
-  Alert, Button, Form, FormControl, InputGroup,
-} from 'react-bootstrap'
+import { Alert, Button, Form, FormControl, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser } from '@fortawesome/free-regular-svg-icons'
 import { faLock } from '@fortawesome/free-solid-svg-icons'
@@ -60,10 +58,19 @@ export default function Register() {
 
   return (
     <>
-      <Alert variant="danger" show={error !== ''} onClose={() => setError('')} dismissible>{error}</Alert>
+      <Alert
+        variant="danger"
+        show={error !== ''}
+        onClose={() => setError('')}
+        dismissible
+      >
+        {error}
+      </Alert>
       <Form onSubmit={register}>
         <InputGroup className="mb-3">
-          <InputGroupText><FontAwesomeIcon icon={faUser} fixedWidth /></InputGroupText>
+          <InputGroupText>
+            <FontAwesomeIcon icon={faUser} fixedWidth />
+          </InputGroupText>
           <FormControl
             name="username"
             required
@@ -88,7 +95,9 @@ export default function Register() {
         </InputGroup>
 
         <InputGroup className="mb-3">
-          <InputGroupText><FontAwesomeIcon icon={faLock} fixedWidth /></InputGroupText>
+          <InputGroupText>
+            <FontAwesomeIcon icon={faLock} fixedWidth />
+          </InputGroupText>
           <FormControl
             type="password"
             name="password"
@@ -100,7 +109,9 @@ export default function Register() {
         </InputGroup>
 
         <InputGroup className="mb-3">
-          <InputGroupText><FontAwesomeIcon icon={faLock} fixedWidth /></InputGroupText>
+          <InputGroupText>
+            <FontAwesomeIcon icon={faLock} fixedWidth />
+          </InputGroupText>
           <FormControl
             type="password"
             name="password_repeat"
@@ -111,7 +122,12 @@ export default function Register() {
           />
         </InputGroup>
 
-        <Button type="submit" className="d-block w-100" disabled={submitting} variant="success">
+        <Button
+          type="submit"
+          className="d-block w-100"
+          disabled={submitting}
+          variant="success"
+        >
           {dict.signup.form.submit}
         </Button>
       </Form>

@@ -6,8 +6,13 @@ import { NextMiddlewareResult } from 'next/dist/server/web/types'
 import { getLocales } from '@/locales/dictionary'
 import { defaultLocale } from '@/locales/config'
 
-export default async function middleware(request: NextRequest, event: NextFetchEvent) {
-  const headers = { 'accept-language': request.headers.get('accept-language') ?? '' }
+export default async function middleware(
+  request: NextRequest,
+  event: NextFetchEvent,
+) {
+  const headers = {
+    'accept-language': request.headers.get('accept-language') ?? '',
+  }
   const languages = new Negotiator({ headers }).languages()
   const locales = getLocales()
 
@@ -22,16 +27,12 @@ export default async function middleware(request: NextRequest, event: NextFetchE
    * - login
    * - register
    */
-  if (![
-    '/login',
-    '/register',
-    '/ads.txt',
-  ].includes(request.nextUrl.pathname)) {
+  if (!['/login', '/register', '/ads.txt'].includes(request.nextUrl.pathname)) {
     const res: NextMiddlewareResult = await withAuth(
       // Response with local cookies
       () => response,
       {
-      // Matches the pages config in `[...nextauth]`
+        // Matches the pages config in `[...nextauth]`
         pages: {
           signIn: '/login',
         },

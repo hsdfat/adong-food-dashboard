@@ -9,7 +9,10 @@ import { Kitchen } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
-import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function KitchenesList() {
   const [kitchensData, setKitchenesData] =
@@ -19,7 +22,11 @@ export default function KitchenesList() {
   const router = useRouter()
   const dict = useDictionary()
 
-  const loadKitchenes = async (page: number, perPage: number, search: string) => {
+  const loadKitchenes = async (
+    page: number,
+    perPage: number,
+    search: string,
+  ) => {
     try {
       setLoading(true)
       setError('')
@@ -95,7 +102,8 @@ export default function KitchenesList() {
       },
     },
     {
-      label: (dict.kitchens as any)?.view_favorite_suppliers || 'Favorite Suppliers',
+      label:
+        (dict.kitchens as any)?.view_favorite_suppliers || 'Favorite Suppliers',
       onClick: async (kitchen) => {
         router.push(`/kitchens/${kitchen.kitchenId}/favorite-suppliers`)
       },

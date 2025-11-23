@@ -7,7 +7,10 @@ import { Ingredient } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
-import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function IngredientesList() {
   const [ingredientsData, setIngredientesData] =
@@ -17,7 +20,11 @@ export default function IngredientesList() {
   const router = useRouter()
   const dict = useDictionary()
 
-  const loadIngredientes = async (page: number, perPage: number, search: string) => {
+  const loadIngredientes = async (
+    page: number,
+    perPage: number,
+    search: string,
+  ) => {
     try {
       setLoading(true)
       setError('')
@@ -96,6 +103,10 @@ export default function IngredientesList() {
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       loadingLabel: 'Deleting...',
+      onClick: async (ingredient) => {
+        // TODO: Implement delete functionality
+        console.log('Delete ingredient:', ingredient)
+      },
     },
   ]
 

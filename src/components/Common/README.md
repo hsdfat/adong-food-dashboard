@@ -11,11 +11,12 @@ A reusable button component with loading state support.
 **Location:** `src/components/Common/ActionButton/`
 
 **Usage:**
+
 ```tsx
 import ActionButton from '@/components/Common/ActionButton'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 
-<ActionButton
+;<ActionButton
   variant="primary"
   size="sm"
   loading={isLoading}
@@ -28,6 +29,7 @@ import { faSave } from '@fortawesome/free-solid-svg-icons'
 ```
 
 **Props:**
+
 - `variant`: Button variant (primary, secondary, success, danger, etc.)
 - `size`: Button size (sm, lg)
 - `loading`: Show loading spinner
@@ -44,10 +46,11 @@ A specialized button for form submissions with loading state.
 **Location:** `src/components/Common/SaveButton/`
 
 **Usage:**
+
 ```tsx
 import SaveButton from '@/components/Common/SaveButton'
 
-<SaveButton
+;<SaveButton
   loading={isSubmitting}
   submittingLabel="Saving..."
   submitLabel="Save"
@@ -55,6 +58,7 @@ import SaveButton from '@/components/Common/SaveButton'
 ```
 
 **Props:**
+
 - Extends `ActionButtonProps` (except variant, children, loadingLabel)
 - `loading`: Show loading state
 - `submittingLabel`: Text when submitting (defaults to dictionary)
@@ -67,6 +71,7 @@ A reusable loading component with spinner.
 **Location:** `src/components/Common/LoadingState/`
 
 **Usage:**
+
 ```tsx
 import LoadingState, { LoadingStateCard } from '@/components/Common/LoadingState'
 
@@ -78,6 +83,7 @@ import LoadingState, { LoadingStateCard } from '@/components/Common/LoadingState
 ```
 
 **Props:**
+
 - `message`: Loading message text
 - `fullHeight`: Make container full height
 - `size`: Spinner size (sm, lg)
@@ -90,6 +96,7 @@ A complete list page component for master data with search, pagination, and acti
 **Location:** `src/components/Common/MasterDataListPage/`
 
 **Usage:**
+
 ```tsx
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
 import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
@@ -133,6 +140,7 @@ const actions: TableAction[] = [
 ```
 
 **Props:**
+
 - `title`: Page title
 - `addNewLabel`: Label for "Add New" button
 - `createPath`: Path to create page
@@ -159,10 +167,11 @@ A complete form page component with error/success handling and buttons.
 **Location:** `src/components/Common/MasterDataFormPage/`
 
 **Usage:**
+
 ```tsx
 import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 
-<MasterDataFormPage
+;<MasterDataFormPage
   title="Add New Item"
   onSubmit={handleSubmit}
   cancelPath="/items"
@@ -185,6 +194,7 @@ import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 ```
 
 **Props:**
+
 - `title`: Form title
 - `children`: Form fields (FormGroup components)
 - `onSubmit`: Submit handler
@@ -200,6 +210,7 @@ import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 ## Example Refactoring
 
 See example refactored components:
+
 - `src/components/Page/Ingredient/IngredientList.refactored.example.tsx`
 - `src/components/Page/Ingredient/IngredientForm.refactored.example.tsx`
 
@@ -212,14 +223,15 @@ A reusable modal component for selecting a single object from a list.
 **Location:** `src/components/Common/SingleSelectionModal/`
 
 **Usage:**
+
 ```tsx
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 
-<SingleSelectionModal
+;<SingleSelectionModal
   show={showModal}
   onHide={() => setShowModal(false)}
   title="Select Kitchen"
-  items={kitchens.map(k => ({
+  items={kitchens.map((k) => ({
     id: k.kitchenId,
     name: k.kitchenName,
     subtitle: k.address,
@@ -238,6 +250,7 @@ import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 ```
 
 **Props:**
+
 - `show`: Whether modal is visible
 - `onHide`: Function to close modal
 - `title`: Modal title
@@ -262,14 +275,15 @@ A reusable modal component for selecting multiple objects with checkboxes.
 **Location:** `src/components/Common/MultiSelectionModal/`
 
 **Usage:**
+
 ```tsx
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 
-<MultiSelectionModal
+;<MultiSelectionModal
   show={showModal}
   onHide={() => setShowModal(false)}
   title="Select Dishes"
-  items={dishes.map(d => ({
+  items={dishes.map((d) => ({
     id: d.dishId,
     name: d.dishName,
     subtitle: `${d.ingredientCount} ingredients`,
@@ -282,7 +296,7 @@ import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
     if (checked) {
       setSelectedIds([...selectedIds, itemId])
     } else {
-      setSelectedIds(selectedIds.filter(id => id !== itemId))
+      setSelectedIds(selectedIds.filter((id) => id !== itemId))
     }
   }}
   onConfirm={handleAddDishes}
@@ -303,6 +317,7 @@ import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 ```
 
 **Props:**
+
 - `show`: Whether modal is visible
 - `onHide`: Function to close modal
 - `title`: Modal title
@@ -350,4 +365,3 @@ To refactor an existing form page:
 2. Move error/success alerts to props
 3. Remove manual button code (handled by component)
 4. Keep form field definitions as children
-

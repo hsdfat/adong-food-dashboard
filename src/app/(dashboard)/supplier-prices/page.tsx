@@ -3,7 +3,6 @@ import { Metadata } from 'next'
 import SupplierPricesList from '@/components/Page/SupplierPrice/SupplierPricesList'
 import useDictionary from '@/locales/dictionary-hook'
 
-
 export default function SupplierPricesPage() {
   const dict = useDictionary()
 

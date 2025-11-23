@@ -3,7 +3,7 @@
 /**
  * EXAMPLE: Refactored IngredientList using common components
  * This demonstrates how to use MasterDataListPage component
- * 
+ *
  * To use this pattern:
  * 1. Replace the existing IngredientList.tsx with this code
  * 2. Adjust the props and handlers as needed
@@ -15,8 +15,13 @@ import { ingredientApi } from '@/services'
 import { Ingredient } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
-import MasterDataListPage, { MasterDataListPageProps } from '@/components/Common/MasterDataListPage'
-import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import MasterDataListPage, {
+  MasterDataListPageProps,
+} from '@/components/Common/MasterDataListPage'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function IngredientesList() {
   const [ingredientsData, setIngredientesData] =
@@ -26,7 +31,11 @@ export default function IngredientesList() {
   const router = useRouter()
   const dict = useDictionary()
 
-  const loadIngredientes = async (page: number, perPage: number, search: string) => {
+  const loadIngredientes = async (
+    page: number,
+    perPage: number,
+    search: string,
+  ) => {
     try {
       setLoading(true)
       setError('')
@@ -132,5 +141,3 @@ export default function IngredientesList() {
     />
   )
 }
-
-

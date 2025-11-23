@@ -3,18 +3,14 @@
 /**
  * EXAMPLE: Refactored IngredientForm using common components
  * This demonstrates how to use MasterDataFormPage, SaveButton, and LoadingState
- * 
+ *
  * To use this pattern:
  * 1. Replace the existing IngredientForm.tsx with this code
  * 2. Adjust the form fields and handlers as needed
  */
 
 import React, { useState } from 'react'
-import {
-  FormGroup,
-  FormLabel,
-  FormControl,
-} from 'react-bootstrap'
+import { FormGroup, FormLabel, FormControl } from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import { ingredientApi } from '@/services'
 import {
@@ -168,5 +164,3 @@ export default function IngredientForm({
     </MasterDataFormPage>
   )
 }
-
-

@@ -26,19 +26,19 @@ const getDictionary = async (localeCookie) => {
 // Test cases
 async function testLocale() {
   console.log('Testing locale switching...')
-  
+
   // Test default (Vietnamese)
   const dict1 = await getDictionary()
   console.log('Default locale:', dict1)
-  
+
   // Test English
   const dict2 = await getDictionary('en')
   console.log('English locale:', dict2)
-  
+
   // Test Vietnamese
   const dict3 = await getDictionary('vi')
   console.log('Vietnamese locale:', dict3)
-  
+
   // Test invalid locale (should fallback to default)
   const dict4 = await getDictionary('invalid')
   console.log('Invalid locale fallback:', dict4)

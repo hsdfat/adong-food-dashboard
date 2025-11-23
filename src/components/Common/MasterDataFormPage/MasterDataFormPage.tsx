@@ -1,13 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import {
-  Form,
-  Alert,
-  Card,
-  CardBody,
-  CardHeader,
-} from 'react-bootstrap'
+import { Form, Alert, Card, CardBody, CardHeader } from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
 import useDictionary from '@/locales/dictionary-hook'
 import SaveButton from '@/components/Common/SaveButton/SaveButton'
@@ -82,7 +76,11 @@ const MasterDataFormPage: React.FC<MasterDataFormPageProps> = ({
         )}
 
         {localSuccess && (
-          <Alert variant="success" dismissible onClose={() => setLocalSuccess('')}>
+          <Alert
+            variant="success"
+            dismissible
+            onClose={() => setLocalSuccess('')}
+          >
             {localSuccess}
           </Alert>
         )}
@@ -111,4 +109,3 @@ const MasterDataFormPage: React.FC<MasterDataFormPageProps> = ({
 }
 
 export default MasterDataFormPage
-

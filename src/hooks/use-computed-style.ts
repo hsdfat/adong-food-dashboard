@@ -8,7 +8,10 @@ export default function useComputedStyle(property: string) {
   useEffect(() => {
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       const element = document.body
-      const computedStyle = window.getComputedStyle(element, null).getPropertyValue(property).replace(/^\s/, '')
+      const computedStyle = window
+        .getComputedStyle(element, null)
+        .getPropertyValue(property)
+        .replace(/^\s/, '')
       setStyle(computedStyle)
     }
   }, [property, theme])

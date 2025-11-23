@@ -7,7 +7,10 @@ import { Dish } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
-import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function DishesList() {
   const [dishesData, setDishesData] = useState<ResourceCollection<Dish> | null>(
@@ -90,6 +93,9 @@ export default function DishesList() {
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       loadingLabel: 'Deleting...',
+      onClick: async (dish) => {
+        await handleDelete(dish.dishId, dish)
+      },
     },
   ]
 

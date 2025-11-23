@@ -1,13 +1,32 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Card, CardBody, CardHeader, Table, Alert, Badge, Spinner, Button, FormSelect, FormControl, Modal, InputGroup } from 'react-bootstrap'
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Table,
+  Alert,
+  Badge,
+  Spinner,
+  Button,
+  FormSelect,
+  FormControl,
+  Modal,
+  InputGroup,
+} from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import useDictionary from '@/locales/dictionary-hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faList, faSave, faSearch, faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowLeft,
+  faList,
+  faSave,
+  faSearch,
+  faEllipsis,
+} from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import StatusToast from '@/components/Common/StatusToast'
@@ -15,44 +34,106 @@ import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 
 // Mock best supplier data - in real implementation this would come from an API
 const mockBestSuppliers: Record<string, number> = {
-  'ING022': 1001, // Best supplier for ingredient NL001 is productId 1001
-  'NL002': 1002,
-  'NL003': 1003,
-  'NL004': 1004,
-  'ING023': 1006,
-  'ING024': 1007,
-  'ING025': 1008,
-  'ING026': 1009
+  ING022: 1001, // Best supplier for ingredient NL001 is productId 1001
+  NL002: 1002,
+  NL003: 1003,
+  NL004: 1004,
+  ING023: 1006,
+  ING024: 1007,
+  ING025: 1008,
+  ING026: 1009,
 }
 
 // Mock supplier price data for testing
 const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
   const baseSuppliers = [
-    { productId: 1001, supplierId: 'SUP001', supplierName: 'Fresh Foods Co', productName: 'Premium Tomatoes', price: 25000 },
-    { productId: 1002, supplierId: 'SUP002', supplierName: 'Global Ingredients', productName: 'Organic Onions', price: 18000 },
-    { productId: 1003, supplierId: 'SUP003', supplierName: 'Farm Direct', productName: 'Fresh Garlic', price: 35000 },
-    { productId: 1004, supplierId: 'SUP004', supplierName: 'Wholesale Market', productName: 'Quality Potatoes', price: 12000 },
-    { productId: 1005, supplierId: 'SUP005', supplierName: 'Organic Farms', productName: 'Fresh Carrots', price: 22000 },
-    { productId: 1006, supplierId: 'SUP006', supplierName: 'Import Foods', productName: 'Bell Peppers', price: 28000 },
-    { productId: 1007, supplierId: 'SUP007', supplierName: 'Local Growers', productName: 'Fresh Lettuce', price: 15000 },
-    { productId: 1008, supplierId: 'SUP008', supplierName: 'Specialty Foods', productName: 'Fresh Herbs', price: 45000 },
-    { productId: 1009, supplierId: 'SUP009', supplierName: 'Mega Suppliers', productName: 'Fresh Mushrooms', price: 32000 },
-    { productId: 1010, supplierId: 'SUP010', supplierName: 'Quality Imports', productName: 'Fresh Spinach', price: 20000 },
+    {
+      productId: 1001,
+      supplierId: 'SUP001',
+      supplierName: 'Fresh Foods Co',
+      productName: 'Premium Tomatoes',
+      price: 25000,
+    },
+    {
+      productId: 1002,
+      supplierId: 'SUP002',
+      supplierName: 'Global Ingredients',
+      productName: 'Organic Onions',
+      price: 18000,
+    },
+    {
+      productId: 1003,
+      supplierId: 'SUP003',
+      supplierName: 'Farm Direct',
+      productName: 'Fresh Garlic',
+      price: 35000,
+    },
+    {
+      productId: 1004,
+      supplierId: 'SUP004',
+      supplierName: 'Wholesale Market',
+      productName: 'Quality Potatoes',
+      price: 12000,
+    },
+    {
+      productId: 1005,
+      supplierId: 'SUP005',
+      supplierName: 'Organic Farms',
+      productName: 'Fresh Carrots',
+      price: 22000,
+    },
+    {
+      productId: 1006,
+      supplierId: 'SUP006',
+      supplierName: 'Import Foods',
+      productName: 'Bell Peppers',
+      price: 28000,
+    },
+    {
+      productId: 1007,
+      supplierId: 'SUP007',
+      supplierName: 'Local Growers',
+      productName: 'Fresh Lettuce',
+      price: 15000,
+    },
+    {
+      productId: 1008,
+      supplierId: 'SUP008',
+      supplierName: 'Specialty Foods',
+      productName: 'Fresh Herbs',
+      price: 45000,
+    },
+    {
+      productId: 1009,
+      supplierId: 'SUP009',
+      supplierName: 'Mega Suppliers',
+      productName: 'Fresh Mushrooms',
+      price: 32000,
+    },
+    {
+      productId: 1010,
+      supplierId: 'SUP010',
+      supplierName: 'Quality Imports',
+      productName: 'Fresh Spinach',
+      price: 20000,
+    },
   ]
-  
+
   // Generate 2-3 alternative suppliers for each ingredient with slightly higher prices
-  const bestSupplier = baseSuppliers.find(s => s.productId === mockBestSuppliers[ingredientId])
+  const bestSupplier = baseSuppliers.find(
+    (s) => s.productId === mockBestSuppliers[ingredientId],
+  )
   const alternatives = baseSuppliers
-    .filter(s => s.productId !== mockBestSuppliers[ingredientId])
+    .filter((s) => s.productId !== mockBestSuppliers[ingredientId])
     .slice(0, 2)
-    .map(s => ({
+    .map((s) => ({
       ...s,
       productId: parseInt(`${s.productId}${ingredientId.slice(-2)}`),
       price: s.price + Math.floor(Math.random() * 5000) + 1000, // Higher price for alternatives
     }))
-  
+
   const mockPrices: SupplierPrice[] = []
-  
+
   if (bestSupplier) {
     mockPrices.push({
       productId: bestSupplier.productId,
@@ -74,8 +155,8 @@ const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
       promotion: 'Best Price',
     })
   }
-  
-  alternatives.forEach(alt => {
+
+  alternatives.forEach((alt) => {
     mockPrices.push({
       productId: alt.productId,
       productName: alt.productName,
@@ -96,7 +177,7 @@ const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
       promotion: 'Regular Price',
     })
   })
-  
+
   return mockPrices
 }
 
@@ -112,11 +193,23 @@ export default function OrderDetailPage() {
 
   // Ingredient summary + supplier prices
   const [summaryLoading, setSummaryLoading] = useState(false)
-  type IngredientSummaryRow = { ingredientId: string; ingredientName: string; quantity: number; unit: string }
-  const [ingredientSummary, setIngredientSummary] = useState<IngredientSummaryRow[]>([])
-  const [pricesByIngredient, setPricesByIngredient] = useState<Record<string, SupplierPrice[]>>({})
-  const [selectedSupplierByIngredient, setSelectedSupplierByIngredient] = useState<Record<string, number | ''>>({})
-  const [filterByIngredient, setFilterByIngredient] = useState<Record<string, string>>({})
+  type IngredientSummaryRow = {
+    ingredientId: string
+    ingredientName: string
+    quantity: number
+    unit: string
+  }
+  const [ingredientSummary, setIngredientSummary] = useState<
+    IngredientSummaryRow[]
+  >([])
+  const [pricesByIngredient, setPricesByIngredient] = useState<
+    Record<string, SupplierPrice[]>
+  >({})
+  const [selectedSupplierByIngredient, setSelectedSupplierByIngredient] =
+    useState<Record<string, number | ''>>({})
+  const [filterByIngredient, setFilterByIngredient] = useState<
+    Record<string, string>
+  >({})
   const [saving, setSaving] = useState(false)
   const [savingRow, setSavingRow] = useState<string>('')
   const [saveSuccess, setSaveSuccess] = useState('')
@@ -186,26 +279,31 @@ export default function OrderDetailPage() {
       // Get best suppliers from API
       let bestSuppliersData: any = null
       try {
-        const ingredientsPayload = normalized.map(ing => ({
+        const ingredientsPayload = normalized.map((ing) => ({
           ingredientId: ing.ingredientId,
           ingredientName: ing.ingredientName,
           totalQuantity: ing.quantity,
           unit: ing.unit,
         }))
-        
+
         const bestSuppliersResponse = await orderApi.getBestSuppliers(id, {
-          ingredients: ingredientsPayload
+          ingredients: ingredientsPayload,
         })
-        
+
         bestSuppliersData = bestSuppliersResponse
         console.log('Best suppliers API response:', bestSuppliersData)
       } catch (bestSuppliersErr) {
-        console.warn('Failed to load best suppliers from API:', bestSuppliersErr)
+        console.warn(
+          'Failed to load best suppliers from API:',
+          bestSuppliersErr,
+        )
         // Continue without best suppliers data
       }
 
       // Preload supplier prices for each ingredient in parallel
-      const uniqueIds = Array.from(new Set(normalized.map((i: any) => i.ingredientId)))
+      const uniqueIds = Array.from(
+        new Set(normalized.map((i: any) => i.ingredientId)),
+      )
       const priceResults = await Promise.all(
         uniqueIds.map(async (ingId) => {
           try {
@@ -213,15 +311,21 @@ export default function OrderDetailPage() {
             // Handle response that might be wrapped in data property or be a direct array
             // API might return: { data: [...] } or directly [...]
             let prices: any = response
-            if (response && typeof response === 'object' && 'data' in response) {
+            if (
+              response &&
+              typeof response === 'object' &&
+              'data' in response
+            ) {
               prices = response.data
             }
             // Ensure it's an array
             let priceArray = Array.isArray(prices) ? prices : []
-            
+
             // If we have best suppliers data, create supplier entries from it
             if (bestSuppliersData && bestSuppliersData.ingredients) {
-              const bestSupplierInfo = bestSuppliersData.ingredients.find((ing: any) => ing.ingredientId === ingId)
+              const bestSupplierInfo = bestSuppliersData.ingredients.find(
+                (ing: any) => ing.ingredientId === ingId,
+              )
               if (bestSupplierInfo && bestSupplierInfo.bestSupplier) {
                 const bestSupplierData: SupplierPrice = {
                   productId: bestSupplierInfo.bestSupplier.productId,
@@ -240,34 +344,52 @@ export default function OrderDetailPage() {
                   effectiveTo: null,
                   active: true,
                   newPrice: bestSupplierInfo.bestSupplier.unitPrice,
-                  promotion: bestSupplierInfo.bestSupplier.isFavorite ? 'Yêu thích' : (bestSupplierInfo.bestSupplier.isLowestPrice ? 'Giá tốt nhất' : ''),
+                  promotion: bestSupplierInfo.bestSupplier.isFavorite
+                    ? 'Yêu thích'
+                    : bestSupplierInfo.bestSupplier.isLowestPrice
+                      ? 'Giá tốt nhất'
+                      : '',
                 }
                 // Use the best supplier data as the primary option
                 priceArray = [bestSupplierData, ...priceArray]
               }
             }
-            
+
             // If no prices from API and no best supplier, use mock data for testing
             if (priceArray.length === 0) {
               priceArray = generateMockSupplierPrices(ingId)
-              console.log(`Using mock supplier prices for ingredient ${ingId}:`, priceArray.length, 'items')
+              console.log(
+                `Using mock supplier prices for ingredient ${ingId}:`,
+                priceArray.length,
+                'items',
+              )
             } else {
-              console.log(`Using API supplier prices for ingredient ${ingId}:`, priceArray.length, 'items')
+              console.log(
+                `Using API supplier prices for ingredient ${ingId}:`,
+                priceArray.length,
+                'items',
+              )
             }
-            
+
             // Filter for active prices if the API returns all prices
             // Only filter if active field exists, otherwise include all
             const activePrices = priceArray.filter((p: SupplierPrice) => {
               if (p.active === undefined || p.active === null) return true
               return p.active !== false
             })
-            console.log(`Loaded ${activePrices.length} supplier prices for ingredient ${ingId}`)
+            console.log(
+              `Loaded ${activePrices.length} supplier prices for ingredient ${ingId}`,
+            )
             return [ingId, activePrices] as [string, SupplierPrice[]]
           } catch (e) {
             console.error('Failed to load prices for', ingId, e)
             // Use mock data as fallback
             const mockPrices = generateMockSupplierPrices(ingId)
-            console.log(`Using mock supplier prices as fallback for ingredient ${ingId}:`, mockPrices.length, 'items')
+            console.log(
+              `Using mock supplier prices as fallback for ingredient ${ingId}:`,
+              mockPrices.length,
+              'items',
+            )
             return [ingId, mockPrices] as [string, SupplierPrice[]]
           }
         }),
@@ -277,12 +399,15 @@ export default function OrderDetailPage() {
         map[ingId] = prices
       })
       setPricesByIngredient(map)
-      
+
       // Load any saved selections from localStorage
       let savedSelections: Record<string, number | ''> = {}
       try {
         const key = `order_supplier_selection_${id}`
-        const saved = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null
+        const saved =
+          typeof window !== 'undefined'
+            ? window.localStorage.getItem(key)
+            : null
         if (saved) {
           const parsed = JSON.parse(saved)
           if (parsed && typeof parsed === 'object') {
@@ -292,61 +417,79 @@ export default function OrderDetailPage() {
       } catch (e) {
         // ignore localStorage errors
       }
-      
+
       // Auto-fill best suppliers for ingredients without saved selections
       const autoFilledSelections = { ...savedSelections }
       let autoFilledCount = 0
-      
+
       console.log('=== DEBUG: Auto-fill Best Suppliers ===')
       console.log('Saved selections:', savedSelections)
-      console.log('Available ingredients:', normalized.map(ing => ing.ingredientId))
+      console.log(
+        'Available ingredients:',
+        normalized.map((ing) => ing.ingredientId),
+      )
       console.log('Best suppliers data:', bestSuppliersData)
-      
+
       normalized.forEach((ing) => {
         console.log(`Processing ingredient ${ing.ingredientId}:`)
-        console.log(`  - Has saved selection: ${!!autoFilledSelections[ing.ingredientId]}`)
-        
+        console.log(
+          `  - Has saved selection: ${!!autoFilledSelections[ing.ingredientId]}`,
+        )
+
         let bestProductId: number | undefined
-        
+
         // Try to get best product ID from API response
         if (bestSuppliersData && bestSuppliersData.ingredients) {
-          const bestSupplierInfo = bestSuppliersData.ingredients.find((bestIng: any) => bestIng.ingredientId === ing.ingredientId)
+          const bestSupplierInfo = bestSuppliersData.ingredients.find(
+            (bestIng: any) => bestIng.ingredientId === ing.ingredientId,
+          )
           if (bestSupplierInfo && bestSupplierInfo.bestSupplier) {
             bestProductId = bestSupplierInfo.bestSupplier.productId
           }
         }
-        
+
         // Fallback to mock data if no API data
         if (!bestProductId) {
           bestProductId = mockBestSuppliers[ing.ingredientId]
         }
-        
+
         console.log(`  - Best product ID: ${bestProductId}`)
-        console.log(`  - Available prices: ${map[ing.ingredientId]?.length || 0} items`)
-        
+        console.log(
+          `  - Available prices: ${map[ing.ingredientId]?.length || 0} items`,
+        )
+
         if (!autoFilledSelections[ing.ingredientId]) {
           const prices = map[ing.ingredientId] || []
-          
-          if (bestProductId && prices.some(p => p.productId === bestProductId)) {
+
+          if (
+            bestProductId &&
+            prices.some((p) => p.productId === bestProductId)
+          ) {
             autoFilledSelections[ing.ingredientId] = bestProductId
             autoFilledCount++
             console.log(`  ✓ Auto-filled with product ID: ${bestProductId}`)
           } else {
-            console.log(`  ✗ Could not auto-fill (no best supplier or not found in prices)`)
+            console.log(
+              `  ✗ Could not auto-fill (no best supplier or not found in prices)`,
+            )
           }
         } else {
-          console.log(`  - Already has selection: ${autoFilledSelections[ing.ingredientId]}`)
+          console.log(
+            `  - Already has selection: ${autoFilledSelections[ing.ingredientId]}`,
+          )
         }
       })
-      
+
       console.log(`Final selections:`, autoFilledSelections)
       console.log(`Auto-filled count: ${autoFilledCount}`)
       console.log('=== END DEBUG ===')
-      
+
       setSelectedSupplierByIngredient(autoFilledSelections)
-      
+
       if (autoFilledCount > 0) {
-        console.log(`Auto-filled best suppliers for ${autoFilledCount} ingredients`)
+        console.log(
+          `Auto-filled best suppliers for ${autoFilledCount} ingredients`,
+        )
       }
     } finally {
       setSummaryLoading(false)
@@ -357,28 +500,35 @@ export default function OrderDetailPage() {
   const handleAutoFillBestSuppliers = () => {
     const newSelections: Record<string, number | ''> = {}
     let autoFilledCount = 0
-    
+
     ingredientSummary.forEach((ing) => {
       const prices = pricesByIngredient[ing.ingredientId] || []
-      
+
       // First try to find supplier with promotion indicating it's the best (from API data)
-      const bestFromApi = prices.find(p => p.promotion && (p.promotion.includes('Giá tốt nhất') || p.promotion.includes('Yêu thích')))
+      const bestFromApi = prices.find(
+        (p) =>
+          p.promotion &&
+          (p.promotion.includes('Giá tốt nhất') ||
+            p.promotion.includes('Yêu thích')),
+      )
       if (bestFromApi) {
         newSelections[ing.ingredientId] = bestFromApi.productId
         autoFilledCount++
         return
       }
-      
+
       // Fallback to mock best suppliers
       const bestProductId = mockBestSuppliers[ing.ingredientId]
-      if (bestProductId && prices.some(p => p.productId === bestProductId)) {
+      if (bestProductId && prices.some((p) => p.productId === bestProductId)) {
         newSelections[ing.ingredientId] = bestProductId
         autoFilledCount++
       }
     })
-    
-    setSelectedSupplierByIngredient(prev => ({ ...prev, ...newSelections }))
-    setSaveSuccess(`Auto-filled best suppliers for ${autoFilledCount} ingredients`)
+
+    setSelectedSupplierByIngredient((prev) => ({ ...prev, ...newSelections }))
+    setSaveSuccess(
+      `Auto-filled best suppliers for ${autoFilledCount} ingredients`,
+    )
     setTimeout(() => setSaveSuccess(''), 3000)
   }
 
@@ -386,16 +536,21 @@ export default function OrderDetailPage() {
   const getBestSupplier = (ingredientId: string): SupplierPrice | null => {
     // First try to find in the loaded prices (which includes best supplier data from API)
     const prices = pricesByIngredient[ingredientId] || []
-    
+
     // Look for supplier with promotion indicating it's the best (from API data)
-    const bestFromApi = prices.find(p => p.promotion && (p.promotion.includes('Giá tốt nhất') || p.promotion.includes('Yêu thích')))
+    const bestFromApi = prices.find(
+      (p) =>
+        p.promotion &&
+        (p.promotion.includes('Giá tốt nhất') ||
+          p.promotion.includes('Yêu thích')),
+    )
     if (bestFromApi) {
       return bestFromApi
     }
-    
+
     // Fallback to mock best suppliers
     const bestProductId = mockBestSuppliers[ingredientId]
-    return prices.find(p => p.productId === bestProductId) || null
+    return prices.find((p) => p.productId === bestProductId) || null
   }
 
   const getStatusBadge = (status: string) => {
@@ -417,7 +572,10 @@ export default function OrderDetailPage() {
 
   const handleSelectSupplier = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
-    setSelectedSupplierByIngredient((prev: Record<string, number | ''>) => ({ ...prev, [ingredientId]: productId }))
+    setSelectedSupplierByIngredient((prev: Record<string, number | ''>) => ({
+      ...prev,
+      [ingredientId]: productId,
+    }))
   }
 
   const handleFilterChange = (ingredientId: string, value: string) => {
@@ -428,7 +586,10 @@ export default function OrderDetailPage() {
     if (!orderId) return
     const key = `order_supplier_selection_${orderId}`
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(key, JSON.stringify(selectedSupplierByIngredient))
+      window.localStorage.setItem(
+        key,
+        JSON.stringify(selectedSupplierByIngredient),
+      )
     }
   }
 
@@ -439,24 +600,26 @@ export default function OrderDetailPage() {
     try {
       const prices = pricesByIngredient[ingredientId] || []
       const selectedProductId = selectedSupplierByIngredient[ingredientId]
-      
+
       if (!selectedProductId) {
         setSaveError('Please select a supplier for this ingredient first')
         return
       }
-      
-      const selectedPrice = prices.find((p) => p.productId === selectedProductId)
+
+      const selectedPrice = prices.find(
+        (p) => p.productId === selectedProductId,
+      )
       if (!selectedPrice) {
         setSaveError('Selected supplier not found in price list')
         return
       }
-      
+
       const row = ingredientSummary.find((r) => r.ingredientId === ingredientId)
       if (!row) {
         setSaveError('Ingredient not found in summary')
         return
       }
-      
+
       setSavingRow(ingredientId)
       await orderApi.createSupplierRequests(orderId, {
         Selections: [
@@ -466,12 +629,15 @@ export default function OrderDetailPage() {
             SelectedProductId: selectedPrice.productId,
             Quantity: row.quantity,
             Unit: row.unit,
-            UnitPrice: (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice) || 0,
-            Notes: ''
-          }
-        ]
+            UnitPrice:
+              (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0
+                ? selectedPrice.pricePer1
+                : selectedPrice.unitPrice) || 0,
+            Notes: '',
+          },
+        ],
       })
-      
+
       handleSaveSelectionsLocal()
       setSaveSuccess('Saved supplier request for 1 ingredient')
     } catch (e: any) {
@@ -494,25 +660,43 @@ export default function OrderDetailPage() {
     try {
       setSaving(true)
       // Build map supplierId -> ingredients[]
-      const grouped: Record<string, { ingredientId: string; quantity: number; unit: string; unitPrice: number }[]> = {}
+      const grouped: Record<
+        string,
+        {
+          ingredientId: string
+          quantity: number
+          unit: string
+          unitPrice: number
+        }[]
+      > = {}
       let validSelectionsCount = 0
-      
+
       for (const ing of ingredientSummary) {
         const selectedProductId = selectedSupplierByIngredient[ing.ingredientId]
         if (!selectedProductId) {
-          console.warn(`No supplier selected for ingredient ${ing.ingredientId}`)
+          console.warn(
+            `No supplier selected for ingredient ${ing.ingredientId}`,
+          )
           continue
         }
-        
+
         const prices = pricesByIngredient[ing.ingredientId] || []
-        const selectedPrice = prices.find((p) => p.productId === selectedProductId)
+        const selectedPrice = prices.find(
+          (p) => p.productId === selectedProductId,
+        )
         if (!selectedPrice) {
-          console.warn(`Selected supplier not found for ingredient ${ing.ingredientId}`)
+          console.warn(
+            `Selected supplier not found for ingredient ${ing.ingredientId}`,
+          )
           continue
         }
-        
-        const unitPrice = (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice) || 0
-        if (!grouped[selectedPrice.supplierId]) grouped[selectedPrice.supplierId] = []
+
+        const unitPrice =
+          (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0
+            ? selectedPrice.pricePer1
+            : selectedPrice.unitPrice) || 0
+        if (!grouped[selectedPrice.supplierId])
+          grouped[selectedPrice.supplierId] = []
         grouped[selectedPrice.supplierId].push({
           ingredientId: ing.ingredientId,
           quantity: ing.quantity,
@@ -538,7 +722,7 @@ export default function OrderDetailPage() {
         UnitPrice: number
         Notes: string
       }> = []
-      
+
       for (const sid of supplierIds) {
         for (const ingredient of grouped[sid]) {
           const prices = pricesByIngredient[ingredient.ingredientId] || []
@@ -551,7 +735,7 @@ export default function OrderDetailPage() {
               Quantity: ingredient.quantity,
               Unit: ingredient.unit,
               UnitPrice: ingredient.unitPrice,
-              Notes: ''
+              Notes: '',
             })
           }
         }
@@ -559,11 +743,13 @@ export default function OrderDetailPage() {
 
       // Send one request with all selections
       await orderApi.createSupplierRequests(orderId, {
-        Selections: allSelections
+        Selections: allSelections,
       })
 
       handleSaveSelectionsLocal()
-      setSaveSuccess(`Saved supplier requests for ${validSelectionsCount} ingredients`)
+      setSaveSuccess(
+        `Saved supplier requests for ${validSelectionsCount} ingredients`,
+      )
     } catch (e: any) {
       console.error('Save all failed:', e)
       setSaveError(e?.message || 'Failed to save supplier requests')
@@ -593,7 +779,9 @@ export default function OrderDetailPage() {
     return (
       <Card>
         <CardBody>
-          <Alert variant="danger">{error || dict.orders?.labels?.order_not_found || 'Order not found'}</Alert>
+          <Alert variant="danger">
+            {error || dict.orders?.labels?.order_not_found || 'Order not found'}
+          </Alert>
           <Button variant="secondary" onClick={() => router.push('/orders')}>
             <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
             {dict.orders?.labels?.back_to_orders || 'Back to Orders'}
@@ -610,16 +798,20 @@ export default function OrderDetailPage() {
           <div>
             <h4>Order #{order.orderId}</h4>
             <div className="text-muted">
-              {order.kitchenName} - {new Date(order.orderDate).toLocaleDateString()}
+              {order.kitchenName} -{' '}
+              {new Date(order.orderDate).toLocaleDateString()}
             </div>
           </div>
           <div className="d-flex gap-2">
             <Button
               variant="outline-primary"
-              onClick={() => router.push(`/orders/${orderId}/ingredients/summary`)}
+              onClick={() =>
+                router.push(`/orders/${orderId}/ingredients/summary`)
+              }
             >
               <FontAwesomeIcon icon={faList} className="me-2" />
-              {dict.orders?.labels?.view_ingredients_summary || 'View Ingredients Summary'}
+              {dict.orders?.labels?.view_ingredients_summary ||
+                'View Ingredients Summary'}
             </Button>
             <Button variant="secondary" onClick={() => router.push('/orders')}>
               <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
@@ -629,25 +821,45 @@ export default function OrderDetailPage() {
         </div>
       </CardHeader>
       <CardBody>
-        <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 2000, minWidth: 280 }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 16,
+            right: 16,
+            zIndex: 2000,
+            minWidth: 280,
+          }}
+        >
           {Boolean(saveSuccess) && (
-            <Alert variant="success" dismissible onClose={() => setSaveSuccess('')}>
+            <Alert
+              variant="success"
+              dismissible
+              onClose={() => setSaveSuccess('')}
+            >
               {saveSuccess}
             </Alert>
           )}
           {Boolean(saveError) && (
-            <Alert variant="danger" dismissible onClose={() => setSaveError('')}>
+            <Alert
+              variant="danger"
+              dismissible
+              onClose={() => setSaveError('')}
+            >
               {saveError}
             </Alert>
           )}
         </div>
         {/* Order Info */}
         <div className="mb-4">
-          <h5>{dict.orders?.labels?.order_information || 'Order Information'}</h5>
+          <h5>
+            {dict.orders?.labels?.order_information || 'Order Information'}
+          </h5>
           <Table bordered>
             <tbody>
               <tr>
-                <th style={{ width: '200px' }}>{dict.orders?.columns?.order_id || 'Order ID'}</th>
+                <th style={{ width: '200px' }}>
+                  {dict.orders?.columns?.order_id || 'Order ID'}
+                </th>
                 <td>#{order.orderId}</td>
               </tr>
               <tr>
@@ -690,7 +902,9 @@ export default function OrderDetailPage() {
               <thead className="table-light">
                 <tr>
                   <th>{dict.orders?.columns?.dish || 'Dish'}</th>
-                  <th className="text-center">{dict.orders?.columns?.portions || 'Portions'}</th>
+                  <th className="text-center">
+                    {dict.orders?.columns?.portions || 'Portions'}
+                  </th>
                   <th>{dict.orders?.columns?.ingredients || 'Ingredients'}</th>
                   <th>{dict.orders?.columns?.note || 'Note'}</th>
                 </tr>
@@ -714,8 +928,8 @@ export default function OrderDetailPage() {
                         <ul className="mb-0">
                           {detail.ingredients.map((ing) => (
                             <li key={ing.orderIngredientId}>
-                              {ing.ingredientName} - {formatNumber(ing.quantity)}{' '}
-                              {ing.unit}
+                              {ing.ingredientName} -{' '}
+                              {formatNumber(ing.quantity)} {ing.unit}
                               {ing.standardPerPortion !== undefined && (
                                 <span className="text-muted">
                                   {' '}
@@ -727,7 +941,10 @@ export default function OrderDetailPage() {
                           ))}
                         </ul>
                       ) : (
-                        <span className="text-muted">{dict.orders?.labels?.no_ingredients_text || 'No ingredients'}</span>
+                        <span className="text-muted">
+                          {dict.orders?.labels?.no_ingredients_text ||
+                            'No ingredients'}
+                        </span>
                       )}
                     </td>
                     <td>{detail.note || '-'}</td>
@@ -741,13 +958,20 @@ export default function OrderDetailPage() {
         {/* Supplementary Foods */}
         {order.supplementaries && order.supplementaries.length > 0 && (
           <div className="mb-4">
-            <h5>{dict.orders?.labels?.supplementary_foods || 'Supplementary Foods'}</h5>
+            <h5>
+              {dict.orders?.labels?.supplementary_foods ||
+                'Supplementary Foods'}
+            </h5>
             <Table striped bordered hover responsive>
               <thead className="table-light">
                 <tr>
                   <th>{dict.orders?.columns?.ingredient || 'Ingredient'}</th>
-                  <th className="text-center">{dict.orders?.columns?.portions || 'Portions'}</th>
-                  <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
+                  <th className="text-center">
+                    {dict.orders?.columns?.portions || 'Portions'}
+                  </th>
+                  <th className="text-end">
+                    {dict.orders?.columns?.quantity || 'Quantity'}
+                  </th>
                   <th>{dict.orders?.columns?.unit || 'Unit'}</th>
                   <th>{dict.orders?.columns?.note || 'Note'}</th>
                 </tr>
@@ -783,18 +1007,30 @@ export default function OrderDetailPage() {
         {/* Ingredient Summary with Supplier Selection */}
         <div className="mb-4">
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <h5 className="mb-0">{dict.orders?.ingredient_summary || 'Ingredient Summary'}</h5>
+            <h5 className="mb-0">
+              {dict.orders?.ingredient_summary || 'Ingredient Summary'}
+            </h5>
             <div className="d-flex gap-2">
-              <Button variant="success" size="sm" onClick={handleSaveAll} disabled={saving}>
+              <Button
+                variant="success"
+                size="sm"
+                onClick={handleSaveAll}
+                disabled={saving}
+              >
                 {saving ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                     {dict.orders?.labels?.saving || 'Saving...'}
                   </>
                 ) : (
                   <>
                     <FontAwesomeIcon icon={faSave} className="me-2" />
-                    {dict.orders?.labels?.save_all_selected || 'Save all selected'}
+                    {dict.orders?.labels?.save_all_selected ||
+                      'Save all selected'}
                   </>
                 )}
               </Button>
@@ -806,45 +1042,87 @@ export default function OrderDetailPage() {
               {dict.orders?.loading || 'Loading...'}
             </div>
           ) : ingredientSummary.length === 0 ? (
-            <Alert variant="info">{dict.orders?.no_ingredients || 'No ingredients found for this order'}</Alert>
+            <Alert variant="info">
+              {dict.orders?.no_ingredients ||
+                'No ingredients found for this order'}
+            </Alert>
           ) : (
             <Table striped bordered hover responsive>
               <thead className="table-light">
                 <tr>
-                  <th>{dict.orders?.columns?.ingredient_id || 'Ingredient ID'}</th>
-                  <th>{dict.orders?.columns?.ingredient_name || 'Ingredient Name'}</th>
-                  <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
+                  <th>
+                    {dict.orders?.columns?.ingredient_id || 'Ingredient ID'}
+                  </th>
+                  <th>
+                    {dict.orders?.columns?.ingredient_name || 'Ingredient Name'}
+                  </th>
+                  <th className="text-end">
+                    {dict.orders?.columns?.quantity || 'Quantity'}
+                  </th>
                   <th>{dict.orders?.columns?.unit || 'Unit'}</th>
-                  <th style={{ minWidth: '360px' }}>{dict.orders?.columns?.supplier || 'Supplier'}</th>
-                  <th className="text-end" style={{ width: '140px' }}>{dict.orders?.columns?.price || 'Price'}</th>
-                  <th className="text-end" style={{ width: '160px' }}>{dict.orders?.columns?.total_price || 'Total Price'}</th>
+                  <th style={{ minWidth: '360px' }}>
+                    {dict.orders?.columns?.supplier || 'Supplier'}
+                  </th>
+                  <th className="text-end" style={{ width: '140px' }}>
+                    {dict.orders?.columns?.price || 'Price'}
+                  </th>
+                  <th className="text-end" style={{ width: '160px' }}>
+                    {dict.orders?.columns?.total_price || 'Total Price'}
+                  </th>
                   <th style={{ width: '200px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {ingredientSummary.map((ing: IngredientSummaryRow) => {
                   const prices = pricesByIngredient[ing.ingredientId] || []
-                  const selected = selectedSupplierByIngredient[ing.ingredientId] ?? ''
-                  const selectedPrice = prices.find((p: SupplierPrice) => p.productId === selected)
+                  const selected =
+                    selectedSupplierByIngredient[ing.ingredientId] ?? ''
+                  const selectedPrice = prices.find(
+                    (p: SupplierPrice) => p.productId === selected,
+                  )
                   const bestSupplier = getBestSupplier(ing.ingredientId)
-                  const unitPrice = selectedPrice ? ((selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0) ? selectedPrice.pricePer1 : selectedPrice.unitPrice) : 0
+                  const unitPrice = selectedPrice
+                    ? selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0
+                      ? selectedPrice.pricePer1
+                      : selectedPrice.unitPrice
+                    : 0
                   const totalPrice = unitPrice * (ing.quantity || 0)
-                  const isBestSelected = bestSupplier && selectedPrice && bestSupplier.productId === selectedPrice.productId
+                  const isBestSelected =
+                    bestSupplier &&
+                    selectedPrice &&
+                    bestSupplier.productId === selectedPrice.productId
                   return (
                     <tr key={ing.ingredientId}>
                       <td>
                         <Badge bg="secondary">{ing.ingredientId}</Badge>
                       </td>
-                      <td><strong>{ing.ingredientName}</strong></td>
-                      <td className="text-end"><strong>{formatNumber(ing.quantity)}</strong></td>
+                      <td>
+                        <strong>{ing.ingredientName}</strong>
+                      </td>
+                      <td className="text-end">
+                        <strong>{formatNumber(ing.quantity)}</strong>
+                      </td>
                       <td>{ing.unit}</td>
                       <td>
                         <InputGroup size="sm">
                           <FormControl
                             readOnly
-                            placeholder={prices.length === 0 ? (dict.orders?.labels?.no_supplier_price || 'No active supplier price') : (dict.orders?.labels?.select || 'Select...')}
-                            value={selectedPrice ? `${selectedPrice.supplierName} ${selectedPrice.productName ? '- ' + selectedPrice.productName : ''}` : ''}
-                            className={isBestSelected ? 'border-success bg-success-subtle' : ''}
+                            placeholder={
+                              prices.length === 0
+                                ? dict.orders?.labels?.no_supplier_price ||
+                                  'No active supplier price'
+                                : dict.orders?.labels?.select || 'Select...'
+                            }
+                            value={
+                              selectedPrice
+                                ? `${selectedPrice.supplierName} ${selectedPrice.productName ? '- ' + selectedPrice.productName : ''}`
+                                : ''
+                            }
+                            className={
+                              isBestSelected
+                                ? 'border-success bg-success-subtle'
+                                : ''
+                            }
                           />
                           <Button
                             variant="outline-primary"
@@ -863,12 +1141,18 @@ export default function OrderDetailPage() {
                           <Button
                             variant="success"
                             size="sm"
-                            disabled={!selectedPrice || savingRow === ing.ingredientId}
+                            disabled={
+                              !selectedPrice || savingRow === ing.ingredientId
+                            }
                             onClick={() => handleSaveRow(ing.ingredientId)}
                             title={dict.common?.save || 'Save'}
                           >
                             {savingRow === ing.ingredientId ? (
-                              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
                             ) : (
                               <FontAwesomeIcon icon={faSave} />
                             )}
@@ -899,7 +1183,7 @@ export default function OrderDetailPage() {
                           <Button
                             variant="outline-secondary"
                             size="sm"
-                            onClick={() => { }}
+                            onClick={() => {}}
                             title="Actions"
                           >
                             <FontAwesomeIcon icon={faEllipsis} />
@@ -916,16 +1200,27 @@ export default function OrderDetailPage() {
 
         {/* Modal: Select Supplier per Ingredient */}
         {(() => {
-          const allPrices = activeIngredientId ? (pricesByIngredient[activeIngredientId] || []) : []
+          const allPrices = activeIngredientId
+            ? pricesByIngredient[activeIngredientId] || []
+            : []
           const filteredPrices = supplierSearch
-            ? allPrices.filter((p) =>
-              (p.supplierName || '').toLowerCase().includes(supplierSearch.toLowerCase()) ||
-              (p.productName || '').toLowerCase().includes(supplierSearch.toLowerCase()),
-            )
+            ? allPrices.filter(
+                (p) =>
+                  (p.supplierName || '')
+                    .toLowerCase()
+                    .includes(supplierSearch.toLowerCase()) ||
+                  (p.productName || '')
+                    .toLowerCase()
+                    .includes(supplierSearch.toLowerCase()),
+              )
             : allPrices
 
-          const currentSelectedId = activeIngredientId ? (selectedSupplierByIngredient[activeIngredientId] ?? '') : ''
-          const bestProductId = activeIngredientId ? mockBestSuppliers[activeIngredientId] : undefined
+          const currentSelectedId = activeIngredientId
+            ? (selectedSupplierByIngredient[activeIngredientId] ?? '')
+            : ''
+          const bestProductId = activeIngredientId
+            ? mockBestSuppliers[activeIngredientId]
+            : undefined
 
           if (!activeIngredientId) {
             return null
@@ -943,12 +1238,18 @@ export default function OrderDetailPage() {
                 id: String(p.productId),
                 name: p.supplierName || '',
                 subtitle: `${p.productName || '-'} • ${p.unit || ''}`,
-                badge: formatNumber((p.pricePer1 && p.pricePer1 > 0 ? p.pricePer1 : p.unitPrice) || 0),
+                badge: formatNumber(
+                  (p.pricePer1 && p.pricePer1 > 0
+                    ? p.pricePer1
+                    : p.unitPrice) || 0,
+                ),
                 ...p,
               }))}
               searchValue={supplierSearch}
               onSearchChange={setSupplierSearch}
-              selectedId={currentSelectedId ? String(currentSelectedId) : undefined}
+              selectedId={
+                currentSelectedId ? String(currentSelectedId) : undefined
+              }
               onSelect={(item) => {
                 if (activeIngredientId) {
                   handleSelectSupplier(activeIngredientId, item.id)
@@ -956,7 +1257,10 @@ export default function OrderDetailPage() {
                 setShowSupplierModal(false)
               }}
               searchPlaceholder={dict.orders?.labels?.search || 'Search...'}
-              emptyMessage={dict.orders?.labels?.no_supplier_price || 'No active supplier price'}
+              emptyMessage={
+                dict.orders?.labels?.no_supplier_price ||
+                'No active supplier price'
+              }
               closeLabel={dict.orders?.labels?.close || 'Close'}
               renderItem={(item, isSelected) => {
                 const p = item as any as SupplierPrice
@@ -975,21 +1279,25 @@ export default function OrderDetailPage() {
                           {p.supplierName}
                           {isBest && <Badge bg="success">Best</Badge>}
                         </div>
-                        <small className={isSelected ? 'text-white-50' : 'text-muted'}>
+                        <small
+                          className={
+                            isSelected ? 'text-white-50' : 'text-muted'
+                          }
+                        >
                           {p.productName || '-'} • {p.unit || ''}
                         </small>
                       </div>
                       <Badge
                         bg={
-                          isSelected
-                            ? 'light'
-                            : isBest
-                              ? 'success'
-                              : 'primary'
+                          isSelected ? 'light' : isBest ? 'success' : 'primary'
                         }
                         text={isSelected ? 'dark' : 'white'}
                       >
-                        {formatNumber((p.pricePer1 && p.pricePer1 > 0 ? p.pricePer1 : p.unitPrice) || 0)}
+                        {formatNumber(
+                          (p.pricePer1 && p.pricePer1 > 0
+                            ? p.pricePer1
+                            : p.unitPrice) || 0,
+                        )}
                       </Badge>
                     </div>
                   </button>
@@ -1002,4 +1310,3 @@ export default function OrderDetailPage() {
     </Card>
   )
 }
-

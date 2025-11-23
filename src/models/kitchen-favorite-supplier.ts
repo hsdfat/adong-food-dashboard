@@ -7,7 +7,7 @@ export interface KitchenFavoriteSupplier {
   createdByUserId?: string
   createdDate: string
   modifiedDate: string
-  
+
   // Relationships
   kitchen?: {
     kitchenId: string

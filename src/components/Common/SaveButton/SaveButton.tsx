@@ -4,7 +4,8 @@ import React from 'react'
 import ActionButton, { ActionButtonProps } from '../ActionButton/ActionButton'
 import useDictionary from '@/locales/dictionary-hook'
 
-export interface SaveButtonProps extends Omit<ActionButtonProps, 'variant' | 'children' | 'loadingLabel'> {
+export interface SaveButtonProps
+  extends Omit<ActionButtonProps, 'variant' | 'children' | 'loadingLabel'> {
   loading?: boolean
   submittingLabel?: string
   submitLabel?: string
@@ -23,7 +24,9 @@ const SaveButton: React.FC<SaveButtonProps> = ({
       variant="success"
       type="submit"
       loading={loading}
-      loadingLabel={submittingLabel || dict.action?.submitting || 'Submitting...'}
+      loadingLabel={
+        submittingLabel || dict.action?.submitting || 'Submitting...'
+      }
       {...props}
     >
       {submitLabel || dict.action?.submit || 'Save'}
@@ -32,5 +35,3 @@ const SaveButton: React.FC<SaveButtonProps> = ({
 }
 
 export default SaveButton
-
-

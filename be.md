@@ -13,9 +13,11 @@
 ## Detected Technologies
 
 ### Python (100.0% confidence)
-*Python programming language*
+
+_Python programming language_
 
 **Related files:**
+
 - Dockerfile
 - auth/ginauth.go
 - cmd/main.go
@@ -24,9 +26,11 @@
 - ... and 25 more files
 
 ### Go (100.0% confidence)
-*Go programming language*
+
+_Go programming language_
 
 **Related files:**
+
 - auth/ginauth.go
 - cmd/main.go
 - db/db.sql
@@ -35,9 +39,11 @@
 - ... and 27 more files
 
 ### JavaScript (100.0% confidence)
-*JavaScript runtime and ecosystem*
+
+_JavaScript runtime and ecosystem_
 
 **Related files:**
+
 - auth/ginauth.go
 - cmd/main.go
 - handler/dish.go
@@ -46,9 +52,11 @@
 - ... and 21 more files
 
 ### TypeScript (100.0% confidence)
-*TypeScript - JavaScript with static typing*
+
+_TypeScript - JavaScript with static typing_
 
 **Related files:**
+
 - auth/ginauth.go
 - db/db.sql
 - db/migrate_order_id_to_string.sql
@@ -57,9 +65,11 @@
 - ... and 16 more files
 
 ### Docker (100.0% confidence)
-*Docker containerization platform*
+
+_Docker containerization platform_
 
 **Related files:**
+
 - Dockerfile
 - db/db.sql
 - db/migrate_order_id_to_string.sql
@@ -68,9 +78,11 @@
 - ... and 5 more files
 
 ### CSS (100.0% confidence)
-*Cascading Style Sheets*
+
+_Cascading Style Sheets_
 
 **Related files:**
+
 - Dockerfile
 - auth/ginauth.go
 - cmd/main.go
@@ -79,9 +91,11 @@
 - ... and 27 more files
 
 ### Java (100.0% confidence)
-*Java programming language*
+
+_Java programming language_
 
 **Related files:**
+
 - auth/ginauth.go
 - cmd/main.go
 - handler/dish.go
@@ -90,9 +104,11 @@
 - ... and 23 more files
 
 ### Ruby (55.0% confidence)
-*Ruby programming language*
+
+_Ruby programming language_
 
 **Related files:**
+
 - .gitignore
 - README.md
 - db/db.sql
@@ -101,9 +117,11 @@
 - ... and 6 more files
 
 ### Rust (30.0% confidence)
-*Rust systems programming language*
+
+_Rust systems programming language_
 
 **Related files:**
+
 - Dockerfile
 - db/migrate_order_id_to_string.sql
 - go.mod
@@ -112,9 +130,11 @@
 - ... and 1 more files
 
 ### C (10.0% confidence)
-*C programming language*
+
+_C programming language_
 
 **Related files:**
+
 - cmd/main.go
 - utils/search.go
 
@@ -174,7 +194,8 @@
 ### auth/
 
 #### auth/ginauth.go
-*Language: Go | Size: 399 bytes*
+
+_Language: Go | Size: 399 bytes_
 
 ```go
 package auth
@@ -199,7 +220,8 @@ type UserProvider interface {
 ### cmd/
 
 #### cmd/main.go
-*Language: Go | Size: 908 bytes*
+
+_Language: Go | Size: 908 bytes_
 
 ```go
 package main
@@ -234,7 +256,7 @@ func main() {
 	}
 
 	log.Println("Database connected successfully")
-	s := server.SetupRouter() 
+	s := server.SetupRouter()
 	// Start server
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -251,7 +273,8 @@ func main() {
 ### db/
 
 #### db/db.sql
-*Language: SQL | Size: 21008 bytes*
+
+_Language: SQL | Size: 21008 bytes_
 
 ```sql
 -- ============================================================================
@@ -485,7 +508,7 @@ CREATE TABLE IF NOT EXISTS public.order_ingredient_suppliers
 -- Create the kitchen favorite suppliers table
 CREATE TABLE IF NOT EXISTS public.kitchen_favorite_suppliers
 (
-    favorite_id integer NOT NULL GENERATED ALWAYS AS IDENTITY 
+    favorite_id integer NOT NULL GENERATED ALWAYS AS IDENTITY
         ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     kitchen_id character varying(50) COLLATE pg_catalog."default" NOT NULL,
     supplier_id character varying(50) COLLATE pg_catalog."default" NOT NULL,
@@ -680,14 +703,15 @@ CREATE INDEX IF NOT EXISTS idx_ois_ingredient ON public.order_ingredient_supplie
 CREATE INDEX IF NOT EXISTS idx_ois_supplier ON public.order_ingredient_suppliers(selected_supplier_id);
 CREATE INDEX IF NOT EXISTS idx_ois_product ON public.order_ingredient_suppliers(selected_product_id);
 
-CREATE INDEX IF NOT EXISTS idx_favorite_kitchen ON public.kitchen_favorite_suppliers(kitchen_id);    
+CREATE INDEX IF NOT EXISTS idx_favorite_kitchen ON public.kitchen_favorite_suppliers(kitchen_id);
 CREATE INDEX IF NOT EXISTS idx_favorite_supplier ON public.kitchen_favorite_suppliers(supplier_id);
 
 END;
 ```
 
 #### db/migrate_order_id_to_string.sql
-*Language: SQL | Size: 5270 bytes*
+
+_Language: SQL | Size: 5270 bytes_
 
 ```sql
 -- =========================================================
@@ -701,24 +725,24 @@ BEGIN;
 -- Step 1: Drop all foreign key constraints that reference orders.order_id
 -- This is necessary before we can change the column type
 
-ALTER TABLE IF EXISTS public.order_details 
+ALTER TABLE IF EXISTS public.order_details
     DROP CONSTRAINT IF EXISTS fk_detail_order;
 
-ALTER TABLE IF EXISTS public.order_supplementary_foods 
+ALTER TABLE IF EXISTS public.order_supplementary_foods
     DROP CONSTRAINT IF EXISTS fk_supp_order;
 
-ALTER TABLE IF EXISTS public.supplier_requests 
+ALTER TABLE IF EXISTS public.supplier_requests
     DROP CONSTRAINT IF EXISTS fk_req_order;
 
 -- Step 2: Change column types to VARCHAR(50) in all foreign key tables first
 -- PostgreSQL will automatically convert INTEGER to TEXT/VARCHAR during type change
-ALTER TABLE public.order_details 
+ALTER TABLE public.order_details
     ALTER COLUMN order_id TYPE VARCHAR(50) USING CAST(order_id AS VARCHAR(50));
 
-ALTER TABLE public.order_supplementary_foods 
+ALTER TABLE public.order_supplementary_foods
     ALTER COLUMN order_id TYPE VARCHAR(50) USING CAST(order_id AS VARCHAR(50));
 
-ALTER TABLE public.supplier_requests 
+ALTER TABLE public.supplier_requests
     ALTER COLUMN order_id TYPE VARCHAR(50) USING CAST(order_id AS VARCHAR(50));
 
 -- Step 3: Change the primary key column in orders table
@@ -729,15 +753,15 @@ ALTER TABLE public.supplier_requests
 -- 4. Rename new column
 
 -- Add new column for order_id as VARCHAR
-ALTER TABLE public.orders 
+ALTER TABLE public.orders
     ADD COLUMN order_id_new VARCHAR(50);
 
 -- Convert existing integer IDs to strings
-UPDATE public.orders 
+UPDATE public.orders
 SET order_id_new = CAST(order_id AS VARCHAR(50));
 
 -- Make sure the new column is NOT NULL
-ALTER TABLE public.orders 
+ALTER TABLE public.orders
     ALTER COLUMN order_id_new SET NOT NULL;
 
 -- Step 4: Update all foreign key references to use the new string column
@@ -759,38 +783,38 @@ WHERE sr.order_id = CAST(o.order_id AS VARCHAR(50));
 
 -- Step 5: Drop the old order_id column and rename the new one
 -- First drop the primary key constraint
-ALTER TABLE public.orders 
+ALTER TABLE public.orders
     DROP CONSTRAINT IF EXISTS orders_pkey;
 
 -- Drop the old order_id column
-ALTER TABLE public.orders 
+ALTER TABLE public.orders
     DROP COLUMN order_id;
 
 -- Rename the new column to order_id
-ALTER TABLE public.orders 
+ALTER TABLE public.orders
     RENAME COLUMN order_id_new TO order_id;
 
 -- Add primary key constraint on the new order_id column
-ALTER TABLE public.orders 
+ALTER TABLE public.orders
     ADD PRIMARY KEY (order_id);
 
 -- Step 7: Recreate all foreign key constraints
-ALTER TABLE public.order_details 
-    ADD CONSTRAINT fk_detail_order 
-    FOREIGN KEY (order_id) 
-    REFERENCES public.orders(order_id) 
+ALTER TABLE public.order_details
+    ADD CONSTRAINT fk_detail_order
+    FOREIGN KEY (order_id)
+    REFERENCES public.orders(order_id)
     ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE public.order_supplementary_foods 
-    ADD CONSTRAINT fk_supp_order 
-    FOREIGN KEY (order_id) 
-    REFERENCES public.orders(order_id) 
+ALTER TABLE public.order_supplementary_foods
+    ADD CONSTRAINT fk_supp_order
+    FOREIGN KEY (order_id)
+    REFERENCES public.orders(order_id)
     ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE public.supplier_requests 
-    ADD CONSTRAINT fk_req_order 
-    FOREIGN KEY (order_id) 
-    REFERENCES public.orders(order_id) 
+ALTER TABLE public.supplier_requests
+    ADD CONSTRAINT fk_req_order
+    FOREIGN KEY (order_id)
+    REFERENCES public.orders(order_id)
     ON UPDATE CASCADE ON DELETE CASCADE;
 
 -- Step 8: Recreate indexes (they should still exist, but ensure they're correct)
@@ -803,8 +827,8 @@ COMMIT;
 -- =========================================================
 -- VERIFICATION QUERIES (run these after migration to verify)
 -- =========================================================
--- 
--- SELECT 'orders' as table_name, COUNT(*) as total_rows, 
+--
+-- SELECT 'orders' as table_name, COUNT(*) as total_rows,
 --        COUNT(DISTINCT order_id) as unique_ids,
 --        MIN(order_id) as min_id, MAX(order_id) as max_id
 -- FROM public.orders
@@ -837,7 +861,8 @@ COMMIT;
 ```
 
 #### db/samples.sql
-*Language: SQL | Size: 5961 bytes*
+
+_Language: SQL | Size: 5961 bytes_
 
 ```sql
 -- =========================================================
@@ -960,7 +985,8 @@ VALUES
 ### handler/
 
 #### handler/dish.go
-*Language: Go | Size: 4221 bytes*
+
+_Language: Go | Size: 4221 bytes_
 
 ```go
 package handler
@@ -1103,7 +1129,8 @@ func DeleteDish(c *gin.Context) {
 ```
 
 #### handler/dish_test.go
-*Language: Go | Size: 1643 bytes*
+
+_Language: Go | Size: 1643 bytes_
 
 ```go
 package handler
@@ -1176,7 +1203,8 @@ func TestGetDishes_WithSearch(t *testing.T) {
 ```
 
 #### handler/ingredient.go
-*Language: Go | Size: 4422 bytes*
+
+_Language: Go | Size: 4422 bytes_
 
 ```go
 package handler
@@ -1317,7 +1345,8 @@ func DeleteIngredient(c *gin.Context) {
 ```
 
 #### handler/kitchen.go
-*Language: Go | Size: 11556 bytes*
+
+_Language: Go | Size: 11556 bytes_
 
 ```go
 package handler
@@ -1645,7 +1674,8 @@ func DeleteKitchenFavoriteSupplier(c *gin.Context) {
 ```
 
 #### handler/order.go
-*Language: Go | Size: 27259 bytes*
+
+_Language: Go | Size: 27259 bytes_
 
 ```go
 package handler
@@ -2176,12 +2206,12 @@ func SaveOrderIngredientsWithSupplier(c *gin.Context) {
 
 		// Validate product exists and belongs to supplier and ingredient
 		var product models.SupplierPrice
-		if err := store.DB.GormClient.First(&product, "product_id = ? AND supplier_id = ? AND ingredient_id = ?", 
+		if err := store.DB.GormClient.First(&product, "product_id = ? AND supplier_id = ? AND ingredient_id = ?",
 			sel.SelectedProductID, sel.SelectedSupplierID, sel.IngredientID).Error; err != nil {
-			logger.Log.Error("SaveOrderIngredientsWithSupplier product not found or mismatch", 
-				"product_id", sel.SelectedProductID, 
-				"supplier_id", sel.SelectedSupplierID, 
-				"ingredient_id", sel.IngredientID, 
+			logger.Log.Error("SaveOrderIngredientsWithSupplier product not found or mismatch",
+				"product_id", sel.SelectedProductID,
+				"supplier_id", sel.SelectedSupplierID,
+				"ingredient_id", sel.IngredientID,
 				"error", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Product not found or does not match supplier/ingredient"})
 			return
@@ -2201,13 +2231,13 @@ func SaveOrderIngredientsWithSupplier(c *gin.Context) {
 				WHERE osf.order_id = ? AND osf.ingredient_id = ?
 			) x`
 		if err := store.DB.GormClient.Raw(presentSQL, orderID, sel.IngredientID, orderID, sel.IngredientID).Scan(&presentCount).Error; err != nil {
-			logger.Log.Error("SaveOrderIngredientsWithSupplier validate ingredient in order error", 
+			logger.Log.Error("SaveOrderIngredientsWithSupplier validate ingredient in order error",
 				"order_id", orderID, "ingredient_id", sel.IngredientID, "error", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		if presentCount == 0 {
-			logger.Log.Error("SaveOrderIngredientsWithSupplier ingredient not in order", 
+			logger.Log.Error("SaveOrderIngredientsWithSupplier ingredient not in order",
 				"order_id", orderID, "ingredient_id", sel.IngredientID)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Ingredient does not belong to the order: " + sel.IngredientID})
 			return
@@ -2216,7 +2246,7 @@ func SaveOrderIngredientsWithSupplier(c *gin.Context) {
 		// Check for duplicate ingredient_id in request
 		for j := i + 1; j < len(request.Selections); j++ {
 			if request.Selections[j].IngredientID == sel.IngredientID {
-				logger.Log.Error("SaveOrderIngredientsWithSupplier duplicate ingredient in request", 
+				logger.Log.Error("SaveOrderIngredientsWithSupplier duplicate ingredient in request",
 					"ingredient_id", sel.IngredientID)
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Duplicate ingredient_id in request: " + sel.IngredientID})
 				return
@@ -2258,17 +2288,17 @@ func SaveOrderIngredientsWithSupplier(c *gin.Context) {
 			}
 
 			if err := tx.Create(&newSelection).Error; err != nil {
-				logger.Log.Error("SaveOrderIngredientsWithSupplier create selection error", 
+				logger.Log.Error("SaveOrderIngredientsWithSupplier create selection error",
 					"error", err, "ingredient_id", sel.IngredientID)
 				tx.Rollback()
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 				return
 			}
 			savedSelections = append(savedSelections, newSelection)
-			logger.Log.Info("SaveOrderIngredientsWithSupplier created new selection", 
+			logger.Log.Info("SaveOrderIngredientsWithSupplier created new selection",
 				"order_id", orderID, "ingredient_id", sel.IngredientID)
 		} else if findErr != nil {
-			logger.Log.Error("SaveOrderIngredientsWithSupplier find existing selection error", 
+			logger.Log.Error("SaveOrderIngredientsWithSupplier find existing selection error",
 				"error", findErr, "ingredient_id", sel.IngredientID)
 			tx.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": findErr.Error()})
@@ -2285,14 +2315,14 @@ func SaveOrderIngredientsWithSupplier(c *gin.Context) {
 			existing.Notes = sel.Notes
 
 			if err := tx.Save(&existing).Error; err != nil {
-				logger.Log.Error("SaveOrderIngredientsWithSupplier update selection error", 
+				logger.Log.Error("SaveOrderIngredientsWithSupplier update selection error",
 					"error", err, "ingredient_id", sel.IngredientID)
 				tx.Rollback()
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 				return
 			}
 			savedSelections = append(savedSelections, existing)
-			logger.Log.Info("SaveOrderIngredientsWithSupplier updated existing selection", 
+			logger.Log.Info("SaveOrderIngredientsWithSupplier updated existing selection",
 				"order_id", orderID, "ingredient_id", sel.IngredientID)
 		}
 	}
@@ -2398,7 +2428,8 @@ func convertOrderToDTO(o *models.Order, includeChildren bool) models.OrderDTO {
 ```
 
 #### handler/recipe_standard.go
-*Language: Go | Size: 7118 bytes*
+
+_Language: Go | Size: 7118 bytes_
 
 ```go
 package handler
@@ -2634,7 +2665,8 @@ func GetRecipeStandardsByDish(c *gin.Context) {
 ```
 
 #### handler/supplier.go
-*Language: Go | Size: 4392 bytes*
+
+_Language: Go | Size: 4392 bytes_
 
 ```go
 package handler
@@ -2776,7 +2808,8 @@ func DeleteSupplier(c *gin.Context) {
 ```
 
 #### handler/supplier_price.go
-*Language: Go | Size: 11747 bytes*
+
+_Language: Go | Size: 11747 bytes_
 
 ```go
 package handler
@@ -3149,7 +3182,8 @@ func DeleteSupplierPrice(c *gin.Context) {
 ```
 
 #### handler/user.go
-*Language: Go | Size: 4253 bytes*
+
+_Language: Go | Size: 4253 bytes_
 
 ```go
 package handler
@@ -3294,7 +3328,8 @@ func DeleteUser(c *gin.Context) {
 ### logger/
 
 #### logger/logger.go
-*Language: Go | Size: 1074 bytes*
+
+_Language: Go | Size: 1074 bytes_
 
 ```go
 package logger
@@ -3321,13 +3356,13 @@ type Logger struct {
 func NewLogger() *Logger {
 	// set caller skip to 2
 	cfg := zap.NewProductionConfig()
-	
+
 	cfg.Level.SetLevel(zapcore.DebugLevel) // Set the desired level (e.g., InfoLevel)
 	logger, _ := cfg.Build()
 	logger = logger.WithOptions(zap.AddCallerSkip(1))
-	
+
 	sugar := logger.Sugar()
-	
+
 	return &Logger{
 		SugaredLogger: sugar,
 	}
@@ -3357,7 +3392,8 @@ var (
 ### models/
 
 #### models/common.go
-*Language: Go | Size: 17 bytes*
+
+_Language: Go | Size: 17 bytes_
 
 ```go
 package models
@@ -3366,7 +3402,8 @@ package models
 ```
 
 #### models/dish.go
-*Language: Go | Size: 816 bytes*
+
+_Language: Go | Size: 816 bytes_
 
 ```go
 package models
@@ -3391,7 +3428,8 @@ func (Dish) TableName() string {
 ```
 
 #### models/ingredient.go
-*Language: Go | Size: 786 bytes*
+
+_Language: Go | Size: 786 bytes_
 
 ```go
 package models
@@ -3415,7 +3453,8 @@ func (Ingredient) TableName() string {
 ```
 
 #### models/kitchen.go
-*Language: Go | Size: 2034 bytes*
+
+_Language: Go | Size: 2034 bytes_
 
 ```go
 package models
@@ -3460,7 +3499,8 @@ func (KitchenFavoriteSupplier) TableName() string {
 ```
 
 #### models/order.go
-*Language: Go | Size: 7247 bytes*
+
+_Language: Go | Size: 7247 bytes_
 
 ```go
 // models/order.go
@@ -3583,7 +3623,8 @@ func (OrderIngredientSupplier) TableName() string {
 ```
 
 #### models/order_dto.go
-*Language: Go | Size: 2131 bytes*
+
+_Language: Go | Size: 2131 bytes_
 
 ```go
 package models
@@ -3640,7 +3681,8 @@ type OrderSupplementaryDTO struct {
 ```
 
 #### models/pagination.go
-*Language: Go | Size: 2231 bytes*
+
+_Language: Go | Size: 2231 bytes_
 
 ```go
 package models
@@ -3736,7 +3778,8 @@ func CalculatePaginationMeta(page, perPage int, total int64) *PaginationMeta {
 ```
 
 #### models/recipe_standard.go
-*Language: Go | Size: 1319 bytes*
+
+_Language: Go | Size: 1319 bytes_
 
 ```go
 package models
@@ -3768,7 +3811,8 @@ func (RecipeStandard) TableName() string {
 ```
 
 #### models/recipe_standard_dto.go
-*Language: Go | Size: 1819 bytes*
+
+_Language: Go | Size: 1819 bytes_
 
 ```go
 package models
@@ -3832,7 +3876,8 @@ func ConvertRecipeStandardsToDTO(recipes []RecipeStandard) []RecipeStandardDTO {
 ```
 
 #### models/supplier.go
-*Language: Go | Size: 877 bytes*
+
+_Language: Go | Size: 877 bytes_
 
 ```go
 package models
@@ -3858,7 +3903,8 @@ func (Supplier) TableName() string {
 ```
 
 #### models/supplier_price.go
-*Language: Go | Size: 1800 bytes*
+
+_Language: Go | Size: 1800 bytes_
 
 ```go
 package models
@@ -3896,7 +3942,8 @@ func (SupplierPrice) TableName() string {
 ```
 
 #### models/supplier_price_dto.go
-*Language: Go | Size: 2175 bytes*
+
+_Language: Go | Size: 2175 bytes_
 
 ```go
 package models
@@ -3966,7 +4013,8 @@ func ConvertSupplierPricesToDTO(prices []SupplierPrice) []SupplierPriceDTO {
 ```
 
 #### models/user.go
-*Language: Go | Size: 1136 bytes*
+
+_Language: Go | Size: 1136 bytes_
 
 ```go
 package models
@@ -3993,7 +4041,7 @@ type User struct {
 	Active       *bool     `gorm:"column:active;default:true" json:"active"`
     CreatedDate  time.Time `gorm:"column:created_date;autoCreateTime" json:"createdDate"`
     ModifiedDate time.Time `gorm:"column:modified_date;autoUpdateTime" json:"modifiedDate"`
-	
+
 	// Relationships
 	Kitchen      *Kitchen  `gorm:"foreignKey:KitchenID;references:KitchenID" json:"kitchen,omitempty"`
 }
@@ -4010,7 +4058,8 @@ func (User) TableName() string {
 ```
 
 #### .env
-*Language: Text | Size: 119 bytes*
+
+_Language: Text | Size: 119 bytes_
 
 ```text
 DATABASE_URL="host=14.225.198.206 user=adong password=adong123 dbname=adongfoodv2 port=5432 sslmode=disable"
@@ -4018,7 +4067,8 @@ PORT=18080
 ```
 
 #### .gitignore
-*Language: Text | Size: 15 bytes*
+
+_Language: Text | Size: 15 bytes_
 
 ```text
 backend.md
@@ -4026,7 +4076,8 @@ backend.md
 ```
 
 #### Dockerfile
-*Language: Text | Size: 1121 bytes*
+
+_Language: Text | Size: 1121 bytes_
 
 ```text
 # ============================================
@@ -4080,7 +4131,8 @@ CMD ["./main"]
 ```
 
 #### README.md
-*Language: Markdown | Size: 21 bytes*
+
+_Language: Markdown | Size: 21 bytes_
 
 ```markdown
 # adong-food-backend
@@ -4089,7 +4141,8 @@ CMD ["./main"]
 ### server/
 
 #### server/router.go
-*Language: Go | Size: 8746 bytes*
+
+_Language: Go | Size: 8746 bytes_
 
 ```go
 package server
@@ -4221,14 +4274,14 @@ func SetupRouter() *gin.Engine {
 
 		api.GET("/kitchens", handler.GetKitchens)
 		api.POST("/kitchens", handler.CreateKitchen)
-		
+
 		// Kitchen favorite suppliers (must be before /kitchens/:id to avoid route conflict)
 		api.GET("/kitchens/:id/favorite-suppliers", handler.GetKitchenFavoriteSuppliers)
 		api.GET("/kitchens/:id/favorite-suppliers/:favoriteId", handler.GetKitchenFavoriteSupplier)
 		api.POST("/kitchens/:id/favorite-suppliers", handler.CreateKitchenFavoriteSupplier)
 		api.PUT("/kitchens/:id/favorite-suppliers/:favoriteId", handler.UpdateKitchenFavoriteSupplier)
 		api.DELETE("/kitchens/:id/favorite-suppliers/:favoriteId", handler.DeleteKitchenFavoriteSupplier)
-		
+
 		api.GET("/kitchens/:id", handler.GetKitchen)
 		api.PUT("/kitchens/:id", handler.UpdateKitchen)
 		api.DELETE("/kitchens/:id", handler.DeleteKitchen)
@@ -4332,7 +4385,8 @@ func SetupRouter() *gin.Engine {
 ### store/
 
 #### store/gorm.go
-*Language: Go | Size: 1630 bytes*
+
+_Language: Go | Size: 1630 bytes_
 
 ```go
 package store
@@ -4407,7 +4461,8 @@ func convertToCoreUser(dbUser models.User) *core.User {
 ### utils/
 
 #### utils/search.go
-*Language: Go | Size: 1635 bytes*
+
+_Language: Go | Size: 1635 bytes_
 
 ```go
 package utils
@@ -4482,4 +4537,3 @@ func ApplyPagination(db *gorm.DB, page, pageSize int) *gorm.DB {
 	return db.Offset(offset).Limit(pageSize)
 }
 ```
-

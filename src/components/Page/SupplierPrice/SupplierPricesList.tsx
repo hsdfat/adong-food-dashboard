@@ -16,17 +16,16 @@ import {
   CardHeader,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPlus,
-  faSearch,
-  faFilter,
-} from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
-import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import MasterDataTable, {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
 import { format, formatDate, parse } from 'date-fns'
@@ -133,9 +132,9 @@ export default function SupplierPricesList({
   }
 
   const handleDelete = async (id: number) => {
-    const price = prices.find(item => item.productId === id)
+    const price = prices.find((item) => item.productId === id)
     const productName = price?.productName || `product ${id}`
-    
+
     if (!confirm(`Are you sure you want to delete ${productName}?`)) {
       return
     }
@@ -276,7 +275,7 @@ export default function SupplierPricesList({
       key: 'newPrice',
       label: dict.supplierPrice?.newPrice || 'New Price',
       align: 'right',
-      render: (value) => value ? formatCurrency(value) : '-',
+      render: (value) => (value ? formatCurrency(value) : '-'),
     },
     {
       key: 'promotion',
@@ -340,90 +339,91 @@ export default function SupplierPricesList({
         </Button>
       </CardHeader>
       <CardBody>
+        {error && (
+          <Alert variant="danger" dismissible onClose={() => setError('')}>
+            {error}
+          </Alert>
+        )}
 
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Search and Filter Bar */}
-      <form onSubmit={handleSearch} className="mb-3">
-        <Row>
-          <Col md={8}>
-            <InputGroup>
-              <FormControl
-                type="text"
-                placeholder={dict.common?.search || 'Search supplier prices...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Button variant="primary" type="submit">
-                <FontAwesomeIcon icon={faSearch} className="me-2" />
-                {dict.common?.search || 'Search'}
-              </Button>
-              {(searchQuery || dateFrom || dateTo) && (
-                <Button variant="outline-danger" onClick={handleClearFilters}>
-                  {dict.common?.clear || 'Clear'}
+        {/* Search and Filter Bar */}
+        <form onSubmit={handleSearch} className="mb-3">
+          <Row>
+            <Col md={8}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  placeholder={
+                    dict.common?.search || 'Search supplier prices...'
+                  }
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Button variant="primary" type="submit">
+                  <FontAwesomeIcon icon={faSearch} className="me-2" />
+                  {dict.common?.search || 'Search'}
                 </Button>
-              )}
-            </InputGroup>
-          </Col>
-          <Col md={4} className="text-end">
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <FontAwesomeIcon icon={faFilter} className="me-2" />
-              {dict.common?.filter || 'Filter'}
-            </Button>
-          </Col>
-        </Row>
-
-        {/* Date Filters */}
-        {showFilters && (
-          <Row className="mt-3">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>
-                  {dict.supplierPrice?.effectiveFrom || 'Effective From'}
-                </Form.Label>
-                <FormControl
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                />
-              </Form.Group>
+                {(searchQuery || dateFrom || dateTo) && (
+                  <Button variant="outline-danger" onClick={handleClearFilters}>
+                    {dict.common?.clear || 'Clear'}
+                  </Button>
+                )}
+              </InputGroup>
             </Col>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>
-                  {dict.supplierPrice?.effectiveTo || 'Effective To'}
-                </Form.Label>
-                <FormControl
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
-                />
-              </Form.Group>
+            <Col md={4} className="text-end">
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <FontAwesomeIcon icon={faFilter} className="me-2" />
+                {dict.common?.filter || 'Filter'}
+              </Button>
             </Col>
           </Row>
-        )}
-      </form>
 
-      <MasterDataTable
-        data={prices || []}
-        columns={columns}
-        actions={actions}
-        loading={loading}
-        emptyMessage={dict.common?.no_data || 'No data available'}
-        onActionSuccess={handleActionSuccess}
-        onActionError={handleActionError}
-        inlineActionsColumn="productName"
-      />
+          {/* Date Filters */}
+          {showFilters && (
+            <Row className="mt-3">
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>
+                    {dict.supplierPrice?.effectiveFrom || 'Effective From'}
+                  </Form.Label>
+                  <FormControl
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => setDateFrom(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>
+                    {dict.supplierPrice?.effectiveTo || 'Effective To'}
+                  </Form.Label>
+                  <FormControl
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => setDateTo(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          )}
+        </form>
 
-      {meta && <Pagination meta={meta} />}
+        <MasterDataTable
+          data={prices || []}
+          columns={columns}
+          actions={actions}
+          loading={loading}
+          emptyMessage={dict.common?.no_data || 'No data available'}
+          onActionSuccess={handleActionSuccess}
+          onActionError={handleActionError}
+          inlineActionsColumn="productName"
+        />
+
+        {meta && <Pagination meta={meta} />}
       </CardBody>
     </Card>
   )

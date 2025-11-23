@@ -32,7 +32,13 @@ import {
   faSync,
 } from '@fortawesome/free-solid-svg-icons'
 import useDictionary from '@/locales/dictionary-hook'
-import { kitchenApi, dishApi, ingredientApi, recipeStandardApi, orderApi } from '@/services'
+import {
+  kitchenApi,
+  dishApi,
+  ingredientApi,
+  recipeStandardApi,
+  orderApi,
+} from '@/services'
 import { Kitchen, RecipeStandard } from '@/models'
 import { Dish as DishModel, Ingredient as IngredientModel } from '@/models'
 import { CreateOrderInput } from '@/models/order'
@@ -113,13 +119,17 @@ interface OrderFormProps {
 
 // ==================== MAIN COMPONENT ====================
 
-export default function OrderForm({ orderId: existingOrderId, isEdit = false, preFillData }: OrderFormProps) {
+export default function OrderForm({
+  orderId: existingOrderId,
+  isEdit = false,
+  preFillData,
+}: OrderFormProps) {
   const router = useRouter()
   const dict = useDictionary()
   const isSubmittingRef = useRef(false)
 
   // ==================== STATE MANAGEMENT ====================
-  
+
   // Loading & Error States
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -139,12 +149,16 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
 
   // Order Content States
   const [orderDishes, setOrderDishes] = useState<OrderDishItem[]>([])
-  const [supplementaryFoods, setSupplementaryFoods] = useState<SupplementaryFoodItem[]>([])
+  const [supplementaryFoods, setSupplementaryFoods] = useState<
+    SupplementaryFoodItem[]
+  >([])
 
   // Dish Modal States
   const [showDishModal, setShowDishModal] = useState(false)
   const [availableDishes, setAvailableDishes] = useState<DishModel[]>([])
-  const [dishRecipeStandards, setDishRecipeStandards] = useState<Map<string, RecipeStandard[]>>(new Map())
+  const [dishRecipeStandards, setDishRecipeStandards] = useState<
+    Map<string, RecipeStandard[]>
+  >(new Map())
   const [searchDish, setSearchDish] = useState('')
   const [selectedDishes, setSelectedDishes] = useState<string[]>([])
   const [portions, setPortions] = useState(1)
@@ -152,20 +166,28 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
   // Ingredient Modal States
   const [showIngredientModal, setShowIngredientModal] = useState(false)
   const [currentDishIndex, setCurrentDishIndex] = useState<number | null>(null)
-  const [availableIngredients, setAvailableIngredients] = useState<IngredientModel[]>([])
+  const [availableIngredients, setAvailableIngredients] = useState<
+    IngredientModel[]
+  >([])
   const [searchIngredient, setSearchIngredient] = useState('')
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
   const [customAmount, setCustomAmount] = useState(0)
 
   // Supplementary Food Modal States
   const [showSupplementaryModal, setShowSupplementaryModal] = useState(false)
-  const [selectedSupplementaryIngredients, setSelectedSupplementaryIngredients] = useState<string[]>([])
+  const [
+    selectedSupplementaryIngredients,
+    setSelectedSupplementaryIngredients,
+  ] = useState<string[]>([])
   const [supplementaryAmount, setSupplementaryAmount] = useState(1)
 
   // Supplier Selection States
   const [loadingBestSuppliers, setLoadingBestSuppliers] = useState(false)
-  const [supplierSelections, setSupplierSelections] = useState<Record<string, number | ''>>({})
-  const [availableSuppliersByIngredient, setAvailableSuppliersByIngredient] = useState<Record<string, SupplierPrice[]>>({})
+  const [supplierSelections, setSupplierSelections] = useState<
+    Record<string, number | ''>
+  >({})
+  const [availableSuppliersByIngredient, setAvailableSuppliersByIngredient] =
+    useState<Record<string, SupplierPrice[]>>({})
 
   // ==================== INITIALIZATION ====================
 
@@ -183,23 +205,26 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
     if (bestSuppliersData.kitchenId) {
       setBepId(bestSuppliersData.kitchenId)
       // Find and set kitchen name
-      const kitchen = availableKitchens.find(k => k.kitchenId === bestSuppliersData.kitchenId)
+      const kitchen = availableKitchens.find(
+        (k) => k.kitchenId === bestSuppliersData.kitchenId,
+      )
       if (kitchen) {
         setTenBep(kitchen.kitchenName)
       }
     }
 
     // Convert ingredients to supplementary foods (since we only have ingredient data)
-    const supplementaryItems: SupplementaryFoodItem[] = bestSuppliersData.ingredients.map((ing: any, index: number) => ({
-      id: `prefill-${index}`,
-      nguyenLieuId: ing.ingredientId,
-      tenNguyenLieu: ing.ingredientName,
-      donViTinh: ing.unit,
-      dinhMuc: 0, // No standard per portion for supplementary items
-      soSuat: 1, // Default to 1 portion
-      soLuong: ing.totalQuantity,
-      ghiChu: '',
-    }))
+    const supplementaryItems: SupplementaryFoodItem[] =
+      bestSuppliersData.ingredients.map((ing: any, index: number) => ({
+        id: `prefill-${index}`,
+        nguyenLieuId: ing.ingredientId,
+        tenNguyenLieu: ing.ingredientName,
+        donViTinh: ing.unit,
+        dinhMuc: 0, // No standard per portion for supplementary items
+        soSuat: 1, // Default to 1 portion
+        soLuong: ing.totalQuantity,
+        ghiChu: '',
+      }))
 
     setSupplementaryFoods(supplementaryItems)
 
@@ -211,12 +236,8 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
 
   const initializeForm = async () => {
     generateOrderId()
-    await Promise.all([
-      loadKitchens(),
-      loadDishes(),
-      loadIngredients(),
-    ])
-    
+    await Promise.all([loadKitchens(), loadDishes(), loadIngredients()])
+
     // If pre-fill data is provided, use it after loading all data
     if (preFillData) {
       preFillFormWithBestSuppliers(preFillData)
@@ -233,7 +254,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
     const hours = String(now.getHours()).padStart(2, '0')
     const minutes = String(now.getMinutes()).padStart(2, '0')
     const seconds = String(now.getSeconds()).padStart(2, '0')
-    
+
     setOrderId(`PLD${year}${month}${day}${hours}${minutes}${seconds}`)
   }
 
@@ -258,13 +279,18 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
       await Promise.all(
         dishes.map(async (dish) => {
           try {
-            const recipeResponse = await recipeStandardApi.getByDish(dish.dishId)
+            const recipeResponse = await recipeStandardApi.getByDish(
+              dish.dishId,
+            )
             recipeStandardsMap.set(dish.dishId, recipeResponse.data || [])
           } catch (err) {
-            console.error(`Failed to load recipe standards for dish ${dish.dishId}:`, err)
+            console.error(
+              `Failed to load recipe standards for dish ${dish.dishId}:`,
+              err,
+            )
             recipeStandardsMap.set(dish.dishId, [])
           }
-        })
+        }),
       )
       setDishRecipeStandards(recipeStandardsMap)
     } catch (err) {
@@ -285,7 +311,10 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
 
   // ==================== SUPPLIER MANAGEMENT ====================
 
-  const loadBestSuppliers = async (tempOrderId?: string, bestSuppliersData?: any) => {
+  const loadBestSuppliers = async (
+    tempOrderId?: string,
+    bestSuppliersData?: any,
+  ) => {
     if (!orderId && !tempOrderId) return
 
     try {
@@ -298,22 +327,25 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
       } else {
         // Otherwise call API to get best suppliers
         const totalIngredients = calculateTotalIngredients()
-        
+
         if (totalIngredients.length === 0) {
           console.log('No ingredients to get best suppliers for')
           return
         }
 
-        const ingredientsPayload = totalIngredients.map(ing => ({
+        const ingredientsPayload = totalIngredients.map((ing) => ({
           ingredientId: ing.ingredientId,
           ingredientName: ing.ingredientName,
           totalQuantity: ing.totalQuantity,
           unit: ing.unit,
         }))
 
-        const response = await orderApi.getBestSuppliers(tempOrderId || orderId, {
-          ingredients: ingredientsPayload
-        })
+        const response = await orderApi.getBestSuppliers(
+          tempOrderId || orderId,
+          {
+            ingredients: ingredientsPayload,
+          },
+        )
 
         data = response as BestSupplierResponse
       }
@@ -328,7 +360,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         // If there's a best supplier, set it as selected and create supplier data
         if (ingData.bestSupplier) {
           newSelections[ingId] = ingData.bestSupplier.productId
-          
+
           // Create supplier data from bestSupplier info
           const bestSupplierData: SupplierPrice = {
             productId: ingData.bestSupplier.productId,
@@ -347,38 +379,50 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
             effectiveTo: null,
             active: true,
             newPrice: ingData.bestSupplier.unitPrice,
-            promotion: ingData.bestSupplier.isFavorite ? 'Yêu thích' : (ingData.bestSupplier.isLowestPrice ? 'Giá tốt nhất' : ''),
+            promotion: ingData.bestSupplier.isFavorite
+              ? 'Yêu thích'
+              : ingData.bestSupplier.isLowestPrice
+                ? 'Giá tốt nhất'
+                : '',
           }
-          
+
           newAvailableSuppliers[ingId] = [bestSupplierData]
         } else {
           // Load all available suppliers for this ingredient if no best supplier
           try {
-            const suppliersResponse = await supplierPriceApi.getByIngredient(ingId)
+            const suppliersResponse =
+              await supplierPriceApi.getByIngredient(ingId)
             let suppliers: SupplierPrice[] = []
-            
-            if (suppliersResponse && typeof suppliersResponse === 'object' && 'data' in suppliersResponse) {
+
+            if (
+              suppliersResponse &&
+              typeof suppliersResponse === 'object' &&
+              'data' in suppliersResponse
+            ) {
               suppliers = suppliersResponse.data as SupplierPrice[]
             } else if (Array.isArray(suppliersResponse)) {
               suppliers = suppliersResponse
             }
 
             // Filter active suppliers
-            const activeSuppliers = suppliers.filter(s => s.active !== false)
+            const activeSuppliers = suppliers.filter((s) => s.active !== false)
             newAvailableSuppliers[ingId] = activeSuppliers
           } catch (err) {
-            console.error(`Failed to load suppliers for ingredient ${ingId}:`, err)
+            console.error(
+              `Failed to load suppliers for ingredient ${ingId}:`,
+              err,
+            )
             newAvailableSuppliers[ingId] = []
           }
         }
       }
 
       // Merge with existing selections (keep user's manual selections)
-      setSupplierSelections(prev => ({
+      setSupplierSelections((prev) => ({
         ...newSelections,
         ...prev, // User selections take priority
       }))
-      
+
       setAvailableSuppliersByIngredient(newAvailableSuppliers)
 
       console.log('Best suppliers loaded:', {
@@ -404,9 +448,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
 
   const handleSupplierChange = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
-    setSupplierSelections(prev => ({
+    setSupplierSelections((prev) => ({
       ...prev,
-      [ingredientId]: productId
+      [ingredientId]: productId,
     }))
   }
 
@@ -465,11 +509,15 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           }
         }
         return dish
-      })
+      }),
     )
   }
 
-  const handleUpdateDinhMuc = (dishId: string, ingredientId: string, newDinhMuc: number) => {
+  const handleUpdateDinhMuc = (
+    dishId: string,
+    ingredientId: string,
+    newDinhMuc: number,
+  ) => {
     if (newDinhMuc < 0) return
 
     const roundedDinhMuc = Math.round(newDinhMuc * 100) / 100
@@ -484,14 +532,15 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                 ? {
                     ...ing,
                     dinhMuc: roundedDinhMuc,
-                    soLuong: Math.round(roundedDinhMuc * dish.soSuat * 100) / 100,
+                    soLuong:
+                      Math.round(roundedDinhMuc * dish.soSuat * 100) / 100,
                   }
-                : ing
+                : ing,
             ),
           }
         }
         return dish
-      })
+      }),
     )
   }
 
@@ -502,19 +551,23 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           return {
             ...dish,
             ingredients: dish.ingredients.filter(
-              (ing) => ing.nguyenLieuId !== ingredientId
+              (ing) => ing.nguyenLieuId !== ingredientId,
             ),
           }
         }
         return dish
-      })
+      }),
     )
   }
 
   // ==================== INGREDIENT MANAGEMENT ====================
 
   const handleAddCustomIngredients = () => {
-    if (currentDishIndex === null || selectedIngredients.length === 0 || customAmount <= 0) {
+    if (
+      currentDishIndex === null ||
+      selectedIngredients.length === 0 ||
+      customAmount <= 0
+    ) {
       alert('Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ')
       return
     }
@@ -522,10 +575,14 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
     const dish = orderDishes[currentDishIndex]
     const newIngredients = selectedIngredients
       .map((ingId) => {
-        const ingredient = availableIngredients.find((ing) => ing.ingredientId === ingId)
+        const ingredient = availableIngredients.find(
+          (ing) => ing.ingredientId === ingId,
+        )
         if (!ingredient) return null
 
-        const exists = dish.ingredients.find((ing) => ing.nguyenLieuId === ingId)
+        const exists = dish.ingredients.find(
+          (ing) => ing.nguyenLieuId === ingId,
+        )
         if (exists) return null
 
         return {
@@ -556,31 +613,37 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
   // ==================== SUPPLEMENTARY FOOD MANAGEMENT ====================
 
   const handleAddSupplementaryFoods = () => {
-    if (selectedSupplementaryIngredients.length === 0 || supplementaryAmount <= 0) {
+    if (
+      selectedSupplementaryIngredients.length === 0 ||
+      supplementaryAmount <= 0
+    ) {
       alert('Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ')
       return
     }
 
-    const newSupplementaryFoods: SupplementaryFoodItem[] = selectedSupplementaryIngredients
-      .map((ingId) => {
-        const ingredient = availableIngredients.find((ing) => ing.ingredientId === ingId)
-        if (!ingredient) return null
+    const newSupplementaryFoods: SupplementaryFoodItem[] =
+      selectedSupplementaryIngredients
+        .map((ingId) => {
+          const ingredient = availableIngredients.find(
+            (ing) => ing.ingredientId === ingId,
+          )
+          if (!ingredient) return null
 
-        const dinhMuc = 0
-        const soLuong = Math.round(dinhMuc * supplementaryAmount * 100) / 100
+          const dinhMuc = 0
+          const soLuong = Math.round(dinhMuc * supplementaryAmount * 100) / 100
 
-        return {
-          id: `${Date.now()}-${Math.random()}`,
-          nguyenLieuId: ingredient.ingredientId,
-          tenNguyenLieu: ingredient.ingredientName,
-          donViTinh: ingredient.unit,
-          dinhMuc: dinhMuc,
-          soSuat: supplementaryAmount,
-          soLuong: soLuong,
-          ghiChu: '',
-        }
-      })
-      .filter((item) => item !== null) as SupplementaryFoodItem[]
+          return {
+            id: `${Date.now()}-${Math.random()}`,
+            nguyenLieuId: ingredient.ingredientId,
+            tenNguyenLieu: ingredient.ingredientName,
+            donViTinh: ingredient.unit,
+            dinhMuc: dinhMuc,
+            soSuat: supplementaryAmount,
+            soLuong: soLuong,
+            ghiChu: '',
+          }
+        })
+        .filter((item) => item !== null) as SupplementaryFoodItem[]
 
     setSupplementaryFoods([...supplementaryFoods, ...newSupplementaryFoods])
     closeSupplementaryModal()
@@ -594,7 +657,8 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
     setSupplementaryFoods(
       supplementaryFoods.map((item) => {
         if (item.id === id) {
-          const newSoLuong = Math.round(roundedDinhMuc * item.soSuat * 100) / 100
+          const newSoLuong =
+            Math.round(roundedDinhMuc * item.soSuat * 100) / 100
           return {
             ...item,
             dinhMuc: roundedDinhMuc,
@@ -602,7 +666,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           }
         }
         return item
-      })
+      }),
     )
   }
 
@@ -614,7 +678,8 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
     setSupplementaryFoods(
       supplementaryFoods.map((item) => {
         if (item.id === id) {
-          const newSoLuong = Math.round(item.dinhMuc * roundedSoSuat * 100) / 100
+          const newSoLuong =
+            Math.round(item.dinhMuc * roundedSoSuat * 100) / 100
           return {
             ...item,
             soSuat: roundedSoSuat,
@@ -622,13 +687,15 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           }
         }
         return item
-      })
+      }),
     )
   }
 
   const handleUpdateSupplementaryNote = (id: string, note: string) => {
     setSupplementaryFoods(
-      supplementaryFoods.map((item) => (item.id === id ? { ...item, ghiChu: note } : item))
+      supplementaryFoods.map((item) =>
+        item.id === id ? { ...item, ghiChu: note } : item,
+      ),
     )
   }
 
@@ -799,31 +866,38 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
   // ==================== COMPUTED VALUES ====================
 
   const filteredDishes = useMemo(
-    () => availableDishes.filter((dish) =>
-      dish.dishName.toLowerCase().includes(searchDish.toLowerCase())
-    ),
-    [availableDishes, searchDish]
+    () =>
+      availableDishes.filter((dish) =>
+        dish.dishName.toLowerCase().includes(searchDish.toLowerCase()),
+      ),
+    [availableDishes, searchDish],
   )
 
   const filteredIngredients = useMemo(
-    () => availableIngredients.filter((ing) =>
-      ing.ingredientName.toLowerCase().includes(searchIngredient.toLowerCase())
-    ),
-    [availableIngredients, searchIngredient]
+    () =>
+      availableIngredients.filter((ing) =>
+        ing.ingredientName
+          .toLowerCase()
+          .includes(searchIngredient.toLowerCase()),
+      ),
+    [availableIngredients, searchIngredient],
   )
 
   const filteredKitchens = useMemo(
-    () => availableKitchens.filter(
-      (kitchen) =>
-        kitchen.kitchenName.toLowerCase().includes(searchKitchen.toLowerCase()) ||
-        kitchen.kitchenId.toLowerCase().includes(searchKitchen.toLowerCase())
-    ),
-    [availableKitchens, searchKitchen]
+    () =>
+      availableKitchens.filter(
+        (kitchen) =>
+          kitchen.kitchenName
+            .toLowerCase()
+            .includes(searchKitchen.toLowerCase()) ||
+          kitchen.kitchenId.toLowerCase().includes(searchKitchen.toLowerCase()),
+      ),
+    [availableKitchens, searchKitchen],
   )
 
   const totalIngredients = useMemo(
     () => calculateTotalIngredients(),
-    [orderDishes, supplementaryFoods]
+    [orderDishes, supplementaryFoods],
   )
 
   // ==================== RENDER ====================
@@ -885,7 +959,10 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                       readOnly
                       required
                     />
-                    <Button variant="outline-primary" onClick={() => setShowKitchenModal(true)}>
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => setShowKitchenModal(true)}
+                    >
                       <FontAwesomeIcon icon={faSearch} />
                     </Button>
                   </InputGroup>
@@ -918,7 +995,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
             </div>
 
             {orderDishes.length === 0 ? (
-              <Alert variant="info">Chưa có món ăn nào. Nhấn "Thêm món ăn" để bắt đầu.</Alert>
+              <Alert variant="info">
+                Chưa có món ăn nào. Nhấn "Thêm món ăn" để bắt đầu.
+              </Alert>
             ) : (
               <div className="table-responsive">
                 <Table striped bordered hover>
@@ -945,13 +1024,20 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                             type="number"
                             min="1"
                             value={dish.soSuat}
-                            onChange={(e) => handleUpdatePortions(dish.id, parseInt(e.target.value) || 1)}
+                            onChange={(e) =>
+                              handleUpdatePortions(
+                                dish.id,
+                                parseInt(e.target.value) || 1,
+                              )
+                            }
                             size="sm"
                           />
                         </td>
                         <td>
                           {dish.ingredients.length === 0 ? (
-                            <small className="text-muted">Chưa có nguyên liệu</small>
+                            <small className="text-muted">
+                              Chưa có nguyên liệu
+                            </small>
                           ) : (
                             <Table size="sm" className="mb-0">
                               <tbody>
@@ -960,7 +1046,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                                     <td style={{ width: '40%' }}>
                                       {ing.tenNguyenLieu}
                                       <br />
-                                      <small className="text-muted">{ing.nguyenLieuId}</small>
+                                      <small className="text-muted">
+                                        {ing.nguyenLieuId}
+                                      </small>
                                     </td>
                                     <td style={{ width: '20%' }}>
                                       <FormControl
@@ -969,20 +1057,34 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                                         step="0.01"
                                         value={ing.dinhMuc}
                                         onChange={(e) =>
-                                          handleUpdateDinhMuc(dish.id, ing.nguyenLieuId, parseFloat(e.target.value) || 0)
+                                          handleUpdateDinhMuc(
+                                            dish.id,
+                                            ing.nguyenLieuId,
+                                            parseFloat(e.target.value) || 0,
+                                          )
                                         }
                                         size="sm"
                                       />
-                                      <small className="text-muted">{ing.donViTinh}/suất</small>
+                                      <small className="text-muted">
+                                        {ing.donViTinh}/suất
+                                      </small>
                                     </td>
                                     <td style={{ width: '30%' }}>
-                                      <strong>{formatNumber(ing.soLuong)}</strong> {ing.donViTinh}
+                                      <strong>
+                                        {formatNumber(ing.soLuong)}
+                                      </strong>{' '}
+                                      {ing.donViTinh}
                                     </td>
                                     <td style={{ width: '10%' }}>
                                       <Button
                                         variant="danger"
                                         size="sm"
-                                        onClick={() => handleRemoveIngredient(dish.id, ing.nguyenLieuId)}
+                                        onClick={() =>
+                                          handleRemoveIngredient(
+                                            dish.id,
+                                            ing.nguyenLieuId,
+                                          )
+                                        }
                                       >
                                         <FontAwesomeIcon icon={faTrash} />
                                       </Button>
@@ -1006,7 +1108,11 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                           </Button>
                         </td>
                         <td>
-                          <Button variant="danger" size="sm" onClick={() => handleRemoveDish(dish.id)}>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleRemoveDish(dish.id)}
+                          >
                             <FontAwesomeIcon icon={faTrash} />
                           </Button>
                         </td>
@@ -1024,7 +1130,10 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           <CardBody>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5 className="mb-0">Thực phẩm bổ sung</h5>
-              <Button variant="success" onClick={() => setShowSupplementaryModal(true)}>
+              <Button
+                variant="success"
+                onClick={() => setShowSupplementaryModal(true)}
+              >
                 <FontAwesomeIcon icon={faPlus} className="me-2" />
                 Thêm thực phẩm bổ sung
               </Button>
@@ -1032,7 +1141,8 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
 
             {supplementaryFoods.length === 0 ? (
               <Alert variant="info">
-                Chưa có thực phẩm bổ sung. Nhấn "Thêm thực phẩm bổ sung" để thêm mới.
+                Chưa có thực phẩm bổ sung. Nhấn "Thêm thực phẩm bổ sung" để thêm
+                mới.
               </Alert>
             ) : (
               <div className="table-responsive">
@@ -1055,7 +1165,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                         <td>
                           <strong>{item.tenNguyenLieu}</strong>
                           <br />
-                          <small className="text-muted">{item.nguyenLieuId}</small>
+                          <small className="text-muted">
+                            {item.nguyenLieuId}
+                          </small>
                         </td>
                         <td>
                           <FormControl
@@ -1064,11 +1176,16 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                             step="0.01"
                             value={item.dinhMuc}
                             onChange={(e) =>
-                              handleUpdateSupplementaryDinhMuc(item.id, parseFloat(e.target.value) || 0)
+                              handleUpdateSupplementaryDinhMuc(
+                                item.id,
+                                parseFloat(e.target.value) || 0,
+                              )
                             }
                             size="sm"
                           />
-                          <small className="text-muted">{item.donViTinh}/suất</small>
+                          <small className="text-muted">
+                            {item.donViTinh}/suất
+                          </small>
                         </td>
                         <td>
                           <FormControl
@@ -1076,19 +1193,28 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                             min="1"
                             value={item.soSuat}
                             onChange={(e) =>
-                              handleUpdateSupplementarySoSuat(item.id, parseInt(e.target.value) || 1)
+                              handleUpdateSupplementarySoSuat(
+                                item.id,
+                                parseInt(e.target.value) || 1,
+                              )
                             }
                             size="sm"
                           />
                         </td>
                         <td>
-                          <strong>{formatNumber(item.soLuong)}</strong> {item.donViTinh}
+                          <strong>{formatNumber(item.soLuong)}</strong>{' '}
+                          {item.donViTinh}
                         </td>
                         <td>
                           <FormControl
                             type="text"
                             value={item.ghiChu || ''}
-                            onChange={(e) => handleUpdateSupplementaryNote(item.id, e.target.value)}
+                            onChange={(e) =>
+                              handleUpdateSupplementaryNote(
+                                item.id,
+                                e.target.value,
+                              )
+                            }
                             size="sm"
                             placeholder="Ghi chú..."
                           />
@@ -1097,7 +1223,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                           <Button
                             variant="danger"
                             size="sm"
-                            onClick={() => handleRemoveSupplementaryFood(item.id)}
+                            onClick={() =>
+                              handleRemoveSupplementaryFood(item.id)
+                            }
                           >
                             <FontAwesomeIcon icon={faTrash} />
                           </Button>
@@ -1116,7 +1244,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           <Card className="mb-4">
             <CardBody>
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="mb-0">Tổng hợp nguyên liệu & Chọn nhà cung cấp</h5>
+                <h5 className="mb-0">
+                  Tổng hợp nguyên liệu & Chọn nhà cung cấp
+                </h5>
                 <Button
                   variant="outline-primary"
                   onClick={() => loadBestSuppliers()}
@@ -1148,9 +1278,13 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                   </thead>
                   <tbody>
                     {totalIngredients.map((ing, index) => {
-                      const suppliers = availableSuppliersByIngredient[ing.ingredientId] || []
-                      const selectedProductId = supplierSelections[ing.ingredientId]
-                      const selectedSupplier = suppliers.find(s => s.productId === selectedProductId)
+                      const suppliers =
+                        availableSuppliersByIngredient[ing.ingredientId] || []
+                      const selectedProductId =
+                        supplierSelections[ing.ingredientId]
+                      const selectedSupplier = suppliers.find(
+                        (s) => s.productId === selectedProductId,
+                      )
 
                       return (
                         <tr key={ing.ingredientId}>
@@ -1158,10 +1292,13 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                           <td>
                             <strong>{ing.ingredientName}</strong>
                             <br />
-                            <small className="text-muted">{ing.ingredientId}</small>
+                            <small className="text-muted">
+                              {ing.ingredientId}
+                            </small>
                           </td>
                           <td>
-                            <strong>{formatNumber(ing.totalQuantity)}</strong> {ing.unit}
+                            <strong>{formatNumber(ing.totalQuantity)}</strong>{' '}
+                            {ing.unit}
                           </td>
                           <td>
                             {loadingBestSuppliers ? (
@@ -1176,37 +1313,64 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
                               <div>
                                 <FormSelect
                                   value={selectedProductId || ''}
-                                  onChange={(e) => handleSupplierChange(ing.ingredientId, e.target.value)}
+                                  onChange={(e) =>
+                                    handleSupplierChange(
+                                      ing.ingredientId,
+                                      e.target.value,
+                                    )
+                                  }
                                   size="sm"
                                 >
-                                  <option value="">-- Chọn nhà cung cấp --</option>
+                                  <option value="">
+                                    -- Chọn nhà cung cấp --
+                                  </option>
                                   {suppliers.map((supplier) => (
-                                    <option key={supplier.productId} value={supplier.productId}>
-                                      {supplier.supplierName} - {supplier.productName} ({formatNumber(supplier.unitPrice)} đ/{supplier.unit})
-                                      {supplier.promotion && ` - ${supplier.promotion}`}
+                                    <option
+                                      key={supplier.productId}
+                                      value={supplier.productId}
+                                    >
+                                      {supplier.supplierName} -{' '}
+                                      {supplier.productName} (
+                                      {formatNumber(supplier.unitPrice)} đ/
+                                      {supplier.unit})
+                                      {supplier.promotion &&
+                                        ` - ${supplier.promotion}`}
                                     </option>
                                   ))}
                                 </FormSelect>
                                 {selectedSupplier && (
                                   <div className="mt-2">
                                     <small className="text-muted">
-                                      <strong>Chi tiết:</strong> {selectedSupplier.supplierName} ({selectedSupplier.supplierId})
+                                      <strong>Chi tiết:</strong>{' '}
+                                      {selectedSupplier.supplierName} (
+                                      {selectedSupplier.supplierId})
                                       <br />
-                                      <strong>Sản phẩm:</strong> {selectedSupplier.productName}
+                                      <strong>Sản phẩm:</strong>{' '}
+                                      {selectedSupplier.productName}
                                       <br />
-                                      <strong>Đơn giá:</strong> {formatNumber(selectedSupplier.unitPrice)} đ/{selectedSupplier.unit}
+                                      <strong>Đơn giá:</strong>{' '}
+                                      {formatNumber(selectedSupplier.unitPrice)}{' '}
+                                      đ/{selectedSupplier.unit}
                                       <br />
-                                      <strong>Tổng tiền:</strong> {formatNumber(selectedSupplier.unitPrice * ing.totalQuantity)} đ
+                                      <strong>Tổng tiền:</strong>{' '}
+                                      {formatNumber(
+                                        selectedSupplier.unitPrice *
+                                          ing.totalQuantity,
+                                      )}{' '}
+                                      đ
                                       {selectedSupplier.specification && (
                                         <>
                                           <br />
-                                          <strong>Quy cách:</strong> {selectedSupplier.specification}
+                                          <strong>Quy cách:</strong>{' '}
+                                          {selectedSupplier.specification}
                                         </>
                                       )}
                                       {selectedSupplier.promotion && (
                                         <>
                                           <br />
-                                          <Badge bg="success">{selectedSupplier.promotion}</Badge>
+                                          <Badge bg="success">
+                                            {selectedSupplier.promotion}
+                                          </Badge>
                                         </>
                                       )}
                                     </small>
@@ -1241,7 +1405,11 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
             )}
           </Button>
 
-          <Button type="button" variant="secondary" onClick={() => router.push('/orders')}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.push('/orders')}
+          >
             <FontAwesomeIcon icon={faTimes} className="me-2" />
             Hủy
           </Button>
@@ -1253,7 +1421,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         show={showKitchenModal}
         onHide={closeKitchenModal}
         title="Chọn bếp"
-        items={filteredKitchens.map(k => ({
+        items={filteredKitchens.map((k) => ({
           id: k.kitchenId,
           name: k.kitchenName,
           subtitle: k.address,
@@ -1272,7 +1440,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         show={showDishModal}
         onHide={closeDishModal}
         title="Thêm món ăn"
-        items={filteredDishes.map(d => ({
+        items={filteredDishes.map((d) => ({
           id: d.dishId,
           name: d.dishName,
           subtitle: `${dishRecipeStandards.get(d.dishId)?.length || 0} nguyên liệu`,
@@ -1286,7 +1454,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           if (checked) {
             setSelectedDishes([...selectedDishes, dishId])
           } else {
-            setSelectedDishes(selectedDishes.filter(id => id !== dishId))
+            setSelectedDishes(selectedDishes.filter((id) => id !== dishId))
           }
         }}
         onConfirm={handleAddDishes}
@@ -1311,7 +1479,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         show={showIngredientModal}
         onHide={closeIngredientModal}
         title="Thêm nguyên liệu vào món ăn"
-        items={filteredIngredients.map(i => ({
+        items={filteredIngredients.map((i) => ({
           id: i.ingredientId,
           name: i.ingredientName,
           subtitle: `${i.ingredientId} - ${i.unit}`,
@@ -1324,7 +1492,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
           if (checked) {
             setSelectedIngredients([...selectedIngredients, ingId])
           } else {
-            setSelectedIngredients(selectedIngredients.filter(id => id !== ingId))
+            setSelectedIngredients(
+              selectedIngredients.filter((id) => id !== ingId),
+            )
           }
         }}
         onConfirm={handleAddCustomIngredients}
@@ -1334,7 +1504,9 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         selectedCountLabel={`Đã chọn ${selectedIngredients.length} nguyên liệu`}
         additionalFields={
           <FormGroup>
-            <FormLabel>Số lượng (áp dụng cho tất cả nguyên liệu đã chọn):</FormLabel>
+            <FormLabel>
+              Số lượng (áp dụng cho tất cả nguyên liệu đã chọn):
+            </FormLabel>
             <FormControl
               type="number"
               min="0"
@@ -1350,7 +1522,7 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         show={showSupplementaryModal}
         onHide={closeSupplementaryModal}
         title="Thêm thực phẩm bổ sung"
-        items={filteredIngredients.map(i => ({
+        items={filteredIngredients.map((i) => ({
           id: i.ingredientId,
           name: i.ingredientName,
           subtitle: `${i.ingredientId} - ${i.unit}`,
@@ -1361,9 +1533,14 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         selectedIds={selectedSupplementaryIngredients}
         onSelect={(ingId, checked) => {
           if (checked) {
-            setSelectedSupplementaryIngredients([...selectedSupplementaryIngredients, ingId])
+            setSelectedSupplementaryIngredients([
+              ...selectedSupplementaryIngredients,
+              ingId,
+            ])
           } else {
-            setSelectedSupplementaryIngredients(selectedSupplementaryIngredients.filter(id => id !== ingId))
+            setSelectedSupplementaryIngredients(
+              selectedSupplementaryIngredients.filter((id) => id !== ingId),
+            )
           }
         }}
         onConfirm={handleAddSupplementaryFoods}
@@ -1375,12 +1552,16 @@ export default function OrderForm({ orderId: existingOrderId, isEdit = false, pr
         selectedHighlightClass="bg-success text-white"
         additionalFields={
           <FormGroup>
-            <FormLabel>Số suất (áp dụng cho tất cả nguyên liệu đã chọn):</FormLabel>
+            <FormLabel>
+              Số suất (áp dụng cho tất cả nguyên liệu đã chọn):
+            </FormLabel>
             <FormControl
               type="number"
               min="1"
               value={supplementaryAmount}
-              onChange={(e) => setSupplementaryAmount(parseInt(e.target.value) || 1)}
+              onChange={(e) =>
+                setSupplementaryAmount(parseInt(e.target.value) || 1)
+              }
             />
             <small className="text-muted">
               Bạn có thể chỉnh sửa định mức và số lượng sau khi thêm

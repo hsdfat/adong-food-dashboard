@@ -2,9 +2,9 @@ import React from 'react'
 import useDictionary from '@/locales/dictionary-hook'
 
 type Props = {
-  total: number;
-  from: number;
-  to: number;
+  total: number
+  from: number
+  to: number
 }
 
 export default function Summary(props: Props) {

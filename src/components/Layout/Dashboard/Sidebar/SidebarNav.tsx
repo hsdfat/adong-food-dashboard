@@ -1,5 +1,8 @@
 import {
-  faAddressCard, faBell, faFileLines, faStar,
+  faAddressCard,
+  faBell,
+  faFileLines,
+  faStar,
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faBug,
@@ -30,7 +33,9 @@ const SidebarNavTitle = (props: PropsWithChildren) => {
   const { children } = props
 
   return (
-    <li className="nav-title px-3 py-2 mt-3 text-uppercase fw-bold">{children}</li>
+    <li className="nav-title px-3 py-2 mt-3 text-uppercase fw-bold">
+      {children}
+    </li>
   )
 }
 
@@ -44,9 +49,14 @@ export default async function SidebarNav() {
         {dict.sidebar.items.dashboard}
       </SidebarNavItem>
 
-      <SidebarNavTitle>{dict.sidebar.items.master_data || 'Master Data'}</SidebarNavTitle>
+      <SidebarNavTitle>
+        {dict.sidebar.items.master_data || 'Master Data'}
+      </SidebarNavTitle>
 
-      <SidebarNavGroup toggleIcon={faPuzzlePiece} toggleText={dict.sidebar.items.master_data || 'Master Data'}>
+      <SidebarNavGroup
+        toggleIcon={faPuzzlePiece}
+        toggleText={dict.sidebar.items.master_data || 'Master Data'}
+      >
         <SidebarNavItem href="/ingredients">
           {dict.sidebar.items.ingredients}
         </SidebarNavItem>
@@ -61,7 +71,10 @@ export default async function SidebarNav() {
         </SidebarNavItem>
       </SidebarNavGroup>
 
-      <SidebarNavGroup toggleIcon={faUtensils} toggleText={dict.sidebar.items.recipes || 'Recipes'}>
+      <SidebarNavGroup
+        toggleIcon={faUtensils}
+        toggleText={dict.sidebar.items.recipes || 'Recipes'}
+      >
         <SidebarNavItem href="/recipe-standards">
           {dict.sidebar.items.recipe_standards}
         </SidebarNavItem>
@@ -74,7 +87,10 @@ export default async function SidebarNav() {
         </SidebarNavItem>
       </SidebarNavGroup>
 
-      <SidebarNavGroup toggleIcon={faBoxes} toggleText={dict.sidebar.items.inventory_management || 'Inventory'}>
+      <SidebarNavGroup
+        toggleIcon={faBoxes}
+        toggleText={dict.sidebar.items.inventory_management || 'Inventory'}
+      >
         <SidebarNavItem href="/supplier-prices">
           {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
         </SidebarNavItem>

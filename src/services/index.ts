@@ -109,21 +109,38 @@ export { recipeStandardApi }
 // Kitchen Favorite Suppliers API
 export const kitchenFavoriteSupplierApi = {
   getAll: (kitchenId: string, queryString: string = '') =>
-    apiClient<ResourceCollection<KitchenFavoriteSupplier>>(`/api/kitchens/${kitchenId}/favorite-suppliers${queryString}`),
+    apiClient<ResourceCollection<KitchenFavoriteSupplier>>(
+      `/api/kitchens/${kitchenId}/favorite-suppliers${queryString}`,
+    ),
   getById: (kitchenId: string, favoriteId: string) =>
-    apiClient<KitchenFavoriteSupplier>(`/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`),
+    apiClient<KitchenFavoriteSupplier>(
+      `/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`,
+    ),
   create: (kitchenId: string, data: CreateKitchenFavoriteSupplierInput) =>
-    apiClient<KitchenFavoriteSupplier>(`/api/kitchens/${kitchenId}/favorite-suppliers`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-  update: (kitchenId: string, favoriteId: string, data: UpdateKitchenFavoriteSupplierInput) =>
-    apiClient<KitchenFavoriteSupplier>(`/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    }),
+    apiClient<KitchenFavoriteSupplier>(
+      `/api/kitchens/${kitchenId}/favorite-suppliers`,
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+      },
+    ),
+  update: (
+    kitchenId: string,
+    favoriteId: string,
+    data: UpdateKitchenFavoriteSupplierInput,
+  ) =>
+    apiClient<KitchenFavoriteSupplier>(
+      `/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      },
+    ),
   delete: (kitchenId: string, favoriteId: string) =>
-    apiClient<{ message: string }>(`/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`, {
-      method: 'DELETE',
-    }),
+    apiClient<{ message: string }>(
+      `/api/kitchens/${kitchenId}/favorite-suppliers/${favoriteId}`,
+      {
+        method: 'DELETE',
+      },
+    ),
 }

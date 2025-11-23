@@ -7,7 +7,10 @@ import { Supplier } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
-import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function SupplieresList() {
   const [suppliersData, setSupplieresData] =
@@ -17,7 +20,11 @@ export default function SupplieresList() {
   const router = useRouter()
   const dict = useDictionary()
 
-  const loadSupplieres = async (page: number, perPage: number, search: string) => {
+  const loadSupplieres = async (
+    page: number,
+    perPage: number,
+    search: string,
+  ) => {
     try {
       setLoading(true)
       setError('')

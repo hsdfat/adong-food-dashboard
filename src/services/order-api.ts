@@ -1,7 +1,6 @@
 // services/order-api.ts
 import { apiClient } from '@/utils/api_client'
 import {
-  Order,
   OrderDTO,
   CreateOrderInput,
   UpdateOrderInput,
@@ -15,10 +14,13 @@ export const orderApi = {
   /**
    * Get all orders with pagination and filters
    */
-  async getAll(params?: GetOrdersParams): Promise<ResourceCollection<OrderDTO>> {
+  async getAll(
+    params?: GetOrdersParams,
+  ): Promise<ResourceCollection<OrderDTO>> {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
-    if (params?.per_page) queryParams.append('per_page', params.per_page.toString())
+    if (params?.per_page)
+      queryParams.append('per_page', params.per_page.toString())
     if (params?.search) queryParams.append('search', params.search)
     if (params?.sortBy) queryParams.append('sortBy', params.sortBy)
     if (params?.sortDir) queryParams.append('sortDir', params.sortDir)
@@ -56,7 +58,7 @@ export const orderApi = {
       dish_id?: string
       ingredient_id?: string
     },
-  ): Promise<any> {
+  ): Promise<unknown> {
     const queryParams = new URLSearchParams()
     if (params?.kitchen_id) queryParams.append('kitchen_id', params.kitchen_id)
     if (params?.status) queryParams.append('status', params.status)
@@ -69,7 +71,7 @@ export const orderApi = {
     const url = queryParams.toString()
       ? `${BASE_URL}/${id}/ingredients/summary?${queryParams.toString()}`
       : `${BASE_URL}/${id}/ingredients/summary`
-    return await apiClient<any>(url)
+    return await apiClient<unknown>(url)
   },
 
   /**
@@ -85,7 +87,7 @@ export const orderApi = {
       to_date?: string
       dish_id?: string
     },
-  ): Promise<any> {
+  ): Promise<unknown> {
     const queryParams = new URLSearchParams()
     if (params?.kitchen_id) queryParams.append('kitchen_id', params.kitchen_id)
     if (params?.status) queryParams.append('status', params.status)
@@ -96,7 +98,7 @@ export const orderApi = {
     const url = queryParams.toString()
       ? `${BASE_URL}/${orderId}/ingredients/${ingredientId}/summary?${queryParams.toString()}`
       : `${BASE_URL}/${orderId}/ingredients/${ingredientId}/summary`
-    return await apiClient<any>(url)
+    return await apiClient<unknown>(url)
   },
 
   /**
@@ -157,10 +159,13 @@ export const orderApi = {
       }>
     },
   ): Promise<any> {
-    return await apiClient<any>(`${BASE_URL}/${orderId}/supplier-requests`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
+    return await apiClient<unknown>(
+      `${BASE_URL}/${orderId}/supplier-requests`,
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+      },
+    )
   },
 
   /**
@@ -168,25 +173,29 @@ export const orderApi = {
    * GET /api/orders/{orderId}/supplier-requests
    */
   async getSupplierRequests(orderId: number | string): Promise<any[]> {
-    return await apiClient<any[]>(`${BASE_URL}/${orderId}/supplier-requests`)
+    return await apiClient<unknown[]>(
+      `${BASE_URL}/${orderId}/supplier-requests`,
+    )
   },
 
   /**
    * Get best suppliers for order ingredients
    * POST /api/orders/{orderId}/best-suppliers
    */
-  async getBestSuppliers(orderId: number | string, data: {
-    ingredients: Array<{
-      ingredientId: string
-      ingredientName: string
-      totalQuantity: number
-      unit: string
-    }>
-  }): Promise<any> {
-    return await apiClient<any>(`${BASE_URL}/${orderId}/best-suppliers`, {
+  async getBestSuppliers(
+    orderId: number | string,
+    data: {
+      ingredients: Array<{
+        ingredientId: string
+        ingredientName: string
+        totalQuantity: number
+        unit: string
+      }>
+    },
+  ): Promise<any> {
+    return await apiClient<unknown>(`${BASE_URL}/${orderId}/best-suppliers`, {
       method: 'POST',
       body: JSON.stringify(data),
     })
   },
 }
-

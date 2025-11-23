@@ -2,7 +2,7 @@ import RowPerPageSelect from '@/components/Pagination/RowsPerPageSelect'
 import useDictionary from '@/locales/dictionary-hook'
 
 type Props = {
-  perPage: number;
+  perPage: number
 }
 
 export default function RowsPerPage(props: Props) {
@@ -12,10 +12,7 @@ export default function RowsPerPage(props: Props) {
 
   return (
     <div className="col-auto ms-sm-auto mb-3">
-      {dict.pagination.rows_per_page}
-      :
-      {' '}
-      <RowPerPageSelect perPage={perPage} />
+      {dict.pagination.rows_per_page}: <RowPerPageSelect perPage={perPage} />
     </div>
   )
 }

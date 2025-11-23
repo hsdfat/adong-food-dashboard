@@ -91,8 +91,8 @@ export default function IngredientSummary() {
       console.error('Error loading ingredients summary:', err)
       setError(
         err.message ||
-        dict.orders?.error_load_summary ||
-        'Failed to load ingredient summary',
+          dict.orders?.error_load_summary ||
+          'Failed to load ingredient summary',
       )
     } finally {
       setLoading(false)
@@ -122,10 +122,7 @@ export default function IngredientSummary() {
       <Card>
         <CardBody>
           <Alert variant="danger">{error}</Alert>
-          <button
-            className="btn btn-secondary"
-            onClick={() => router.back()}
-          >
+          <button className="btn btn-secondary" onClick={() => router.back()}>
             {dict.orders?.labels?.back_to_orders || 'Go Back'}
           </button>
         </CardBody>
@@ -154,13 +151,24 @@ export default function IngredientSummary() {
           <Table striped bordered hover responsive>
             <thead className="table-light">
               <tr>
-                <th>{dict.orders?.columns?.ingredient_id || 'Ingredient ID'}</th>
-                <th>{dict.orders?.columns?.ingredient_name || 'Ingredient Name'}</th>
-                <th className="text-end">{dict.orders?.columns?.quantity || 'Quantity'}</th>
+                <th>
+                  {dict.orders?.columns?.ingredient_id || 'Ingredient ID'}
+                </th>
+                <th>
+                  {dict.orders?.columns?.ingredient_name || 'Ingredient Name'}
+                </th>
+                <th className="text-end">
+                  {dict.orders?.columns?.quantity || 'Quantity'}
+                </th>
                 <th>{dict.orders?.columns?.unit || 'Unit'}</th>
                 {summary.ingredients.some(
                   (ing) => ing.standardPerPortion !== undefined,
-                ) && <th className="text-end">{dict.orders?.columns?.standard_per_portion || 'Standard/Portion'}</th>}
+                ) && (
+                  <th className="text-end">
+                    {dict.orders?.columns?.standard_per_portion ||
+                      'Standard/Portion'}
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -179,26 +187,35 @@ export default function IngredientSummary() {
                   {summary.ingredients.some(
                     (ing) => ing.standardPerPortion !== undefined,
                   ) && (
-                      <td className="text-end">
-                        {ingredient.standardPerPortion !== undefined
-                          ? formatNumber(ingredient.standardPerPortion)
-                          : '-'}
-                      </td>
-                    )}
+                    <td className="text-end">
+                      {ingredient.standardPerPortion !== undefined
+                        ? formatNumber(ingredient.standardPerPortion)
+                        : '-'}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
             <tfoot className="table-light">
               <tr>
                 <td colSpan={2}>
-                  <strong>{dict.orders?.columns?.total_ingredients || 'Total Ingredients'}</strong>
+                  <strong>
+                    {dict.orders?.columns?.total_ingredients ||
+                      'Total Ingredients'}
+                  </strong>
                 </td>
                 <td className="text-end">
                   <strong>{summary.ingredients.length}</strong>
                 </td>
-                <td colSpan={summary.ingredients.some(
-                  (ing) => ing.standardPerPortion !== undefined,
-                ) ? 2 : 1}></td>
+                <td
+                  colSpan={
+                    summary.ingredients.some(
+                      (ing) => ing.standardPerPortion !== undefined,
+                    )
+                      ? 2
+                      : 1
+                  }
+                ></td>
               </tr>
             </tfoot>
           </Table>
@@ -210,10 +227,7 @@ export default function IngredientSummary() {
         )}
 
         <div className="mt-3">
-          <button
-            className="btn btn-secondary"
-            onClick={() => router.back()}
-          >
+          <button className="btn btn-secondary" onClick={() => router.back()}>
             {dict.orders?.labels?.back_to_orders || 'Go Back'}
           </button>
         </div>
@@ -221,4 +235,3 @@ export default function IngredientSummary() {
     </Card>
   )
 }
-

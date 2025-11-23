@@ -6,13 +6,11 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type Props = {
-  name: string;
+  name: string
 } & PropsWithChildren
 
 export default function THSort(props: Props) {
-  const {
-    name, children,
-  } = props
+  const { name, children } = props
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -40,7 +38,13 @@ export default function THSort(props: Props) {
   }
 
   return (
-    <a className="text-decoration-none" role="button" tabIndex={0} onClick={onClick} onKeyDown={onClick}>
+    <a
+      className="text-decoration-none"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={onClick}
+    >
       {children}
       <FontAwesomeIcon icon={getIcon()} fixedWidth size="xs" />
     </a>

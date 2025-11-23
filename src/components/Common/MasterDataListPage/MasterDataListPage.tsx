@@ -11,15 +11,15 @@ import {
   CardHeader,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPlus,
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
-import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
+import MasterDataTable, {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
 import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 import LoadingState from '@/components/Common/LoadingState/LoadingState'
 import ActionButton from '@/components/Common/ActionButton/ActionButton'
@@ -87,8 +87,10 @@ function MasterDataListPage<T extends Record<string, any>>({
   const handleDelete = async (id: string, item: T) => {
     const itemName = getItemName(item)
     const dictSection = dictKey ? (dict as any)[dictKey] : null
-    const confirmMessage = dictSection?.confirm_delete || `Are you sure you want to delete ${itemName}?`
-    
+    const confirmMessage =
+      dictSection?.confirm_delete ||
+      `Are you sure you want to delete ${itemName}?`
+
     if (!confirm(confirmMessage)) {
       return
     }
@@ -103,7 +105,9 @@ function MasterDataListPage<T extends Record<string, any>>({
         })
         onLoadData(page, perPage, search)
       } catch (err) {
-        const errorMsg = dictSection?.error_delete || `Failed to delete ${itemName}. Please try again.`
+        const errorMsg =
+          dictSection?.error_delete ||
+          `Failed to delete ${itemName}. Please try again.`
         addNotification({
           type: 'error',
           title: 'Error',
@@ -159,9 +163,12 @@ function MasterDataListPage<T extends Record<string, any>>({
   }
 
   // Enhance actions with delete handler if onDelete is provided
-  const enhancedActions = actions.map(action => {
+  const enhancedActions = actions.map((action) => {
     // Only auto-handle delete if onDelete is provided and action is delete
-    if (onDelete && (action.label === 'Delete' || action.variant === 'danger')) {
+    if (
+      onDelete &&
+      (action.label === 'Delete' || action.variant === 'danger')
+    ) {
       return {
         ...action,
         onClick: async (row: T) => {
@@ -212,11 +219,7 @@ function MasterDataListPage<T extends Record<string, any>>({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <ActionButton
-              variant="primary"
-              type="submit"
-              icon={faSearch}
-            >
+            <ActionButton variant="primary" type="submit" icon={faSearch}>
               {dict.common?.search || 'Search'}
             </ActionButton>
             {search && (
@@ -247,4 +250,3 @@ function MasterDataListPage<T extends Record<string, any>>({
 }
 
 export default MasterDataListPage
-

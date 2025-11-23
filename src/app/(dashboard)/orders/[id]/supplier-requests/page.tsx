@@ -1,11 +1,24 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Card, CardBody, CardHeader, Button, Alert, Table, Badge, Spinner } from 'react-bootstrap'
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Button,
+  Alert,
+  Table,
+  Badge,
+  Spinner,
+} from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import useDictionary from '@/locales/dictionary-hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faEye, faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowLeft,
+  faEye,
+  faExternalLink,
+} from '@fortawesome/free-solid-svg-icons'
 import { orderApi } from '@/services'
 import StatusToast from '@/components/Common/StatusToast'
 
@@ -137,8 +150,10 @@ export default function OrderSupplierRequestsPage() {
   const getStatusBadge = (status: string) => {
     const s = (status || '').toLowerCase()
     if (s === 'pending') return <Badge bg="warning">Pending</Badge>
-    if (s === 'approved' || s === 'completed') return <Badge bg="success">{status}</Badge>
-    if (s === 'cancelled' || s === 'rejected') return <Badge bg="danger">{status}</Badge>
+    if (s === 'approved' || s === 'completed')
+      return <Badge bg="success">{status}</Badge>
+    if (s === 'cancelled' || s === 'rejected')
+      return <Badge bg="danger">{status}</Badge>
     return <Badge bg="secondary">{status}</Badge>
   }
 
@@ -146,7 +161,7 @@ export default function OrderSupplierRequestsPage() {
     const supplierName = selection.selectedSupplier.supplierName
     const header = `Yêu cầu nhà cung cấp cho đơn hàng #${selection.orderId}\nNhà cung cấp: ${supplierName} (${selection.selectedSupplierId})\nNgày chọn: ${new Date(selection.selectionDate).toLocaleString()}`
     const lines = [
-      ` - ${selection.ingredient.ingredientName} (${selection.ingredientId}): ${formatNumber(selection.quantity)} ${selection.unit} x ${formatNumber(selection.unitPrice)} = ${formatNumber(selection.totalCost)}`
+      ` - ${selection.ingredient.ingredientName} (${selection.ingredientId}): ${formatNumber(selection.quantity)} ${selection.unit} x ${formatNumber(selection.unitPrice)} = ${formatNumber(selection.totalCost)}`,
     ]
     if (selection.notes) {
       lines.push(`Ghi chú: ${selection.notes}`)
@@ -155,13 +170,20 @@ export default function OrderSupplierRequestsPage() {
     return [header, 'Danh sách nguyên liệu:', ...lines, footer].join('\n')
   }
 
-  const handleZaloClick = async (e: React.MouseEvent, link: string, selection: Selection) => {
+  const handleZaloClick = async (
+    e: React.MouseEvent,
+    link: string,
+    selection: Selection,
+  ) => {
     e.preventDefault()
     setCopySuccess('')
     try {
       const message = buildZaloMessage(selection)
       await navigator.clipboard.writeText(message)
-      setCopySuccess(dict.orders?.labels?.copy_to_clipboard_success || 'Copied message to clipboard')
+      setCopySuccess(
+        dict.orders?.labels?.copy_to_clipboard_success ||
+          'Copied message to clipboard',
+      )
       setShowCopyToast(true)
       setTimeout(() => {
         window.open(link, '_blank', 'noopener,noreferrer')
@@ -190,13 +212,21 @@ export default function OrderSupplierRequestsPage() {
       <CardHeader>
         <div className="d-flex justify-content-between align-items-center">
           <div>
-            <h4>{dict.orders?.labels?.supplier_requests_title || 'Supplier Requests'} #{orderId}</h4>
+            <h4>
+              {dict.orders?.labels?.supplier_requests_title ||
+                'Supplier Requests'}{' '}
+              #{orderId}
+            </h4>
             <div className="text-muted">
-              {dict.orders?.labels?.supplier_requests_subtitle || 'List of supplier requests for this order'}
+              {dict.orders?.labels?.supplier_requests_subtitle ||
+                'List of supplier requests for this order'}
             </div>
           </div>
           <div className="d-flex gap-2">
-            <Button variant="outline-primary" onClick={() => router.push(`/orders/${orderId}`)}>
+            <Button
+              variant="outline-primary"
+              onClick={() => router.push(`/orders/${orderId}`)}
+            >
               <FontAwesomeIcon icon={faEye} className="me-2" />
               {dict.orders?.labels?.view_order || 'View Order'}
             </Button>
@@ -226,7 +256,8 @@ export default function OrderSupplierRequestsPage() {
         )}
         {selections.length === 0 ? (
           <Alert variant="info" className="mb-0">
-            {dict.orders?.labels?.no_supplier_requests || 'No supplier requests found for this order.'}
+            {dict.orders?.labels?.no_supplier_requests ||
+              'No supplier requests found for this order.'}
           </Alert>
         ) : (
           <Table striped bordered hover responsive>
@@ -246,13 +277,20 @@ export default function OrderSupplierRequestsPage() {
             <tbody>
               {selections.map((selection) => (
                 <tr key={selection.orderIngredientSupplierId}>
-                  <td><strong>#{selection.orderIngredientSupplierId}</strong></td>
+                  <td>
+                    <strong>#{selection.orderIngredientSupplierId}</strong>
+                  </td>
                   <td>
                     <div>
-                      <div><strong>{selection.ingredient.ingredientName}</strong></div>
-                      <small className="text-muted">{selection.ingredientId}</small>
+                      <div>
+                        <strong>{selection.ingredient.ingredientName}</strong>
+                      </div>
+                      <small className="text-muted">
+                        {selection.ingredientId}
+                      </small>
                       <div className="small text-muted">
-                        {selection.ingredient.materialGroup} • {selection.ingredient.property}
+                        {selection.ingredient.materialGroup} •{' '}
+                        {selection.ingredient.property}
                       </div>
                     </div>
                   </td>
@@ -260,7 +298,9 @@ export default function OrderSupplierRequestsPage() {
                     <div className="d-flex align-items-center gap-2 flex-wrap">
                       <div>
                         <div>{selection.selectedSupplier.supplierName}</div>
-                        <small className="text-muted">{selection.selectedSupplierId}</small>
+                        <small className="text-muted">
+                          {selection.selectedSupplierId}
+                        </small>
                       </div>
                       {selection.selectedSupplier.zaloLink && (
                         <a
@@ -268,20 +308,38 @@ export default function OrderSupplierRequestsPage() {
                           href={selection.selectedSupplier.zaloLink}
                           target="_blank"
                           rel="noreferrer"
-                          onClick={(e) => handleZaloClick(e, selection.selectedSupplier.zaloLink, selection)}
+                          onClick={(e) =>
+                            handleZaloClick(
+                              e,
+                              selection.selectedSupplier.zaloLink,
+                              selection,
+                            )
+                          }
                         >
-                          <FontAwesomeIcon icon={faExternalLink} className="me-1" /> {dict.orders?.labels?.zalo || 'Zalo'}
+                          <FontAwesomeIcon
+                            icon={faExternalLink}
+                            className="me-1"
+                          />{' '}
+                          {dict.orders?.labels?.zalo || 'Zalo'}
                         </a>
                       )}
                     </div>
                   </td>
-                  <td className="text-end">{formatNumber(selection.quantity)} {selection.unit}</td>
-                  <td className="text-end">{formatNumber(selection.unitPrice)}</td>
-                  <td className="text-end"><strong>{formatNumber(selection.totalCost)}</strong></td>
+                  <td className="text-end">
+                    {formatNumber(selection.quantity)} {selection.unit}
+                  </td>
+                  <td className="text-end">
+                    {formatNumber(selection.unitPrice)}
+                  </td>
+                  <td className="text-end">
+                    <strong>{formatNumber(selection.totalCost)}</strong>
+                  </td>
                   <td>
                     <div>
                       <div>{selection.selectedBy.fullName}</div>
-                      <small className="text-muted">{selection.selectedBy.role}</small>
+                      <small className="text-muted">
+                        {selection.selectedBy.role}
+                      </small>
                     </div>
                   </td>
                   <td>{new Date(selection.selectionDate).toLocaleString()}</td>
@@ -293,9 +351,19 @@ export default function OrderSupplierRequestsPage() {
                           variant="outline-primary"
                           href={selection.selectedSupplier.zaloLink}
                           target="_blank"
-                          onClick={(e) => handleZaloClick(e, selection.selectedSupplier.zaloLink, selection)}
+                          onClick={(e) =>
+                            handleZaloClick(
+                              e,
+                              selection.selectedSupplier.zaloLink,
+                              selection,
+                            )
+                          }
                         >
-                          <FontAwesomeIcon icon={faExternalLink} className="me-1" /> Zalo
+                          <FontAwesomeIcon
+                            icon={faExternalLink}
+                            className="me-1"
+                          />{' '}
+                          Zalo
                         </Button>
                       )}
                     </div>
@@ -309,5 +377,3 @@ export default function OrderSupplierRequestsPage() {
     </Card>
   )
 }
-
-

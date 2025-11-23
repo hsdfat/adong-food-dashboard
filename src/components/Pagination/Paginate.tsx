@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type Props = {
-  currentPage: number;
-  lastPage: number;
+  currentPage: number
+  lastPage: number
 }
 
 export default function Paginate(props: Props) {
