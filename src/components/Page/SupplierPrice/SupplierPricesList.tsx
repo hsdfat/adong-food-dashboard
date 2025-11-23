@@ -203,11 +203,13 @@ export default function SupplierPricesList({
       key: 'productId',
       label: dict.supplierPrice?.productID || 'ID',
       align: 'left',
+      priority: true,
     },
     {
       key: 'productName',
       label: dict.supplierPrice?.productName || 'Product Name',
       align: 'left',
+      priority: true,
     },
     {
       key: 'ingredientName',
@@ -418,6 +420,7 @@ export default function SupplierPricesList({
         emptyMessage={dict.common?.no_data || 'No data available'}
         onActionSuccess={handleActionSuccess}
         onActionError={handleActionError}
+        inlineActionsColumn="productName"
       />
 
       {meta && <Pagination meta={meta} />}

@@ -9,40 +9,88 @@ import { faArrowLeft, faEye, faExternalLink } from '@fortawesome/free-solid-svg-
 import { orderApi } from '@/services'
 import StatusToast from '@/components/Common/StatusToast'
 
-type SupplierInfo = {
-  supplierId: string
-  supplierName?: string
-  zaloLink?: string
-  address?: string
-  phone?: string
-  email?: string
-  active?: boolean
+type IngredientInfo = {
+  ingredientId: string
+  ingredientName: string
+  ingredientTypeId: string
+  property: string
+  materialGroup: string
+  unit: string
+  createdDate: string
+  modifiedDate: string
 }
 
-type RequestDetail = {
-  requestDetailId: number
-  requestId: number
+type SupplierInfo = {
+  supplierId: string
+  supplierName: string
+  zaloLink: string
+  address: string
+  phone: string
+  email: string
+  active: boolean
+  createdDate: string
+  modifiedDate: string
+}
+
+type ProductInfo = {
+  productId: number
+  productName: string
   ingredientId: string
+  category: string
+  supplierId: string
+  manufacturer: string
+  unit: string
+  specification: string
+  unitPrice: number
+  pricePer1: number
+  effectiveFrom: null
+  effectiveTo: null
+  active: boolean
+  newPrice: number
+  promotion: string
+  createdDate: string
+  modifiedDate: string
+}
+
+type UserInfo = {
+  userId: string
+  userName: string
+  password: string
+  fullName: string
+  role: string
+  kitchenId: string
+  email: string
+  phone: string
+  active: boolean
+  createdDate: string
+  modifiedDate: string
+}
+
+type Selection = {
+  orderIngredientSupplierId: number
+  orderId: string
+  ingredientId: string
+  selectedSupplierId: string
+  selectedProductId: number
   quantity: number
   unit: string
   unitPrice: number
-  totalPrice: number
-  ingredient?: {
-    ingredientId: string
-    ingredientName: string
-    unit?: string
-  }
-}
-
-type SupplierRequest = {
-  requestId: number
-  orderId: string
-  supplierId: string
-  status: string
+  totalCost: number
+  selectionDate: string
+  selectedByUserId: string
+  notes: string
   createdDate: string
   modifiedDate: string
-  supplier?: SupplierInfo
-  details?: RequestDetail[]
+  ingredient: IngredientInfo
+  selectedSupplier: SupplierInfo
+  selectedProduct: ProductInfo
+  selectedBy: UserInfo
+}
+
+type SupplierSelectionsResponse = {
+  count: number
+  orderId: string
+  selections: Selection[]
 }
 
 export default function OrderSupplierRequestsPage() {
@@ -53,7 +101,7 @@ export default function OrderSupplierRequestsPage() {
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
-  const [requests, setRequests] = useState<SupplierRequest[]>([])
+  const [selections, setSelections] = useState<Selection[]>([])
   const [copySuccess, setCopySuccess] = useState<string>('')
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false)
 
@@ -64,8 +112,14 @@ export default function OrderSupplierRequestsPage() {
         setLoading(true)
         setError('')
         const data = await orderApi.getSupplierRequests(orderId)
-        const arr = Array.isArray(data) ? data : []
-        setRequests(arr as unknown as SupplierRequest[])
+        // Handle new response format
+        if (data && typeof data === 'object' && 'selections' in data) {
+          const response = data as unknown as SupplierSelectionsResponse
+          setSelections(response.selections || [])
+        } else {
+          // Fallback for old format or empty response
+          setSelections([])
+        }
       } catch (e: any) {
         setError(e?.message || 'Failed to load supplier requests')
       } finally {
@@ -88,26 +142,24 @@ export default function OrderSupplierRequestsPage() {
     return <Badge bg="secondary">{status}</Badge>
   }
 
-  const buildZaloMessage = (r: SupplierRequest): string => {
-    const supplierName = r.supplier?.supplierName || r.supplierId
-    const header = `Yêu cầu nhà cung cấp cho đơn hàng #${r.orderId} (Mã yêu cầu #${r.requestId})\nNhà cung cấp: ${supplierName} (${r.supplierId})\nTrạng thái: ${r.status}`
-    const lines = (r.details || []).map((d) => {
-      const name = d.ingredient?.ingredientName || d.ingredientId
-      const qty = `${formatNumber(d.quantity)} ${d.unit}`
-      const unitPrice = formatNumber(d.unitPrice)
-      const total = formatNumber(d.totalPrice || d.unitPrice * d.quantity)
-      return ` - ${name} (${d.ingredientId}): ${qty} x ${unitPrice} = ${total}`
-    })
-    const totalAmount = (r.details || []).reduce((sum, d) => sum + (d.totalPrice || (d.unitPrice * (d.quantity || 0)) || 0), 0)
-    const footer = `Tổng tiền: ${formatNumber(totalAmount)}\nVui lòng xác nhận giúp. Xin cảm ơn!`
+  const buildZaloMessage = (selection: Selection): string => {
+    const supplierName = selection.selectedSupplier.supplierName
+    const header = `Yêu cầu nhà cung cấp cho đơn hàng #${selection.orderId}\nNhà cung cấp: ${supplierName} (${selection.selectedSupplierId})\nNgày chọn: ${new Date(selection.selectionDate).toLocaleString()}`
+    const lines = [
+      ` - ${selection.ingredient.ingredientName} (${selection.ingredientId}): ${formatNumber(selection.quantity)} ${selection.unit} x ${formatNumber(selection.unitPrice)} = ${formatNumber(selection.totalCost)}`
+    ]
+    if (selection.notes) {
+      lines.push(`Ghi chú: ${selection.notes}`)
+    }
+    const footer = `Tổng tiền: ${formatNumber(selection.totalCost)}\nNgười chọn: ${selection.selectedBy.fullName}\nVui lòng xác nhận giúp. Xin cảm ơn!`
     return [header, 'Danh sách nguyên liệu:', ...lines, footer].join('\n')
   }
 
-  const handleZaloClick = async (e: React.MouseEvent, link: string, r: SupplierRequest) => {
+  const handleZaloClick = async (e: React.MouseEvent, link: string, selection: Selection) => {
     e.preventDefault()
     setCopySuccess('')
     try {
-      const message = buildZaloMessage(r)
+      const message = buildZaloMessage(selection)
       await navigator.clipboard.writeText(message)
       setCopySuccess(dict.orders?.labels?.copy_to_clipboard_success || 'Copied message to clipboard')
       setShowCopyToast(true)
@@ -172,7 +224,7 @@ export default function OrderSupplierRequestsPage() {
             {error}
           </Alert>
         )}
-        {requests.length === 0 ? (
+        {selections.length === 0 ? (
           <Alert variant="info" className="mb-0">
             {dict.orders?.labels?.no_supplier_requests || 'No supplier requests found for this order.'}
           </Alert>
@@ -180,71 +232,75 @@ export default function OrderSupplierRequestsPage() {
           <Table striped bordered hover responsive>
             <thead className="table-light">
               <tr>
-                <th>Request ID</th>
+                <th>Selection ID</th>
+                <th>Ingredient</th>
                 <th>Supplier</th>
-                <th className="text-end">Items</th>
-                <th className="text-end">Total Amount</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Updated</th>
+                <th className="text-end">Quantity</th>
+                <th className="text-end">Unit Price</th>
+                <th className="text-end">Total Cost</th>
+                <th>Selected By</th>
+                <th>Selection Date</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {requests.map((r) => {
-                const details = r.details || []
-                const totalAmount = details.reduce((sum, d) => sum + (d.totalPrice || (d.unitPrice * (d.quantity || 0)) || 0), 0)
-                return (
-                  <tr key={r.requestId}>
-                    <td><strong>#{r.requestId}</strong></td>
-                    <td>
-                      <div className="d-flex align-items-center gap-2 flex-wrap">
-                        <div>
-                          <div>{r.supplier?.supplierName || r.supplierId}</div>
-                          <small className="text-muted">{r.supplierId}</small>
-                        </div>
-                        {r.supplier?.zaloLink && (
-                          <a
-                            className="btn btn-sm btn-outline-primary"
-                            href={r.supplier.zaloLink}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={(e) => handleZaloClick(e, r.supplier!.zaloLink!, r)}
-                          >
-                            <FontAwesomeIcon icon={faExternalLink} className="me-1" /> {dict.orders?.labels?.zalo || 'Zalo'}
-                          </a>
-                        )}
+              {selections.map((selection) => (
+                <tr key={selection.orderIngredientSupplierId}>
+                  <td><strong>#{selection.orderIngredientSupplierId}</strong></td>
+                  <td>
+                    <div>
+                      <div><strong>{selection.ingredient.ingredientName}</strong></div>
+                      <small className="text-muted">{selection.ingredientId}</small>
+                      <div className="small text-muted">
+                        {selection.ingredient.materialGroup} • {selection.ingredient.property}
                       </div>
-                    </td>
-                    <td className="text-end">{details.length}</td>
-                    <td className="text-end"><strong>{formatNumber(totalAmount)}</strong></td>
-                    <td>{getStatusBadge(r.status)}</td>
-                    <td>{new Date(r.createdDate).toLocaleString()}</td>
-                    <td>{new Date(r.modifiedDate).toLocaleString()}</td>
-                  </tr>
-                )
-              })}
-              {/* Details rows */}
-              {requests.map((r) => (
-                (r.details || []).map((d) => (
-                  <tr key={`detail-${r.requestId}-${d.requestDetailId}`}>
-                    <td colSpan={2} className="ps-4">
-                      <small className="text-muted">{r.requestId}</small>
-                    </td>
-                    <td colSpan={5}>
-                      <div className="d-flex justify-content-between flex-wrap">
-                        <div>
-                          <strong>{d.ingredient?.ingredientName || d.ingredientId}</strong>
-                          <span className="text-muted ms-2">{d.ingredientId}</span>
-                        </div>
-                        <div>
-                          <span className="me-3">{formatNumber(d.quantity)} {d.unit}</span>
-                          <span className="me-3">x {formatNumber(d.unitPrice)}</span>
-                          <strong>= {formatNumber(d.totalPrice || d.unitPrice * d.quantity)}</strong>
-                        </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                      <div>
+                        <div>{selection.selectedSupplier.supplierName}</div>
+                        <small className="text-muted">{selection.selectedSupplierId}</small>
                       </div>
-                    </td>
-                  </tr>
-                ))
+                      {selection.selectedSupplier.zaloLink && (
+                        <a
+                          className="btn btn-sm btn-outline-primary"
+                          href={selection.selectedSupplier.zaloLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => handleZaloClick(e, selection.selectedSupplier.zaloLink, selection)}
+                        >
+                          <FontAwesomeIcon icon={faExternalLink} className="me-1" /> {dict.orders?.labels?.zalo || 'Zalo'}
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td className="text-end">{formatNumber(selection.quantity)} {selection.unit}</td>
+                  <td className="text-end">{formatNumber(selection.unitPrice)}</td>
+                  <td className="text-end"><strong>{formatNumber(selection.totalCost)}</strong></td>
+                  <td>
+                    <div>
+                      <div>{selection.selectedBy.fullName}</div>
+                      <small className="text-muted">{selection.selectedBy.role}</small>
+                    </div>
+                  </td>
+                  <td>{new Date(selection.selectionDate).toLocaleString()}</td>
+                  <td>
+                    <div className="d-flex gap-1">
+                      {selection.selectedSupplier.zaloLink && (
+                        <Button
+                          size="sm"
+                          variant="outline-primary"
+                          href={selection.selectedSupplier.zaloLink}
+                          target="_blank"
+                          onClick={(e) => handleZaloClick(e, selection.selectedSupplier.zaloLink, selection)}
+                        >
+                          <FontAwesomeIcon icon={faExternalLink} className="me-1" /> Zalo
+                        </Button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </Table>

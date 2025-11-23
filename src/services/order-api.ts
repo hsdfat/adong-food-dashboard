@@ -146,12 +146,14 @@ export const orderApi = {
   async createSupplierRequests(
     orderId: number | string,
     data: {
-      supplierId: string
-      ingredients: Array<{
-        ingredientId: string
-        quantity: number
-        unit: string
-        unitPrice: number
+      Selections: Array<{
+        IngredientId: string
+        SelectedSupplierId: string
+        SelectedProductId: number
+        Quantity: number
+        Unit: string
+        UnitPrice: number
+        Notes?: string
       }>
     },
   ): Promise<any> {
@@ -167,6 +169,24 @@ export const orderApi = {
    */
   async getSupplierRequests(orderId: number | string): Promise<any[]> {
     return await apiClient<any[]>(`${BASE_URL}/${orderId}/supplier-requests`)
+  },
+
+  /**
+   * Get best suppliers for order ingredients
+   * POST /api/orders/{orderId}/best-suppliers
+   */
+  async getBestSuppliers(orderId: number | string, data: {
+    ingredients: Array<{
+      ingredientId: string
+      ingredientName: string
+      totalQuantity: number
+      unit: string
+    }>
+  }): Promise<any> {
+    return await apiClient<any>(`${BASE_URL}/${orderId}/best-suppliers`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
   },
 }
 

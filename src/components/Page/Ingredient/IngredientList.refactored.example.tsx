@@ -1,12 +1,21 @@
 'use client'
 
+/**
+ * EXAMPLE: Refactored IngredientList using common components
+ * This demonstrates how to use MasterDataListPage component
+ * 
+ * To use this pattern:
+ * 1. Replace the existing IngredientList.tsx with this code
+ * 2. Adjust the props and handlers as needed
+ */
+
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ingredientApi } from '@/services'
 import { Ingredient } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
-import MasterDataListPage from '@/components/Common/MasterDataListPage'
+import MasterDataListPage, { MasterDataListPageProps } from '@/components/Common/MasterDataListPage'
 import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function IngredientesList() {
@@ -51,13 +60,11 @@ export default function IngredientesList() {
       key: 'ingredientId',
       label: dict.ingredients?.id || 'ID',
       align: 'left',
-      priority: true,
     },
     {
       key: 'ingredientName',
       label: dict.ingredients?.name || 'Name',
       align: 'left',
-      priority: true,
     },
     {
       key: 'property',
@@ -94,6 +101,9 @@ export default function IngredientesList() {
     },
     {
       label: dict.action?.delete || 'Delete',
+      onClick: async () => {
+        // Delete is handled by MasterDataListPage automatically
+      },
       variant: 'danger',
       loadingLabel: 'Deleting...',
     },
@@ -115,11 +125,12 @@ export default function IngredientesList() {
       onLoadData={loadIngredientes}
       onDelete={handleDelete}
       onError={setError}
-      getItemName={(ingredient) => ingredient.ingredientName || 'ingredient'}
-      getItemId={(ingredient) => ingredient.ingredientId}
+      getItemName={(item) => item.ingredientName || 'ingredient'}
+      getItemId={(item) => item.ingredientId}
       basePath="/ingredients"
       dictKey="ingredients"
-      inlineActionsColumn="ingredientName"
     />
   )
 }
+
+

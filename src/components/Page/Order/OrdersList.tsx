@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import {
   Button,
   Card,
@@ -12,13 +12,13 @@ import {
   DropdownMenu,
   DropdownItem,
   Alert,
-  Badge,
   FormControl,
   InputGroup,
   FormSelect,
   Row,
   Col,
   Form,
+  Spinner,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -26,7 +26,6 @@ import {
   faEllipsisVertical,
   faSearch,
   faEye,
-  faEdit,
   faTrash,
   faSave,
   faXmark,
@@ -40,316 +39,469 @@ import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
+// ==================== TYPE DEFINITIONS ====================
+
+interface FilterState {
+  searchQuery: string
+  dateFrom: string
+  dateTo: string
+  showFilters: boolean
+}
+
+interface StatusState {
+  original: Record<string, string>
+  edited: Record<string, string>
+  saving: Record<string, boolean>
+}
+
+// ==================== CONSTANTS ====================
+
+const DEFAULT_PER_PAGE = 10
+const COMMON_STATUSES = ['Pending', 'Approved', 'Completed', 'Cancelled', 'Rejected']
+
+const STATUS_COLORS = {
+  pending: { bg: '#ffc107', text: '#000000', border: '#ffc107' },
+  approved: { bg: '#198754', text: '#ffffff', border: '#198754' },
+  completed: { bg: '#198754', text: '#ffffff', border: '#198754' },
+  cancelled: { bg: '#dc3545', text: '#ffffff', border: '#dc3545' },
+  rejected: { bg: '#dc3545', text: '#ffffff', border: '#dc3545' },
+  default: { bg: '#6c757d', text: '#ffffff', border: '#6c757d' },
+}
+
+// ==================== UTILITY FUNCTIONS ====================
+
+function getDefaultDateRange() {
+  const today = new Date()
+  const weekAgo = new Date()
+  weekAgo.setDate(today.getDate() - 7)
+
+  return {
+    from: weekAgo.toISOString().split('T')[0],
+    to: today.toISOString().split('T')[0],
+  }
+}
+
+function getStatusColors(status: string) {
+  const statusLower = status.toLowerCase()
+  return STATUS_COLORS[statusLower as keyof typeof STATUS_COLORS] || STATUS_COLORS.default
+}
+
+// ==================== MAIN COMPONENT ====================
+
 function OrdersList() {
-  const [ordersData, setOrdersData] =
-    useState<ResourceCollection<OrderDTO> | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string>('')
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [dateFrom, setDateFrom] = useState<string>('')
-  const [dateTo, setDateTo] = useState<string>('')
-  const [showFilters, setShowFilters] = useState(true)
-  const [originalStatuses, setOriginalStatuses] = useState<Record<number, string>>({})
-  const [editedStatuses, setEditedStatuses] = useState<Record<number, string>>({})
-  const [savingStatuses, setSavingStatuses] = useState<Record<number, boolean>>({})
-  const hasInitializedDefaults = useRef(false)
-  const editedStatusesRef = useRef(editedStatuses)
-  editedStatusesRef.current = editedStatuses
   const router = useRouter()
   const searchParams = useSearchParams()
   const dict = useDictionary()
 
-  // Get query params
-  const page = parseInt(searchParams.get('page') || '1')
-  const perPage = parseInt(searchParams.get('per_page') || '10')
-  const search = searchParams.get('search') || ''
-  const fromDate = searchParams.get('from_date') || ''
-  const toDate = searchParams.get('to_date') || ''
+  // ==================== STATE MANAGEMENT ====================
 
-  // Calculate default dates (latest week: 7 days ago to today)
-  const getDefaultDateRange = useCallback(() => {
-    const today = new Date()
-    const weekAgo = new Date()
-    weekAgo.setDate(today.getDate() - 7)
+  // Data State
+  const [ordersData, setOrdersData] = useState<ResourceCollection<OrderDTO> | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-    return {
-      from: weekAgo.toISOString().split('T')[0],
-      to: today.toISOString().split('T')[0],
-    }
-  }, [])
+  // Filter State
+  const [filters, setFilters] = useState<FilterState>({
+    searchQuery: '',
+    dateFrom: '',
+    dateTo: '',
+    showFilters: true,
+  })
 
-  // Initialize default dates if not in URL (only once on mount)
-  useEffect(() => {
-    if (hasInitializedDefaults.current) return
+  // Status Management State
+  const [statusState, setStatusState] = useState<StatusState>({
+    original: {},
+    edited: {},
+    saving: {},
+  })
 
-    const urlFromDate = searchParams.get('from_date')
-    const urlToDate = searchParams.get('to_date')
+  // Refs for preventing duplicate calls
+  const isInitialized = useRef(false)
+  const isLoadingRef = useRef(false)
 
-    if (!urlFromDate && !urlToDate) {
-      hasInitializedDefaults.current = true
-      const defaults = getDefaultDateRange()
-      const newSearchParams = new URLSearchParams(searchParams)
-      newSearchParams.set('from_date', defaults.from)
-      newSearchParams.set('to_date', defaults.to)
-      router.replace(`/orders?${newSearchParams.toString()}`, { scroll: false })
-    } else {
-      hasInitializedDefaults.current = true
-    }
-  }, [searchParams, router])
+  // ==================== URL PARAMS ====================
 
-  const loadOrders = useCallback(async (preserveEditedStatuses = false) => {
-    try {
-      setLoading(true)
-      setError('')
+  const urlParams = useMemo(() => ({
+    page: parseInt(searchParams.get('page') || '1'),
+    perPage: parseInt(searchParams.get('per_page') || String(DEFAULT_PER_PAGE)),
+    search: searchParams.get('search') || '',
+    fromDate: searchParams.get('from_date') || '',
+    toDate: searchParams.get('to_date') || '',
+  }), [searchParams])
 
-      const data = await orderApi.getAll({
-        page,
-        per_page: perPage,
-        search: search || undefined,
-        from_date: fromDate || undefined,
-        to_date: toDate || undefined,
-      })
-      setOrdersData(data)
+  // ==================== DATA LOADING ====================
 
-      // Initialize original statuses
-      if (data.data) {
-        const statusMap: Record<number, string> = {}
-        data.data.forEach((order) => {
-          statusMap[order.orderId] = order.status
-        })
-        setOriginalStatuses(statusMap)
-
-        // Only clear edited statuses if not preserving them
-        if (!preserveEditedStatuses) {
-          setEditedStatuses({})
-        } else {
-          // Remove edited statuses for orders that are no longer in the current page
-          const currentOrderIds = new Set(data.data.map((o) => o.orderId))
-          const newEditedStatuses: Record<number, string> = {}
-          Object.keys(editedStatusesRef.current).forEach((orderIdStr) => {
-            const orderId = parseInt(orderIdStr)
-            if (currentOrderIds.has(orderId)) {
-              newEditedStatuses[orderId] = editedStatusesRef.current[orderId]
-            }
-          })
-          setEditedStatuses(newEditedStatuses)
-        }
-      }
-    } catch (err) {
-      setError(dict.orders?.error_load || 'Failed to load orders')
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }, [page, perPage, search, fromDate, toDate, dict.orders?.error_load])
-
-  useEffect(() => {
-    setSearchQuery(search)
-    const defaults = getDefaultDateRange()
-    setDateFrom(fromDate || defaults.from)
-    setDateTo(toDate || defaults.to)
-    loadOrders()
-  }, [page, perPage, search, fromDate, toDate, getDefaultDateRange, loadOrders])
-
-  const handleDelete = useCallback(async (id: number) => {
-    if (
-      !confirm(
-        dict.orders?.confirm_delete ||
-        'Are you sure you want to delete this order?',
-      )
-    ) {
+  const loadOrders = useCallback(async () => {
+    // Prevent duplicate API calls
+    if (isLoadingRef.current) {
+      console.log('[OrdersList] Already loading, skipping duplicate call')
       return
     }
 
     try {
-      await orderApi.delete(id)
-      loadOrders()
-    } catch (err) {
-      setError(dict.orders?.error_delete || 'Failed to delete order')
-      console.error(err)
+      isLoadingRef.current = true
+      setLoading(true)
+      setError('')
+
+      const data = await orderApi.getAll({
+        page: urlParams.page,
+        per_page: urlParams.perPage,
+        search: urlParams.search || undefined,
+        from_date: urlParams.fromDate || undefined,
+        to_date: urlParams.toDate || undefined,
+      })
+
+      setOrdersData(data)
+
+      // Initialize status tracking
+      if (data.data) {
+        const originalStatuses: Record<string, string> = {}
+        data.data.forEach((order) => {
+          originalStatuses[order.orderId] = order.status
+        })
+
+        setStatusState(prev => ({
+          ...prev,
+          original: originalStatuses,
+          // Keep only edited statuses for orders still in current page
+          edited: Object.fromEntries(
+            Object.entries(prev.edited).filter(([orderId]) =>
+              data.data.some(o => String(o.orderId) === orderId)
+            )
+          ),
+        }))
+      }
+    } catch (err: any) {
+      console.error('[OrdersList] Load error:', err)
+      setError(err?.message || 'Failed to load orders')
+    } finally {
+      setLoading(false)
+      isLoadingRef.current = false
     }
-  }, [dict.orders?.confirm_delete, dict.orders?.error_delete, loadOrders])
+  }, [urlParams.page, urlParams.perPage, urlParams.search, urlParams.fromDate, urlParams.toDate])
+
+  // ==================== INITIALIZATION ====================
+
+  useEffect(() => {
+    // Initialize default date range only once on mount
+    if (!isInitialized.current) {
+      isInitialized.current = true
+
+      // Set default dates if not in URL
+      if (!urlParams.fromDate && !urlParams.toDate) {
+        const defaults = getDefaultDateRange()
+        const newParams = new URLSearchParams(searchParams)
+        newParams.set('from_date', defaults.from)
+        newParams.set('to_date', defaults.to)
+        router.replace(`/orders?${newParams.toString()}`, { scroll: false })
+        return // Don't load orders yet, wait for URL update
+      }
+    }
+
+    // Load orders when URL params change
+    loadOrders()
+  }, [urlParams.page, urlParams.perPage, urlParams.search, urlParams.fromDate, urlParams.toDate])
+
+  // Sync filters with URL params
+  useEffect(() => {
+    const defaults = getDefaultDateRange()
+    setFilters({
+      searchQuery: urlParams.search,
+      dateFrom: urlParams.fromDate || defaults.from,
+      dateTo: urlParams.toDate || defaults.to,
+      showFilters: true,
+    })
+  }, [urlParams.search, urlParams.fromDate, urlParams.toDate])
+
+  // ==================== FILTER HANDLERS ====================
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault()
 
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set('page', '1') // Reset to first page
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('page', '1') // Reset to first page
 
-    if (searchQuery.trim()) {
-      newSearchParams.set('search', searchQuery.trim())
+    if (filters.searchQuery.trim()) {
+      newParams.set('search', filters.searchQuery.trim())
     } else {
-      newSearchParams.delete('search')
+      newParams.delete('search')
     }
 
-    if (dateFrom) {
-      newSearchParams.set('from_date', dateFrom)
+    if (filters.dateFrom) {
+      newParams.set('from_date', filters.dateFrom)
     } else {
-      newSearchParams.delete('from_date')
+      newParams.delete('from_date')
     }
 
-    if (dateTo) {
-      newSearchParams.set('to_date', dateTo)
+    if (filters.dateTo) {
+      newParams.set('to_date', filters.dateTo)
     } else {
-      newSearchParams.delete('to_date')
+      newParams.delete('to_date')
     }
 
-    router.push(`/orders?${newSearchParams.toString()}`)
-  }, [searchParams, searchQuery, dateFrom, dateTo, router])
+    router.push(`/orders?${newParams.toString()}`)
+  }, [filters, searchParams, router])
 
-  const handleClearSearch = useCallback(() => {
-    setSearchQuery('')
-    setDateFrom('')
-    setDateTo('')
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set('page', '1')
-    newSearchParams.delete('search')
-    newSearchParams.delete('from_date')
-    newSearchParams.delete('to_date')
-    router.push(`/orders?${newSearchParams.toString()}`)
+  const handleClearFilters = useCallback(() => {
+    setFilters(prev => ({
+      ...prev,
+      searchQuery: '',
+      dateFrom: '',
+      dateTo: '',
+    }))
+
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('page', '1')
+    newParams.delete('search')
+    newParams.delete('from_date')
+    newParams.delete('to_date')
+    router.push(`/orders?${newParams.toString()}`)
   }, [searchParams, router])
 
-  const getStatusBadge = useCallback((status: string) => {
-    const statusLower = status.toLowerCase()
-    if (statusLower === 'pending') {
-      return <Badge bg="warning">Pending</Badge>
-    } else if (statusLower === 'approved' || statusLower === 'completed') {
-      return <Badge bg="success">{status}</Badge>
-    } else if (statusLower === 'cancelled' || statusLower === 'rejected') {
-      return <Badge bg="danger">{status}</Badge>
-    }
-    return <Badge bg="secondary">{status}</Badge>
+  const toggleFilters = useCallback(() => {
+    setFilters(prev => ({ ...prev, showFilters: !prev.showFilters }))
   }, [])
 
-  const getStatusBadgeColor = useCallback((status: string): string => {
-    const statusLower = status.toLowerCase()
-    if (statusLower === 'pending') {
-      return 'warning'
-    } else if (statusLower === 'approved' || statusLower === 'completed') {
-      return 'success'
-    } else if (statusLower === 'cancelled' || statusLower === 'rejected') {
-      return 'danger'
-    }
-    return 'secondary'
+  const updateFilter = useCallback(<K extends keyof FilterState>(key: K, value: FilterState[K]) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
   }, [])
 
-  const getStatusBackgroundColor = useCallback((status: string): string => {
-    const statusLower = status.toLowerCase()
-    if (statusLower === 'pending') {
-      return '#ffc107' // Bootstrap warning color
-    } else if (statusLower === 'approved' || statusLower === 'completed') {
-      return '#198754' // Bootstrap success color
-    } else if (statusLower === 'cancelled' || statusLower === 'rejected') {
-      return '#dc3545' // Bootstrap danger color
-    }
-    return '#6c757d' // Bootstrap secondary color
+  // ==================== STATUS HANDLERS ====================
+
+  const handleStatusChange = useCallback((orderId: string, newStatus: string) => {
+    setStatusState(prev => {
+      const originalStatus = prev.original[orderId]
+
+      if (newStatus === originalStatus) {
+        // Revert to original - remove from edited
+        const { [orderId]: _, ...remainingEdited } = prev.edited
+        return { ...prev, edited: remainingEdited }
+      } else {
+        // Status changed - add to edited
+        return {
+          ...prev,
+          edited: { ...prev.edited, [orderId]: newStatus },
+        }
+      }
+    })
   }, [])
 
-  const getStatusTextColor = useCallback((status: string): string => {
-    const statusLower = status.toLowerCase()
-    if (statusLower === 'pending') {
-      return '#000000' // Black text for warning background
-    }
-    return '#ffffff' // White text for other backgrounds
-  }, [])
-
-  const getStatusBorderColor = useCallback((status: string): string => {
-    const statusLower = status.toLowerCase()
-    if (statusLower === 'pending') {
-      return '#ffc107'
-    } else if (statusLower === 'approved' || statusLower === 'completed') {
-      return '#198754'
-    } else if (statusLower === 'cancelled' || statusLower === 'rejected') {
-      return '#dc3545'
-    }
-    return '#6c757d'
-  }, [])
-
-  const handleStatusChange = useCallback((orderId: number, newStatus: string) => {
-    const originalStatus = originalStatuses[orderId] || ''
-    if (newStatus === originalStatus) {
-      // Revert to original - remove from edited statuses
-      const newEditedStatuses = { ...editedStatuses }
-      delete newEditedStatuses[orderId]
-      setEditedStatuses(newEditedStatuses)
-    } else {
-      // Status changed - add to edited statuses
-      setEditedStatuses({
-        ...editedStatuses,
-        [orderId]: newStatus,
-      })
-    }
-  }, [originalStatuses, editedStatuses])
-
-  const handleSaveStatus = useCallback(async (orderId: number) => {
-    const newStatus = editedStatuses[orderId]
+  const handleSaveStatus = useCallback(async (orderId: string) => {
+    const newStatus = statusState.edited[orderId]
     if (!newStatus) return
 
     try {
-      setSavingStatuses({ ...savingStatuses, [orderId]: true })
+      setStatusState(prev => ({
+        ...prev,
+        saving: { ...prev.saving, [orderId]: true },
+      }))
       setError('')
 
-      await orderApi.updateStatus(orderId, newStatus)
+      await orderApi.updateStatus(parseInt(orderId), newStatus)
 
       // Update original status and remove from edited
-      setOriginalStatuses({
-        ...originalStatuses,
-        [orderId]: newStatus,
-      })
-      const newEditedStatuses = { ...editedStatuses }
-      delete newEditedStatuses[orderId]
-      setEditedStatuses(newEditedStatuses)
-
-      // Reload orders to get updated data, but preserve other edited statuses
-      await loadOrders(true)
-    } catch (err) {
-      setError(dict.orders?.error_update || 'Failed to update order status')
-      console.error(err)
-    } finally {
-      setSavingStatuses({ ...savingStatuses, [orderId]: false })
-    }
-  }, [editedStatuses, savingStatuses, originalStatuses, dict.orders?.error_update, loadOrders])
-
-  const handleDiscardStatus = useCallback((orderId: number) => {
-    // Remove from edited statuses to revert
-    const newEditedStatuses = { ...editedStatuses }
-    delete newEditedStatuses[orderId]
-    setEditedStatuses(newEditedStatuses)
-  }, [editedStatuses])
-
-  const isStatusChanged = useCallback((orderId: number): boolean => {
-    return orderId in editedStatuses
-  }, [editedStatuses])
-
-  const getCurrentStatus = useCallback((orderId: number, originalStatus: string): string => {
-    return editedStatuses[orderId] || originalStatus
-  }, [editedStatuses])
-
-  // Common order statuses - ensure all statuses from orders are included
-  const allStatuses = useMemo((): string[] => {
-    const statusSet = new Set<string>()
-    // Add common statuses
-    const commonStatuses = ['Pending', 'Approved', 'Completed', 'Cancelled', 'Rejected']
-    commonStatuses.forEach((s) => statusSet.add(s))
-
-    // Add any statuses from loaded orders
-    if (ordersData?.data) {
-      ordersData.data.forEach((order) => {
-        if (order.status) {
-          statusSet.add(order.status)
+      setStatusState(prev => {
+        const { [orderId]: _, ...remainingEdited } = prev.edited
+        const { [orderId]: __, ...remainingSaving } = prev.saving
+        return {
+          original: { ...prev.original, [orderId]: newStatus },
+          edited: remainingEdited,
+          saving: remainingSaving,
         }
       })
+
+      // Reload to get fresh data
+      await loadOrders()
+    } catch (err: any) {
+      console.error('[OrdersList] Status update error:', err)
+      setError(err?.message || 'Failed to update order status')
+      setStatusState(prev => ({
+        ...prev,
+        saving: { ...prev.saving, [orderId]: false },
+      }))
     }
+  }, [statusState.edited, loadOrders])
+
+  const handleDiscardStatus = useCallback((orderId: string) => {
+    setStatusState(prev => {
+      const { [orderId]: _, ...remainingEdited } = prev.edited
+      return { ...prev, edited: remainingEdited }
+    })
+  }, [])
+
+  // ==================== DELETE HANDLER ====================
+
+  const handleDelete = useCallback(async (orderId: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
+      return
+    }
+
+    try {
+      await orderApi.delete(parseInt(orderId))
+      await loadOrders()
+    } catch (err: any) {
+      console.error('[OrdersList] Delete error:', err)
+      setError(err?.message || 'Failed to delete order')
+    }
+  }, [loadOrders])
+
+  // ==================== COMPUTED VALUES ====================
+
+  const allStatuses = useMemo(() => {
+    const statusSet = new Set<string>(COMMON_STATUSES)
+
+    // Add any statuses from loaded orders
+    ordersData?.data?.forEach((order) => {
+      if (order.status) {
+        statusSet.add(order.status)
+      }
+    })
 
     return Array.from(statusSet).sort()
   }, [ordersData?.data])
 
-  if (loading) {
+  const hasActiveFilters = useMemo(
+    () => Boolean(urlParams.search || urlParams.fromDate || urlParams.toDate),
+    [urlParams.search, urlParams.fromDate, urlParams.toDate]
+  )
+
+  // ==================== HELPER FUNCTIONS ====================
+
+  const getCurrentStatus = useCallback(
+    (orderId: string): string => {
+      return statusState.edited[orderId] || statusState.original[orderId] || 'Pending'
+    },
+    [statusState.edited, statusState.original]
+  )
+
+  const isStatusChanged = useCallback(
+    (orderId: string): boolean => {
+      return orderId in statusState.edited
+    },
+    [statusState.edited]
+  )
+
+  const isSavingStatus = useCallback(
+    (orderId: string): boolean => {
+      return Boolean(statusState.saving[orderId])
+    },
+    [statusState.saving]
+  )
+
+  // ==================== RENDER HELPERS ====================
+
+  const renderStatusSelect = useCallback(
+    (order: OrderDTO) => {
+      const orderId = String(order.orderId)
+      const currentStatus = getCurrentStatus(orderId)
+      const colors = getStatusColors(currentStatus)
+      const isChanged = isStatusChanged(orderId)
+      const isSaving = isSavingStatus(orderId)
+
+      return (
+        <div className="d-flex align-items-center gap-2">
+          <FormSelect
+            size="sm"
+            value={currentStatus}
+            onChange={(e) => handleStatusChange(orderId, e.target.value)}
+            disabled={isSaving}
+            style={{
+              minWidth: '120px',
+              backgroundColor: colors.bg,
+              color: colors.text,
+              borderColor: colors.border,
+            }}
+          >
+            {allStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </FormSelect>
+
+          {isChanged && (
+            <div className="d-flex gap-1">
+              <Button
+                variant="success"
+                size="sm"
+                onClick={() => handleSaveStatus(orderId)}
+                disabled={isSaving}
+                title="Lưu"
+              >
+                {isSaving ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  <FontAwesomeIcon icon={faSave} />
+                )}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => handleDiscardStatus(orderId)}
+                disabled={isSaving}
+                title="Hủy"
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </Button>
+            </div>
+          )}
+        </div>
+      )
+    },
+    [
+      allStatuses,
+      getCurrentStatus,
+      isStatusChanged,
+      isSavingStatus,
+      handleStatusChange,
+      handleSaveStatus,
+      handleDiscardStatus,
+    ]
+  )
+
+  const renderActions = useCallback(
+    (order: OrderDTO) => {
+      const orderId = String(order.orderId)
+
+      return (
+        <Dropdown>
+          <DropdownToggle variant="link" className="text-decoration-none" title="Actions">
+            <FontAwesomeIcon icon={faEllipsisVertical} />
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem onClick={() => router.push(`/orders/${orderId}`)}>
+              <FontAwesomeIcon icon={faEye} className="me-2" />
+              Xem chi tiết
+            </DropdownItem>
+            <DropdownItem onClick={() => router.push(`/orders/${orderId}/ingredients/summary`)}>
+              <FontAwesomeIcon icon={faEye} className="me-2" />
+              Tổng hợp nguyên liệu
+            </DropdownItem>
+            <DropdownItem onClick={() => router.push(`/orders/${orderId}/supplier-requests`)}>
+              <FontAwesomeIcon icon={faEye} className="me-2" />
+              Yêu cầu nhà cung cấp
+            </DropdownItem>
+            <DropdownItem disabled className="dropdown-divider" />
+            <DropdownItem onClick={() => handleDelete(orderId)} className="text-danger">
+              <FontAwesomeIcon icon={faTrash} className="me-2" />
+              Xóa
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      )
+    },
+    [router, handleDelete]
+  )
+
+  // ==================== RENDER ====================
+
+  if (loading && !ordersData) {
     return (
       <Card>
         <CardBody>
-          <div className="text-center py-4">
-            {dict.orders?.loading || 'Loading...'}
+          <div className="text-center py-5">
+            <Spinner animation="border" className="me-2" />
+            <span>Đang tải đơn hàng...</span>
           </div>
         </CardBody>
       </Card>
@@ -361,20 +513,16 @@ function OrdersList() {
       <CardHeader>
         <div className="d-flex justify-content-between align-items-center">
           <div>
-            <h4>{dict.sidebar?.items?.order || 'Orders'}</h4>
-            <div className="text-muted">
-              {dict.orders?.title || 'Manage orders'}
-            </div>
+            <h4>Quản lý đơn hàng</h4>
+            <div className="text-muted">Danh sách phiếu lên đơn</div>
           </div>
-          <Button
-            variant="primary"
-            onClick={() => router.push('/orders/create')}
-          >
+          <Button variant="primary" onClick={() => router.push('/orders/create')}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
-            {dict.orders?.create || 'Create Order'}
+            Tạo đơn hàng
           </Button>
         </div>
       </CardHeader>
+
       <CardBody>
         {error && (
           <Alert variant="danger" dismissible onClose={() => setError('')}>
@@ -383,237 +531,135 @@ function OrdersList() {
         )}
 
         {/* Search and Filters */}
-        <form onSubmit={handleSearch} className="mb-3">
+        <Form onSubmit={handleSearch} className="mb-4">
           <Row className="g-2 mb-2">
             <Col md={6}>
               <Form.Group>
-                <Form.Label className="small mb-1">
-                  {dict.orders?.search_placeholder || 'Search by Order ID, Kitchen, or Created By Name'}
-                </Form.Label>
+                <Form.Label className="small mb-1">Tìm kiếm</Form.Label>
                 <InputGroup>
                   <InputGroup.Text>
                     <FontAwesomeIcon icon={faSearch} />
                   </InputGroup.Text>
                   <FormControl
                     type="text"
-                    placeholder={dict.orders?.search_placeholder || 'Search orders...'}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tìm theo mã đơn, bếp, người tạo..."
+                    value={filters.searchQuery}
+                    onChange={(e) => updateFilter('searchQuery', e.target.value)}
                   />
                 </InputGroup>
               </Form.Group>
             </Col>
             <Col md={6} className="d-flex align-items-end gap-2">
-              <Button
-                variant="outline-secondary"
-                onClick={() => setShowFilters(!showFilters)}
-                className="mb-0"
-              >
+              <Button variant="outline-secondary" onClick={toggleFilters} className="mb-0">
                 <FontAwesomeIcon icon={faFilter} className="me-2" />
-                {dict.common?.filter || 'Filter'}
+                {filters.showFilters ? 'Ẩn' : 'Hiện'} bộ lọc
               </Button>
-              {(search || dateFrom || dateTo) && (
-                <Button
-                  variant="outline-secondary"
-                  onClick={handleClearSearch}
-                  className="mb-0"
-                >
-                  {dict.common?.clear || 'Clear'}
+              {hasActiveFilters && (
+                <Button variant="outline-secondary" onClick={handleClearFilters} className="mb-0">
+                  Xóa bộ lọc
                 </Button>
               )}
               <Button variant="primary" type="submit" className="mb-0">
                 <FontAwesomeIcon icon={faSearch} className="me-2" />
-                {dict.common?.search || 'Search'}
+                Tìm kiếm
               </Button>
             </Col>
           </Row>
 
-          {/* Date Range Filters - Collapsible */}
-          {showFilters && (
+          {/* Date Range Filters */}
+          {filters.showFilters && (
             <Row className="g-2">
-              <Col md={4}>
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label className="small mb-1">
                     <FontAwesomeIcon icon={faCalendar} className="me-1" />
-                    {dict.orders?.columns?.order_date || 'Order Date'} - From
+                    Từ ngày
                   </Form.Label>
                   <FormControl
                     type="date"
-                    value={dateFrom}
-                    onChange={(e) => setDateFrom(e.target.value)}
+                    value={filters.dateFrom}
+                    onChange={(e) => updateFilter('dateFrom', e.target.value)}
                   />
                 </Form.Group>
               </Col>
-              <Col md={4}>
+              <Col md={6}>
                 <Form.Group>
                   <Form.Label className="small mb-1">
                     <FontAwesomeIcon icon={faCalendar} className="me-1" />
-                    {dict.orders?.columns?.order_date || 'Order Date'} - To
+                    Đến ngày
                   </Form.Label>
                   <FormControl
                     type="date"
-                    value={dateTo}
-                    onChange={(e) => setDateTo(e.target.value)}
+                    value={filters.dateTo}
+                    onChange={(e) => updateFilter('dateTo', e.target.value)}
                   />
                 </Form.Group>
               </Col>
             </Row>
           )}
-        </form>
+        </Form>
 
         {/* Orders Table */}
-        {ordersData && ordersData.data && ordersData.data.length > 0 ? (
+        {ordersData?.data && ordersData.data.length > 0 ? (
           <>
-            <Table striped bordered hover responsive>
-              <thead className="table-light">
-                <tr>
-                  <th>{dict.orders?.columns?.order_id || 'Order ID'}</th>
-                  <th>{dict.orders?.columns?.kitchen || 'Kitchen'}</th>
-                  <th>{dict.orders?.columns?.order_date || 'Order Date'}</th>
-                  <th>{dict.orders?.columns?.status || 'Status'}</th>
-                  <th>{dict.orders?.columns?.created_by || 'Created By'}</th>
-                  <th>{dict.orders?.columns?.details_count || 'Details Count'}</th>
-                  <th className="text-center">{dict.orders?.columns?.actions || 'Actions'}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ordersData.data.map((order) => (
-                  <tr key={order.orderId}>
-                    <td>
-                      <strong>#{order.orderId}</strong>
-                    </td>
-                    <td>
-                      <div>
-                        <div>{order.kitchenName}</div>
-                        <small className="text-muted">{order.kitchenId}</small>
-                      </div>
-                    </td>
-                    <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                    <td>
-                      <div className="d-flex align-items-center gap-2">
-                        <FormSelect
-                          size="sm"
-                          value={getCurrentStatus(order.orderId, order.status)}
-                          onChange={(e) =>
-                            handleStatusChange(order.orderId, e.target.value)
-                          }
-                          style={{
-                            minWidth: '120px',
-                            backgroundColor: getStatusBackgroundColor(getCurrentStatus(order.orderId, order.status)),
-                            color: getStatusTextColor(getCurrentStatus(order.orderId, order.status)),
-                            borderColor: getStatusBorderColor(getCurrentStatus(order.orderId, order.status)),
-                          }}
-                          disabled={savingStatuses[order.orderId]}
-                        >
-                          {allStatuses.map((status) => (
-                            <option key={status} value={status}>
-                              {status}
-                            </option>
-                          ))}
-                        </FormSelect>
-                        {isStatusChanged(order.orderId) && (
-                          <div className="d-flex gap-1">
-                            <Button
-                              variant="success"
-                              size="sm"
-                              onClick={() => handleSaveStatus(order.orderId)}
-                              disabled={savingStatuses[order.orderId]}
-                            >
-                              <FontAwesomeIcon
-                                icon={faSave}
-                                title={dict.common?.save || 'Save'}
-                              />
-                            </Button>
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => handleDiscardStatus(order.orderId)}
-                              disabled={savingStatuses[order.orderId]}
-                            >
-                              <FontAwesomeIcon
-                                icon={faXmark}
-                                title={dict.common?.cancel || 'Cancel'}
-                              />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div>
-                        <div>{order.createdByName}</div>
-                        <small className="text-muted">
-                          {order.createdByUserId}
-                        </small>
-                      </div>
-                    </td>
-                    <td>
-                      {order.details?.length || 0} {dict.orders?.labels?.dish_plural || 'dish(es)'}
-                      {order.supplementaries &&
-                        order.supplementaries.length > 0 && (
-                          <span className="text-muted">
-                            {' '}
-                            + {order.supplementaries.length} {dict.orders?.labels?.supplementary || 'supplementary'}
-                          </span>
-                        )}
-                    </td>
-                    <td className="text-center">
-                      <Dropdown>
-                        <DropdownToggle
-                          variant="link"
-                          className="text-decoration-none"
-                          id={`dropdown-${order.orderId}`}
-                        >
-                          <FontAwesomeIcon icon={faEllipsisVertical} />
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <DropdownItem
-                            onClick={() =>
-                              router.push(`/orders/${order.orderId}`)
-                            }
-                          >
-                            <FontAwesomeIcon icon={faEye} className="me-2" />
-                            {dict.orders?.view_details || 'View Details'}
-                          </DropdownItem>
-                          <DropdownItem
-                            onClick={() =>
-                              router.push(
-                                `/orders/${order.orderId}/ingredients/summary`,
-                              )
-                            }
-                          >
-                            <FontAwesomeIcon icon={faEye} className="me-2" />
-                            {dict.orders?.labels?.view_ingredients_summary || 'View Ingredients Summary'}
-                          </DropdownItem>
-                          <DropdownItem
-                            onClick={() =>
-                              router.push(`/orders/${order.orderId}/supplier-requests`)
-                            }
-                          >
-                            <FontAwesomeIcon icon={faEye} className="me-2" />
-                            {'View Supplier Requests'}
-                          </DropdownItem>
-                          <DropdownItem
-                            onClick={() => handleDelete(order.orderId)}
-                            className="text-danger"
-                          >
-                            <FontAwesomeIcon icon={faTrash} className="me-2" />
-                            {dict.action?.delete || 'Delete'}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </td>
+            <div className="table-responsive">
+              <Table striped bordered hover>
+                <thead className="table-light">
+                  <tr>
+                    <th className="table-priority-column">Mã đơn hàng</th>
+                    <th className="table-priority-column">Bếp</th>
+                    <th className="table-non-priority-column">Ngày lên đơn</th>
+                    <th className="table-non-priority-column">Trạng thái</th>
+                    <th className="table-non-priority-column">Người tạo</th>
+                    <th className="table-non-priority-column">Chi tiết</th>
+                    <th className="text-center table-non-priority-column">Thao tác</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {ordersData.data.map((order) => (
+                    <tr key={order.orderId}>
+                      <td className="table-priority-column">
+                        <strong>#{order.orderId}</strong>
+                      </td>
+                      <td className="table-priority-column">
+                        <div>
+                          <div>{order.kitchenName}</div>
+                          <small className="text-muted">{order.kitchenId}</small>
+                        </div>
+                      </td>
+                      <td className="table-non-priority-column">{new Date(order.orderDate).toLocaleDateString('vi-VN')}</td>
+                      <td className="table-non-priority-column">{renderStatusSelect(order)}</td>
+                      <td className="table-non-priority-column">
+                        <div>
+                          <div>{order.createdByName}</div>
+                          <small className="text-muted">{order.createdByUserId}</small>
+                        </div>
+                      </td>
+                      <td className="table-non-priority-column">
+                        <div>
+                          {order.details?.length || 0} món ăn
+                          {order.supplementaries && order.supplementaries.length > 0 && (
+                            <div className="text-muted small">
+                              + {order.supplementaries.length} thực phẩm bổ sung
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="text-center table-non-priority-column">{renderActions(order)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
 
             {/* Pagination */}
             {ordersData.meta && <Pagination meta={ordersData.meta} />}
           </>
         ) : (
-          <Alert variant="info">
-            {dict.orders?.no_orders || 'No orders found'}
+          <Alert variant="info" className="mb-0">
+            {hasActiveFilters
+              ? 'Không tìm thấy đơn hàng nào phù hợp với bộ lọc.'
+              : 'Chưa có đơn hàng nào.'}
           </Alert>
         )}
       </CardBody>
@@ -621,5 +667,6 @@ function OrdersList() {
   )
 }
 
-export default React.memo(OrdersList)
+// ==================== EXPORT ====================
 
+export default React.memo(OrdersList)

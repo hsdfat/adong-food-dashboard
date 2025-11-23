@@ -11,3 +11,54 @@
     @extend .bg-dark;
   }
 }
+
+// Mobile responsive table styles
+// Hide non-priority columns on mobile devices and make priority columns full width
+@media (max-width: 767.98px) {
+  .table-responsive .table,
+  .table {
+    // Hide non-priority columns on mobile
+    .table-non-priority-column {
+      display: none !important;
+    }
+
+    // Show priority columns and make them take full width
+    .table-priority-column {
+      display: table-cell !important;
+    }
+
+    // Make the table use full width
+    width: 100%;
+    table-layout: auto;
+
+    // Adjust priority column widths to use full available space
+    // First priority column (usually ID) gets less width
+    thead tr th.table-priority-column,
+    tbody tr td.table-priority-column {
+      width: auto;
+    }
+
+    // Target the first visible priority column (ID column)
+    // This works because non-priority columns are hidden
+    thead tr th.table-priority-column:first-of-type,
+    tbody tr td.table-priority-column:first-of-type {
+      width: 30%;
+      max-width: 120px;
+    }
+
+    // Target the second priority column (Name column) if it exists
+    // Otherwise, the last priority column will take remaining space
+    thead tr th.table-priority-column:nth-of-type(2),
+    tbody tr td.table-priority-column:nth-of-type(2) {
+      width: 70%;
+      min-width: 0;
+    }
+
+    // Fallback: if there's only one priority column or we want the last one to take remaining space
+    thead tr th.table-priority-column:last-of-type,
+    tbody tr td.table-priority-column:last-of-type {
+      width: auto;
+      min-width: 0;
+    }
+  }
+}

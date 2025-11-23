@@ -1,23 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import {
-  Button,
-  Alert,
-  FormControl,
-  InputGroup,
-} from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPlus,
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { recipeStandardApi } from '@/services/'
 import { RecipeStandard } from '@/models/recipe_standard'
+import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
-import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
-import { useNotification } from '@/components/Common/Notification/NotificationProvider'
+import MasterDataListPage from '@/components/Common/MasterDataListPage'
+import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
 
 interface RecipeStandardsListProps {
   dishId?: string
@@ -26,27 +16,36 @@ interface RecipeStandardsListProps {
 export default function RecipeStandardsList({
   dishId,
 }: RecipeStandardsListProps) {
-  const [standards, setStandards] = useState<RecipeStandard[]>([])
+  const [standardsData, setStandardsData] = useState<ResourceCollection<RecipeStandard> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
-  const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
   const dict = useDictionary()
-  const { addNotification } = useNotification()
 
-  useEffect(() => {
-    loadStandards()
-    console.log('Loading recipe standards for dishId:', dishId, standards)
-  }, [dishId])
-
-  const loadStandards = async () => {
+  const loadStandards = async (page: number, perPage: number, search: string) => {
     try {
       setLoading(true)
       setError('')
-      const response = dishId
-        ? await recipeStandardApi.getByDish(dishId)
-        : await recipeStandardApi.getAll()
-      setStandards(response.data)
+      
+      let response: ResourceCollection<RecipeStandard>
+      if (dishId) {
+        // When dishId is provided, get by dish (no pagination/search support in this endpoint)
+        response = await recipeStandardApi.getByDish(dishId)
+      } else {
+        // When no dishId, use getAll with pagination
+        const params = new URLSearchParams()
+        params.append('page', page.toString())
+        params.append('per_page', perPage.toString())
+        if (search) {
+          params.append('search', search)
+        }
+        response = await recipeStandardApi.getAll({
+          page,
+          per_page: perPage,
+          search: search || undefined,
+        })
+      }
+      setStandardsData(response)
     } catch (err) {
       setError('Failed to load recipe standards')
       console.error(err)
@@ -55,31 +54,8 @@ export default function RecipeStandardsList({
     }
   }
 
-  const handleDelete = async (id: number) => {
-    const standard = standards.find(item => item.standardId === id)
-    const standardName = standard?.dishName || standard?.ingredientName || `recipe standard ${id}`
-    
-    if (!confirm(`Are you sure you want to delete ${standardName}?`)) {
-      return
-    }
-
-    try {
-      await recipeStandardApi.delete(id)
-      addNotification({
-        type: 'success',
-        title: 'Success',
-        message: `${standardName} has been deleted successfully.`,
-      })
-      await loadStandards()
-    } catch (err) {
-      addNotification({
-        type: 'error',
-        title: 'Error',
-        message: `Failed to delete ${standardName}. Please try again.`,
-      })
-      setError('Failed to delete recipe standard')
-      console.error(err)
-    }
+  const handleDelete = async (id: string, standard: RecipeStandard) => {
+    await recipeStandardApi.delete(standard.standardId)
   }
 
   // Define table columns
@@ -88,11 +64,13 @@ export default function RecipeStandardsList({
       key: 'standardId',
       label: dict.recipe_standards?.dishId ?? 'ID',
       align: 'left',
+      priority: true,
     },
     {
       key: 'dishName',
       label: dict.recipe_standards?.dish ?? 'Dish',
       align: 'left',
+      priority: true,
       render: (value, row) => 
         row.dish?.dishName || value || row.dishId,
     },
@@ -131,110 +109,39 @@ export default function RecipeStandardsList({
   // Define table actions
   const actions: TableAction[] = [
     {
-      label: dict.action.edit,
+      label: dict.action?.edit || 'Edit',
       onClick: async (standard) => {
         router.push(`/recipe-standards/${standard.standardId}/edit`)
       },
     },
     {
-      label: dict.action.delete,
-      onClick: async (standard) => {
-        await handleDelete(standard.standardId)
-      },
+      label: dict.action?.delete || 'Delete',
       variant: 'danger',
       loadingLabel: 'Deleting...',
     },
   ]
 
-  const handleActionSuccess = (action: string, row: any) => {
-    if (action === 'Edit') {
-      const standardName = row.dishName || row.ingredientName || 'recipe standard'
-      addNotification({
-        type: 'info',
-        title: 'Navigation',
-        message: `Redirecting to edit ${standardName}...`,
-      })
-    }
-  }
-
-  const handleActionError = (action: string, row: any, error: any) => {
-    const standardName = row.dishName || row.ingredientName || 'item'
-    addNotification({
-      type: 'error',
-      title: 'Action Failed',
-      message: `Failed to ${action.toLowerCase()} ${standardName}. Please try again.`,
-    })
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    // For now, just reload - search functionality can be added later
-    loadStandards()
-  }
-
-  const handleClearSearch = () => {
-    setSearchQuery('')
-    loadStandards()
-  }
-
-  if (loading) {
-    return (
-      <div className="text-center py-4">
-        {dict.common?.loading || 'Loading...'}
-      </div>
-    )
-  }
-
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="mb-0">{dict.recipe_standards?.title || 'Recipe Standards Management'}</h4>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => router.push('/recipe-standards/create')}
-        >
-          <FontAwesomeIcon icon={faPlus} className="me-2" />
-          {dict.recipe_standards?.add_new || 'Add New Recipe Standard'}
-        </Button>
-      </div>
-
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Search Bar */}
-      <form onSubmit={handleSearch} className="mb-3">
-        <InputGroup>
-          <FormControl
-            type="text"
-            placeholder={dict.common?.search || 'Search recipe standards...'}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Button variant="primary" type="submit">
-            <FontAwesomeIcon icon={faSearch} className="me-2" />
-            {dict.common?.search || 'Search'}
-          </Button>
-          {searchQuery && (
-            <Button variant="secondary" onClick={handleClearSearch}>
-              Clear
-            </Button>
-          )}
-        </InputGroup>
-      </form>
-
-      <MasterDataTable
-        data={standards || []}
-        columns={columns}
-        actions={actions}
-        loading={loading}
-        emptyMessage={dict.common?.no_data || 'No data available'}
-        onActionSuccess={handleActionSuccess}
-        onActionError={handleActionError}
-      />
-    </>
+    <MasterDataListPage<RecipeStandard>
+      title={dict.recipe_standards?.title || 'Recipe Standards Management'}
+      addNewLabel={dict.recipe_standards?.add_new || 'Add New Recipe Standard'}
+      createPath="/recipe-standards/create"
+      searchPlaceholder={dict.common?.search || 'Search recipe standards...'}
+      emptyMessage={dict.common?.no_data || 'No data available'}
+      loadingMessage={dict.common?.loading || 'Loading...'}
+      columns={columns}
+      actions={actions}
+      data={standardsData}
+      loading={loading}
+      error={error}
+      onLoadData={loadStandards}
+      onDelete={handleDelete}
+      onError={setError}
+      getItemName={(standard) => standard.dishName || standard.ingredientName || 'recipe standard'}
+      getItemId={(standard) => standard.standardId.toString()}
+      basePath="/recipe-standards"
+      dictKey="recipe_standards"
+      inlineActionsColumn="dishName"
+    />
   )
 }

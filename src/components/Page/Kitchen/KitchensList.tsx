@@ -1,49 +1,25 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import {
-  Button,
-  Alert,
-  FormControl,
-  InputGroup,
-} from 'react-bootstrap'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPlus,
-  faSearch,
-  faHeart,
-} from '@fortawesome/free-solid-svg-icons'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import { kitchenApi } from '@/services'
 import { Kitchen } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
-import Pagination from '@/components/Pagination/Pagination'
-import MasterDataTable, { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
-import { useNotification } from '@/components/Common/Notification/NotificationProvider'
+import MasterDataListPage from '@/components/Common/MasterDataListPage'
+import { TableColumn, TableAction } from '@/components/Common/MasterDataTable/MasterDataTable'
 
 export default function KitchenesList() {
   const [kitchensData, setKitchenesData] =
     useState<ResourceCollection<Kitchen> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
-  const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
-  const searchParams = useSearchParams()
   const dict = useDictionary()
-  const { addNotification } = useNotification()
 
-  // Get query params
-  const page = parseInt(searchParams.get('page') || '1')
-  const perPage = parseInt(searchParams.get('per_page') || '10')
-  const search = searchParams.get('search') || ''
-
-  useEffect(() => {
-    setSearchQuery(search)
-    loadKitchenes()
-  }, [page, perPage, search])
-
-  const loadKitchenes = async () => {
+  const loadKitchenes = async (page: number, perPage: number, search: string) => {
     try {
       setLoading(true)
       setError('')
@@ -67,59 +43,8 @@ export default function KitchenesList() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    const kitchen = kitchensData?.data?.find(item => item.kitchenId === id)
-    const kitchenName = kitchen?.kitchenName || 'this kitchen'
-    
-    if (
-      !confirm(
-        dict.kitchens?.confirm_delete ||
-          `Are you sure you want to delete ${kitchenName}?`,
-      )
-    ) {
-      return
-    }
-
-    try {
-      await kitchenApi.delete(id)
-      addNotification({
-        type: 'success',
-        title: 'Success',
-        message: `${kitchenName} has been deleted successfully.`,
-      })
-      loadKitchenes()
-    } catch (err) {
-      addNotification({
-        type: 'error',
-        title: 'Error',
-        message: `Failed to delete ${kitchenName}. Please try again.`,
-      })
-      setError(dict.kitchens?.error_delete || 'Failed to delete kitchen')
-      console.error(err)
-    }
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set('page', '1') // Reset to first page
-
-    if (searchQuery.trim()) {
-      newSearchParams.set('search', searchQuery.trim())
-    } else {
-      newSearchParams.delete('search')
-    }
-
-    router.push(`/kitchens?${newSearchParams.toString()}`)
-  }
-
-  const handleClearSearch = () => {
-    setSearchQuery('')
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set('page', '1')
-    newSearchParams.delete('search')
-    router.push(`/kitchens?${newSearchParams.toString()}`)
+  const handleDelete = async (id: string, kitchen: Kitchen) => {
+    await kitchenApi.delete(id)
   }
 
   // Define table columns
@@ -128,11 +53,13 @@ export default function KitchenesList() {
       key: 'kitchenId',
       label: dict.kitchens?.id || 'ID',
       align: 'left',
+      priority: true,
     },
     {
       key: 'kitchenName',
       label: dict.kitchens?.name || 'Kitchen Name',
       align: 'left',
+      priority: true,
     },
     {
       key: 'address',
@@ -172,106 +99,36 @@ export default function KitchenesList() {
       onClick: async (kitchen) => {
         router.push(`/kitchens/${kitchen.kitchenId}/favorite-suppliers`)
       },
-      icon: <FontAwesomeIcon icon={faHeart} className="me-2" />,
+      icon: <FontAwesomeIcon icon={faHeart} />,
     },
     {
       label: dict.action?.delete || 'Delete',
-      onClick: async (kitchen) => {
-        await handleDelete(kitchen.kitchenId)
-      },
       variant: 'danger',
       loadingLabel: 'Deleting...',
     },
   ]
 
-  const handleActionSuccess = (action: string, row: any) => {
-    if (action === 'Edit') {
-      addNotification({
-        type: 'info',
-        title: 'Navigation',
-        message: `Redirecting to edit ${row.kitchenName || 'kitchen'}...`,
-      })
-    } else if (action === 'Favorite Suppliers') {
-      addNotification({
-        type: 'info',
-        title: 'Navigation',
-        message: `Redirecting to favorite suppliers for ${row.kitchenName || 'kitchen'}...`,
-      })
-    }
-  }
-
-  const handleActionError = (action: string, row: any, error: any) => {
-    addNotification({
-      type: 'error',
-      title: 'Action Failed',
-      message: `Failed to ${action.toLowerCase()} ${row.kitchenName || 'item'}. Please try again.`,
-    })
-  }
-
-  if (loading) {
-    return (
-      <div className="text-center py-4">
-        {dict.kitchens?.loading || 'Loading...'}
-      </div>
-    )
-  }
-
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="mb-0">{dict.kitchens?.title || 'Kitchen Management'}</h4>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => router.push('/kitchens/create')}
-        >
-          <FontAwesomeIcon icon={faPlus} className="me-2" />
-          {dict.kitchens?.add_new || 'Add New Kitchen'}
-        </Button>
-      </div>
-
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Search Bar */}
-      <form onSubmit={handleSearch} className="mb-3">
-        <InputGroup>
-          <FormControl
-            type="text"
-            placeholder={dict.common?.search || 'Search kitchens...'}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Button variant="primary" type="submit">
-            <FontAwesomeIcon icon={faSearch} className="me-2" />
-            {dict.common?.search || 'Search'}
-          </Button>
-          {search && (
-            <Button variant="secondary" onClick={handleClearSearch}>
-              Clear
-            </Button>
-          )}
-        </InputGroup>
-      </form>
-
-      {/* Table */}
-      <MasterDataTable
-        data={kitchensData?.data || []}
-        columns={columns}
-        actions={actions}
-        loading={loading}
-        emptyMessage={dict.kitchens?.no_data || 'No kitchens found'}
-        onActionSuccess={handleActionSuccess}
-        onActionError={handleActionError}
-      />
-
-      {/* Pagination */}
-      {kitchensData && kitchensData.meta && (
-        <Pagination meta={kitchensData.meta} />
-      )}
-    </>
+    <MasterDataListPage<Kitchen>
+      title={dict.kitchens?.title || 'Kitchen Management'}
+      addNewLabel={dict.kitchens?.add_new || 'Add New Kitchen'}
+      createPath="/kitchens/create"
+      searchPlaceholder={dict.common?.search || 'Search kitchens...'}
+      emptyMessage={dict.kitchens?.no_data || 'No kitchens found'}
+      loadingMessage={dict.kitchens?.loading || 'Loading...'}
+      columns={columns}
+      actions={actions}
+      data={kitchensData}
+      loading={loading}
+      error={error}
+      onLoadData={loadKitchenes}
+      onDelete={handleDelete}
+      onError={setError}
+      getItemName={(kitchen) => kitchen.kitchenName || 'kitchen'}
+      getItemId={(kitchen) => kitchen.kitchenId}
+      basePath="/kitchens"
+      dictKey="kitchens"
+      inlineActionsColumn="kitchenName"
+    />
   )
 }

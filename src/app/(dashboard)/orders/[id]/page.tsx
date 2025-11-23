@@ -11,6 +11,7 @@ import { faArrowLeft, faList, faSave, faSearch, faEllipsis } from '@fortawesome/
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import StatusToast from '@/components/Common/StatusToast'
+import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 
 // Mock best supplier data - in real implementation this would come from an API
 const mockBestSuppliers: Record<string, number> = {
@@ -182,6 +183,27 @@ export default function OrderDetailPage() {
       }))
       setIngredientSummary(normalized)
 
+      // Get best suppliers from API
+      let bestSuppliersData: any = null
+      try {
+        const ingredientsPayload = normalized.map(ing => ({
+          ingredientId: ing.ingredientId,
+          ingredientName: ing.ingredientName,
+          totalQuantity: ing.quantity,
+          unit: ing.unit,
+        }))
+        
+        const bestSuppliersResponse = await orderApi.getBestSuppliers(id, {
+          ingredients: ingredientsPayload
+        })
+        
+        bestSuppliersData = bestSuppliersResponse
+        console.log('Best suppliers API response:', bestSuppliersData)
+      } catch (bestSuppliersErr) {
+        console.warn('Failed to load best suppliers from API:', bestSuppliersErr)
+        // Continue without best suppliers data
+      }
+
       // Preload supplier prices for each ingredient in parallel
       const uniqueIds = Array.from(new Set(normalized.map((i: any) => i.ingredientId)))
       const priceResults = await Promise.all(
@@ -197,7 +219,35 @@ export default function OrderDetailPage() {
             // Ensure it's an array
             let priceArray = Array.isArray(prices) ? prices : []
             
-            // If no prices from API, use mock data for testing
+            // If we have best suppliers data, create supplier entries from it
+            if (bestSuppliersData && bestSuppliersData.ingredients) {
+              const bestSupplierInfo = bestSuppliersData.ingredients.find((ing: any) => ing.ingredientId === ingId)
+              if (bestSupplierInfo && bestSupplierInfo.bestSupplier) {
+                const bestSupplierData: SupplierPrice = {
+                  productId: bestSupplierInfo.bestSupplier.productId,
+                  productName: bestSupplierInfo.bestSupplier.productName,
+                  ingredientId: ingId,
+                  ingredientName: bestSupplierInfo.ingredientName,
+                  category: '',
+                  supplierId: bestSupplierInfo.bestSupplier.supplierId,
+                  supplierName: bestSupplierInfo.bestSupplier.supplierName,
+                  manufacturer: '',
+                  unit: bestSupplierInfo.bestSupplier.unit,
+                  specification: bestSupplierInfo.bestSupplier.specification,
+                  unitPrice: bestSupplierInfo.bestSupplier.unitPrice,
+                  pricePer1: bestSupplierInfo.bestSupplier.unitPrice,
+                  effectiveFrom: new Date().toISOString(),
+                  effectiveTo: null,
+                  active: true,
+                  newPrice: bestSupplierInfo.bestSupplier.unitPrice,
+                  promotion: bestSupplierInfo.bestSupplier.isFavorite ? 'Yêu thích' : (bestSupplierInfo.bestSupplier.isLowestPrice ? 'Giá tốt nhất' : ''),
+                }
+                // Use the best supplier data as the primary option
+                priceArray = [bestSupplierData, ...priceArray]
+              }
+            }
+            
+            // If no prices from API and no best supplier, use mock data for testing
             if (priceArray.length === 0) {
               priceArray = generateMockSupplierPrices(ingId)
               console.log(`Using mock supplier prices for ingredient ${ingId}:`, priceArray.length, 'items')
@@ -227,6 +277,7 @@ export default function OrderDetailPage() {
         map[ingId] = prices
       })
       setPricesByIngredient(map)
+      
       // Load any saved selections from localStorage
       let savedSelections: Record<string, number | ''> = {}
       try {
@@ -249,16 +300,31 @@ export default function OrderDetailPage() {
       console.log('=== DEBUG: Auto-fill Best Suppliers ===')
       console.log('Saved selections:', savedSelections)
       console.log('Available ingredients:', normalized.map(ing => ing.ingredientId))
-      console.log('Mock best suppliers:', mockBestSuppliers)
+      console.log('Best suppliers data:', bestSuppliersData)
       
       normalized.forEach((ing) => {
         console.log(`Processing ingredient ${ing.ingredientId}:`)
         console.log(`  - Has saved selection: ${!!autoFilledSelections[ing.ingredientId]}`)
-        console.log(`  - Best product ID: ${mockBestSuppliers[ing.ingredientId]}`)
+        
+        let bestProductId: number | undefined
+        
+        // Try to get best product ID from API response
+        if (bestSuppliersData && bestSuppliersData.ingredients) {
+          const bestSupplierInfo = bestSuppliersData.ingredients.find((bestIng: any) => bestIng.ingredientId === ing.ingredientId)
+          if (bestSupplierInfo && bestSupplierInfo.bestSupplier) {
+            bestProductId = bestSupplierInfo.bestSupplier.productId
+          }
+        }
+        
+        // Fallback to mock data if no API data
+        if (!bestProductId) {
+          bestProductId = mockBestSuppliers[ing.ingredientId]
+        }
+        
+        console.log(`  - Best product ID: ${bestProductId}`)
         console.log(`  - Available prices: ${map[ing.ingredientId]?.length || 0} items`)
         
         if (!autoFilledSelections[ing.ingredientId]) {
-          const bestProductId = mockBestSuppliers[ing.ingredientId]
           const prices = map[ing.ingredientId] || []
           
           if (bestProductId && prices.some(p => p.productId === bestProductId)) {
@@ -293,9 +359,18 @@ export default function OrderDetailPage() {
     let autoFilledCount = 0
     
     ingredientSummary.forEach((ing) => {
-      const bestProductId = mockBestSuppliers[ing.ingredientId]
       const prices = pricesByIngredient[ing.ingredientId] || []
       
+      // First try to find supplier with promotion indicating it's the best (from API data)
+      const bestFromApi = prices.find(p => p.promotion && (p.promotion.includes('Giá tốt nhất') || p.promotion.includes('Yêu thích')))
+      if (bestFromApi) {
+        newSelections[ing.ingredientId] = bestFromApi.productId
+        autoFilledCount++
+        return
+      }
+      
+      // Fallback to mock best suppliers
+      const bestProductId = mockBestSuppliers[ing.ingredientId]
       if (bestProductId && prices.some(p => p.productId === bestProductId)) {
         newSelections[ing.ingredientId] = bestProductId
         autoFilledCount++
@@ -309,8 +384,17 @@ export default function OrderDetailPage() {
 
   // Get best supplier for a specific ingredient
   const getBestSupplier = (ingredientId: string): SupplierPrice | null => {
-    const bestProductId = mockBestSuppliers[ingredientId]
+    // First try to find in the loaded prices (which includes best supplier data from API)
     const prices = pricesByIngredient[ingredientId] || []
+    
+    // Look for supplier with promotion indicating it's the best (from API data)
+    const bestFromApi = prices.find(p => p.promotion && (p.promotion.includes('Giá tốt nhất') || p.promotion.includes('Yêu thích')))
+    if (bestFromApi) {
+      return bestFromApi
+    }
+    
+    // Fallback to mock best suppliers
+    const bestProductId = mockBestSuppliers[ingredientId]
     return prices.find(p => p.productId === bestProductId) || null
   }
 
@@ -375,15 +459,17 @@ export default function OrderDetailPage() {
       
       setSavingRow(ingredientId)
       await orderApi.createSupplierRequests(orderId, {
-        supplierId: selectedPrice.supplierId,
-        ingredients: [
+        Selections: [
           {
-            ingredientId: ingredientId,
-            quantity: row.quantity,
-            unit: row.unit,
-            unitPrice: (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice) || 0,
-          },
-        ],
+            IngredientId: ingredientId,
+            SelectedSupplierId: selectedPrice.supplierId,
+            SelectedProductId: selectedPrice.productId,
+            Quantity: row.quantity,
+            Unit: row.unit,
+            UnitPrice: (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0 ? selectedPrice.pricePer1 : selectedPrice.unitPrice) || 0,
+            Notes: ''
+          }
+        ]
       })
       
       handleSaveSelectionsLocal()
@@ -442,13 +528,39 @@ export default function OrderDetailPage() {
         return
       }
 
-      // Send one request per supplier
+      // Convert grouped data to selections format with capital field names
+      const allSelections: Array<{
+        IngredientId: string
+        SelectedSupplierId: string
+        SelectedProductId: number
+        Quantity: number
+        Unit: string
+        UnitPrice: number
+        Notes: string
+      }> = []
+      
       for (const sid of supplierIds) {
-        await orderApi.createSupplierRequests(orderId, {
-          supplierId: sid,
-          ingredients: grouped[sid],
-        })
+        for (const ingredient of grouped[sid]) {
+          const prices = pricesByIngredient[ingredient.ingredientId] || []
+          const selectedPrice = prices.find((p) => p.supplierId === sid)
+          if (selectedPrice) {
+            allSelections.push({
+              IngredientId: ingredient.ingredientId,
+              SelectedSupplierId: sid,
+              SelectedProductId: selectedPrice.productId,
+              Quantity: ingredient.quantity,
+              Unit: ingredient.unit,
+              UnitPrice: ingredient.unitPrice,
+              Notes: ''
+            })
+          }
+        }
       }
+
+      // Send one request with all selections
+      await orderApi.createSupplierRequests(orderId, {
+        Selections: allSelections
+      })
 
       handleSaveSelectionsLocal()
       setSaveSuccess(`Saved supplier requests for ${validSelectionsCount} ingredients`)
@@ -803,113 +915,89 @@ export default function OrderDetailPage() {
         </div>
 
         {/* Modal: Select Supplier per Ingredient */}
-        <Modal
-          show={showSupplierModal}
-          onHide={() => {
-            setShowSupplierModal(false)
-            setSupplierSearch('')
-          }}
-          size="lg"
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>
-              {dict.orders?.labels?.select || 'Select'} {dict.orders?.columns?.supplier || 'Supplier'}
-              {activeIngredientName ? ` - ${activeIngredientName}` : ''}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="mb-3">
-              <InputGroup>
-                <InputGroup.Text>
-                  <FontAwesomeIcon icon={faSearch} />
-                </InputGroup.Text>
-                <FormControl
-                  type="text"
-                  placeholder={dict.orders?.labels?.search || 'Search...'}
-                  value={supplierSearch}
-                  onChange={(e) => setSupplierSearch(e.target.value)}
-                />
-              </InputGroup>
-            </div>
-            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-              {activeIngredientId ? (
-                (() => {
-                  const allPrices = pricesByIngredient[activeIngredientId] || []
-                  const list = supplierSearch
-                    ? allPrices.filter((p) =>
-                      (p.supplierName || '').toLowerCase().includes(supplierSearch.toLowerCase()) ||
-                      (p.productName || '').toLowerCase().includes(supplierSearch.toLowerCase()),
-                    )
-                    : allPrices
-                  if (list.length === 0) {
-                    return <Alert variant="info">{dict.orders?.labels?.no_supplier_price || 'No active supplier price'}</Alert>
-                  }
-                  const current = selectedSupplierByIngredient[activeIngredientId] ?? ''
-                  const bestProductId = mockBestSuppliers[activeIngredientId]
-                  return (
-                    <div className="list-group">
-                      {list.map((p) => {
-                        const isBest = p.productId === bestProductId
-                        return (
-                          <button
-                            key={p.productId}
-                            type="button"
-                            className={`list-group-item list-group-item-action ${
-                              current === p.productId ? 'active' : ''
-                            } ${isBest && current !== p.productId ? 'border-success' : ''}`}
-                            onClick={() => {
-                              handleSelectSupplier(activeIngredientId, String(p.productId))
-                              setShowSupplierModal(false)
-                            }}
-                          >
-                            <div className="d-flex justify-content-between align-items-center">
-                              <div>
-                                <div className="fw-bold d-flex align-items-center gap-2">
-                                  {p.supplierName}
-                                  {isBest && (
-                                    <Badge bg="success">Best</Badge>
-                                  )}
-                                </div>
-                                <small className={current === p.productId ? 'text-white-50' : 'text-muted'}>
-                                  {p.productName || '-'} • {p.unit || ''}
-                                </small>
-                              </div>
-                              <Badge 
-                                bg={
-                                  current === p.productId 
-                                    ? 'light' 
-                                    : isBest 
-                                      ? 'success' 
-                                      : 'primary'
-                                } 
-                                text={current === p.productId ? 'dark' : 'white'}
-                              >
-                                {formatNumber((p.pricePer1 && p.pricePer1 > 0 ? p.pricePer1 : p.unitPrice) || 0)}
-                              </Badge>
-                            </div>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  )
-                })()
-              ) : (
-                <Alert variant="info">{dict.orders?.labels?.select || 'Select'} ingredient</Alert>
-              )}
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => {
+        {(() => {
+          const allPrices = activeIngredientId ? (pricesByIngredient[activeIngredientId] || []) : []
+          const filteredPrices = supplierSearch
+            ? allPrices.filter((p) =>
+              (p.supplierName || '').toLowerCase().includes(supplierSearch.toLowerCase()) ||
+              (p.productName || '').toLowerCase().includes(supplierSearch.toLowerCase()),
+            )
+            : allPrices
+
+          const currentSelectedId = activeIngredientId ? (selectedSupplierByIngredient[activeIngredientId] ?? '') : ''
+          const bestProductId = activeIngredientId ? mockBestSuppliers[activeIngredientId] : undefined
+
+          if (!activeIngredientId) {
+            return null
+          }
+
+          return (
+            <SingleSelectionModal
+              show={showSupplierModal}
+              onHide={() => {
                 setShowSupplierModal(false)
                 setSupplierSearch('')
               }}
-            >
-              {dict.orders?.labels?.close || 'Close'}
-            </Button>
-          </Modal.Footer>
-        </Modal>
+              title={`${dict.orders?.labels?.select || 'Select'} ${dict.orders?.columns?.supplier || 'Supplier'}${activeIngredientName ? ` - ${activeIngredientName}` : ''}`}
+              items={filteredPrices.map((p) => ({
+                id: String(p.productId),
+                name: p.supplierName || '',
+                subtitle: `${p.productName || '-'} • ${p.unit || ''}`,
+                badge: formatNumber((p.pricePer1 && p.pricePer1 > 0 ? p.pricePer1 : p.unitPrice) || 0),
+                ...p,
+              }))}
+              searchValue={supplierSearch}
+              onSearchChange={setSupplierSearch}
+              selectedId={currentSelectedId ? String(currentSelectedId) : undefined}
+              onSelect={(item) => {
+                if (activeIngredientId) {
+                  handleSelectSupplier(activeIngredientId, item.id)
+                }
+                setShowSupplierModal(false)
+              }}
+              searchPlaceholder={dict.orders?.labels?.search || 'Search...'}
+              emptyMessage={dict.orders?.labels?.no_supplier_price || 'No active supplier price'}
+              closeLabel={dict.orders?.labels?.close || 'Close'}
+              renderItem={(item, isSelected) => {
+                const p = item as any as SupplierPrice
+                const isBest = bestProductId && p.productId === bestProductId
+                return (
+                  <button
+                    type="button"
+                    className={`list-group-item list-group-item-action ${
+                      isSelected ? 'active' : ''
+                    } ${isBest && !isSelected ? 'border-success' : ''}`}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div>
+                        <div className="fw-bold d-flex align-items-center gap-2">
+                          {p.supplierName}
+                          {isBest && <Badge bg="success">Best</Badge>}
+                        </div>
+                        <small className={isSelected ? 'text-white-50' : 'text-muted'}>
+                          {p.productName || '-'} • {p.unit || ''}
+                        </small>
+                      </div>
+                      <Badge
+                        bg={
+                          isSelected
+                            ? 'light'
+                            : isBest
+                              ? 'success'
+                              : 'primary'
+                        }
+                        text={isSelected ? 'dark' : 'white'}
+                      >
+                        {formatNumber((p.pricePer1 && p.pricePer1 > 0 ? p.pricePer1 : p.unitPrice) || 0)}
+                      </Badge>
+                    </div>
+                  </button>
+                )
+              }}
+            />
+          )
+        })()}
       </CardBody>
     </Card>
   )
