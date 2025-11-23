@@ -16,7 +16,7 @@ import {
   faSave,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons'
-import useDictionary from '@/locales/dictionary-hook'
+import useOrderDictionary from './locales/use-order-dictionary'
 import {
   kitchenApi,
   dishApi,
@@ -114,7 +114,7 @@ export default function OrderForm({
   preFillData,
 }: OrderFormProps) {
   const router = useRouter()
-  const dict = useDictionary()
+  const dict = useOrderDictionary()
   const isSubmittingRef = useRef(false)
 
   // ==================== STATE MANAGEMENT ====================
@@ -256,7 +256,7 @@ export default function OrderForm({
       setAvailableKitchens(response.data || [])
     } catch (err) {
       console.error('Failed to load kitchens:', err)
-      setError('Không thể tải danh sách bếp')
+      setError(dict.common?.error || 'Failed to load kitchens')
     }
   }
 
@@ -287,7 +287,7 @@ export default function OrderForm({
       setDishRecipeStandards(recipeStandardsMap)
     } catch (err) {
       console.error('Failed to load dishes:', err)
-      setError('Không thể tải danh sách món ăn')
+      setError(dict.common?.error || 'Failed to load dishes')
     }
   }
 
@@ -297,7 +297,7 @@ export default function OrderForm({
       setAvailableIngredients(response.data || [])
     } catch (err) {
       console.error('Failed to load ingredients:', err)
-      setError('Không thể tải danh sách nguyên liệu')
+      setError(dict.common?.error || 'Failed to load ingredients')
     }
   }
 
@@ -307,7 +307,11 @@ export default function OrderForm({
     tempOrderId?: string,
     bestSuppliersData?: any,
   ) => {
-    if (!orderId && !tempOrderId) return
+    // For creating new orders, we need kitchenId and ingredients
+    if (!bepId) {
+      console.log('Kitchen ID is required to get best suppliers')
+      return
+    }
 
     try {
       setLoadingBestSuppliers(true)
@@ -325,20 +329,17 @@ export default function OrderForm({
           return
         }
 
+        // Map to backend expected format: ingredientId, quantity, unit
         const ingredientsPayload = totalIngredients.map((ing) => ({
           ingredientId: ing.ingredientId,
-          ingredientName: ing.ingredientName,
-          totalQuantity: ing.totalQuantity,
+          quantity: ing.totalQuantity,
           unit: ing.unit,
         }))
 
-        const response = await orderApi.getBestSuppliers(
-          tempOrderId || orderId,
-          {
-            ingredients: ingredientsPayload,
-            kitchenId: bepId || undefined,
-          },
-        )
+        const response = await orderApi.getBestSuppliersForNewOrder({
+          kitchenId: bepId,
+          ingredients: ingredientsPayload,
+        })
 
         data = response as BestSupplierResponse
       }
@@ -461,11 +462,11 @@ export default function OrderForm({
   // Auto-load best suppliers when ingredients or kitchen change
   useEffect(() => {
     const totalIngredients = calculateTotalIngredients()
-    if (totalIngredients.length > 0 && orderId && bepId) {
+    if (totalIngredients.length > 0 && bepId) {
       loadBestSuppliers()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderDishes, supplementaryFoods, orderId, bepId])
+  }, [orderDishes, supplementaryFoods, bepId])
 
   const handleSupplierChange = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
@@ -479,7 +480,7 @@ export default function OrderForm({
 
   const handleAddDishes = () => {
     if (selectedDishes.length === 0 || portions <= 0) {
-      alert('Vui lòng chọn món ăn và nhập số suất hợp lệ')
+      alert(dict.order_form?.validation?.add_dish_or_food || 'Please select dishes and enter valid portions')
       return
     }
 
@@ -509,7 +510,7 @@ export default function OrderForm({
   }
 
   const handleRemoveDish = (dishId: string) => {
-    if (confirm('Bạn có chắc muốn xóa món này?')) {
+    if (confirm(dict.order_form?.confirm_delete_dish || 'Are you sure you want to remove this dish?')) {
       setOrderDishes(orderDishes.filter((d) => d.id !== dishId))
     }
   }
@@ -589,7 +590,7 @@ export default function OrderForm({
       selectedIngredients.length === 0 ||
       customAmount <= 0
     ) {
-      alert('Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ')
+      alert(dict.order_form?.validation?.add_dish_or_food || 'Please select ingredients and enter valid quantity')
       return
     }
 
@@ -617,7 +618,7 @@ export default function OrderForm({
       .filter((ing) => ing !== null) as any[]
 
     if (newIngredients.length === 0) {
-      alert('Tất cả nguyên liệu đã có trong món ăn')
+      alert(dict.order_form?.all_ingredients_exist || 'All ingredients already exist in the dish')
       return
     }
 
@@ -638,7 +639,7 @@ export default function OrderForm({
       selectedSupplementaryIngredients.length === 0 ||
       supplementaryAmount <= 0
     ) {
-      alert('Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ')
+      alert(dict.order_form?.validation?.add_dish_or_food || 'Please select ingredients and enter valid quantity')
       return
     }
 
@@ -721,7 +722,7 @@ export default function OrderForm({
   }
 
   const handleRemoveSupplementaryFood = (id: string) => {
-    if (confirm('Bạn có chắc muốn xóa thực phẩm bổ sung này?')) {
+    if (confirm(dict.order_form?.confirm_delete_supplementary || 'Are you sure you want to remove this supplementary food?')) {
       setSupplementaryFoods(supplementaryFoods.filter((item) => item.id !== id))
     }
   }
@@ -817,19 +818,19 @@ export default function OrderForm({
 
     // Validation
     if (!orderId.trim()) {
-      setError('Vui lòng nhập mã phiếu lên đơn')
+      setError(dict.order_form?.validation?.enter_order_id || 'Please enter order ID')
       isSubmittingRef.current = false
       return
     }
 
     if (!bepId.trim()) {
-      setError('Vui lòng chọn bếp')
+      setError(dict.order_form?.validation?.select_kitchen || 'Please select kitchen')
       isSubmittingRef.current = false
       return
     }
 
     if (orderDishes.length === 0 && supplementaryFoods.length === 0) {
-      setError('Vui lòng thêm ít nhất một món ăn hoặc thực phẩm bổ sung')
+      setError(dict.order_form?.validation?.add_dish_or_food || 'Please add at least one dish or supplementary food')
       isSubmittingRef.current = false
       return
     }
@@ -867,14 +868,14 @@ export default function OrderForm({
       }
 
       const createdOrder = await orderApi.create(orderData)
-      setSuccess('Tạo phiếu lên đơn thành công!')
+      setSuccess(dict.common?.success || 'Order created successfully!')
 
       // Redirect to order detail page
       setTimeout(() => {
         router.push(`/orders/${createdOrder.orderId}`)
       }, 1500)
     } catch (err: any) {
-      const errorMessage = err.message || 'Có lỗi xảy ra khi tạo phiếu lên đơn'
+      const errorMessage = err.message || dict.common?.error || 'Error occurred while creating order'
       setError(errorMessage)
       console.error(err)
       setSuccess('')
@@ -994,12 +995,12 @@ export default function OrderForm({
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" className="me-2" />
-                Đang xử lý...
+                {dict.ingredient_summary?.actions?.processing || 'Processing...'}
               </>
             ) : (
               <>
                 <FontAwesomeIcon icon={faSave} className="me-2" />
-                Lưu phiếu lên đơn
+                {dict.ingredient_summary?.actions?.save_order || 'Save Order'}
               </>
             )}
           </Button>
@@ -1010,7 +1011,7 @@ export default function OrderForm({
             onClick={() => router.push('/orders')}
           >
             <FontAwesomeIcon icon={faTimes} className="me-2" />
-            Hủy
+            {dict.order_form?.cancel || 'Cancel'}
           </Button>
         </div>
       </Form>
@@ -1019,7 +1020,7 @@ export default function OrderForm({
       <SingleSelectionModal
         show={showKitchenModal}
         onHide={closeKitchenModal}
-        title="Chọn bếp"
+        title={dict.orders_list?.table_headers?.kitchen || 'Select Kitchen'}
         items={filteredKitchens.map((k) => ({
           id: k.kitchenId,
           name: k.kitchenName,
@@ -1031,18 +1032,18 @@ export default function OrderForm({
         onSearchChange={setSearchKitchen}
         selectedId={bepId}
         onSelect={(item) => handleSelectKitchen(item as Kitchen)}
-        searchPlaceholder="Tìm kiếm bếp..."
-        emptyMessage="Không tìm thấy bếp"
+        searchPlaceholder={dict.orders_list?.search_placeholder || 'Search kitchens...'}
+        emptyMessage={dict.common?.no_data || 'No kitchen found'}
       />
 
       <MultiSelectionModal
         show={showDishModal}
         onHide={closeDishModal}
-        title="Thêm món ăn"
+        title={`${dict.common?.add || 'Add'} ${dict.dish_list?.table_headers?.dish || 'Dish'}`}
         items={filteredDishes.map((d) => ({
           id: d.dishId,
           name: d.dishName,
-          subtitle: `${dishRecipeStandards.get(d.dishId)?.length || 0} nguyên liệu`,
+          subtitle: `${dishRecipeStandards.get(d.dishId)?.length || 0} ${dict.dish_list?.table_headers?.ingredients || 'Ingredients'}`,
           badge: d.dishId,
           ...d,
         }))}
@@ -1057,13 +1058,13 @@ export default function OrderForm({
           }
         }}
         onConfirm={handleAddDishes}
-        searchPlaceholder="Tìm kiếm món ăn..."
-        emptyMessage="Không tìm thấy món ăn"
-        confirmLabel={`Thêm ${selectedDishes.length} món`}
-        selectedCountLabel={`Đã chọn ${selectedDishes.length} món`}
+        searchPlaceholder={dict.orders_list?.search_placeholder || 'Search dishes...'}
+        emptyMessage={dict.dish_list?.no_dishes || 'No dish found'}
+        confirmLabel={`${dict.common?.add || 'Add'} ${selectedDishes.length} ${dict.dish_list?.table_headers?.dish || 'Dishes'}`}
+        selectedCountLabel={`${dict.common?.selected || 'Selected'} ${selectedDishes.length} ${dict.dish_list?.table_headers?.dish || 'Dishes'}`}
         additionalFields={
           <FormGroup>
-            <FormLabel>Số suất (áp dụng cho tất cả món đã chọn):</FormLabel>
+            <FormLabel>{dict.dish_list?.portions_for_all || 'Portions (apply to all selected dishes):'}</FormLabel>
             <FormControl
               type="number"
               min="1"
@@ -1077,7 +1078,7 @@ export default function OrderForm({
       <MultiSelectionModal
         show={showIngredientModal}
         onHide={closeIngredientModal}
-        title="Thêm nguyên liệu vào món ăn"
+        title={`${dict.common?.add || 'Add'} ${dict.dish_list?.table_headers?.ingredients || 'Ingredients'} ${dict.common?.to || 'to'} ${dict.dish_list?.table_headers?.dish || 'Dish'}`}
         items={filteredIngredients.map((i) => ({
           id: i.ingredientId,
           name: i.ingredientName,
@@ -1097,15 +1098,13 @@ export default function OrderForm({
           }
         }}
         onConfirm={handleAddCustomIngredients}
-        searchPlaceholder="Tìm kiếm nguyên liệu..."
-        emptyMessage="Không tìm thấy nguyên liệu"
-        confirmLabel={`Thêm ${selectedIngredients.length} nguyên liệu`}
-        selectedCountLabel={`Đã chọn ${selectedIngredients.length} nguyên liệu`}
+        searchPlaceholder={dict.orders_list?.search_placeholder || 'Search ingredients...'}
+        emptyMessage={dict.ingredient_summary?.no_ingredients || 'No ingredient found'}
+        confirmLabel={`${dict.common?.add || 'Add'} ${selectedIngredients.length} ${dict.dish_list?.table_headers?.ingredients || 'Ingredients'}`}
+        selectedCountLabel={`${dict.common?.selected || 'Selected'} ${selectedIngredients.length} ${dict.dish_list?.table_headers?.ingredients || 'Ingredients'}`}
         additionalFields={
           <FormGroup>
-            <FormLabel>
-              Số lượng (áp dụng cho tất cả nguyên liệu đã chọn):
-            </FormLabel>
+            <FormLabel>{dict.order_form?.quantity || 'Quantity (apply to all selected ingredients):'}</FormLabel>
             <FormControl
               type="number"
               min="0"
@@ -1120,7 +1119,7 @@ export default function OrderForm({
       <MultiSelectionModal
         show={showSupplementaryModal}
         onHide={closeSupplementaryModal}
-        title="Thêm thực phẩm bổ sung"
+        title={`${dict.common?.add || 'Add'} Supplementary ${dict.dish_list?.table_headers?.ingredients || 'Ingredients'}`}
         items={filteredIngredients.map((i) => ({
           id: i.ingredientId,
           name: i.ingredientName,
@@ -1143,17 +1142,15 @@ export default function OrderForm({
           }
         }}
         onConfirm={handleAddSupplementaryFoods}
-        searchPlaceholder="Tìm kiếm nguyên liệu..."
-        emptyMessage="Không tìm thấy nguyên liệu"
-        confirmLabel={`Thêm ${selectedSupplementaryIngredients.length} thực phẩm`}
-        selectedCountLabel={`Đã chọn ${selectedSupplementaryIngredients.length} nguyên liệu`}
+        searchPlaceholder={dict.orders_list?.search_placeholder || 'Search ingredients...'}
+        emptyMessage={dict.ingredient_summary?.no_ingredients || 'No ingredient found'}
+        confirmLabel={`${dict.common?.add || 'Add'} ${selectedSupplementaryIngredients.length} ${dict.order_form?.add_supplementary_food || 'Supplementary'}`}
+        selectedCountLabel={`${dict.common?.selected || 'Selected'} ${selectedSupplementaryIngredients.length} ${dict.dish_list?.table_headers?.ingredients || 'Ingredients'}`}
         confirmVariant="success"
         selectedHighlightClass="bg-success text-white"
         additionalFields={
           <FormGroup>
-            <FormLabel>
-              Số suất (áp dụng cho tất cả nguyên liệu đã chọn):
-            </FormLabel>
+            <FormLabel>{dict.dish_list?.portions_for_all || 'Portions (apply to all selected ingredients):'}</FormLabel>
             <FormControl
               type="number"
               min="1"
@@ -1163,7 +1160,7 @@ export default function OrderForm({
               }
             />
             <small className="text-muted">
-              Bạn có thể chỉnh sửa định mức và số lượng sau khi thêm
+              {dict.order_form?.edit_after_add || 'You can edit standard and quantity after adding'}
             </small>
           </FormGroup>
         }

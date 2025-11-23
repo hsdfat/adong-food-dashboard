@@ -18,7 +18,7 @@ import {
 import { useParams, useRouter } from 'next/navigation'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
-import useDictionary from '@/locales/dictionary-hook'
+import useOrderDictionary from '@/components/Page/Order/locales/use-order-dictionary'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowLeft,
@@ -184,7 +184,7 @@ const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
 export default function OrderDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const dict = useDictionary()
+  const dict = useOrderDictionary()
   const orderId = params?.id ? (params.id as string) : null
 
   const [loading, setLoading] = useState(true)
@@ -860,22 +860,22 @@ export default function OrderDetailPage() {
                 <td>#{order.orderId}</td>
               </tr>
               <tr>
-                <th>{dict.orders?.columns?.kitchen || 'Kitchen'}</th>
+                <th>{dict.order_form?.kitchen_required || 'Kitchen'}</th>
                 <td>
                   <div>{order.kitchenName}</div>
                   <small className="text-muted">{order.kitchenId}</small>
                 </td>
               </tr>
               <tr>
-                <th>{dict.orders?.columns?.order_date || 'Order Date'}</th>
+                <th>{dict.order_form?.order_date || 'Order Date'}</th>
                 <td>{new Date(order.orderDate).toLocaleDateString()}</td>
               </tr>
               <tr>
-                <th>{dict.orders?.columns?.status || 'Status'}</th>
+                <th>Status</th>
                 <td>{getStatusBadge(order.status)}</td>
               </tr>
               <tr>
-                <th>{dict.orders?.columns?.created_by || 'Created By'}</th>
+                <th>Created By</th>
                 <td>
                   <div>{order.createdByName}</div>
                   <small className="text-muted">{order.createdByUserId}</small>

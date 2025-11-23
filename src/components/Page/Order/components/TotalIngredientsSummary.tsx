@@ -4,6 +4,7 @@ import React from 'react'
 import { Card, CardBody, Button, Table, Alert, FormSelect, Badge, Spinner } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
+import useDictionary from '@/locales/dictionary-hook'
 import { SupplierPrice } from '@/models/supplier-price'
 
 interface TotalIngredient {
@@ -47,23 +48,25 @@ export default function TotalIngredientsSummary({
   onSupplierChange,
   formatNumber,
 }: TotalIngredientsSummaryProps) {
+  const dict = useDictionary()
+  
   if (ingredients.length === 0) return null
 
   return (
     <Card className="mb-4">
       <CardBody>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">Tổng hợp nguyên liệu & Chọn nhà cung cấp</h5>
+          <h5 className="mb-0">{dict.orders?.labels?.ingredient_summary || 'Ingredient Summary & Supplier Selection'}</h5>
           <Button variant="outline-primary" onClick={onRefresh} disabled={loading}>
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" className="me-2" />
-                Đang tải...
+                {dict.orders?.loading || 'Loading...'}
               </>
             ) : (
               <>
                 <FontAwesomeIcon icon={faSync} className="me-2" />
-                Làm mới đề xuất
+                {dict.orders?.labels?.refresh_suggestions || 'Refresh Suggestions'}
               </>
             )}
           </Button>
@@ -74,9 +77,9 @@ export default function TotalIngredientsSummary({
             <thead>
               <tr>
                 <th style={{ width: '5%' }}>#</th>
-                <th style={{ width: '30%' }}>Nguyên liệu</th>
-                <th style={{ width: '15%' }}>Số lượng</th>
-                <th style={{ width: '50%' }}>Nhà cung cấp</th>
+                <th style={{ width: '30%' }}>{dict.orders?.table_headers?.ingredient || 'Ingredient'}</th>
+                <th style={{ width: '15%' }}>{dict.orders?.table_headers?.quantity || 'Quantity'}</th>
+                <th style={{ width: '50%' }}>{dict.orders?.table_headers?.supplier || 'Supplier'}</th>
               </tr>
             </thead>
             <tbody>
@@ -113,21 +116,21 @@ export default function TotalIngredientsSummary({
                         </div>
                       ) : suppliers.length === 0 ? (
                         <Alert variant="warning" className="mb-0 py-2">
-                          Không có nhà cung cấp
+                          {dict.orders?.labels?.no_supplier || 'No supplier'}
                         </Alert>
                       ) : (
                         <div>
                           {bestSupplier && !selectedProductId && (
                             <Alert variant="info" className="mb-2 py-2">
-                              <strong>💡 Đề xuất:</strong> {bestSupplier.supplierName}
+                              <strong>💡 {dict.orders?.labels?.suggestion || 'Suggestion'}:</strong> {bestSupplier.supplierName}
                               {bestSupplier.isFavorite && (
                                 <Badge bg="primary" className="ms-2">
-                                  Yêu thích
+                                  {dict.orders?.labels?.favorite || 'Favorite'}
                                 </Badge>
                               )}
                               {bestSupplier.isLowestPrice && (
                                 <Badge bg="success" className="ms-2">
-                                  Giá tốt nhất
+                                  {dict.orders?.labels?.best_price || 'Best Price'}
                                 </Badge>
                               )}
                               {' - '}
@@ -142,13 +145,13 @@ export default function TotalIngredientsSummary({
                               isBestSupplierSelected ? 'border-success bg-success-subtle' : ''
                             }
                           >
-                            <option value="">-- Chọn nhà cung cấp --</option>
+                            <option value="">-- {dict.orders?.labels?.select_supplier || 'Select Supplier'} --</option>
                             {suppliers.map((supplier) => {
                               const isBest =
                                 bestSupplier && bestSupplier.productId === supplier.productId
                               const tags: string[] = []
-                              if (supplier.isFavorite) tags.push('❤️ Yêu thích')
-                              if (supplier.isLowestPrice) tags.push('💰 Giá tốt nhất')
+                              if (supplier.isFavorite) tags.push(`❤️ ${dict.orders?.labels?.favorite || 'Favorite'}`)
+                              if (supplier.isLowestPrice) tags.push(`💰 ${dict.orders?.labels?.best_price || 'Best Price'}`)
                               if (supplier.promotion && !supplier.isFavorite && !supplier.isLowestPrice) {
                                 tags.push(supplier.promotion)
                               }
@@ -172,7 +175,7 @@ export default function TotalIngredientsSummary({
                                 {isBestSupplierSelected && (
                                   <>
                                     <Badge bg="success" className="mb-1">
-                                      ⭐ Đề xuất tốt nhất
+                                      ⭐ {dict.orders?.labels?.best_suggestion || 'Best Suggestion'}
                                     </Badge>
                                     <br />
                                   </>
@@ -180,12 +183,12 @@ export default function TotalIngredientsSummary({
                                 <div className="mb-1">
                                   {selectedSupplier.isFavorite && (
                                     <Badge bg="danger" className="me-1">
-                                      ❤️ Yêu thích
+                                      ❤️ {dict.orders?.labels?.favorite || 'Favorite'}
                                     </Badge>
                                   )}
                                   {selectedSupplier.isLowestPrice && (
                                     <Badge bg="success" className="me-1">
-                                      💰 Giá tốt nhất
+                                      💰 {dict.orders?.labels?.best_price || 'Best Price'}
                                     </Badge>
                                   )}
                                   {selectedSupplier.promotion &&
@@ -196,15 +199,15 @@ export default function TotalIngredientsSummary({
                                       </Badge>
                                     )}
                                 </div>
-                                <strong>Chi tiết:</strong> {selectedSupplier.supplierName} (
+                                <strong>{dict.orders?.labels?.details || 'Details'}:</strong> {selectedSupplier.supplierName} (
                                 {selectedSupplier.supplierId})
                                 <br />
-                                <strong>Sản phẩm:</strong> {selectedSupplier.productName}
+                                <strong>{dict.orders?.labels?.product || 'Product'}:</strong> {selectedSupplier.productName}
                                 <br />
-                                <strong>Đơn giá:</strong> {formatNumber(selectedSupplier.unitPrice)}{' '}
+                                <strong>{dict.orders?.table_headers?.unit_price_label || 'Unit Price'}:</strong> {formatNumber(selectedSupplier.unitPrice)}{' '}
                                 đ/{selectedSupplier.unit}
                                 <br />
-                                <strong>Tổng tiền:</strong>{' '}
+                                <strong>{dict.orders?.table_headers?.total_cost || 'Total Cost'}:</strong>{' '}
                                 {selectedSupplier.totalCost !== undefined
                                   ? formatNumber(selectedSupplier.totalCost)
                                   : formatNumber(selectedSupplier.unitPrice * ing.totalQuantity)}{' '}
@@ -212,7 +215,7 @@ export default function TotalIngredientsSummary({
                                 {selectedSupplier.specification && (
                                   <>
                                     <br />
-                                    <strong>Quy cách:</strong> {selectedSupplier.specification}
+                                    <strong>{dict.orders?.labels?.specification || 'Specification'}:</strong> {selectedSupplier.specification}
                                   </>
                                 )}
                               </small>

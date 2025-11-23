@@ -4,6 +4,7 @@ import React from 'react'
 import { Table, FormControl, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import useDictionary from '@/locales/dictionary-hook'
 
 interface DishIngredient {
   nguyenLieuId: string
@@ -42,6 +43,7 @@ export default function DishRow({
   onRemoveDish,
   formatNumber,
 }: DishRowProps) {
+  const dict = useDictionary()
   return (
     <tr>
       <td>{index + 1}</td>
@@ -109,7 +111,7 @@ export default function DishRow({
           onClick={() => onAddIngredient(index)}
         >
           <FontAwesomeIcon icon={faPlus} className="me-1" />
-          Thêm nguyên liệu
+          {dict.orders?.add || 'Add'} {dict.orders?.columns?.ingredient || 'Ingredient'}
         </Button>
       </td>
       <td>

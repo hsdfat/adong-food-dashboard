@@ -3,6 +3,7 @@
 import React from 'react'
 import { Table, Alert } from 'react-bootstrap'
 import { OrderDTO } from '@/models/order'
+import useDictionary from '@/locales/dictionary-hook'
 import OrderRow from './OrderRow'
 
 interface OrderTableProps {
@@ -38,12 +39,14 @@ export default function OrderTable({
   onViewSupplierRequests,
   onDelete,
 }: OrderTableProps) {
+  const dict = useDictionary()
+  
   if (orders.length === 0) {
     return (
       <Alert variant="info" className="mb-0">
         {hasActiveFilters
-          ? 'Không tìm thấy đơn hàng nào phù hợp với bộ lọc.'
-          : 'Chưa có đơn hàng nào.'}
+          ? (dict.orders?.labels?.no_orders_match_filters || 'No orders found matching the filters')
+          : (dict.orders?.labels?.no_orders || 'No orders yet')}
       </Alert>
     )
   }
@@ -53,13 +56,13 @@ export default function OrderTable({
       <Table striped bordered hover>
         <thead className="table-light">
           <tr>
-            <th className="table-priority-column">Mã đơn hàng</th>
-            <th className="table-priority-column">Bếp</th>
-            <th className="table-non-priority-column">Ngày lên đơn</th>
-            <th className="table-non-priority-column">Trạng thái</th>
-            <th className="table-non-priority-column">Người tạo</th>
-            <th className="table-non-priority-column">Chi tiết</th>
-            <th className="text-center table-non-priority-column">Thao tác</th>
+            <th className="table-priority-column">{dict.orders?.columns?.orderId || 'Order ID'}</th>
+            <th className="table-priority-column">{dict.orders?.table_headers?.kitchen || 'Kitchen'}</th>
+            <th className="table-non-priority-column">{dict.orders?.table_headers?.order_date || 'Order Date'}</th>
+            <th className="table-non-priority-column">{dict.orders?.table_headers?.status || 'Status'}</th>
+            <th className="table-non-priority-column">{dict.orders?.table_headers?.created_by || 'Created By'}</th>
+            <th className="table-non-priority-column">{dict.orders?.table_headers?.details_count || 'Details Count'}</th>
+            <th className="text-center table-non-priority-column">{dict.common?.actions || 'Actions'}</th>
           </tr>
         </thead>
         <tbody>

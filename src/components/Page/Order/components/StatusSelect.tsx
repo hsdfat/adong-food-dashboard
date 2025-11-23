@@ -4,6 +4,7 @@ import React from 'react'
 import { FormSelect, Button, Spinner } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faXmark } from '@fortawesome/free-solid-svg-icons'
+import useDictionary from '@/locales/dictionary-hook'
 
 interface StatusSelectProps {
   currentStatus: string
@@ -26,6 +27,8 @@ export default function StatusSelect({
   onSave,
   onDiscard,
 }: StatusSelectProps) {
+  const dict = useDictionary()
+  
   return (
     <div className="d-flex align-items-center gap-2">
       <FormSelect
@@ -54,7 +57,7 @@ export default function StatusSelect({
             size="sm"
             onClick={onSave}
             disabled={isSaving}
-            title="Lưu"
+            title={dict.common?.save || 'Save'}
           >
             {isSaving ? (
               <Spinner animation="border" size="sm" />
@@ -67,7 +70,7 @@ export default function StatusSelect({
             size="sm"
             onClick={onDiscard}
             disabled={isSaving}
-            title="Hủy"
+            title={dict.common?.cancel || 'Cancel'}
           >
             <FontAwesomeIcon icon={faXmark} />
           </Button>

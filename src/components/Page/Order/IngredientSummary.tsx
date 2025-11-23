@@ -152,20 +152,20 @@ export default function IngredientSummary() {
             <thead className="table-light">
               <tr>
                 <th>
-                  {dict.orders?.columns?.ingredient_id || 'Ingredient ID'}
+                  {(dict.orders as any)?.columns?.ingredient_id || 'Ingredient ID'}
                 </th>
                 <th>
-                  {dict.orders?.columns?.ingredient_name || 'Ingredient Name'}
+                  {(dict.orders as any)?.columns?.ingredient_name || 'Ingredient Name'}
                 </th>
                 <th className="text-end">
-                  {dict.orders?.columns?.quantity || 'Quantity'}
+                  {(dict.orders as any)?.columns?.quantity || 'Quantity'}
                 </th>
-                <th>{dict.orders?.columns?.unit || 'Unit'}</th>
+                <th>{(dict.orders as any)?.columns?.unit || 'Unit'}</th>
                 {summary.ingredients.some(
                   (ing) => ing.standardPerPortion !== undefined,
                 ) && (
                   <th className="text-end">
-                    {dict.orders?.columns?.standard_per_portion ||
+                    {(dict.orders as any)?.columns?.standard_per_portion ||
                       'Standard/Portion'}
                   </th>
                 )}
@@ -200,7 +200,7 @@ export default function IngredientSummary() {
               <tr>
                 <td colSpan={2}>
                   <strong>
-                    {dict.orders?.columns?.total_ingredients ||
+                    {(dict.orders as any)?.columns?.total_ingredients ||
                       'Total Ingredients'}
                   </strong>
                 </td>

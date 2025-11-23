@@ -4,6 +4,7 @@ import React from 'react'
 import { Card, CardBody, Button, Alert, Table } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import useOrderDictionary from '../locales/use-order-dictionary'
 import DishRow from './DishRow'
 
 interface DishIngredient {
@@ -43,20 +44,22 @@ export default function DishList({
   onRemoveDish,
   formatNumber,
 }: DishListProps) {
+  const dict = useOrderDictionary()
+  
   return (
     <Card className="mb-4">
       <CardBody>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">Danh sách món ăn</h5>
+          <h5 className="mb-0">{dict.dish_list?.title || 'Dishes'}</h5>
           <Button variant="primary" onClick={onAddDish}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
-            Thêm món ăn
+            {dict.dish_list?.add_dish || 'Add Dish'}
           </Button>
         </div>
 
         {dishes.length === 0 ? (
           <Alert variant="info">
-            Chưa có món ăn nào. Nhấn "Thêm món ăn" để bắt đầu.
+            {dict.dish_list?.no_dishes || 'No dishes added'}. {dict.dish_list?.add_dish || 'Add Dish'} {dict.common?.select || 'to'} {dict.common?.search || 'start'}.
           </Alert>
         ) : (
           <div className="table-responsive">
@@ -64,10 +67,10 @@ export default function DishList({
               <thead>
                 <tr>
                   <th style={{ width: '5%' }}>#</th>
-                  <th style={{ width: '25%' }}>Món ăn</th>
-                  <th style={{ width: '10%' }}>Số suất</th>
-                  <th style={{ width: '50%' }}>Nguyên liệu</th>
-                  <th style={{ width: '10%' }}>Thao tác</th>
+                  <th style={{ width: '25%' }}>{dict.dish_list?.table_headers?.dish || 'Dish'}</th>
+                  <th style={{ width: '10%' }}>{dict.dish_list?.table_headers?.portions || 'Portions'}</th>
+                  <th style={{ width: '50%' }}>{dict.dish_list?.table_headers?.ingredients || 'Ingredients'}</th>
+                  <th style={{ width: '10%' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>

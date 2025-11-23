@@ -94,11 +94,17 @@ export default async function SidebarNav() {
         <SidebarNavItem href="/supplier-prices">
           {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
         </SidebarNavItem>
+        <SidebarNavItem href="/inventory/stocks">
+          {dict.sidebar.items.stocks || 'Stocks'}
+        </SidebarNavItem>
+        <SidebarNavItem href="/inventory/imports">
+          {dict.sidebar.items.imports || 'Imports'}
+        </SidebarNavItem>
+        <SidebarNavItem href="/inventory/exports">
+          {dict.sidebar.items.exports || 'Exports'}
+        </SidebarNavItem>
         {/* <SidebarNavItem href="/receiving">
           {dict.sidebar.items.receiving}
-        </SidebarNavItem>
-        <SidebarNavItem href="/inventory">
-          {dict.sidebar.items.inventory || 'Stock Levels'}
         </SidebarNavItem> */}
       </SidebarNavGroup>
 

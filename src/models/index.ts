@@ -51,6 +51,29 @@ export type {
 // Resource Models
 export type { Resource, ResourceCollection } from './resource'
 
+// Inventory Models
+export type {
+  InventoryStock,
+  UpdateStockLevelsInput,
+  StockSummary,
+  StockValuation,
+  StockValuationResponse,
+  InventoryImport,
+  InventoryImportDetail,
+  CreateImportDetailInput,
+  CreateImportInput,
+  UpdateImportInput,
+  InventoryExport,
+  InventoryExportDetail,
+  CreateExportDetailInput,
+  CreateExportInput,
+  UpdateExportInput,
+  InventoryTransaction,
+  InventoryApiResponse,
+  InventoryListResponse,
+  LowStockAlertsResponse,
+} from './inventory'
+
 // export { MenuCard, MenuCardCreateRequest } from './menu_card'
 
 export { newResource } from './resource'

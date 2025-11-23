@@ -4,6 +4,7 @@ import React from 'react'
 import { FormControl, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import useOrderDictionary from '../locales/use-order-dictionary'
 
 interface SupplementaryFoodItem {
   id: string
@@ -35,6 +36,8 @@ export default function SupplementaryFoodRow({
   onRemove,
   formatNumber,
 }: SupplementaryFoodRowProps) {
+  const dict = useOrderDictionary()
+
   return (
     <tr>
       <td>{index + 1}</td>
@@ -43,28 +46,17 @@ export default function SupplementaryFoodRow({
         <br />
         <small className="text-muted">{item.nguyenLieuId}</small>
       </td>
+      <td>{item.dinhMuc}</td>
+      <td>{item.soSuat}</td>
       <td>
         <FormControl
           type="number"
+          value={item.soLuong}
+          onChange={(e) => onSoSuatChange(item.id, parseFloat(e.target.value) || 0)}
+          size="sm"
           min="0"
           step="0.01"
-          value={item.dinhMuc}
-          onChange={(e) => onDinhMucChange(item.id, parseFloat(e.target.value) || 0)}
-          size="sm"
         />
-        <small className="text-muted">{item.donViTinh}/suất</small>
-      </td>
-      <td>
-        <FormControl
-          type="number"
-          min="1"
-          value={item.soSuat}
-          onChange={(e) => onSoSuatChange(item.id, parseInt(e.target.value) || 1)}
-          size="sm"
-        />
-      </td>
-      <td>
-        <strong>{formatNumber(item.soLuong)}</strong> {item.donViTinh}
       </td>
       <td>
         <FormControl
@@ -72,7 +64,7 @@ export default function SupplementaryFoodRow({
           value={item.ghiChu || ''}
           onChange={(e) => onNoteChange(item.id, e.target.value)}
           size="sm"
-          placeholder="Ghi chú..."
+          placeholder={dict.order_form.notes || 'Note...'}
         />
       </td>
       <td>

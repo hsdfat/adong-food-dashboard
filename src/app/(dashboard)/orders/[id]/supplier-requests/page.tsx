@@ -147,9 +147,11 @@ export default function OrderSupplierRequestsPage() {
     return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
   }
 
+    const columns = dict.orders?.columns as { [key: string]: string } | undefined
+
   const getStatusBadge = (status: string) => {
     const s = (status || '').toLowerCase()
-    if (s === 'pending') return <Badge bg="warning">Pending</Badge>
+    if (s === 'pending') return <Badge bg="warning">{dict.orders?.labels?.status_badges?.pending || 'Pending'}</Badge>
     if (s === 'approved' || s === 'completed')
       return <Badge bg="success">{status}</Badge>
     if (s === 'cancelled' || s === 'rejected')
@@ -159,15 +161,35 @@ export default function OrderSupplierRequestsPage() {
 
   const buildZaloMessage = (selection: Selection): string => {
     const supplierName = selection.selectedSupplier.supplierName
-    const header = `Yêu cầu nhà cung cấp cho đơn hàng #${selection.orderId}\nNhà cung cấp: ${supplierName} (${selection.selectedSupplierId})\nNgày chọn: ${new Date(selection.selectionDate).toLocaleString()}`
+    const headerTemplate = dict.orders?.labels?.zalo_message?.header || 'Supplier request for order #{{orderId}}\nSupplier: {{supplierName}} ({{supplierId}})\nSelected date: {{selectionDate}}'
+    const header = headerTemplate
+      .replace('{{orderId}}', selection.orderId)
+      .replace('{{supplierName}}', supplierName)
+      .replace('{{supplierId}}', selection.selectedSupplierId)
+      .replace('{{selectionDate}}', new Date(selection.selectionDate).toLocaleString())
+    
+    const ingredientTemplate = dict.orders?.labels?.zalo_message?.ingredient_line || ' - {{ingredientName}} ({{ingredientId}}): {{quantity}} {{unit}} x {{unitPrice}} = {{totalCost}}'
     const lines = [
-      ` - ${selection.ingredient.ingredientName} (${selection.ingredientId}): ${formatNumber(selection.quantity)} ${selection.unit} x ${formatNumber(selection.unitPrice)} = ${formatNumber(selection.totalCost)}`,
+      ingredientTemplate
+        .replace('{{ingredientName}}', selection.ingredient.ingredientName)
+        .replace('{{ingredientId}}', selection.ingredientId)
+        .replace('{{quantity}}', formatNumber(selection.quantity))
+        .replace('{{unit}}', selection.unit)
+        .replace('{{unitPrice}}', formatNumber(selection.unitPrice))
+        .replace('{{totalCost}}', formatNumber(selection.totalCost)),
     ]
+    
     if (selection.notes) {
-      lines.push(`Ghi chú: ${selection.notes}`)
+      const notesTemplate = dict.orders?.labels?.zalo_message?.notes || 'Notes: {{notes}}'
+      lines.push(notesTemplate.replace('{{notes}}', selection.notes))
     }
-    const footer = `Tổng tiền: ${formatNumber(selection.totalCost)}\nNgười chọn: ${selection.selectedBy.fullName}\nVui lòng xác nhận giúp. Xin cảm ơn!`
-    return [header, 'Danh sách nguyên liệu:', ...lines, footer].join('\n')
+    
+    const footerTemplate = dict.orders?.labels?.zalo_message?.footer || 'Total cost: {{totalCost}}\nSelected by: {{selectedBy}}\nPlease confirm. Thank you!'
+    const footer = footerTemplate
+      .replace('{{totalCost}}', formatNumber(selection.totalCost))
+      .replace('{{selectedBy}}', selection.selectedBy.fullName)
+    
+    return [header, dict.orders?.labels?.zalo_message?.ingredients_list || 'Ingredient list:', ...lines, footer].join('\n')
   }
 
   const handleZaloClick = async (
@@ -263,15 +285,15 @@ export default function OrderSupplierRequestsPage() {
           <Table striped bordered hover responsive>
             <thead className="table-light">
               <tr>
-                <th>Selection ID</th>
-                <th>Ingredient</th>
-                <th>Supplier</th>
-                <th className="text-end">Quantity</th>
-                <th className="text-end">Unit Price</th>
-                <th className="text-end">Total Cost</th>
-                <th>Selected By</th>
-                <th>Selection Date</th>
-                <th>Actions</th>
+                                <th>{columns?.selection_id || 'Selection ID'}</th>
+                                <th>{columns?.ingredient || 'Ingredient'}</th>
+                                <th>{columns?.supplier || 'Supplier'}</th>
+                                <th className="text-end">{columns?.quantity || 'Quantity'}</th>
+                                <th className="text-end">{columns?.unit_price || 'Unit Price'}</th>
+                                <th className="text-end">{columns?.total_cost || 'Total Cost'}</th>
+                                <th>{columns?.selected_by || 'Selected By'}</th>
+                                <th>{columns?.selection_date || 'Selection Date'}</th>
+                                <th>{columns?.actions || 'Actions'}</th>
               </tr>
             </thead>
             <tbody>
@@ -363,7 +385,7 @@ export default function OrderSupplierRequestsPage() {
                             icon={faExternalLink}
                             className="me-1"
                           />{' '}
-                          Zalo
+                          {dict.orders?.labels?.zalo || 'Zalo'}
                         </Button>
                       )}
                     </div>

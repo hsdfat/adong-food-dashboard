@@ -4,6 +4,7 @@ import React from 'react'
 import { Card, CardBody, Row, Col, FormGroup, FormLabel, FormControl, InputGroup, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import useDictionary from '@/locales/dictionary-hook'
 
 interface OrderHeaderFormProps {
   orderId: string
@@ -26,14 +27,16 @@ export default function OrderHeaderForm({
   onKitchenSelect,
   onNoteChange,
 }: OrderHeaderFormProps) {
+  const dict = useDictionary()
+  
   return (
     <Card className="mb-4">
       <CardBody>
-        <h5 className="mb-3">Thông tin phiếu lên đơn</h5>
+        <h5 className="mb-3">{dict.orders?.labels?.order_information || 'Order Information'}</h5>
         <Row>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>Mã phiếu lên đơn *</FormLabel>
+              <FormLabel>{dict.orders?.form_labels?.order_id || 'Order ID'} *</FormLabel>
               <FormControl
                 type="text"
                 value={orderId}
@@ -45,7 +48,7 @@ export default function OrderHeaderForm({
           </Col>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>Ngày lên đơn *</FormLabel>
+              <FormLabel>{dict.orders?.form_labels?.order_date || 'Order Date'} *</FormLabel>
               <FormControl
                 type="date"
                 value={ngayLen}
@@ -59,12 +62,12 @@ export default function OrderHeaderForm({
         <Row>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>Bếp *</FormLabel>
+              <FormLabel>{dict.orders?.form_labels?.kitchen_required || 'Kitchen *'}</FormLabel>
               <InputGroup>
                 <FormControl
                   type="text"
                   value={tenBep}
-                  placeholder="Chọn bếp..."
+                  placeholder={dict.orders?.select_kitchen || 'Select Kitchen'}
                   readOnly
                   required
                 />
@@ -76,7 +79,7 @@ export default function OrderHeaderForm({
           </Col>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>Ghi chú</FormLabel>
+              <FormLabel>{dict.orders?.form_labels?.notes || 'Notes'}</FormLabel>
               <FormControl
                 as="textarea"
                 rows={1}

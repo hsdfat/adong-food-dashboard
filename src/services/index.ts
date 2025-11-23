@@ -23,6 +23,11 @@ import { ResourceCollection } from '@/models/resource'
 import { recipeStandardApi } from './recipe-standard'
 export { supplierPriceApi } from './supplier-price.service'
 export { orderApi } from './order-api'
+export {
+  inventoryStockApi,
+  inventoryImportApi,
+  inventoryExportApi,
+} from './inventory-api'
 
 // Ingredients API
 export const ingredientApi = {

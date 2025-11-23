@@ -4,6 +4,7 @@ import React from 'react'
 import { Form, Row, Col, FormGroup, FormLabel, FormControl, InputGroup, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFilter, faCalendar } from '@fortawesome/free-solid-svg-icons'
+import useDictionary from '@/locales/dictionary-hook'
 
 interface FilterState {
   searchQuery: string
@@ -29,19 +30,21 @@ export default function OrderFilters({
   onClearFilters,
   onToggleFilters,
 }: OrderFiltersProps) {
+  const dict = useDictionary()
+  
   return (
     <Form onSubmit={onSearch} className="mb-4">
       <Row className="g-2 mb-2">
         <Col md={6}>
           <Form.Group>
-            <Form.Label className="small mb-1">Tìm kiếm</Form.Label>
+            <Form.Label className="small mb-1">{dict.orders?.filter_labels?.search || 'Search'}</Form.Label>
             <InputGroup>
               <InputGroup.Text>
                 <FontAwesomeIcon icon={faSearch} />
               </InputGroup.Text>
               <FormControl
                 type="text"
-                placeholder="Tìm theo mã đơn, bếp, người tạo..."
+                placeholder={dict.orders?.filter_labels?.search_placeholder || 'Search orders...'}
                 value={filters.searchQuery}
                 onChange={(e) => onFilterChange('searchQuery', e.target.value)}
               />
@@ -51,16 +54,16 @@ export default function OrderFilters({
         <Col md={6} className="d-flex align-items-end gap-2">
           <Button variant="outline-secondary" onClick={onToggleFilters} className="mb-0">
             <FontAwesomeIcon icon={faFilter} className="me-2" />
-            {filters.showFilters ? 'Ẩn' : 'Hiện'} bộ lọc
+            {filters.showFilters ? (dict.orders?.filter_labels?.hide_filters || 'Hide Filters') : (dict.orders?.filter_labels?.show_filters || 'Show Filters')}
           </Button>
           {hasActiveFilters && (
             <Button variant="outline-secondary" onClick={onClearFilters} className="mb-0">
-              Xóa bộ lọc
+              {dict.orders?.filter_labels?.clear_filters || 'Clear Filters'}
             </Button>
           )}
           <Button variant="primary" type="submit" className="mb-0">
             <FontAwesomeIcon icon={faSearch} className="me-2" />
-            Tìm kiếm
+            {dict.orders?.filter_labels?.search || 'Search'}
           </Button>
         </Col>
       </Row>
@@ -71,7 +74,7 @@ export default function OrderFilters({
             <Form.Group>
               <Form.Label className="small mb-1">
                 <FontAwesomeIcon icon={faCalendar} className="me-1" />
-                Từ ngày
+                {dict.orders?.filter_labels?.date_from || 'Date From'}
               </Form.Label>
               <FormControl
                 type="date"
@@ -84,7 +87,7 @@ export default function OrderFilters({
             <Form.Group>
               <Form.Label className="small mb-1">
                 <FontAwesomeIcon icon={faCalendar} className="me-1" />
-                Đến ngày
+                {dict.orders?.filter_labels?.date_to || 'Date To'}
               </Form.Label>
               <FormControl
                 type="date"

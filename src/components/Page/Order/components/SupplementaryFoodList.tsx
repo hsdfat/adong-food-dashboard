@@ -4,6 +4,7 @@ import React from 'react'
 import { Card, CardBody, Button, Alert, Table } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import useDictionary from '@/locales/dictionary-hook'
 import SupplementaryFoodRow from './SupplementaryFoodRow'
 
 interface SupplementaryFoodItem {
@@ -36,20 +37,22 @@ export default function SupplementaryFoodList({
   onRemove,
   formatNumber,
 }: SupplementaryFoodListProps) {
+  const dict = useDictionary()
+  
   return (
     <Card className="mb-4">
       <CardBody>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">Thực phẩm bổ sung</h5>
+          <h5 className="mb-0">{dict.orders?.labels?.supplementary_foods || 'Supplementary Foods'}</h5>
           <Button variant="success" onClick={onAdd}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
-            Thêm thực phẩm bổ sung
+            {dict.action?.add || 'Add'} {dict.orders?.labels?.supplementary || 'Supplementary'}
           </Button>
         </div>
 
         {items.length === 0 ? (
           <Alert variant="info">
-            Chưa có thực phẩm bổ sung. Nhấn "Thêm thực phẩm bổ sung" để thêm mới.
+            {dict.orders?.labels?.no_ingredients_text || 'No ingredients'}. {dict.action?.add || 'Add'} {dict.orders?.labels?.supplementary || 'supplementary'} {dict.common?.to || 'to'} {dict.common?.add || 'add'} {dict.common?.new || 'new'}.
           </Alert>
         ) : (
           <div className="table-responsive">
@@ -57,12 +60,12 @@ export default function SupplementaryFoodList({
               <thead>
                 <tr>
                   <th style={{ width: '5%' }}>#</th>
-                  <th style={{ width: '25%' }}>Nguyên liệu</th>
-                  <th style={{ width: '15%' }}>Định mức</th>
-                  <th style={{ width: '10%' }}>Số suất</th>
-                  <th style={{ width: '15%' }}>Số lượng</th>
-                  <th style={{ width: '20%' }}>Ghi chú</th>
-                  <th style={{ width: '10%' }}>Thao tác</th>
+                  <th style={{ width: '25%' }}>{dict.orders?.table_headers?.ingredient || 'Ingredient'}</th>
+                  <th style={{ width: '15%' }}>{dict.orders?.columns?.standard_per_portion || 'Standard/Portion'}</th>
+                  <th style={{ width: '10%' }}>{dict.orders?.table_headers?.portions || 'Portions'}</th>
+                  <th style={{ width: '15%' }}>{dict.orders?.table_headers?.quantity || 'Quantity'}</th>
+                  <th style={{ width: '20%' }}>{dict.orders?.table_headers?.note || 'Note'}</th>
+                  <th style={{ width: '10%' }}>{dict.common?.actions || 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>

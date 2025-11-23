@@ -355,7 +355,7 @@ function OrdersList() {
 
   const handleDelete = useCallback(
     async (orderId: string) => {
-      if (!confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
+      if (!confirm(dict.orders?.confirm_delete || 'Are you sure you want to delete this order?')) {
         return
       }
 
@@ -427,7 +427,7 @@ function OrdersList() {
         <CardBody>
           <div className="text-center py-5">
             <Spinner animation="border" className="me-2" />
-            <span>Đang tải đơn hàng...</span>
+            <span>{dict.orders?.loading || 'Loading orders...'}</span>
           </div>
         </CardBody>
       </Card>
@@ -439,15 +439,15 @@ function OrdersList() {
       <CardHeader>
         <div className="d-flex justify-content-between align-items-center">
           <div>
-            <h4>Quản lý đơn hàng</h4>
-            <div className="text-muted">Danh sách phiếu lên đơn</div>
+            <h4>{dict.orders?.title || 'Order Management'}</h4>
+            <div className="text-muted">{dict.orders?.subtitle || 'List of orders'}</div>
           </div>
           <Button
             variant="primary"
             onClick={() => router.push('/orders/create')}
           >
             <FontAwesomeIcon icon={faPlus} className="me-2" />
-            Tạo đơn hàng
+            {dict.orders?.create || 'Create Order'}
           </Button>
         </div>
       </CardHeader>
