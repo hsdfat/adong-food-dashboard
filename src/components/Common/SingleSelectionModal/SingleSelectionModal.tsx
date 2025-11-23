@@ -14,30 +14,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 export interface SingleSelectionModalItem {
-  id: string
-  name: string
-  subtitle?: string
-  badge?: string
-  [key: string]: any // Allow additional properties
+  id: string;
+  name: string;
+  subtitle?: string;
+  badge?: string;
+  [key: string]: unknown; // Allow additional properties
 }
 
 export interface SingleSelectionModalProps<T extends SingleSelectionModalItem> {
-  show: boolean
-  onHide: () => void
-  title: string
-  items: T[]
-  searchValue: string
-  onSearchChange: (value: string) => void
-  selectedId?: string
-  onSelect: (item: T) => void
-  searchPlaceholder?: string
-  emptyMessage?: string
-  closeLabel?: string
-  getItemName?: (item: T) => string
-  getItemSubtitle?: (item: T) => string
-  getItemBadge?: (item: T) => string
-  renderItem?: (item: T, isSelected: boolean) => React.ReactNode
-  size?: 'sm' | 'lg' | 'xl'
+  show: boolean;
+  onHide: () => void;
+  title: string;
+  items: T[];
+  searchValue: string;
+  onSearchChange: (value: string) => void;
+  selectedId?: string;
+  onSelect: (item: T) => void;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  closeLabel?: string;
+  getItemName?: (item: T) => string;
+  getItemSubtitle?: (item: T) => string;
+  getItemBadge?: (item: T) => string;
+  renderItem?: (item: T, isSelected: boolean) => React.ReactNode;
+  size?: 'sm' | 'lg' | 'xl';
 }
 
 export default function SingleSelectionModal<
@@ -101,6 +101,14 @@ export default function SingleSelectionModal<
                     <div
                       key={item.id}
                       onClick={() => handleSelect(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleSelect(item);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
                       style={{ cursor: 'pointer' }}
                     >
                       {renderItem(item, isSelected)}

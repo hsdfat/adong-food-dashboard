@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react'
 import { Card, CardBody } from 'react-bootstrap'
 import StockForm from '@/components/Page/Inventory/StockForm'

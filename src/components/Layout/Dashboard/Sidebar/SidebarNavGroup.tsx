@@ -18,10 +18,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 
 type SidebarNavGroupToggleProps = {
-  eventKey: string
-  icon: IconDefinition
-  setIsShow: (isShow: boolean) => void
-} & PropsWithChildren
+  eventKey: string;
+  icon: IconDefinition;
+  setIsShow: (isShow: boolean) => void;
+} & PropsWithChildren;
 
 const SidebarNavGroupToggle = (props: SidebarNavGroupToggleProps) => {
   // https://react-bootstrap.github.io/components/accordion/#custom-toggle-with-expansion-awareness
@@ -58,9 +58,9 @@ const SidebarNavGroupToggle = (props: SidebarNavGroupToggleProps) => {
 }
 
 type SidebarNavGroupProps = {
-  toggleIcon: IconDefinition
-  toggleText: string
-} & PropsWithChildren
+  toggleIcon: IconDefinition;
+  toggleText: string;
+} & PropsWithChildren;
 
 export default function SidebarNavGroup(props: SidebarNavGroupProps) {
   const { toggleIcon, toggleText, children } = props

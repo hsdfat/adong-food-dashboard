@@ -1,28 +1,27 @@
-'use client'
+'use client';
 
-import React, { createContext, useContext, useState, useCallback } from 'react'
-import { Toast, ToastContainer } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { Toast, ToastContainer } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
   faExclamationTriangle,
   faInfoCircle,
-  faTimes,
-} from '@fortawesome/free-solid-svg-icons'
+} from '@fortawesome/free-solid-svg-icons';
 
 export interface Notification {
-  id: string
-  type: 'success' | 'error' | 'warning' | 'info'
-  title: string
-  message?: string
-  duration?: number
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  title: string;
+  message?: string;
+  duration?: number;
 }
 
 interface NotificationContextType {
-  notifications: Notification[]
-  addNotification: (notification: Omit<Notification, 'id'>) => void
-  removeNotification: (id: string) => void
-  clearNotifications: () => void
+  notifications: Notification[];
+  addNotification: (notification: Omit<Notification, 'id'>) => void;
+  removeNotification: (id: string) => void;
+  clearNotifications: () => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -40,77 +39,80 @@ export const useNotification = () => {
 }
 
 interface NotificationProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
 }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const removeNotification = useCallback((id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }, []);
 
   const addNotification = useCallback(
     (notification: Omit<Notification, 'id'>) => {
-      const id = Date.now().toString() + Math.random().toString(36).substr(2, 9)
-      const newNotification = { ...notification, id }
+      const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+      const newNotification = { ...notification, id };
 
-      setNotifications((prev) => [...prev, newNotification])
+      setNotifications((prev) => [...prev, newNotification]);
 
       // Auto-remove notification after duration (default 5 seconds)
-      const duration = notification.duration || 5000
+      const duration = notification.duration || 5000;
       setTimeout(() => {
-        removeNotification(id)
-      }, duration)
+        removeNotification(id);
+      }, duration);
     },
-    [],
-  )
-
-  const removeNotification = useCallback((id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id))
-  }, [])
+    [removeNotification],
+  );
 
   const clearNotifications = useCallback(() => {
-    setNotifications([])
-  }, [])
+    setNotifications([]);
+  }, []);
 
   const getIcon = (type: Notification['type']) => {
     switch (type) {
       case 'success':
-        return faCheckCircle
+        return faCheckCircle;
       case 'error':
-        return faExclamationTriangle
+        return faExclamationTriangle;
       case 'warning':
-        return faExclamationTriangle
+        return faExclamationTriangle;
       case 'info':
-        return faInfoCircle
+        return faInfoCircle;
       default:
-        return faInfoCircle
+        return faInfoCircle;
     }
-  }
+  };
 
   const getBgVariant = (type: Notification['type']) => {
     switch (type) {
       case 'success':
-        return 'success'
+        return 'success';
       case 'error':
-        return 'danger'
+        return 'danger';
       case 'warning':
-        return 'warning'
+        return 'warning';
       case 'info':
-        return 'info'
+        return 'info';
       default:
-        return 'info'
+        return 'info';
     }
-  }
+  };
+
+  const contextValue = useMemo(
+    () => ({
+      notifications,
+      addNotification,
+      removeNotification,
+      clearNotifications,
+    }),
+    [notifications, addNotification, removeNotification, clearNotifications],
+  );
 
   return (
-    <NotificationContext.Provider
-      value={{
-        notifications,
-        addNotification,
-        removeNotification,
-        clearNotifications,
-      }}
-    >
+    <NotificationContext.Provider value={contextValue}>
       {children}
 
       <ToastContainer
@@ -123,7 +125,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
             key={notification.id}
             bg={getBgVariant(notification.type)}
             onClose={() => removeNotification(notification.id)}
-            show={true}
+            show
             delay={notification.duration || 5000}
             autohide
           >

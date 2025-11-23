@@ -19,8 +19,8 @@ import {
 import useDictionary from '@/locales/dictionary-hook'
 
 interface KitchenFormProps {
-  kitchen?: Kitchen
-  isEdit?: boolean
+  kitchen?: Kitchen;
+  isEdit?: boolean;
 }
 
 export default function KitchenForm({

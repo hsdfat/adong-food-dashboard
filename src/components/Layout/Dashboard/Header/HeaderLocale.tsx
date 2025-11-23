@@ -16,7 +16,7 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 export default function HeaderLocale({
   currentLocale,
 }: {
-  currentLocale: string
+  currentLocale: string;
 }) {
   const [locale, setLocale] = useState(currentLocale)
   const router = useRouter()

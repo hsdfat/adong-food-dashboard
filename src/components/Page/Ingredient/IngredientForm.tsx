@@ -19,8 +19,8 @@ import {
 import useDictionary from '@/locales/dictionary-hook'
 
 interface IngredientFormProps {
-  ingredient?: Ingredient
-  isEdit?: boolean
+  ingredient?: Ingredient;
+  isEdit?: boolean;
 }
 
 export default function IngredientForm({

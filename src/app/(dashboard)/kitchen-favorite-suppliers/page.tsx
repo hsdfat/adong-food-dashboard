@@ -5,8 +5,8 @@ import KitchenFavoriteSuppliersList from '@/components/Page/KitchenFavoriteSuppl
 
 interface PageProps {
   searchParams: {
-    kitchenId?: string
-  }
+    kitchenId?: string;
+  };
 }
 
 export default async function Page({ searchParams }: PageProps) {

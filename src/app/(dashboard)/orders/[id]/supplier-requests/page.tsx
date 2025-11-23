@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useEffect, useMemo, useState } from 'react'
 import {
@@ -23,25 +23,25 @@ import { orderApi } from '@/services'
 import StatusToast from '@/components/Common/StatusToast'
 
 type IngredientInfo = {
-  ingredientId: string
-  ingredientName: string
-  ingredientTypeId: string
-  property: string
-  materialGroup: string
-  unit: string
-  createdDate: string
-  modifiedDate: string
-}
+  ingredientId: string;
+  ingredientName: string;
+  ingredientTypeId: string;
+  property: string;
+  materialGroup: string;
+  unit: string;
+  createdDate: string;
+  modifiedDate: string;
+};
 
 type SupplierInfo = {
-  supplierId: string
-  supplierName: string
-  zaloLink: string
-  address: string
-  phone: string
-  email: string
-  active: boolean
-  createdDate: string
+  supplierId: string;
+  supplierName: string;
+  zaloLink: string;
+  address: string;
+  phone: string;
+  email: string;
+  active: boolean;
+  createdDate: string;
   modifiedDate: string
 }
 

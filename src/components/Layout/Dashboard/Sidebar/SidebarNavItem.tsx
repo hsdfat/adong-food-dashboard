@@ -9,9 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePathname } from 'next/navigation'
 
 type Props = {
-  href: string
-  icon?: IconDefinition
-} & PropsWithChildren
+  href: string;
+  icon?: IconDefinition;
+} & PropsWithChildren;
 
 export default function SidebarNavItem(props: Props) {
   const { icon, children, href } = props

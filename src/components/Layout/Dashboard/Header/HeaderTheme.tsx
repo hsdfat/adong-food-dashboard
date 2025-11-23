@@ -33,7 +33,7 @@ const CurrentTheme = ({ theme }: { theme: string }) => (
 export default function HeaderTheme({
   currentPreferredTheme,
 }: {
-  currentPreferredTheme: Theme
+  currentPreferredTheme: Theme;
 }) {
   const dict = useDictionary()
   const [preferredTheme, setPreferredTheme] = useState<Theme>(

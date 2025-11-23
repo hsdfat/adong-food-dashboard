@@ -4,9 +4,9 @@ import Image, { ImageProps } from 'next/image'
 import { useEffect, useState } from 'react'
 
 type Props = {
-  src: string
-  fallbackSrc: string
-} & ImageProps
+  src: string;
+  fallbackSrc: string;
+} & ImageProps;
 
 // Source: https://stackoverflow.com/questions/66949606/what-is-the-best-way-to-have-a-fallback-image-in-nextjs
 export default function ImageFallback(props: Props) {

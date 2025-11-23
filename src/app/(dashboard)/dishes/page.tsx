@@ -1,14 +1,15 @@
-'use client'
-import React from 'react'
-import { Card, CardBody, CardHeader } from 'react-bootstrap'
-import DishesList from '@/components/Page/Dish/DishesList'
+'use client';
 
-export default async function Page() {
-  console.log('Fetching dictionary for dishes page')
+import React from 'react';
+import { Card, CardBody } from 'react-bootstrap';
+import DishesList from '@/components/Page/Dish/DishesList';
+
+export default function Page() {
   return (
     <Card>
-      <CardBody></CardBody>
-      <DishesList />
+      <CardBody>
+        <DishesList />
+      </CardBody>
     </Card>
-  )
+  );
 }

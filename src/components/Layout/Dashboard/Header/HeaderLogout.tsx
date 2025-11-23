@@ -5,7 +5,7 @@ import { signOut } from 'next-auth/react'
 export default function HeaderLogout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   const logout = async () => {
     await signOut({ callbackUrl: '/login' })

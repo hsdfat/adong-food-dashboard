@@ -1,14 +1,14 @@
 'use client'
 
-import React from 'react'
-import ActionButton, { ActionButtonProps } from '../ActionButton/ActionButton'
-import useDictionary from '@/locales/dictionary-hook'
+import React from 'react';
+import useDictionary from '@/locales/dictionary-hook';
+import ActionButton, { ActionButtonProps } from '../ActionButton/ActionButton';
 
 export interface SaveButtonProps
   extends Omit<ActionButtonProps, 'variant' | 'children' | 'loadingLabel'> {
-  loading?: boolean
-  submittingLabel?: string
-  submitLabel?: string
+  loading?: boolean;
+  submittingLabel?: string;
+  submitLabel?: string;
 }
 
 const SaveButton: React.FC<SaveButtonProps> = ({
@@ -27,6 +27,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
       loadingLabel={
         submittingLabel || dict.action?.submitting || 'Submitting...'
       }
+      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     >
       {submitLabel || dict.action?.submit || 'Save'}

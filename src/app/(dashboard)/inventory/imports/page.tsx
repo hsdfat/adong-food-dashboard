@@ -1,5 +1,6 @@
-'use client'
-import React from 'react'
+'use client';
+
+import React from 'react';
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import ImportList from '@/components/Page/Inventory/ImportList'
 import useDictionary from '@/locales/dictionary-hook'

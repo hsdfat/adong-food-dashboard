@@ -1,4 +1,4 @@
-'use server'
+'use server';
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import SupplierForm from '@/components/Page/Supplier/SupplierForm'
 import { notFound } from 'next/navigation'

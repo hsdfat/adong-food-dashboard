@@ -15,8 +15,8 @@ import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface DishFormProps {
-  dish?: Dish
-  isEdit?: boolean
+  dish?: Dish;
+  isEdit?: boolean;
 }
 
 export default function DishForm({ dish, isEdit = false }: DishFormProps) {

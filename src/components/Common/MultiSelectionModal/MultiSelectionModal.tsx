@@ -15,40 +15,40 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 export interface MultiSelectionModalItem {
-  id: string
-  name: string
-  subtitle?: string
-  badge?: string
-  [key: string]: any // Allow additional properties
+  id: string;
+  name: string;
+  subtitle?: string;
+  badge?: string;
+  [key: string]: unknown; // Allow additional properties
 }
 
 export interface MultiSelectionModalProps<T extends MultiSelectionModalItem> {
-  show: boolean
-  onHide: () => void
-  title: string
-  items: T[]
-  searchValue: string
-  onSearchChange: (value: string) => void
-  selectedIds: string[]
-  onSelect: (itemId: string, checked: boolean) => void
-  onConfirm: () => void
-  searchPlaceholder?: string
-  emptyMessage?: string
-  closeLabel?: string
-  confirmLabel?: string
-  selectedCountLabel?: string
-  getItemName?: (item: T) => string
-  getItemSubtitle?: (item: T) => string
-  getItemBadge?: (item: T) => string
+  show: boolean;
+  onHide: () => void;
+  title: string;
+  items: T[];
+  searchValue: string;
+  onSearchChange: (value: string) => void;
+  selectedIds: string[];
+  onSelect: (itemId: string, checked: boolean) => void;
+  onConfirm: () => void;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  closeLabel?: string;
+  confirmLabel?: string;
+  selectedCountLabel?: string;
+  getItemName?: (item: T) => string;
+  getItemSubtitle?: (item: T) => string;
+  getItemBadge?: (item: T) => string;
   renderItem?: (
     item: T,
     isSelected: boolean,
     onToggle: (checked: boolean) => void,
-  ) => React.ReactNode
-  additionalFields?: React.ReactNode
-  size?: 'sm' | 'lg' | 'xl'
-  confirmVariant?: string
-  selectedHighlightClass?: string
+  ) => React.ReactNode;
+  additionalFields?: React.ReactNode;
+  size?: 'sm' | 'lg' | 'xl';
+  confirmVariant?: string;
+  selectedHighlightClass?: string;
 }
 
 export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
@@ -171,7 +171,7 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
           {closeLabel}
         </Button>
         <Button
-          variant={confirmVariant as any}
+          variant={confirmVariant as 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info'}
           onClick={onConfirm}
           disabled={selectedCount === 0}
         >

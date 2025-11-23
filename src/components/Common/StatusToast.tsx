@@ -7,11 +7,11 @@ import { Toast, ToastContainer } from 'react-bootstrap'
 type StatusVariant = 'success' | 'danger' | 'warning' | 'info'
 
 interface StatusToastProps {
-  show: boolean
-  message: string
-  onClose: () => void
-  variant?: StatusVariant
-  delay?: number
+  show: boolean;
+  message: string;
+  onClose: () => void;
+  variant?: StatusVariant;
+  delay?: number;
   position?: {
     placement?:
       | 'top-start'
@@ -22,8 +22,8 @@ interface StatusToastProps {
       | 'middle-end'
       | 'bottom-start'
       | 'bottom-center'
-      | 'bottom-end'
-  }
+      | 'bottom-end';
+  };
 }
 
 export default function StatusToast({

@@ -1,5 +1,6 @@
-'use client'
-import { Card, CardBody, CardHeader } from 'react-bootstrap'
+'use client';
+
+import { Card, CardBody, CardHeader } from 'react-bootstrap';
 import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
 import useDictionary from '@/locales/dictionary-hook'
 

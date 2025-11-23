@@ -14,37 +14,37 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
 export interface TableColumn {
-  key: string
-  label: string
-  align?: 'left' | 'center' | 'right'
-  render?: (value: any, row: any, index: number) => React.ReactNode
-  className?: string
-  priority?: boolean // Mark column as priority (shown on mobile with full width)
+  key: string;
+  label: string;
+  align?: 'left' | 'center' | 'right';
+  render?: (value: unknown, row: unknown, index: number) => React.ReactNode;
+  className?: string;
+  priority?: boolean; // Mark column as priority (shown on mobile with full width)
 }
 
 export interface TableAction {
-  label: string
-  onClick: (row: any, index: number) => Promise<void> | void
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info'
-  icon?: React.ReactNode
-  loadingLabel?: string
+  label: string;
+  onClick: (row: unknown, index: number) => Promise<void> | void;
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info';
+  icon?: React.ReactNode;
+  loadingLabel?: string;
 }
 
 export interface MasterDataTableProps {
-  data: any[]
-  columns: TableColumn[]
-  actions?: TableAction[]
-  loading?: boolean
-  emptyMessage?: string
-  hover?: boolean
-  responsive?: boolean
-  bordered?: boolean
-  className?: string
-  onActionSuccess?: (action: string, row: any) => void
-  onActionError?: (action: string, row: any, error: any) => void
-  showActionLoading?: boolean
-  actionsColumnPosition?: string // Column key after which the Actions column should be placed (e.g., 'id' or 'name')
-  actionsColumnLabel?: string // Translation for the Actions column header
+  data: unknown[];
+  columns: TableColumn[];
+  actions?: TableAction[];
+  loading?: boolean;
+  emptyMessage?: string;
+  hover?: boolean;
+  responsive?: boolean;
+  bordered?: boolean;
+  className?: string;
+  onActionSuccess?: (action: string, row: unknown) => void;
+  onActionError?: (action: string, row: unknown, error: unknown) => void;
+  showActionLoading?: boolean;
+  actionsColumnPosition?: string; // Column key after which the Actions column should be placed (e.g., 'id' or 'name')
+  actionsColumnLabel?: string; // Translation for the Actions column header
 }
 
 const MasterDataTable: React.FC<MasterDataTableProps> = ({
@@ -78,10 +78,11 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
 
   const handleActionClick = async (
     action: TableAction,
-    row: any,
+    row: unknown,
     index: number,
   ) => {
-    const actionKey = `${action.label}-${row.id || row.key || index}`
+    const rowWithId = row as { id?: string | number; key?: string | number };
+    const actionKey = `${action.label}-${rowWithId.id || rowWithId.key || index}`
 
     if (loadingActions.has(actionKey)) {
       return
@@ -102,8 +103,9 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
     }
   }
 
-  const renderCell = (column: TableColumn, row: any, index: number) => {
-    const value = row[column.key]
+  const renderCell = (column: TableColumn, row: unknown, index: number) => {
+    const rowRecord = row as Record<string, unknown>;
+    const value = rowRecord[column.key]
 
     let cellContent: React.ReactNode
 
@@ -129,10 +131,13 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
   }
 
 
-  const renderActions = (row: any, index: number) => {
+  const renderActions = (row: unknown, index: number) => {
     if (!actions || actions.length === 0) {
       return null
     }
+
+    const rowWithId = row as { id?: string | number; key?: string | number };
+    const rowId = rowWithId.id || rowWithId.key || index;
 
     // Always use dropdown with 3 dots
     return (
@@ -143,7 +148,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
             className="btn btn-transparent btn-sm p-1"
             bsPrefix="none"
             disabled={Array.from(loadingActions).some((key) =>
-              key.includes(`-${row.id || row.key || index}`),
+              key.includes(`-${rowId}`),
             )}
             title="Actions"
             aria-label="Actions"
@@ -152,7 +157,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
           </DropdownToggle>
           <DropdownMenu>
             {actions.map((action, actionIndex) => {
-              const actionKey = `${action.label}-${row.id || row.key || index}`
+              const actionKey = `${action.label}-${rowId}`
               const isLoading =
                 showActionLoading && loadingActions.has(actionKey)
 
@@ -281,8 +286,10 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={row.id || row.key || index}>
+        {data.map((row: { id?: string | number; key?: string | number }, index) => {
+          const rowKey = row.id || row.key || index;
+          return (
+          <tr key={rowKey}>
             {columns.map((column, colIndex) => {
               const shouldInsertActionsBefore =
                 actionsColumnIndex === colIndex &&
@@ -318,7 +325,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
                 </td>
               )}
           </tr>
-        ))}
+          );
+        })}
       </tbody>
     </Table>
   )

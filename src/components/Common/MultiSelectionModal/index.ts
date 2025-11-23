@@ -1,5 +1,6 @@
-export { default } from './MultiSelectionModal'
+import MultiSelectionModal from './MultiSelectionModal';
+export default MultiSelectionModal;
 export type {
   MultiSelectionModalItem,
   MultiSelectionModalProps,
-} from './MultiSelectionModal'
+} from './MultiSelectionModal';

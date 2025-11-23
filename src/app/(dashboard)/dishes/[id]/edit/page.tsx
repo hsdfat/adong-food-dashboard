@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'

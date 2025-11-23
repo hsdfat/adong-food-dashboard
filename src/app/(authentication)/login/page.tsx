@@ -8,7 +8,7 @@ import { getServerLocale } from '@/locales/server-utils'
 export default async function Page({
   searchParams,
 }: {
-  searchParams: SearchParams
+  searchParams: SearchParams;
 }) {
   const { callbackUrl } = searchParams
   const locale = await getServerLocale()

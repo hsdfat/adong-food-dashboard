@@ -10,17 +10,17 @@ import {
 } from 'react'
 
 type SidebarContextType = {
-  showSidebarState: [boolean, Dispatch<SetStateAction<boolean>>]
-}
+  showSidebarState: [boolean, Dispatch<SetStateAction<boolean>>];
+};
 
 export const SidebarContext = createContext<SidebarContextType>({
   showSidebarState: [false, () => {}],
-})
+});
 
 export default function SidebarProvider({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   const [isShowSidebar, setIsShowSidebar] = useState(false)
 

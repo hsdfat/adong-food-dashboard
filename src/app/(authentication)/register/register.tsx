@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Alert, Button, Form, FormControl, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

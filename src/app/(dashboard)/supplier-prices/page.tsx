@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Metadata } from 'next'
 import SupplierPricesList from '@/components/Page/SupplierPrice/SupplierPricesList'
 import useDictionary from '@/locales/dictionary-hook'

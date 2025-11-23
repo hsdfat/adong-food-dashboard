@@ -36,8 +36,8 @@ import { getPreferredTheme } from '@/themes/theme'
 import Cookies from 'js-cookie'
 
 type ItemWithIconProps = {
-  icon: IconDefinition
-} & PropsWithChildren
+  icon: IconDefinition;
+} & PropsWithChildren;
 
 const ItemWithIcon = (props: ItemWithIconProps) => {
   const { icon, children } = props
