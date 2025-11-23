@@ -130,7 +130,7 @@ export default function IngredientesList() {
       getItemId={(ingredient) => ingredient.ingredientId}
       basePath="/ingredients"
       dictKey="ingredients"
-      inlineActionsColumn="ingredientName"
+      actionsColumnPosition="ingredientName"
     />
   )
 }

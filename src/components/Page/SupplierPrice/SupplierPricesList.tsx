@@ -420,7 +420,8 @@ export default function SupplierPricesList({
           emptyMessage={dict.common?.no_data || 'No data available'}
           onActionSuccess={handleActionSuccess}
           onActionError={handleActionError}
-          inlineActionsColumn="productName"
+          actionsColumnPosition="productName"
+          actionsColumnLabel={dict.common?.actions || 'Actions'}
         />
 
         {meta && <Pagination meta={meta} />}

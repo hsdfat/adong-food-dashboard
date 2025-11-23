@@ -9,14 +9,9 @@ import {
   DropdownItem,
   Badge,
   Spinner,
-  ButtonGroup,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faEllipsisVertical,
-  faEdit,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons'
 
 export interface TableColumn {
   key: string
@@ -48,7 +43,8 @@ export interface MasterDataTableProps {
   onActionSuccess?: (action: string, row: any) => void
   onActionError?: (action: string, row: any, error: any) => void
   showActionLoading?: boolean
-  inlineActionsColumn?: string // Column key where actions should be rendered inline (e.g., 'id' or 'name')
+  actionsColumnPosition?: string // Column key after which the Actions column should be placed (e.g., 'id' or 'name')
+  actionsColumnLabel?: string // Translation for the Actions column header
 }
 
 const MasterDataTable: React.FC<MasterDataTableProps> = ({
@@ -64,7 +60,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
   onActionSuccess,
   onActionError,
   showActionLoading = true,
-  inlineActionsColumn,
+  actionsColumnPosition,
+  actionsColumnLabel = 'Actions',
 }) => {
   const [loadingActions, setLoadingActions] = useState<Set<string>>(new Set())
 
@@ -107,8 +104,6 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
 
   const renderCell = (column: TableColumn, row: any, index: number) => {
     const value = row[column.key]
-    const isInlineActionsColumn =
-      inlineActionsColumn === column.key && actions && actions.length > 0
 
     let cellContent: React.ReactNode
 
@@ -130,205 +125,28 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
       cellContent = value
     }
 
-    // If this is the inline actions column, wrap content with actions
-    if (isInlineActionsColumn) {
-      return (
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="flex-grow-1">{cellContent}</div>
-          <div className="ms-2 flex-shrink-0">
-            {renderInlineActions(row, index)}
-          </div>
-        </div>
-      )
-    }
-
     return cellContent
   }
 
-  const renderInlineActions = (row: any, index: number) => {
-    if (!actions || actions.length === 0) {
-      return null
-    }
-
-    // For inline actions, prefer icon buttons for better UX
-    if (actions.length === 1) {
-      const action = actions[0]
-      const actionKey = `${action.label}-${row.id || row.key || index}`
-      const isLoading = showActionLoading && loadingActions.has(actionKey)
-
-      // Default icon based on variant
-      const defaultIcon = action.variant === 'danger' ? faTrash : faEdit
-
-      return (
-        <button
-          className={`btn btn-sm btn-${action.variant || 'primary'}`}
-          onClick={() => handleActionClick(action, row, index)}
-          disabled={isLoading}
-          title={isLoading ? action.loadingLabel || 'Loading...' : action.label}
-          aria-label={
-            isLoading ? action.loadingLabel || 'Loading...' : action.label
-          }
-        >
-          {isLoading ? (
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-          ) : (
-            action.icon || <FontAwesomeIcon icon={defaultIcon} />
-          )}
-        </button>
-      )
-    }
-
-    // For multiple actions, show as button group with icons
-    if (actions.length <= 3) {
-      return (
-        <ButtonGroup size="sm">
-          {actions.map((action, actionIndex) => {
-            const actionKey = `${action.label}-${row.id || row.key || index}`
-            const isLoading = showActionLoading && loadingActions.has(actionKey)
-
-            // Default icon based on variant
-            const defaultIcon = action.variant === 'danger' ? faTrash : faEdit
-
-            return (
-              <button
-                key={actionIndex}
-                className={`btn btn-${action.variant || 'primary'}`}
-                onClick={() => handleActionClick(action, row, index)}
-                disabled={isLoading}
-                title={
-                  isLoading ? action.loadingLabel || 'Loading...' : action.label
-                }
-                aria-label={
-                  isLoading ? action.loadingLabel || 'Loading...' : action.label
-                }
-              >
-                {isLoading ? (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  action.icon || <FontAwesomeIcon icon={defaultIcon} />
-                )}
-              </button>
-            )
-          })}
-        </ButtonGroup>
-      )
-    }
-
-    // For many actions, use dropdown
-    return (
-      <Dropdown align="end">
-        <DropdownToggle
-          as="button"
-          className="btn btn-transparent btn-sm p-1"
-          bsPrefix="none"
-          disabled={Array.from(loadingActions).some((key) =>
-            key.includes(`-${row.id || row.key || index}`),
-          )}
-          title="More actions"
-          aria-label="More actions"
-        >
-          <FontAwesomeIcon icon={faEllipsisVertical} />
-        </DropdownToggle>
-        <DropdownMenu>
-          {actions.map((action, actionIndex) => {
-            const actionKey = `${action.label}-${row.id || row.key || index}`
-            const isLoading = showActionLoading && loadingActions.has(actionKey)
-
-            return (
-              <DropdownItem
-                key={actionIndex}
-                onClick={() => handleActionClick(action, row, index)}
-                className={action.variant === 'danger' ? 'text-danger' : ''}
-                disabled={isLoading}
-              >
-                {isLoading && (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    className="me-2"
-                  />
-                )}
-                {action.icon && !isLoading && (
-                  <span className="me-2">{action.icon}</span>
-                )}
-                {isLoading ? action.loadingLabel || 'Loading...' : action.label}
-              </DropdownItem>
-            )
-          })}
-        </DropdownMenu>
-      </Dropdown>
-    )
-  }
 
   const renderActions = (row: any, index: number) => {
     if (!actions || actions.length === 0) {
       return null
     }
 
-    if (actions.length === 1) {
-      const action = actions[0]
-      const actionKey = `${action.label}-${row.id || row.key || index}`
-      const isLoading = showActionLoading && loadingActions.has(actionKey)
-
-      return (
-        <div className="text-end">
-          <button
-            className={`btn btn-sm btn-${action.variant || 'primary'}`}
-            onClick={() => handleActionClick(action, row, index)}
-            disabled={isLoading}
-            title={
-              isLoading ? action.loadingLabel || 'Loading...' : action.label
-            }
-            aria-label={
-              isLoading ? action.loadingLabel || 'Loading...' : action.label
-            }
-          >
-            {isLoading && (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-                className="me-1"
-              />
-            )}
-            {action.icon && !isLoading && (
-              <span className="me-1">{action.icon}</span>
-            )}
-            {isLoading ? action.loadingLabel || 'Loading...' : action.label}
-          </button>
-        </div>
-      )
-    }
-
+    // Always use dropdown with 3 dots
     return (
-      <div className="text-end">
+      <div className="text-center">
         <Dropdown align="end">
           <DropdownToggle
             as="button"
-            className="btn btn-transparent btn-sm p-0"
+            className="btn btn-transparent btn-sm p-1"
             bsPrefix="none"
             disabled={Array.from(loadingActions).some((key) =>
               key.includes(`-${row.id || row.key || index}`),
             )}
-            title="More actions"
-            aria-label="More actions"
+            title="Actions"
+            aria-label="Actions"
           >
             <FontAwesomeIcon icon={faEllipsisVertical} />
           </DropdownToggle>
@@ -381,6 +199,22 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
     )
   }
 
+  // Find the index where Actions column should be inserted
+  const getActionsColumnIndex = () => {
+    if (!actions || actions.length === 0) {
+      return -1
+    }
+    if (!actionsColumnPosition) {
+      return columns.length // Default: at the end
+    }
+    const positionIndex = columns.findIndex(
+      (col) => col.key === actionsColumnPosition,
+    )
+    return positionIndex >= 0 ? positionIndex + 1 : columns.length
+  }
+
+  const actionsColumnIndex = getActionsColumnIndex()
+
   if (!data || data.length === 0) {
     return (
       <Table
@@ -392,9 +226,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
         <tbody>
           <tr>
             <td
-              colSpan={
-                columns.length + (actions && !inlineActionsColumn ? 1 : 0)
-              }
+              colSpan={columns.length + (actions && actions.length > 0 ? 1 : 0)}
               className="text-center py-4"
             >
               {emptyMessage}
@@ -414,43 +246,77 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
     >
       <thead>
         <tr>
-          {columns.map((column) => (
-            <th
-              key={column.key}
-              className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
-            >
-              {column.label}
-            </th>
-          ))}
-          {actions && actions.length > 0 && !inlineActionsColumn && (
-            <th
-              className="text-end table-non-priority-column"
-              style={{ width: '60px' }}
-            >
-              Actions
-            </th>
-          )}
+          {columns.map((column, colIndex) => {
+            const shouldInsertActionsBefore =
+              actionsColumnIndex === colIndex && actions && actions.length > 0
+
+            return (
+              <React.Fragment key={column.key}>
+                {shouldInsertActionsBefore && (
+                  <th
+                    className="text-center table-non-priority-column table-actions-column"
+                    style={{ width: '60px' }}
+                  >
+                    {actionsColumnLabel}
+                  </th>
+                )}
+                <th
+                  className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
+                >
+                  {column.label}
+                </th>
+              </React.Fragment>
+            )
+          })}
+          {actionsColumnIndex === columns.length &&
+            actions &&
+            actions.length > 0 && (
+              <th
+                className="text-center table-non-priority-column table-actions-column"
+                style={{ width: '60px' }}
+              >
+                {actionsColumnLabel}
+              </th>
+            )}
         </tr>
       </thead>
       <tbody>
         {data.map((row, index) => (
           <tr key={row.id || row.key || index}>
-            {columns.map((column) => (
-              <td
-                key={column.key}
-                className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
-              >
-                {renderCell(column, row, index)}
-              </td>
-            ))}
-            {actions && actions.length > 0 && !inlineActionsColumn && (
-              <td
-                className="text-end table-non-priority-column"
-                style={{ width: '60px' }}
-              >
-                {renderActions(row, index)}
-              </td>
-            )}
+            {columns.map((column, colIndex) => {
+              const shouldInsertActionsBefore =
+                actionsColumnIndex === colIndex &&
+                actions &&
+                actions.length > 0
+
+              return (
+                <React.Fragment key={column.key}>
+                  {shouldInsertActionsBefore && (
+                    <td
+                      className="text-center table-non-priority-column table-actions-column"
+                      style={{ width: '60px' }}
+                    >
+                      {renderActions(row, index)}
+                    </td>
+                  )}
+                  <td
+                    className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
+                  >
+                    {renderCell(column, row, index)}
+                  </td>
+                </React.Fragment>
+              )
+            })}
+            {actionsColumnIndex === columns.length &&
+              actions &&
+              actions.length > 0 && (
+                <td
+                  className="text-center table-non-priority-column table-actions-column"
+                  style={{ width: '60px' }}
+                >
+                  {renderActions(row, index)}
+                </td>
+              )}
           </tr>
         ))}
       </tbody>

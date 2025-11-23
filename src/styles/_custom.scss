@@ -17,14 +17,22 @@
 @media (max-width: 767.98px) {
   .table-responsive .table,
   .table {
-    // Hide non-priority columns on mobile
-    .table-non-priority-column {
+    // Hide non-priority columns on mobile (except Actions column)
+    .table-non-priority-column:not(.table-actions-column) {
       display: none !important;
     }
 
     // Show priority columns and make them take full width
     .table-priority-column {
       display: table-cell !important;
+    }
+
+    // Always show Actions column on mobile
+    .table-actions-column {
+      display: table-cell !important;
+      width: 60px !important;
+      min-width: 60px !important;
+      max-width: 60px !important;
     }
 
     // Make the table use full width
@@ -50,7 +58,7 @@
     // Otherwise, the last priority column will take remaining space
     thead tr th.table-priority-column:nth-of-type(2),
     tbody tr td.table-priority-column:nth-of-type(2) {
-      width: 70%;
+      width: auto;
       min-width: 0;
     }
 

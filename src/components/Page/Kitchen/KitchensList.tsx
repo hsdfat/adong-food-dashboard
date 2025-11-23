@@ -136,7 +136,7 @@ export default function KitchenesList() {
       getItemId={(kitchen) => kitchen.kitchenId}
       basePath="/kitchens"
       dictKey="kitchens"
-      inlineActionsColumn="kitchenName"
+      actionsColumnPosition="kitchenName"
     />
   )
 }

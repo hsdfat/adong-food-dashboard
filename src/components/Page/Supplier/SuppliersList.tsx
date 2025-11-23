@@ -127,7 +127,7 @@ export default function SupplieresList() {
       getItemId={(supplier) => supplier.supplierId}
       basePath="/suppliers"
       dictKey="suppliers"
-      inlineActionsColumn="supplierName"
+      actionsColumnPosition="supplierName"
     />
   )
 }

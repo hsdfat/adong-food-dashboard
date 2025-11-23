@@ -119,7 +119,7 @@ export default function DishesList() {
       getItemId={(dish) => dish.dishId}
       basePath="/dishes"
       dictKey="dishes"
-      inlineActionsColumn="dishName"
+      actionsColumnPosition="dishName"
     />
   )
 }

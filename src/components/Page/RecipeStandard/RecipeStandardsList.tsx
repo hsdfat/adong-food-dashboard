@@ -154,7 +154,7 @@ export default function RecipeStandardsList({
       getItemId={(standard) => standard.standardId.toString()}
       basePath="/recipe-standards"
       dictKey="recipe_standards"
-      inlineActionsColumn="dishName"
+      actionsColumnPosition="dishName"
     />
   )
 }

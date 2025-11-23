@@ -43,7 +43,7 @@ export interface MasterDataListPageProps<T> {
   getItemId?: (item: T) => string
   basePath: string
   dictKey?: string
-  inlineActionsColumn?: string // Column key where actions should be rendered inline (e.g., 'id' or 'name')
+  actionsColumnPosition?: string // Column key after which the Actions column should be placed (e.g., 'id' or 'name')
 }
 
 function MasterDataListPage<T extends Record<string, any>>({
@@ -65,7 +65,7 @@ function MasterDataListPage<T extends Record<string, any>>({
   getItemId = (item: T) => item.id || item.key || '',
   basePath,
   dictKey,
-  inlineActionsColumn,
+  actionsColumnPosition,
 }: MasterDataListPageProps<T>) {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const router = useRouter()
@@ -239,7 +239,8 @@ function MasterDataListPage<T extends Record<string, any>>({
           emptyMessage={emptyMessage}
           onActionSuccess={handleActionSuccess}
           onActionError={handleActionError}
-          inlineActionsColumn={inlineActionsColumn}
+          actionsColumnPosition={actionsColumnPosition}
+          actionsColumnLabel={dict.common?.actions || 'Actions'}
         />
 
         {/* Pagination */}
