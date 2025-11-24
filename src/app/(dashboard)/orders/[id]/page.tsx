@@ -26,6 +26,7 @@ import {
   faSave,
   faSearch,
   faEllipsis,
+  faFileAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
@@ -809,6 +810,16 @@ export default function OrderDetailPage() {
               <FontAwesomeIcon icon={faList} className="me-2" />
               {dict.orders?.labels?.view_ingredients_summary ||
                 'View Ingredients Summary'}
+            </Button>
+            <Button
+              variant="info"
+              onClick={() =>
+                router.push(`/orders/${orderId}/supplier-requests`)
+              }
+            >
+              <FontAwesomeIcon icon={faFileAlt} className="me-2" />
+              {dict.orders?.labels?.supplier_requests_title ||
+                'Supplier Requests'}
             </Button>
             <Button variant="secondary" onClick={() => router.push('/orders')}>
               <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
