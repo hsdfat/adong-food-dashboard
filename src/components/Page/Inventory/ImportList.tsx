@@ -111,23 +111,26 @@ export default function ImportList() {
     {
       label: dict.action?.view || 'View',
       onClick: async (importItem) => {
-        router.push(`/inventory/imports/${importItem.importId}`)
+        const item = importItem as InventoryImport
+        router.push(`/inventory/imports/${item.importId}`)
       },
     },
     {
       label: dict.action?.edit || 'Edit',
       onClick: async (importItem) => {
-        if (importItem.status === 'draft') {
-          router.push(`/inventory/imports/${importItem.importId}/edit`)
+        const item = importItem as InventoryImport
+        if (item.status === 'draft') {
+          router.push(`/inventory/imports/${item.importId}/edit`)
         }
       },
     },
     {
       label: dict.inventory?.approve || 'Approve',
       onClick: async (importItem) => {
-        if (importItem.status === 'draft') {
+        const item = importItem as InventoryImport
+        if (item.status === 'draft') {
           try {
-            await inventoryImportApi.approve(importItem.importId)
+            await inventoryImportApi.approve(item.importId)
             loadImports(1, 10, '')
           } catch (err) {
             console.error(err)
@@ -140,8 +143,9 @@ export default function ImportList() {
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       onClick: async (importItem) => {
-        if (importItem.status === 'draft') {
-          await handleDelete(importItem.importId, importItem)
+        const item = importItem as InventoryImport
+        if (item.status === 'draft') {
+          await handleDelete(item.importId, item)
         }
       },
     },

@@ -111,13 +111,15 @@ export default function StockList() {
     {
       label: dict.action?.view || 'View',
       onClick: async (stock) => {
-        router.push(`/inventory/stocks/${stock.stockId}`)
+        const item = stock as InventoryStock
+        router.push(`/inventory/stocks/${item.stockId}`)
       },
     },
     {
       label: dict.action?.edit || 'Edit Levels',
       onClick: async (stock) => {
-        router.push(`/inventory/stocks/${stock.stockId}/edit`)
+        const item = stock as InventoryStock
+        router.push(`/inventory/stocks/${item.stockId}/edit`)
       },
     },
   ]

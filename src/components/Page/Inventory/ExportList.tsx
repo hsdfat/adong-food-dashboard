@@ -127,23 +127,26 @@ export default function ExportList() {
     {
       label: dict.action?.view || 'View',
       onClick: async (exportItem) => {
-        router.push(`/inventory/exports/${exportItem.exportId}`)
+        const item = exportItem as InventoryExport
+        router.push(`/inventory/exports/${item.exportId}`)
       },
     },
     {
       label: dict.action?.edit || 'Edit',
       onClick: async (exportItem) => {
-        if (exportItem.status === 'draft') {
-          router.push(`/inventory/exports/${exportItem.exportId}/edit`)
+        const item = exportItem as InventoryExport
+        if (item.status === 'draft') {
+          router.push(`/inventory/exports/${item.exportId}/edit`)
         }
       },
     },
     {
       label: dict.inventory?.approve || 'Approve',
       onClick: async (exportItem) => {
-        if (exportItem.status === 'draft') {
+        const item = exportItem as InventoryExport
+        if (item.status === 'draft') {
           try {
-            await inventoryExportApi.approve(exportItem.exportId)
+            await inventoryExportApi.approve(item.exportId)
             loadExports(1, 10, '')
           } catch (err) {
             console.error(err)
@@ -156,8 +159,9 @@ export default function ExportList() {
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       onClick: async (exportItem) => {
-        if (exportItem.status === 'draft') {
-          await handleDelete(exportItem.exportId, exportItem)
+        const item = exportItem as InventoryExport
+        if (item.status === 'draft') {
+          await handleDelete(item.exportId, item)
         }
       },
     },

@@ -96,7 +96,8 @@ export default function IngredientesList() {
     {
       label: dict.action?.edit || 'Edit',
       onClick: async (ingredient) => {
-        router.push(`/ingredients/${ingredient.ingredientId}/edit`)
+        const item = ingredient as Ingredient
+        router.push(`/ingredients/${item.ingredientId}/edit`)
       },
     },
     {
@@ -104,8 +105,9 @@ export default function IngredientesList() {
       variant: 'danger',
       loadingLabel: 'Deleting...',
       onClick: async (ingredient) => {
+        const item = ingredient as Ingredient
         // TODO: Implement delete functionality
-        console.log('Delete ingredient:', ingredient)
+        console.log('Delete ingredient:', item)
       },
     },
   ]

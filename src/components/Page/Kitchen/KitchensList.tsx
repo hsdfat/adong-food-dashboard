@@ -98,14 +98,16 @@ export default function KitchenesList() {
     {
       label: dict.action?.edit || 'Edit',
       onClick: async (kitchen) => {
-        router.push(`/kitchens/${kitchen.kitchenId}/edit`)
+        const item = kitchen as Kitchen
+        router.push(`/kitchens/${item.kitchenId}/edit`)
       },
     },
     {
       label:
         (dict.kitchens as any)?.view_favorite_suppliers || 'Favorite Suppliers',
       onClick: async (kitchen) => {
-        router.push(`/kitchens/${kitchen.kitchenId}/favorite-suppliers`)
+        const item = kitchen as Kitchen
+        router.push(`/kitchens/${item.kitchenId}/favorite-suppliers`)
       },
       icon: <FontAwesomeIcon icon={faHeart} />,
     },

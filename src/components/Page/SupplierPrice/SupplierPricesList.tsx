@@ -290,13 +290,15 @@ export default function SupplierPricesList({
     {
       label: dict.action?.edit || 'Edit',
       onClick: async (price) => {
-        router.push(`/supplier-prices/${price.productId}/edit`)
+        const item = price as SupplierPrice
+        router.push(`/supplier-prices/${item.productId}/edit`)
       },
     },
     {
       label: dict.action?.delete || 'Delete',
       onClick: async (price) => {
-        await handleDelete(price.productId)
+        const item = price as SupplierPrice
+        await handleDelete(item.productId)
       },
       variant: 'danger',
       loadingLabel: 'Deleting...',

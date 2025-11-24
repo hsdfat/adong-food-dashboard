@@ -97,7 +97,8 @@ export default function SupplieresList() {
     {
       label: dict.action?.edit || 'Edit',
       onClick: async (supplier) => {
-        router.push(`/suppliers/${supplier.supplierId}/edit`)
+        const item = supplier as Supplier
+        router.push(`/suppliers/${item.supplierId}/edit`)
       },
     },
     {
