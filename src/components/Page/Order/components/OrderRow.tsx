@@ -84,7 +84,7 @@ export default function OrderRow({
           )}
         </div>
       </td>
-      <td className="text-center table-non-priority-column">
+      <td className="text-center table-non-priority-column table-actions-column">
         <OrderActions
           orderId={orderId}
           onView={onView}

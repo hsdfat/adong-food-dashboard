@@ -62,7 +62,7 @@ export default function OrderTable({
             <th className="table-non-priority-column">{dict.orders?.table_headers?.status || 'Status'}</th>
             <th className="table-non-priority-column">{dict.orders?.table_headers?.created_by || 'Created By'}</th>
             <th className="table-non-priority-column">{dict.orders?.table_headers?.details_count || 'Details Count'}</th>
-            <th className="text-center table-non-priority-column">{dict.common?.actions || 'Actions'}</th>
+            <th className="text-center table-non-priority-column table-actions-column">{dict.common?.actions || 'Actions'}</th>
           </tr>
         </thead>
         <tbody>
