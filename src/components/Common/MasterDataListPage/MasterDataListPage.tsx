@@ -171,9 +171,10 @@ function MasterDataListPage<T extends Record<string, any>>({
     ) {
       return {
         ...action,
-        onClick: async (row: T) => {
-          const id = getItemId(row)
-          await handleDelete(id, row)
+        onClick: async (row: unknown, index: number) => {
+          const typedRow = row as T
+          const id = getItemId(typedRow)
+          await handleDelete(id, typedRow)
         },
       }
     }
