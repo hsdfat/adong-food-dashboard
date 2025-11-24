@@ -262,7 +262,7 @@ export default function ImportForm({
               variant="outline-primary"
               onClick={() => setShowKitchenModal(true)}
             >
-              {dict.action?.select || 'Select'}
+              {(dict.action as any)?.select || 'Select'}
             </Button>
           </div>
         </FormGroup>
@@ -290,7 +290,7 @@ export default function ImportForm({
               variant="outline-primary"
               onClick={() => setShowSupplierModal(true)}
             >
-              {dict.action?.select || 'Select'}
+              {(dict.action as any)?.select || 'Select'}
             </Button>
             {supplierId && (
               <Button
@@ -357,7 +357,7 @@ export default function ImportForm({
                   <th>{dict.inventory?.total_price || 'Total Price'}</th>
                   <th>{dict.inventory?.expiry_date || 'Expiry Date'}</th>
                   <th>{dict.inventory?.batch_number || 'Batch Number'}</th>
-                  <th>{dict.action?.actions || 'Actions'}</th>
+                  <th>{(dict.action as any)?.actions || 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>

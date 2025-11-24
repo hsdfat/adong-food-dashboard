@@ -116,7 +116,7 @@ export default function ExportDetail({ exportId }: ExportDetailProps) {
               size="sm"
               onClick={() => router.push('/inventory/exports')}
             >
-              {dict.action?.back || 'Back'}
+              {(dict.action as any)?.back || 'Back'}
             </ActionButton>
           </div>
         </CardHeader>

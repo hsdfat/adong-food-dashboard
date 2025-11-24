@@ -271,7 +271,7 @@ export default function ExportForm({
               variant="outline-primary"
               onClick={() => setShowKitchenModal(true)}
             >
-              {dict.action?.select || 'Select'}
+              {(dict.action as any)?.select || 'Select'}
             </Button>
           </div>
         </FormGroup>
@@ -337,7 +337,7 @@ export default function ExportForm({
                 variant="outline-primary"
                 onClick={() => setShowDestinationModal(true)}
               >
-                {dict.action?.select || 'Select'}
+                {(dict.action as any)?.select || 'Select'}
               </Button>
               {destinationKitchenId && (
                 <Button
@@ -404,7 +404,7 @@ export default function ExportForm({
                   <th>{dict.inventory?.unit_cost || 'Unit Cost'}</th>
                   <th>{dict.inventory?.total_cost || 'Total Cost'}</th>
                   <th>{dict.inventory?.batch_number || 'Batch Number'}</th>
-                  <th>{dict.action?.actions || 'Actions'}</th>
+                  <th>{(dict.action as any)?.actions || 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>

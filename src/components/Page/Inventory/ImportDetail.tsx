@@ -108,7 +108,7 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
               size="sm"
               onClick={() => router.push('/inventory/imports')}
             >
-              {dict.action?.back || 'Back'}
+              {(dict.action as any)?.back || 'Back'}
             </ActionButton>
           </div>
         </CardHeader>
