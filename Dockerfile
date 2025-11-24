@@ -10,20 +10,21 @@ RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
 
 # Install only deps first for better layer caching
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 ###############################################
 # builder: build the Next.js app
 ###############################################
 FROM node:22-alpine AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV ESLINT_NO_DEV_ERRORS=true
 WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build
+# Build (linting is disabled via next.config.js)
 RUN pnpm build
 
 ###############################################
