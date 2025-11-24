@@ -79,13 +79,15 @@ export default function DishesList() {
   const actions: TableAction[] = [
     {
       label: dict.dishes?.recipe_standards || 'Recipe Standards',
-      onClick: async (dish) => {
+      onClick: async (row) => {
+        const dish = row as Dish
         router.push(`/dishes/${dish.dishId}/recipe-standard`)
       },
     },
     {
       label: dict.action?.edit || 'Edit',
-      onClick: async (dish) => {
+      onClick: async (row) => {
+        const dish = row as Dish
         router.push(`/dishes/${dish.dishId}/edit`)
       },
     },
@@ -93,7 +95,8 @@ export default function DishesList() {
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       loadingLabel: 'Deleting...',
-      onClick: async (dish) => {
+      onClick: async (row) => {
+        const dish = row as Dish
         await handleDelete(dish.dishId, dish)
       },
     },

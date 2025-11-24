@@ -118,7 +118,8 @@ export default function RecipeStandardsList({
   const actions: TableAction[] = [
     {
       label: dict.action?.edit || 'Edit',
-      onClick: async (standard) => {
+      onClick: async (row) => {
+        const standard = row as RecipeStandard
         router.push(`/recipe-standards/${standard.standardId}/edit`)
       },
     },
@@ -126,7 +127,8 @@ export default function RecipeStandardsList({
       label: dict.action?.delete || 'Delete',
       variant: 'danger',
       loadingLabel: 'Deleting...',
-      onClick: async (standard) => {
+      onClick: async (row) => {
+        const standard = row as RecipeStandard
         await recipeStandardApi.delete(standard.standardId)
       },
     },
