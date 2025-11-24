@@ -102,7 +102,7 @@ export default function StockList() {
       label: dict.inventory?.last_updated || 'Last Updated',
       align: 'center',
       render: (value) =>
-        value ? new Date(value).toLocaleDateString() : '-',
+        value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
   ]
 

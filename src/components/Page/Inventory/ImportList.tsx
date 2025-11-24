@@ -73,7 +73,7 @@ export default function ImportList() {
       label: dict.inventory?.import_date || 'Import Date',
       align: 'center',
       priority: true,
-      render: (value) => new Date(value).toLocaleDateString(),
+      render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
     {
       key: 'supplier',
@@ -85,7 +85,7 @@ export default function ImportList() {
       key: 'totalAmount',
       label: dict.inventory?.total_amount || 'Total Amount',
       align: 'right',
-      render: (value) => new Intl.NumberFormat('vi-VN').format(value),
+      render: (value) => value ? new Intl.NumberFormat('vi-VN').format(value as number) : '-',
     },
     {
       key: 'status',
@@ -102,7 +102,7 @@ export default function ImportList() {
       label: dict.inventory?.created_date || 'Created Date',
       align: 'center',
       render: (value) =>
-        value ? new Date(value).toLocaleDateString() : '-',
+        value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
   ]
 

@@ -70,25 +70,25 @@ export default function SupplieresList() {
       key: 'address',
       label: dict.suppliers?.address || 'Address',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'phone',
       label: dict.suppliers?.phone || 'Phone',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'zaloLink',
       label: dict.suppliers?.zalo_link || 'Zalo Link',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'createdDate',
       label: dict.common?.created_date || 'Created Date',
       align: 'center',
-      render: (value) => new Date(value).toLocaleDateString(),
+      render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
   ]
 

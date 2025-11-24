@@ -72,13 +72,13 @@ export default function KitchenesList() {
       key: 'address',
       label: dict.kitchens?.address || 'Address',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'phone',
       label: dict.kitchens?.phone || 'Phone',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'active',
@@ -89,7 +89,7 @@ export default function KitchenesList() {
       key: 'createdDate',
       label: dict.common?.created_date || 'Created Date',
       align: 'center',
-      render: (value) => new Date(value).toLocaleDateString(),
+      render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
   ]
 

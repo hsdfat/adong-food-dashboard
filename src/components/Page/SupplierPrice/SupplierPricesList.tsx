@@ -281,7 +281,7 @@ export default function SupplierPricesList({
       key: 'promotion',
       label: dict.supplierPrice?.promotion || 'Promotion',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
   ]
 

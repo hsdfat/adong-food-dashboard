@@ -70,13 +70,13 @@ export default function IngredientesList() {
       key: 'property',
       label: dict.ingredients?.property || 'Property',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'materialGroup',
       label: dict.ingredients?.material_group || 'Material Group',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
     },
     {
       key: 'unit',
@@ -87,7 +87,7 @@ export default function IngredientesList() {
       key: 'createdDate',
       label: dict.ingredients?.created_date || 'Created Date',
       align: 'center',
-      render: (value) => new Date(value).toLocaleDateString(),
+      render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
   ]
 

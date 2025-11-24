@@ -109,7 +109,7 @@ export default function RecipeStandardsList({
       key: 'note',
       label: dict.recipe_standards?.note ?? 'Note',
       align: 'left',
-      render: (value) => value || '-',
+      render: (value) => (value ? String(value) : '-'),
       className: 'text-truncate',
     },
   ]
