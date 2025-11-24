@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faSave,
   faTimes,
+  faFileAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import useOrderDictionary from './locales/use-order-dictionary'
 import {
@@ -1004,6 +1005,17 @@ export default function OrderForm({
               </>
             )}
           </Button>
+
+          {existingOrderId && (
+            <Button
+              type="button"
+              variant="info"
+              onClick={() => router.push(`/orders/${existingOrderId}/supplier-requests`)}
+            >
+              <FontAwesomeIcon icon={faFileAlt} className="me-2" />
+              {dict.orders?.labels?.supplier_requests_title || 'Supplier Requests'}
+            </Button>
+          )}
 
           <Button
             type="button"
