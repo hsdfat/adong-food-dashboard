@@ -7,11 +7,11 @@ import { faEllipsisVertical, faEye, faTrash } from '@fortawesome/free-solid-svg-
 import useDictionary from '@/locales/dictionary-hook'
 
 interface OrderActionsProps {
-  orderId: string
-  onView: (orderId: string) => void
-  onViewIngredients: (orderId: string) => void
-  onViewSupplierRequests: (orderId: string) => void
-  onDelete: (orderId: string) => void
+  orderId: string;
+  onView: (orderId: string) => void;
+  onViewIngredients: (orderId: string) => void;
+  onViewSupplierRequests: (orderId: string) => void;
+  onDelete: (orderId: string) => void;
 }
 
 export default function OrderActions({
@@ -31,7 +31,7 @@ export default function OrderActions({
       <DropdownMenu>
         <DropdownItem onClick={() => onView(orderId)}>
           <FontAwesomeIcon icon={faEye} className="me-2" />
-          {dict.orders?.action_labels?.view_details || 'View Details'}
+          {(dict.orders as any)?.action_labels?.view_details || 'View Details'}
         </DropdownItem>
         <DropdownItem onClick={() => onViewIngredients(orderId)}>
           <FontAwesomeIcon icon={faEye} className="me-2" />
@@ -44,7 +44,7 @@ export default function OrderActions({
         <DropdownItem disabled className="dropdown-divider" />
         <DropdownItem onClick={() => onDelete(orderId)} className="text-danger">
           <FontAwesomeIcon icon={faTrash} className="me-2" />
-          {dict.orders?.action_labels?.delete_order || 'Delete Order'}
+          {(dict.orders as any)?.action_labels?.delete_order || 'Delete Order'}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

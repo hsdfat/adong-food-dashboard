@@ -1,4 +1,5 @@
-'use client';
+'use client'
+
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'
@@ -37,22 +38,31 @@ export default function Page({ params }: { params: { id: string } }) {
     loadDish()
   }, [])
 
-  return (
-    <Card>
-      <CardHeader>
-        {dict.dishes.edit}: {dish && dish.dishName}
-      </CardHeader>
-      {!dish ? (
+  if (!dish) {
+    return (
+      <Card>
+        <CardHeader>
+          {dict.dishes.edit}
+        </CardHeader>
         <CardBody>
           <p>{dict.dishes.loading || 'Loading...'}</p>
         </CardBody>
-      ) : notFoundFlag ? (
-        notFound()
-      ) : (
-        <CardBody>
-          <DishForm dish={dish} />
-        </CardBody>
-      )}
+      </Card>
+    )
+  }
+
+  if (notFoundFlag) {
+    return notFound()
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        {dict.dishes.edit}: {dish.dishName}
+      </CardHeader>
+      <CardBody>
+        <DishForm dish={dish} />
+      </CardBody>
     </Card>
   )
 }

@@ -1,12 +1,13 @@
-'use client';
+'use client'
+
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import ImportForm from '@/components/Page/Inventory/ImportForm'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface PageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 export default function Page({ params }: PageProps) {
@@ -18,7 +19,7 @@ export default function Page({ params }: PageProps) {
         {dict.inventory?.edit_import || 'Edit Import'}
       </CardHeader>
       <CardBody>
-        <ImportForm importId={params.id} isEdit={true} />
+        <ImportForm importId={params.id} isEdit />
       </CardBody>
     </Card>
   )

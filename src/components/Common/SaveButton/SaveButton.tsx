@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react';
-import useDictionary from '@/locales/dictionary-hook';
-import ActionButton, { ActionButtonProps } from '../ActionButton/ActionButton';
+import React from 'react'
+import useDictionary from '@/locales/dictionary-hook'
+import ActionButton, { ActionButtonProps } from '../ActionButton/ActionButton'
 
 export interface SaveButtonProps
   extends Omit<ActionButtonProps, 'variant' | 'children' | 'loadingLabel'> {

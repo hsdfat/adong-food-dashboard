@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react'
 import useDictionary from '@/locales/dictionary-hook'
-import { OrderDictionary } from './types'
 import { getLocale } from '@/locales/dictionary'
 import Cookies from 'js-cookie'
+import { OrderDictionary } from './types'
 
 // Import locale files
 import enDictionary from './en.json'

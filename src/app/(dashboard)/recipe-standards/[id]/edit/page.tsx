@@ -1,4 +1,5 @@
 // app/(dashboard)/recipe-standards/[id]/edit/page.tsx
+
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -22,7 +23,7 @@ export default function EditRecipeStandardPage() {
       try {
         setLoading(true)
         setError('')
-        const data = await recipeStandardApi.getById(parseInt(id))
+        const data = await recipeStandardApi.getById(parseInt(id, 10))
         setStandard(data)
       } catch (err) {
         setError(dict.common?.load_error || 'Failed to load recipe standard')

@@ -1,4 +1,5 @@
 // components/Page/RecipeStandard/RecipeStandardForm.tsx
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -23,8 +24,8 @@ import { ResourceCollection } from '@/models/resource'
 import Select from 'react-select'
 
 interface RecipeStandardFormProps {
-  recipeStandard?: RecipeStandard
-  isEdit?: boolean
+  recipeStandard?: RecipeStandard;
+  isEdit?: boolean;
 }
 
 export default function RecipeStandardForm({
@@ -341,7 +342,7 @@ export default function RecipeStandardForm({
                   className="spinner-border spinner-border-sm me-2"
                   role="status"
                   aria-hidden="true"
-                ></span>
+                 />
                 {dict.action?.saving || 'Saving...'}
               </>
             ) : (

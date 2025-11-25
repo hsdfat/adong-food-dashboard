@@ -7,20 +7,20 @@ import {
   DropdownToggle,
   Nav,
   NavItem,
-} from 'react-bootstrap';
-import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+} from 'react-bootstrap'
+import Image from 'next/image'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCreditCard,
   faFile,
   faUser,
-} from '@fortawesome/free-regular-svg-icons';
-import { PropsWithChildren } from 'react';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+} from '@fortawesome/free-regular-svg-icons'
+import { PropsWithChildren } from 'react'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import {
   faGear,
   faPowerOff,
-} from '@fortawesome/free-solid-svg-icons';
+} from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import HeaderLogout from '@/components/Layout/Dashboard/Header/HeaderLogout'
 import { authOptions } from '@/app/api/auth/option'

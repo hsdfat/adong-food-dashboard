@@ -35,14 +35,14 @@ export const orderApi = {
     const url = queryParams.toString()
       ? `${BASE_URL}?${queryParams.toString()}`
       : BASE_URL
-    return await apiClient<ResourceCollection<OrderDTO>>(url)
+    return apiClient<ResourceCollection<OrderDTO>>(url)
   },
 
   /**
    * Get order by ID
    */
   async getById(id: number | string): Promise<OrderDTO> {
-    return await apiClient<OrderDTO>(`${BASE_URL}/${id}`)
+    return apiClient<OrderDTO>(`${BASE_URL}/${id}`)
   },
 
   /**
@@ -51,12 +51,12 @@ export const orderApi = {
   async getIngredientsSummary(
     id: number | string,
     params?: {
-      kitchen_id?: string
-      status?: string
-      from_date?: string
-      to_date?: string
-      dish_id?: string
-      ingredient_id?: string
+      kitchen_id?: string;
+      status?: string;
+      from_date?: string;
+      to_date?: string;
+      dish_id?: string;
+      ingredient_id?: string;
     },
   ): Promise<unknown> {
     const queryParams = new URLSearchParams()
@@ -71,7 +71,7 @@ export const orderApi = {
     const url = queryParams.toString()
       ? `${BASE_URL}/${id}/ingredients/summary?${queryParams.toString()}`
       : `${BASE_URL}/${id}/ingredients/summary`
-    return await apiClient<unknown>(url)
+    return apiClient<unknown>(url)
   },
 
   /**
@@ -81,11 +81,11 @@ export const orderApi = {
     orderId: number | string,
     ingredientId: string,
     params?: {
-      kitchen_id?: string
-      status?: string
-      from_date?: string
-      to_date?: string
-      dish_id?: string
+      kitchen_id?: string;
+      status?: string;
+      from_date?: string;
+      to_date?: string;
+      dish_id?: string;
     },
   ): Promise<unknown> {
     const queryParams = new URLSearchParams()
@@ -98,14 +98,14 @@ export const orderApi = {
     const url = queryParams.toString()
       ? `${BASE_URL}/${orderId}/ingredients/${ingredientId}/summary?${queryParams.toString()}`
       : `${BASE_URL}/${orderId}/ingredients/${ingredientId}/summary`
-    return await apiClient<unknown>(url)
+    return apiClient<unknown>(url)
   },
 
   /**
    * Create new order
    */
   async create(data: CreateOrderInput): Promise<OrderDTO> {
-    return await apiClient<OrderDTO>(BASE_URL, {
+    return apiClient<OrderDTO>(BASE_URL, {
       method: 'POST',
       body: JSON.stringify(data),
     })
@@ -115,7 +115,7 @@ export const orderApi = {
    * Update existing order
    */
   async update(id: number | string, data: UpdateOrderInput): Promise<OrderDTO> {
-    return await apiClient<OrderDTO>(`${BASE_URL}/${id}`, {
+    return apiClient<OrderDTO>(`${BASE_URL}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
@@ -126,9 +126,9 @@ export const orderApi = {
    * PATCH /api/orders/{orderId}/status
    */
   async updateStatus(id: number | string, status: string): Promise<OrderDTO> {
-    return await apiClient<OrderDTO>(`${BASE_URL}/${id}/status`, {
+    return apiClient<OrderDTO>(`${BASE_URL}/${id}/status`, {
       method: 'PATCH',
-      body: JSON.stringify({ status: status }),
+      body: JSON.stringify({ status }),
     })
   },
 
@@ -136,7 +136,7 @@ export const orderApi = {
    * Delete order
    */
   async delete(id: number | string): Promise<void> {
-    return await apiClient(`${BASE_URL}/${id}`, {
+    return apiClient(`${BASE_URL}/${id}`, {
       method: 'DELETE',
     })
   },
@@ -149,17 +149,17 @@ export const orderApi = {
     orderId: number | string,
     data: {
       Selections: Array<{
-        IngredientId: string
-        SelectedSupplierId: string
-        SelectedProductId: number
-        Quantity: number
-        Unit: string
-        UnitPrice: number
-        Notes?: string
-      }>
+        IngredientId: string;
+        SelectedSupplierId: string;
+        SelectedProductId: number;
+        Quantity: number;
+        Unit: string;
+        UnitPrice: number;
+        Notes?: string;
+      }>;
     },
-  ): Promise<any> {
-    return await apiClient<unknown>(
+  ): Promise<unknown> {
+    return apiClient<unknown>(
       `${BASE_URL}/${orderId}/supplier-requests`,
       {
         method: 'POST',
@@ -172,8 +172,8 @@ export const orderApi = {
    * Get supplier requests for an order
    * GET /api/orders/{orderId}/supplier-requests
    */
-  async getSupplierRequests(orderId: number | string): Promise<any[]> {
-    return await apiClient<unknown[]>(
+  async getSupplierRequests(orderId: number | string): Promise<unknown[]> {
+    return apiClient<unknown[]>(
       `${BASE_URL}/${orderId}/selected-suppliers`,
     )
   },
@@ -183,14 +183,14 @@ export const orderApi = {
    * POST /api/orders/best-suppliers
    */
   async getBestSuppliersForNewOrder(data: {
-    kitchenId: string
+    kitchenId: string;
     ingredients: Array<{
-      ingredientId: string
-      quantity: number
-      unit: string
-    }>
+      ingredientId: string;
+      quantity: number;
+      unit: string;
+    }>;
   }): Promise<any> {
-    return await apiClient<unknown>(`${BASE_URL}/best-suppliers`, {
+    return apiClient<unknown>(`${BASE_URL}/best-suppliers`, {
       method: 'POST',
       body: JSON.stringify(data),
     })
@@ -201,7 +201,7 @@ export const orderApi = {
    * GET /api/orders/{orderId}/best-suppliers
    */
   async getBestSuppliersByOrderId(orderId: number | string): Promise<any> {
-    return await apiClient<unknown>(
+    return apiClient<unknown>(
       `${BASE_URL}/${orderId}/best-suppliers`,
       {
         method: 'GET',

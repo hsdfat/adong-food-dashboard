@@ -2,6 +2,7 @@ import { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { getDictionary } from '@/locales/dictionary'
 import Cookies from 'js-cookie'
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:18080'
 
@@ -9,24 +10,24 @@ const API_BASE_URL =
  * API Response format (snake_case)
  */
 interface AuthApiResponse {
-  code: number
-  success: boolean
+  code: number;
+  success: boolean;
   data: {
-    access_token: string
-    refresh_token: string
-    access_token_expires_at: number // Unix timestamp in seconds
-    refresh_token_expires_at?: number // Unix timestamp in seconds
-    token_type: string
+    access_token: string;
+    refresh_token: string;
+    access_token_expires_at: number; // Unix timestamp in seconds
+    refresh_token_expires_at?: number; // Unix timestamp in seconds
+    token_type: string;
     user: {
-      id: string
-      username: string
-      email: string
-      role: string
-      fullName?: string
-      name?: string
-      avatar?: string
-    }
-  }
+      id: string;
+      username: string;
+      email: string;
+      role: string;
+      fullName?: string;
+      name?: string;
+      avatar?: string;
+    };
+  };
 }
 
 /**
@@ -47,8 +48,9 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         // User just logged in - set token with current time as lastRefreshed
         // This prevents immediate refresh attempts right after login
+        const userWithTokens = user as User & { accessTokenExpires?: number; accessToken?: string; refreshToken?: string }
         const expiresAt =
-          (user as any).accessTokenExpires || Date.now() + 3600000
+          userWithTokens.accessTokenExpires || Date.now() + 3600000
         const expiresIn = Math.round((expiresAt - Date.now()) / 1000 / 60) // minutes
 
         console.log('[AUTH] 🔐 User logged in:', {
@@ -62,8 +64,8 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           user: { ...(user as User) },
-          accessToken: (user as any).accessToken,
-          refreshToken: (user as any).refreshToken,
+          accessToken: userWithTokens.accessToken,
+          refreshToken: userWithTokens.refreshToken,
           accessTokenExpires: expiresAt,
           lastRefreshed: Date.now(), // Set to current time to prevent immediate refresh
         }
@@ -108,7 +110,8 @@ export const authOptions: NextAuthOptions = {
           )
           // Fix the timestamp if it's in seconds
           const fixedExpiresAt = expiresAt * 1000
-          token.accessTokenExpires = fixedExpiresAt
+          // Create new token object with fixed timestamp instead of mutating
+          const updatedToken = { ...token, accessTokenExpires: fixedExpiresAt }
           // Recalculate with fixed timestamp
           const fixedIsExpired = now >= fixedExpiresAt
           const fixedTimeUntilExpiry = fixedExpiresAt - now
@@ -174,13 +177,13 @@ export const authOptions: NextAuthOptions = {
 
                 // Map API response (snake_case) to internal format (camelCase)
                 return {
-                  ...token,
-                  accessToken: data.data?.access_token || token.accessToken,
-                  refreshToken: data.data?.refresh_token || token.refreshToken,
+                  ...updatedToken,
+                  accessToken: data.data?.access_token || updatedToken.accessToken,
+                  refreshToken: data.data?.refresh_token || updatedToken.refreshToken,
                   accessTokenExpires: newExpiresAt,
                   lastRefreshed: now,
                 }
-              } else {
+              }
                 const errorText = await response
                   .text()
                   .catch(() => 'Unknown error')
@@ -191,19 +194,19 @@ export const authOptions: NextAuthOptions = {
                   reason: 'REFRESH_API_ERROR',
                 })
                 // Return expired token so the session can be invalidated
-                return { ...token, error: 'RefreshAccessTokenError' }
-              }
+                return { ...updatedToken, error: 'RefreshAccessTokenError' }
+
             } catch (error) {
               console.error('[AUTH] ❌ Token refresh exception:', {
                 error: error instanceof Error ? error.message : String(error),
                 reason: 'REFRESH_NETWORK_ERROR',
               })
               // Return expired token so the session can be invalidated
-              return { ...token, error: 'RefreshAccessTokenError' }
+              return { ...updatedToken, error: 'RefreshAccessTokenError' }
             }
           }
 
-          return { ...token, accessTokenExpires: fixedExpiresAt }
+          return updatedToken
         }
 
         // Refresh if:
@@ -256,7 +259,7 @@ export const authOptions: NextAuthOptions = {
                 accessTokenExpires: newExpiresAt,
                 lastRefreshed: now,
               }
-            } else {
+            } 
               const errorText = await response
                 .text()
                 .catch(() => 'Unknown error')
@@ -268,7 +271,7 @@ export const authOptions: NextAuthOptions = {
               })
               // Return expired token so the session can be invalidated
               return { ...token, error: 'RefreshAccessTokenError' }
-            }
+            
           } catch (error) {
             console.error('[AUTH] ❌ Token refresh exception:', {
               error: error instanceof Error ? error.message : String(error),
@@ -404,7 +407,7 @@ export const authOptions: NextAuthOptions = {
           return {
             id: data.data.user?.id || username, // API returns id as string (e.g., "NV001")
             name: data.data.user?.fullName || data.data.user?.name || username,
-            username: username,
+            username,
             email: data.data.user?.email || `${username}@email.com`,
             avatar: data.data.user?.avatar || '/assets/img/avatars/8.jpg',
             accessToken: data.data.access_token, // snake_case -> camelCase
@@ -431,31 +434,31 @@ export const authOptions: NextAuthOptions = {
 
 declare module 'next-auth' {
   interface User {
-    id: string | number // API returns id as string (e.g., "NV001")
-    username: string
-    name: string
-    email: string
-    avatar: string
-    accessToken?: string
-    refreshToken?: string
-    accessTokenExpires?: number
+    id: string | number; // API returns id as string (e.g., "NV001")
+    username: string;
+    name: string;
+    email: string;
+    avatar: string;
+    accessToken?: string;
+    refreshToken?: string;
+    accessTokenExpires?: number;
   }
 
   interface Session {
-    user: User
-    accessToken?: string
-    refreshToken?: string
-    error?: 'RefreshAccessTokenError'
+    user: User;
+    accessToken?: string;
+    refreshToken?: string;
+    error?: 'RefreshAccessTokenError';
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    user: User
-    accessToken?: string
-    refreshToken?: string
-    accessTokenExpires?: number
-    lastRefreshed?: number
-    error?: 'RefreshAccessTokenError'
+    user: User;
+    accessToken?: string;
+    refreshToken?: string;
+    accessTokenExpires?: number;
+    lastRefreshed?: number;
+    error?: 'RefreshAccessTokenError';
   }
 }

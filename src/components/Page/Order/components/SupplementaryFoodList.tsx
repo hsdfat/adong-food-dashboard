@@ -8,24 +8,24 @@ import useDictionary from '@/locales/dictionary-hook'
 import SupplementaryFoodRow from './SupplementaryFoodRow'
 
 interface SupplementaryFoodItem {
-  id: string
-  nguyenLieuId: string
-  tenNguyenLieu: string
-  donViTinh: string
-  dinhMuc: number
-  soSuat: number
-  soLuong: number
-  ghiChu?: string
+  id: string;
+  nguyenLieuId: string;
+  tenNguyenLieu: string;
+  donViTinh: string;
+  dinhMuc: number;
+  soSuat: number;
+  soLuong: number;
+  ghiChu?: string;
 }
 
 interface SupplementaryFoodListProps {
-  items: SupplementaryFoodItem[]
-  onAdd: () => void
-  onDinhMucChange: (id: string, dinhMuc: number) => void
-  onSoSuatChange: (id: string, soSuat: number) => void
-  onNoteChange: (id: string, note: string) => void
-  onRemove: (id: string) => void
-  formatNumber: (num: number) => string
+  items: SupplementaryFoodItem[];
+  onAdd: () => void;
+  onDinhMucChange: (id: string, dinhMuc: number) => void;
+  onSoSuatChange: (id: string, soSuat: number) => void;
+  onNoteChange: (id: string, note: string) => void;
+  onRemove: (id: string) => void;
+  formatNumber: (num: number) => string;
 }
 
 export default function SupplementaryFoodList({

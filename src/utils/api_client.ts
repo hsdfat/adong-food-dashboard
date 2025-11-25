@@ -1,4 +1,4 @@
-'use server';
+'use server'
 
 import { authOptions } from '@/app/api/auth/option'
 import { getServerSession } from 'next-auth'
@@ -259,9 +259,12 @@ async function apiClient<T>(
     }
     // Check if it's a redirect error (Next.js redirect throws)
     if (error && typeof error === 'object' && 'digest' in error) {
+      // Next.js redirects throw special objects, not Error instances
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw error
     }
-    throw new ApiError(0, 'Network error')
+    const errorMessage = error instanceof Error ? error.message : 'Network error'
+    throw new ApiError(0, errorMessage)
   }
 }
 

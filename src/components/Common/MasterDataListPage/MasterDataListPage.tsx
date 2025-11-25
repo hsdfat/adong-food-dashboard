@@ -25,25 +25,25 @@ import LoadingState from '@/components/Common/LoadingState/LoadingState'
 import ActionButton from '@/components/Common/ActionButton/ActionButton'
 
 export interface MasterDataListPageProps<T> {
-  title: string
-  addNewLabel: string
-  createPath: string
-  searchPlaceholder?: string
-  emptyMessage?: string
-  loadingMessage?: string
-  columns: TableColumn[]
-  actions: TableAction[]
-  data: ResourceCollection<T> | null
-  loading: boolean
-  error: string
-  onLoadData: (page: number, perPage: number, search: string) => Promise<void>
-  onDelete?: (id: string, item: T) => Promise<void>
-  onError?: (error: string) => void
-  getItemName?: (item: T) => string
-  getItemId?: (item: T) => string
-  basePath: string
-  dictKey?: string
-  actionsColumnPosition?: string // Column key after which the Actions column should be placed (e.g., 'id' or 'name')
+  title: string;
+  addNewLabel: string;
+  createPath: string;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  loadingMessage?: string;
+  columns: TableColumn[];
+  actions: TableAction[];
+  data: ResourceCollection<T> | null;
+  loading: boolean;
+  error: string;
+  onLoadData: (page: number, perPage: number, search: string) => Promise<void>;
+  onDelete?: (id: string, item: T) => Promise<void>;
+  onError?: (error: string) => void;
+  getItemName?: (item: T) => string;
+  getItemId?: (item: T) => string;
+  basePath: string;
+  dictKey?: string;
+  actionsColumnPosition?: string; // Column key after which the Actions column should be placed (e.g., 'id' or 'name')
 }
 
 function MasterDataListPage<T extends Record<string, any>>({

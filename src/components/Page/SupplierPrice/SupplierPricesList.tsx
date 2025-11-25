@@ -55,8 +55,8 @@ const parseDateInput = (dateString: string) => {
 }
 
 interface SupplierPricesListProps {
-  ingredientId?: string
-  supplierId?: string
+  ingredientId?: string;
+  supplierId?: string;
 }
 
 export default function SupplierPricesList({
@@ -163,9 +163,7 @@ export default function SupplierPricesList({
     return new Date(dateString).toLocaleDateString('vi-VN')
   }
 
-  const formatCurrency = (amount: number) => {
-    return amount?.toLocaleString('vi-VN') + ' đ'
-  }
+  const formatCurrency = (amount: number) => `${amount?.toLocaleString('vi-VN')  } đ`
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()

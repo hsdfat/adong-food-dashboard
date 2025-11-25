@@ -56,21 +56,30 @@ export default function StockList() {
       label: dict.inventory?.ingredient || 'Ingredient',
       align: 'left',
       priority: true,
-      render: (value, row) => row.ingredient?.ingredientName || row.ingredientId,
+      render: (value, row) => {
+        const stockRow = row as InventoryStock
+        return stockRow.ingredient?.ingredientName || stockRow.ingredientId
+      },
     },
     {
       key: 'kitchen',
       label: dict.inventory?.kitchen || 'Kitchen',
       align: 'left',
       priority: true,
-      render: (value, row) => row.kitchen?.kitchenName || row.kitchenId,
+      render: (value, row) => {
+        const stockRow = row as InventoryStock
+        return stockRow.kitchen?.kitchenName || stockRow.kitchenId
+      },
     },
     {
       key: 'quantity',
       label: dict.inventory?.quantity || 'Quantity',
       align: 'right',
       priority: true,
-      render: (value, row) => `${value} ${row.unit}`,
+      render: (value, row) => {
+        const stockRow = row as InventoryStock
+        return `${value} ${stockRow.unit}`
+      },
     },
     {
       key: 'minStockLevel',
@@ -89,9 +98,10 @@ export default function StockList() {
       label: dict.inventory?.status || 'Status',
       align: 'center',
       render: (value, row) => {
-        if (!row.minStockLevel) return <Badge bg="secondary">-</Badge>
-        const isLow = row.quantity < row.minStockLevel
-        const isOut = row.quantity === 0
+        const stockRow = row as InventoryStock
+        if (!stockRow.minStockLevel) return <Badge bg="secondary">-</Badge>
+        const isLow = stockRow.quantity < stockRow.minStockLevel
+        const isOut = stockRow.quantity === 0
         if (isOut) return <Badge bg="danger">Out of Stock</Badge>
         if (isLow) return <Badge bg="warning">Low Stock</Badge>
         return <Badge bg="success">In Stock</Badge>
@@ -135,30 +145,28 @@ export default function StockList() {
       columns={columns}
       actions={actions}
       data={
-        stocksData
+        stocksData && stocksData.pagination
           ? {
               data: stocksData.data,
-              meta: stocksData.pagination
-                ? (() => {
-                    const { page, limit, total, total_pages } = stocksData.pagination!
-                    // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
-                    const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
-                    // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
-                    const to = total > 0 
-                      ? (page === 1 
-                          ? Math.min(total, limit)
-                          : Math.min((page - 1) * limit + limit, total))
-                      : 0
-                    return {
-                      current_page: page,
-                      per_page: limit,
-                      total: total,
-                      last_page: total_pages,
-                      from: from,
-                      to: to,
-                    }
-                  })()
-                : undefined,
+              meta: (() => {
+                const { page, limit, total, total_pages } = stocksData.pagination!
+                // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
+                const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
+                // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
+                const to = total > 0
+                  ? (page === 1
+                      ? Math.min(total, limit)
+                      : Math.min((page - 1) * limit + limit, total))
+                  : 0
+                return {
+                  current_page: page,
+                  per_page: limit,
+                  total,
+                  last_page: total_pages,
+                  from,
+                  to,
+                }
+              })(),
             }
           : null
       }

@@ -1,5 +1,5 @@
-'use client';
-import { Metadata } from 'next'
+'use client'
+
 import SupplierPricesList from '@/components/Page/SupplierPrice/SupplierPricesList'
 import useDictionary from '@/locales/dictionary-hook'
 

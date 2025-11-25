@@ -8,30 +8,30 @@ import useOrderDictionary from '../locales/use-order-dictionary'
 import DishRow from './DishRow'
 
 interface DishIngredient {
-  nguyenLieuId: string
-  tenNguyenLieu: string
-  donViTinh: string
-  dinhMuc: number
-  soLuong: number
+  nguyenLieuId: string;
+  tenNguyenLieu: string;
+  donViTinh: string;
+  dinhMuc: number;
+  soLuong: number;
 }
 
 interface OrderDishItem {
-  id: string
-  monanId: string
-  tenMonAn: string
-  soSuat: number
-  ingredients: DishIngredient[]
+  id: string;
+  monanId: string;
+  tenMonAn: string;
+  soSuat: number;
+  ingredients: DishIngredient[];
 }
 
 interface DishListProps {
-  dishes: OrderDishItem[]
-  onAddDish: () => void
-  onPortionsChange: (dishId: string, portions: number) => void
-  onDinhMucChange: (dishId: string, ingredientId: string, dinhMuc: number) => void
-  onRemoveIngredient: (dishId: string, ingredientId: string) => void
-  onAddIngredient: (index: number) => void
-  onRemoveDish: (dishId: string) => void
-  formatNumber: (num: number) => string
+  dishes: OrderDishItem[];
+  onAddDish: () => void;
+  onPortionsChange: (dishId: string, portions: number) => void;
+  onDinhMucChange: (dishId: string, ingredientId: string, dinhMuc: number) => void;
+  onRemoveIngredient: (dishId: string, ingredientId: string) => void;
+  onAddIngredient: (index: number) => void;
+  onRemoveDish: (dishId: string) => void;
+  formatNumber: (num: number) => string;
 }
 
 export default function DishList({

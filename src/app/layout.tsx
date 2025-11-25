@@ -21,7 +21,7 @@ config.autoAddCss = false
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   const cookieStore = cookies()
   const localeCookie = cookieStore.get('locale')?.value

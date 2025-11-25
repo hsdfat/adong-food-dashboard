@@ -1,17 +1,17 @@
 export interface Resource<T> {
-  data: T
+  data: T;
 }
 
 export interface ResourceCollection<T> {
-  data: T[]
+  data: T[];
   meta: {
-    current_page: number
-    last_page: number
-    from: number
-    to: number
-    per_page: number
-    total: number
-  }
+    current_page: number;
+    last_page: number;
+    from: number;
+    to: number;
+    per_page: number;
+    total: number;
+  };
 }
 
 const getTo = (total: number, page: number, perPage: number) => {

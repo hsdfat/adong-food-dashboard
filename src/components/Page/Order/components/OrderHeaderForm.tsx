@@ -7,14 +7,14 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface OrderHeaderFormProps {
-  orderId: string
-  ngayLen: string
-  tenBep: string
-  ghiChu: string
-  onOrderIdChange: (value: string) => void
-  onDateChange: (value: string) => void
-  onKitchenSelect: () => void
-  onNoteChange: (value: string) => void
+  orderId: string;
+  ngayLen: string;
+  tenBep: string;
+  ghiChu: string;
+  onOrderIdChange: (value: string) => void;
+  onDateChange: (value: string) => void;
+  onKitchenSelect: () => void;
+  onNoteChange: (value: string) => void;
 }
 
 export default function OrderHeaderForm({
@@ -36,7 +36,7 @@ export default function OrderHeaderForm({
         <Row>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>{dict.orders?.form_labels?.order_id || 'Order ID'} *</FormLabel>
+              <FormLabel>{(dict.orders as any)?.form_labels?.order_id || 'Order ID'} *</FormLabel>
               <FormControl
                 type="text"
                 value={orderId}
@@ -48,7 +48,7 @@ export default function OrderHeaderForm({
           </Col>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>{dict.orders?.form_labels?.order_date || 'Order Date'} *</FormLabel>
+              <FormLabel>{(dict.orders as any)?.form_labels?.order_date || 'Order Date'} *</FormLabel>
               <FormControl
                 type="date"
                 value={ngayLen}
@@ -62,7 +62,7 @@ export default function OrderHeaderForm({
         <Row>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>{dict.orders?.form_labels?.kitchen_required || 'Kitchen *'}</FormLabel>
+              <FormLabel>{(dict.orders as any)?.form_labels?.kitchen_required || 'Kitchen *'}</FormLabel>
               <InputGroup>
                 <FormControl
                   type="text"
@@ -79,7 +79,7 @@ export default function OrderHeaderForm({
           </Col>
           <Col md={6}>
             <FormGroup className="mb-3">
-              <FormLabel>{dict.orders?.form_labels?.notes || 'Notes'}</FormLabel>
+              <FormLabel>{(dict.orders as any)?.form_labels?.notes || 'Notes'}</FormLabel>
               <FormControl
                 as="textarea"
                 rows={1}

@@ -1,30 +1,30 @@
 export interface Supplier {
-  supplierId: string
-  supplierName: string
-  zaloLink: string
-  address: string
-  phone: string
-  email: string
-  active?: boolean | null
-  createdDate: string
-  modifiedDate: string
+  supplierId: string;
+  supplierName: string;
+  zaloLink: string;
+  address: string;
+  phone: string;
+  email: string;
+  active?: boolean | null;
+  createdDate: string;
+  modifiedDate: string;
 }
 
 export interface CreateSupplierInput {
-  supplierId: string
-  supplierName: string
-  zaloLink?: string
-  address?: string
-  phone?: string
-  email?: string
-  active?: boolean
+  supplierId: string;
+  supplierName: string;
+  zaloLink?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  active?: boolean;
 }
 
 export interface UpdateSupplierInput {
-  supplierName?: string
-  zaloLink?: string
-  address?: string
-  phone?: string
-  email?: string
-  active?: boolean
+  supplierName?: string;
+  zaloLink?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  active?: boolean;
 }

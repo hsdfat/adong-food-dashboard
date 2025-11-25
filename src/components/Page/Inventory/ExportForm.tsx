@@ -32,8 +32,8 @@ import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 
 interface ExportFormProps {
-  exportId?: string
-  isEdit?: boolean
+  exportId?: string;
+  isEdit?: boolean;
 }
 
 export default function ExportForm({
@@ -83,7 +83,7 @@ export default function ExportForm({
         try {
           setLoadingData(true)
           const response = await inventoryExportApi.getById(exportId)
-          const data = response.data
+          const {data} = response
           setExportData(data)
           setKitchenId(data.kitchenId)
           setKitchenName(data.kitchen?.kitchenName || '')
@@ -231,12 +231,10 @@ export default function ExportForm({
     setExportDetails(updated)
   }
 
-  const calculateTotal = () => {
-    return exportDetails.reduce(
+  const calculateTotal = () => exportDetails.reduce(
       (sum, detail) => sum + detail.quantity * (detail.unitCost || 0),
       0,
     )
-  }
 
   if (loadingData) {
     return <div>Loading...</div>
@@ -498,7 +496,7 @@ export default function ExportForm({
                       {new Intl.NumberFormat('vi-VN').format(calculateTotal())}
                     </strong>
                   </td>
-                  <td colSpan={2}></td>
+                  <td colSpan={2} />
                 </tr>
               </tfoot>
             </Table>

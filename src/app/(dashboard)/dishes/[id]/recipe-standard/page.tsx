@@ -1,8 +1,8 @@
 // app/(dashboard)/recipe-standards/page.tsx
 
-'use client';
+'use client'
 
-import React from 'react';
+import React from 'react'
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import RecipeStandardsList from '@/components/Page/RecipeStandard/RecipeStandardsList'
 import useDictionary from '@/locales/dictionary-hook'

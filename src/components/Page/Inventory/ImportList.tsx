@@ -66,7 +66,10 @@ export default function ImportList() {
       label: dict.inventory?.kitchen || 'Kitchen',
       align: 'left',
       priority: true,
-      render: (value, row) => row.kitchen?.kitchenName || row.kitchenId,
+      render: (value, row) => {
+        const importRow = row as InventoryImport
+        return importRow.kitchen?.kitchenName || importRow.kitchenId
+      },
     },
     {
       key: 'importDate',
@@ -79,7 +82,10 @@ export default function ImportList() {
       key: 'supplier',
       label: dict.inventory?.supplier || 'Supplier',
       align: 'left',
-      render: (value, row) => row.supplier?.supplierName || row.supplierId || '-',
+      render: (value, row) => {
+        const importRow = row as InventoryImport
+        return importRow.supplier?.supplierName || importRow.supplierId || '-'
+      },
     },
     {
       key: 'totalAmount',
@@ -162,30 +168,28 @@ export default function ImportList() {
       columns={columns}
       actions={actions}
       data={
-        importsData
+        importsData && importsData.pagination
           ? {
               data: importsData.data,
-              meta: importsData.pagination
-                ? (() => {
-                    const { page, limit, total, total_pages } = importsData.pagination!
-                    // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
-                    const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
-                    // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
-                    const to = total > 0 
-                      ? (page === 1 
-                          ? Math.min(total, limit)
-                          : Math.min((page - 1) * limit + limit, total))
-                      : 0
-                    return {
-                      current_page: page,
-                      per_page: limit,
-                      total: total,
-                      last_page: total_pages,
-                      from: from,
-                      to: to,
-                    }
-                  })()
-                : undefined,
+              meta: (() => {
+                const { page, limit, total, total_pages } = importsData.pagination!
+                // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
+                const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
+                // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
+                const to = total > 0
+                  ? (page === 1
+                      ? Math.min(total, limit)
+                      : Math.min((page - 1) * limit + limit, total))
+                  : 0
+                return {
+                  current_page: page,
+                  per_page: limit,
+                  total,
+                  last_page: total_pages,
+                  from,
+                  to,
+                }
+              })(),
             }
           : null
       }

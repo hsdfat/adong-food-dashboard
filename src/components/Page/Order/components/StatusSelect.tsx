@@ -7,14 +7,14 @@ import { faSave, faXmark } from '@fortawesome/free-solid-svg-icons'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface StatusSelectProps {
-  currentStatus: string
-  allStatuses: string[]
-  isChanged: boolean
-  isSaving: boolean
-  colors: { bg: string; text: string; border: string }
-  onStatusChange: (newStatus: string) => void
-  onSave: () => void
-  onDiscard: () => void
+  currentStatus: string;
+  allStatuses: string[];
+  isChanged: boolean;
+  isSaving: boolean;
+  colors: { bg: string; text: string; border: string };
+  onStatusChange: (newStatus: string) => void;
+  onSave: () => void;
+  onDiscard: () => void;
 }
 
 export default function StatusSelect({

@@ -19,8 +19,8 @@ import {
 import useDictionary from '@/locales/dictionary-hook'
 
 interface SupplierFormProps {
-  supplier?: Supplier
-  isEdit?: boolean
+  supplier?: Supplier;
+  isEdit?: boolean;
 }
 
 export default function SupplierForm({

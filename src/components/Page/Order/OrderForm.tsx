@@ -17,7 +17,6 @@ import {
   faTimes,
   faFileAlt,
 } from '@fortawesome/free-solid-svg-icons'
-import useOrderDictionary from './locales/use-order-dictionary'
 import {
   kitchenApi,
   dishApi,
@@ -25,13 +24,13 @@ import {
   recipeStandardApi,
   orderApi,
 } from '@/services'
-import { Kitchen, RecipeStandard } from '@/models'
-import { Dish as DishModel, Ingredient as IngredientModel } from '@/models'
+import { Kitchen, RecipeStandard , Dish as DishModel, Ingredient as IngredientModel } from '@/models'
 import { CreateOrderInput } from '@/models/order'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
+import useOrderDictionary from './locales/use-order-dictionary'
 import OrderHeaderForm from './components/OrderHeaderForm'
 import DishList from './components/DishList'
 import SupplementaryFoodList from './components/SupplementaryFoodList'
@@ -40,71 +39,71 @@ import TotalIngredientsSummary from './components/TotalIngredientsSummary'
 // ==================== TYPE DEFINITIONS ====================
 
 interface OrderIngredient {
-  nguyenLieuId: string
-  tenNguyenLieu: string
-  donViTinh: string
-  dinhMuc: number
+  nguyenLieuId: string;
+  tenNguyenLieu: string;
+  donViTinh: string;
+  dinhMuc: number;
 }
 
 interface OrderDishItem {
-  id: string
-  monanId: string
-  tenMonAn: string
-  soSuat: number
+  id: string;
+  monanId: string;
+  tenMonAn: string;
+  soSuat: number;
   ingredients: {
-    nguyenLieuId: string
-    tenNguyenLieu: string
-    donViTinh: string
-    dinhMuc: number
-    soLuong: number
-  }[]
+    nguyenLieuId: string;
+    tenNguyenLieu: string;
+    donViTinh: string;
+    dinhMuc: number;
+    soLuong: number;
+  }[];
 }
 
 interface SupplementaryFoodItem {
-  id: string
-  nguyenLieuId: string
-  tenNguyenLieu: string
-  donViTinh: string
-  dinhMuc: number
-  soSuat: number
-  soLuong: number
-  ghiChu?: string
+  id: string;
+  nguyenLieuId: string;
+  tenNguyenLieu: string;
+  donViTinh: string;
+  dinhMuc: number;
+  soSuat: number;
+  soLuong: number;
+  ghiChu?: string;
 }
 
 interface TotalIngredient {
-  ingredientId: string
-  ingredientName: string
-  totalQuantity: number
-  unit: string
+  ingredientId: string;
+  ingredientName: string;
+  totalQuantity: number;
+  unit: string;
 }
 
 interface BestSupplier {
-  productId: number
-  productName: string
-  supplierId: string
-  supplierName: string
-  unitPrice: number
-  unit: string
-  specification: string
-  isFavorite: boolean
-  isLowestPrice: boolean
-  totalCost: number
+  productId: number;
+  productName: string;
+  supplierId: string;
+  supplierName: string;
+  unitPrice: number;
+  unit: string;
+  specification: string;
+  isFavorite: boolean;
+  isLowestPrice: boolean;
+  totalCost: number;
 }
 
 interface BestSupplierResponse {
   ingredients: Array<{
-    ingredientId: string
-    ingredientName: string
-    totalQuantity: number
-    unit: string
-    bestSupplier: BestSupplier | null
-  }>
+    ingredientId: string;
+    ingredientName: string;
+    totalQuantity: number;
+    unit: string;
+    bestSupplier: BestSupplier | null;
+  }>;
 }
 
 interface OrderFormProps {
-  orderId?: string
-  isEdit?: boolean
-  preFillData?: any // Data to pre-fill the form with
+  orderId?: string;
+  isEdit?: boolean;
+  preFillData?: any; // Data to pre-fill the form with
 }
 
 // ==================== MAIN COMPONENT ====================
@@ -350,7 +349,8 @@ export default function OrderForm({
       const newAvailableSuppliers: Record<string, SupplierPrice[]> = {}
       const newBestSuppliers: Record<string, BestSupplier | null> = {}
 
-      for (const ingData of data.ingredients) {
+      // Use Promise.all to avoid await in loop
+      await Promise.all(data.ingredients.map(async (ingData) => {
         const ingId = ingData.ingredientId
 
         // Store best supplier info
@@ -437,7 +437,7 @@ export default function OrderForm({
           // If we have a best supplier but failed to load others, still show the best supplier
           newAvailableSuppliers[ingId] = bestSupplierData ? [bestSupplierData] : []
         }
-      }
+      }))
 
       // Merge with existing selections (keep user's manual selections)
       setSupplierSelections((prev) => ({
@@ -660,9 +660,9 @@ export default function OrderForm({
             nguyenLieuId: ingredient.ingredientId,
             tenNguyenLieu: ingredient.ingredientName,
             donViTinh: ingredient.unit,
-            dinhMuc: dinhMuc,
+            dinhMuc,
             soSuat: supplementaryAmount,
-            soLuong: soLuong,
+            soLuong,
             ghiChu: '',
           }
         })
@@ -842,7 +842,7 @@ export default function OrderForm({
 
     try {
       const orderData: CreateOrderInput = {
-        orderId: orderId,
+        orderId,
         kitchenId: bepId,
         orderDate: ngayLen,
         note: ghiChu,

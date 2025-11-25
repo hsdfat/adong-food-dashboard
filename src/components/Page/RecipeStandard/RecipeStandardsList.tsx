@@ -13,7 +13,7 @@ import {
 } from '@/components/Common/MasterDataTable/MasterDataTable'
 
 interface RecipeStandardsListProps {
-  dishId?: string
+  dishId?: string;
 }
 
 export default function RecipeStandardsList({
@@ -103,7 +103,7 @@ export default function RecipeStandardsList({
       key: 'amount',
       label: dict.recipe_standards?.amount ?? 'Amount',
       align: 'right',
-      render: (value) => value?.toLocaleString('vi-VN') + ' VNĐ',
+      render: (value) => `${value?.toLocaleString('vi-VN')  } VNĐ`,
     },
     {
       key: 'note',

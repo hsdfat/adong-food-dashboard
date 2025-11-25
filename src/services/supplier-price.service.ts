@@ -15,13 +15,13 @@ export const supplierPriceApi = {
    * Get all supplier prices with pagination and search
    */
   async getAll(params?: {
-    page?: number
-    per_page?: number
-    search?: string
-    sortBy?: string
-    sortDir?: 'asc' | 'desc'
-    effectiveFrom?: string
-    effectiveTo?: string
+    page?: number;
+    per_page?: number;
+    search?: string;
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
+    effectiveFrom?: string;
+    effectiveTo?: string;
   }): Promise<SupplierPriceListResponse> {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
@@ -36,21 +36,21 @@ export const supplierPriceApi = {
       queryParams.append('effective_to', params.effectiveTo)
 
     const url = `${BASE_URL}?${queryParams.toString()}`
-    return await apiClient<SupplierPriceListResponse>(url)
+    return apiClient<SupplierPriceListResponse>(url)
   },
 
   /**
    * Get supplier price by ID
    */
   async getById(id: number): Promise<SupplierPrice> {
-    return await apiClient<SupplierPrice>(`${BASE_URL}/${id}`)
+    return apiClient<SupplierPrice>(`${BASE_URL}/${id}`)
   },
 
   /**
    * Get supplier prices by ingredient ID
    */
   async getByIngredient(ingredientId: string): Promise<SupplierPrice[]> {
-    return await apiClient<SupplierPrice[]>(
+    return apiClient<SupplierPrice[]>(
       `${BASE_URL}/ingredient/${ingredientId}`,
     )
   },
@@ -59,7 +59,7 @@ export const supplierPriceApi = {
    * Get supplier prices by supplier ID
    */
   async getBySupplier(supplierId: string): Promise<SupplierPrice[]> {
-    return await apiClient<SupplierPrice[]>(
+    return apiClient<SupplierPrice[]>(
       `${BASE_URL}/supplier/${supplierId}`,
     )
   },
@@ -68,7 +68,7 @@ export const supplierPriceApi = {
    * Create new supplier price
    */
   async create(data: CreateSupplierPriceInput): Promise<SupplierPrice> {
-    return await apiClient<SupplierPrice>(BASE_URL, {
+    return apiClient<SupplierPrice>(BASE_URL, {
       method: 'POST',
       body: JSON.stringify(data),
     })
@@ -81,7 +81,7 @@ export const supplierPriceApi = {
     id: number,
     data: UpdateSupplierPriceInput,
   ): Promise<SupplierPrice> {
-    return await apiClient<SupplierPrice>(`${BASE_URL}/${id}`, {
+    return apiClient<SupplierPrice>(`${BASE_URL}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
@@ -91,7 +91,7 @@ export const supplierPriceApi = {
    * Delete supplier price
    */
   async delete(id: number): Promise<void> {
-    return await apiClient(`${BASE_URL}/${id}`, {
+    return apiClient(`${BASE_URL}/${id}`, {
       method: 'DELETE',
     })
   },
@@ -100,7 +100,7 @@ export const supplierPriceApi = {
    * Get active prices for an ingredient
    */
   async getActivePrices(ingredientId: string): Promise<SupplierPrice[]> {
-    return await apiClient<SupplierPrice[]>(
+    return apiClient<SupplierPrice[]>(
       `${BASE_URL}/ingredient/${ingredientId}/active`,
     )
   },

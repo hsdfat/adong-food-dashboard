@@ -1,6 +1,6 @@
-'use server';
+'use server'
 
-import { Card, CardBody, CardHeader } from 'react-bootstrap';
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import KitchenForm from '@/components/Page/Kitchen/KitchenForm'
 import { notFound } from 'next/navigation'
 import { kitchenApi } from '@/services'

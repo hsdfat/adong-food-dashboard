@@ -1,12 +1,13 @@
-'use client';
+'use client'
+
 import React from 'react'
 import { Card, CardBody } from 'react-bootstrap'
 import ExportDetail from '@/components/Page/Inventory/ExportDetail'
 
 interface PageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
 export default function Page({ params }: PageProps) {

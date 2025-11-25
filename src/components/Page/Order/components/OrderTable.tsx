@@ -7,20 +7,20 @@ import useDictionary from '@/locales/dictionary-hook'
 import OrderRow from './OrderRow'
 
 interface OrderTableProps {
-  orders: OrderDTO[]
-  allStatuses: string[]
-  hasActiveFilters: boolean
-  getCurrentStatus: (orderId: string) => string
-  isStatusChanged: (orderId: string) => boolean
-  isSavingStatus: (orderId: string) => boolean
-  getStatusColors: (status: string) => { bg: string; text: string; border: string }
-  onStatusChange: (orderId: string, newStatus: string) => void
-  onSaveStatus: (orderId: string) => void
-  onDiscardStatus: (orderId: string) => void
-  onView: (orderId: string) => void
-  onViewIngredients: (orderId: string) => void
-  onViewSupplierRequests: (orderId: string) => void
-  onDelete: (orderId: string) => void
+  orders: OrderDTO[];
+  allStatuses: string[];
+  hasActiveFilters: boolean;
+  getCurrentStatus: (orderId: string) => string;
+  isStatusChanged: (orderId: string) => boolean;
+  isSavingStatus: (orderId: string) => boolean;
+  getStatusColors: (status: string) => { bg: string; text: string; border: string };
+  onStatusChange: (orderId: string, newStatus: string) => void;
+  onSaveStatus: (orderId: string) => void;
+  onDiscardStatus: (orderId: string) => void;
+  onView: (orderId: string) => void;
+  onViewIngredients: (orderId: string) => void;
+  onViewSupplierRequests: (orderId: string) => void;
+  onDelete: (orderId: string) => void;
 }
 
 export default function OrderTable({

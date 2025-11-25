@@ -39,7 +39,7 @@ import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
 
 interface KitchenFavoriteSuppliersListProps {
-  kitchenId: string
+  kitchenId: string;
 }
 
 export default function KitchenFavoriteSuppliersList({

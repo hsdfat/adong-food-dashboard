@@ -9,7 +9,7 @@ import useDictionary from '@/locales/dictionary-hook'
 import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 
 interface StockFormProps {
-  stockId: number
+  stockId: number;
 }
 
 export default function StockForm({ stockId }: StockFormProps) {

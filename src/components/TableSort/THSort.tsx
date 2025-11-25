@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type Props = {
-  name: string
+  name: string;
 } & PropsWithChildren
 
 export default function THSort(props: Props) {

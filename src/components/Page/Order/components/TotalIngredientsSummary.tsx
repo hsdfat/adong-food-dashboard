@@ -8,34 +8,34 @@ import useDictionary from '@/locales/dictionary-hook'
 import { SupplierPrice } from '@/models/supplier-price'
 
 interface TotalIngredient {
-  ingredientId: string
-  ingredientName: string
-  totalQuantity: number
-  unit: string
+  ingredientId: string;
+  ingredientName: string;
+  totalQuantity: number;
+  unit: string;
 }
 
 interface BestSupplier {
-  productId: number
-  productName: string
-  supplierId: string
-  supplierName: string
-  unitPrice: number
-  unit: string
-  specification: string
-  isFavorite: boolean
-  isLowestPrice: boolean
-  totalCost: number
+  productId: number;
+  productName: string;
+  supplierId: string;
+  supplierName: string;
+  unitPrice: number;
+  unit: string;
+  specification: string;
+  isFavorite: boolean;
+  isLowestPrice: boolean;
+  totalCost: number;
 }
 
 interface TotalIngredientsSummaryProps {
-  ingredients: TotalIngredient[]
-  loading: boolean
-  availableSuppliers: Record<string, SupplierPrice[]>
-  supplierSelections: Record<string, number | ''>
-  bestSuppliers?: Record<string, BestSupplier | null>
-  onRefresh: () => void
-  onSupplierChange: (ingredientId: string, productIdStr: string) => void
-  formatNumber: (num: number) => string
+  ingredients: TotalIngredient[];
+  loading: boolean;
+  availableSuppliers: Record<string, SupplierPrice[]>;
+  supplierSelections: Record<string, number | ''>;
+  bestSuppliers?: Record<string, BestSupplier | null>;
+  onRefresh: () => void;
+  onSupplierChange: (ingredientId: string, productIdStr: string) => void;
+  formatNumber: (num: number) => string;
 }
 
 export default function TotalIngredientsSummary({

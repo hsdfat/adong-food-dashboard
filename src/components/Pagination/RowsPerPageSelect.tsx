@@ -5,7 +5,7 @@ import React from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type Props = {
-  perPage: number
+  perPage: number;
 }
 
 export default function RowPerPageSelect(props: Props) {

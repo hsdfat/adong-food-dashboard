@@ -6,19 +6,19 @@ import StatusSelect from './StatusSelect'
 import OrderActions from './OrderActions'
 
 interface OrderRowProps {
-  order: OrderDTO
-  allStatuses: string[]
-  getCurrentStatus: (orderId: string) => string
-  isStatusChanged: (orderId: string) => boolean
-  isSavingStatus: (orderId: string) => boolean
-  getStatusColors: (status: string) => { bg: string; text: string; border: string }
-  onStatusChange: (orderId: string, newStatus: string) => void
-  onSaveStatus: (orderId: string) => void
-  onDiscardStatus: (orderId: string) => void
-  onView: (orderId: string) => void
-  onViewIngredients: (orderId: string) => void
-  onViewSupplierRequests: (orderId: string) => void
-  onDelete: (orderId: string) => void
+  order: OrderDTO;
+  allStatuses: string[];
+  getCurrentStatus: (orderId: string) => string;
+  isStatusChanged: (orderId: string) => boolean;
+  isSavingStatus: (orderId: string) => boolean;
+  getStatusColors: (status: string) => { bg: string; text: string; border: string };
+  onStatusChange: (orderId: string, newStatus: string) => void;
+  onSaveStatus: (orderId: string) => void;
+  onDiscardStatus: (orderId: string) => void;
+  onView: (orderId: string) => void;
+  onViewIngredients: (orderId: string) => void;
+  onViewSupplierRequests: (orderId: string) => void;
+  onDelete: (orderId: string) => void;
 }
 
 export default function OrderRow({

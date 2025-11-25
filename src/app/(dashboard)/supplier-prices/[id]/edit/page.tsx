@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import SupplierPriceForm from '@/components/Page/SupplierPrice/SupplierPriceForm'
 import { SupplierPrice } from '@/models/supplier-price'
@@ -16,16 +16,10 @@ export default function EditSupplierPricePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (id) {
-      loadSupplierPrice()
-    }
-  }, [id])
-
-  const loadSupplierPrice = async () => {
+  const loadSupplierPrice = useCallback(async () => {
     try {
       setLoading(true)
-      const data = await supplierPriceApi.getById(parseInt(id))
+      const data = await supplierPriceApi.getById(parseInt(id, 10))
       setSupplierPrice(data)
     } catch (err) {
       setError('Failed to load supplier price')
@@ -33,7 +27,13 @@ export default function EditSupplierPricePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
+
+  useEffect(() => {
+    if (id) {
+      loadSupplierPrice()
+    }
+  }, [id, loadSupplierPrice])
 
   if (loading) {
     return <div className="text-center py-4">Loading...</div>

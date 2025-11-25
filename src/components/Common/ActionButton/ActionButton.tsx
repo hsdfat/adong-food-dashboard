@@ -15,16 +15,16 @@ export interface ActionButtonProps {
     | 'info'
     | 'light'
     | 'dark'
-    | 'link'
-  size?: 'sm' | 'lg'
-  loading?: boolean
-  disabled?: boolean
-  icon?: IconDefinition
-  loadingLabel?: string
-  children: React.ReactNode
-  onClick?: () => void | Promise<void>
-  type?: 'button' | 'submit' | 'reset'
-  className?: string
+    | 'link';
+  size?: 'sm' | 'lg';
+  loading?: boolean;
+  disabled?: boolean;
+  icon?: IconDefinition;
+  loadingLabel?: string;
+  children: React.ReactNode;
+  onClick?: () => void | Promise<void>;
+  type?: 'button' | 'submit' | 'reset';
+  className?: string;
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({

@@ -25,16 +25,16 @@ import OrderTable from './components/OrderTable'
 // ==================== TYPE DEFINITIONS ====================
 
 interface FilterState {
-  searchQuery: string
-  dateFrom: string
-  dateTo: string
-  showFilters: boolean
+  searchQuery: string;
+  dateFrom: string;
+  dateTo: string;
+  showFilters: boolean;
 }
 
 interface StatusState {
-  original: Record<string, string>
-  edited: Record<string, string>
-  saving: Record<string, boolean>
+  original: Record<string, string>;
+  edited: Record<string, string>;
+  saving: Record<string, boolean>;
 }
 
 // ==================== CONSTANTS ====================
@@ -293,13 +293,13 @@ function OrdersList() {
           // Revert to original - remove from edited
           const { [orderId]: _, ...remainingEdited } = prev.edited
           return { ...prev, edited: remainingEdited }
-        } else {
+        } 
           // Status changed - add to edited
           return {
             ...prev,
             edited: { ...prev.edited, [orderId]: newStatus },
           }
-        }
+        
       })
     },
     [],
@@ -393,27 +393,21 @@ function OrdersList() {
   // ==================== HELPER FUNCTIONS ====================
 
   const getCurrentStatus = useCallback(
-    (orderId: string): string => {
-      return (
+    (orderId: string): string => (
         statusState.edited[orderId] ||
         statusState.original[orderId] ||
         'Pending'
-      )
-    },
+      ),
     [statusState.edited, statusState.original],
   )
 
   const isStatusChanged = useCallback(
-    (orderId: string): boolean => {
-      return orderId in statusState.edited
-    },
+    (orderId: string): boolean => orderId in statusState.edited,
     [statusState.edited],
   )
 
   const isSavingStatus = useCallback(
-    (orderId: string): boolean => {
-      return Boolean(statusState.saving[orderId])
-    },
+    (orderId: string): boolean => Boolean(statusState.saving[orderId]),
     [statusState.saving],
   )
 

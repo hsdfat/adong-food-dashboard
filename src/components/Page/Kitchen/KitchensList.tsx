@@ -111,11 +111,6 @@ export default function KitchenesList() {
       },
       icon: <FontAwesomeIcon icon={faHeart} />,
     },
-    {
-      label: dict.action?.delete || 'Delete',
-      variant: 'danger',
-      loadingLabel: 'Deleting...',
-    },
   ]
 
   return (

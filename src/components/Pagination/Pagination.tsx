@@ -5,7 +5,7 @@ import RowsPerPage from '@/components/Pagination/RowsPerPage'
 import Summary from '@/components/Pagination/Summary'
 
 type Props = {
-  meta: ResourceCollection<unknown>['meta']
+  meta: ResourceCollection<unknown>['meta'];
 }
 
 export default function Pagination(props: Props) {

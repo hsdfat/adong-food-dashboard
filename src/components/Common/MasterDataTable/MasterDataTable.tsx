@@ -81,7 +81,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
     row: unknown,
     index: number,
   ) => {
-    const rowWithId = row as { id?: string | number; key?: string | number };
+    const rowWithId = row as { id?: string | number; key?: string | number }
     const actionKey = `${action.label}-${rowWithId.id || rowWithId.key || index}`
 
     if (loadingActions.has(actionKey)) {
@@ -104,7 +104,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
   }
 
   const renderCell = (column: TableColumn, row: unknown, index: number) => {
-    const rowRecord = row as Record<string, unknown>;
+    const rowRecord = row as Record<string, unknown>
     const value = rowRecord[column.key]
 
     let cellContent: React.ReactNode
@@ -137,8 +137,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
       return null
     }
 
-    const rowWithId = row as { id?: string | number; key?: string | number };
-    const rowId = rowWithId.id || rowWithId.key || index;
+    const rowWithId = row as { id?: string | number; key?: string | number }
+    const rowId = rowWithId.id || rowWithId.key || index
 
     // Always use dropdown with 3 dots
     return (
@@ -288,8 +288,8 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
       </thead>
       <tbody>
         {data.map((row, index) => {
-          const rowWithId = row as { id?: string | number; key?: string | number };
-          const rowKey = rowWithId.id || rowWithId.key || index;
+          const rowWithId = row as { id?: string | number; key?: string | number }
+          const rowKey = rowWithId.id || rowWithId.key || index
           return (
           <tr key={rowKey}>
             {columns.map((column, colIndex) => {
@@ -327,7 +327,7 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
                 </td>
               )}
           </tr>
-          );
+          )
         })}
       </tbody>
     </Table>

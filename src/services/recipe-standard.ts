@@ -12,11 +12,11 @@ const BASE_URL = '/api/recipe-standards'
 export const recipeStandardApi = {
   // Get all recipe standards with pagination and search
   getAll: async (params?: {
-    page?: number
-    per_page?: number
-    search?: string
-    sortBy?: string
-    sortDir?: 'asc' | 'desc'
+    page?: number;
+    per_page?: number;
+    search?: string;
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
   }): Promise<ResourceCollection<RecipeStandard>> => {
     const queryParams = new URLSearchParams()
     if (params?.page) queryParams.append('page', params.page.toString())
@@ -30,7 +30,7 @@ export const recipeStandardApi = {
       ? `${BASE_URL}?${queryParams.toString()}`
       : BASE_URL
 
-    return await apiClient<ResourceCollection<RecipeStandard>>(url)
+    return apiClient<ResourceCollection<RecipeStandard>>(url)
   },
 
   // Get recipe standard by ID
@@ -42,11 +42,9 @@ export const recipeStandardApi = {
   // Get recipe standards by dish ID
   getByDish: async (
     dishId: string,
-  ): Promise<ResourceCollection<RecipeStandard>> => {
-    return await apiClient<ResourceCollection<RecipeStandard>>(
+  ): Promise<ResourceCollection<RecipeStandard>> => apiClient<ResourceCollection<RecipeStandard>>(
       `${BASE_URL}/dish/${dishId}`,
-    )
-  },
+    ),
 
   // Create new recipe standard
   create: async (data: CreateRecipeStandardInput): Promise<RecipeStandard> => {

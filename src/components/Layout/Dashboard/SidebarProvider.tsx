@@ -15,7 +15,7 @@ type SidebarContextType = {
 
 export const SidebarContext = createContext<SidebarContextType>({
   showSidebarState: [false, () => {}],
-});
+})
 
 export default function SidebarProvider({
   children,

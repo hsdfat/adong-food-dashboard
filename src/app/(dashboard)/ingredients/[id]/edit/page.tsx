@@ -1,7 +1,7 @@
 import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import IngredientForm from '@/components/Page/Ingredient/IngredientForm'
 import { notFound } from 'next/navigation'
-import { dishApi, ingredientApi } from '@/services'
+import { ingredientApi } from '@/services'
 import { Ingredient } from '@/models'
 import { getDictionary } from '@/locales/dictionary'
 

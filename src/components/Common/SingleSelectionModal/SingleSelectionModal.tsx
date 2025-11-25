@@ -103,8 +103,8 @@ export default function SingleSelectionModal<
                       onClick={() => handleSelect(item)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleSelect(item);
+                          e.preventDefault()
+                          handleSelect(item)
                         }
                       }}
                       role="button"

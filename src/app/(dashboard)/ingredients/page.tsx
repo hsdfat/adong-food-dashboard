@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { Card, CardBody, CardHeader } from 'react-bootstrap';
-import IngredientsList from '@/components/Page/Ingredient/IngredientList';
-import useDictionary from '@/locales/dictionary-hook';
+import React from 'react'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import IngredientsList from '@/components/Page/Ingredient/IngredientList'
+import useDictionary from '@/locales/dictionary-hook'
 
 export default function Page() {
   const dict = useDictionary()

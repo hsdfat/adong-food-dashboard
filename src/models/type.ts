@@ -1,6 +1,6 @@
 export interface Type {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 export enum TypeIdentifier {

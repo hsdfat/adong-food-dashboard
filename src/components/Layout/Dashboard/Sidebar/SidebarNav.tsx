@@ -3,8 +3,8 @@ import {
   faPuzzlePiece,
   faUtensils,
   faBoxes,
-} from '@fortawesome/free-solid-svg-icons';
-import React, { PropsWithChildren } from 'react';
+} from '@fortawesome/free-solid-svg-icons'
+import React, { PropsWithChildren } from 'react'
 import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
 import SidebarNavItem from '@/components/Layout/Dashboard/Sidebar/SidebarNavItem'
 import { getDictionary } from '@/locales/dictionary'

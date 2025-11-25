@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Card, CardBody, CardHeader } from 'react-bootstrap';
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import DishForm from '@/components/Page/Dish/DishForm'
 import useDictionary from '@/locales/dictionary-hook'
 

@@ -8,17 +8,17 @@ import SaveButton from '@/components/Common/SaveButton/SaveButton'
 import ActionButton from '@/components/Common/ActionButton/ActionButton'
 
 export interface MasterDataFormPageProps {
-  title: string
-  children: React.ReactNode
-  onSubmit: (e: React.FormEvent) => Promise<void>
-  onCancel?: () => void
-  cancelPath: string
-  loading?: boolean
-  error?: string
-  success?: string
-  submitLabel?: string
-  cancelLabel?: string
-  className?: string
+  title: string;
+  children: React.ReactNode;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onCancel?: () => void;
+  cancelPath: string;
+  loading?: boolean;
+  error?: string;
+  success?: string;
+  submitLabel?: string;
+  cancelLabel?: string;
+  className?: string;
 }
 
 const MasterDataFormPage: React.FC<MasterDataFormPageProps> = ({

@@ -4,10 +4,10 @@ import React from 'react'
 import { Card, CardBody, Spinner } from 'react-bootstrap'
 
 export interface LoadingStateProps {
-  message?: string
-  fullHeight?: boolean
-  size?: 'sm' | 'lg'
-  className?: string
+  message?: string;
+  fullHeight?: boolean;
+  size?: 'sm' | 'lg';
+  className?: string;
 }
 
 const LoadingState: React.FC<LoadingStateProps> = ({
@@ -22,7 +22,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
   const style = fullHeight ? { minHeight: '400px' } : {}
 
   // Spinner only accepts 'sm' | undefined, so map 'lg' to undefined (default size)
-  const spinnerSize = size === 'lg' ? undefined : size;
+  const spinnerSize = size === 'lg' ? undefined : size
 
   return (
     <div className={containerClass} style={style}>
@@ -43,14 +43,12 @@ const LoadingState: React.FC<LoadingStateProps> = ({
 export const LoadingStateCard: React.FC<LoadingStateProps> = ({
   message = 'Loading...',
   ...props
-}) => {
-  return (
+}) => (
     <Card>
       <CardBody>
         <LoadingState message={message} {...props} />
       </CardBody>
     </Card>
   )
-}
 
 export default LoadingState

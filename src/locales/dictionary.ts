@@ -19,11 +19,9 @@ export const getLocale = (localeCookie?: string): Locale => {
     if (cookie && getLocales().includes(cookie as Locale)) {
       return cookie as Locale
     }
-  } else {
+  } else if (localeCookie && getLocales().includes(localeCookie as Locale)) {
     // Server-side: check cookies from headers
-    if (localeCookie && getLocales().includes(localeCookie as Locale)) {
-      return localeCookie as Locale
-    }
+    return localeCookie as Locale
   }
 
   // Server-side or fallback

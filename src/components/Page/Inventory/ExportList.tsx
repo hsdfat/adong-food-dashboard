@@ -66,7 +66,7 @@ export default function ExportList() {
       label: dict.inventory?.kitchen || 'Kitchen',
       align: 'left',
       priority: true,
-      render: (value, row) => row.kitchen?.kitchenName || row.kitchenId,
+      render: (value, row) => (row as InventoryExport).kitchen?.kitchenName || (row as InventoryExport).kitchenId,
     },
     {
       key: 'exportDate',
@@ -87,15 +87,18 @@ export default function ExportList() {
           return: dict.inventory?.type_return || 'Return',
           sample: dict.inventory?.type_sample || 'Sample',
         }
-        return typeLabels[value] || value
+        const valueStr = String(value)
+        return typeLabels[valueStr] || valueStr
       },
     },
     {
       key: 'destinationKitchen',
       label: dict.inventory?.destination_kitchen || 'Destination',
       align: 'left',
-      render: (value, row) =>
-        row.destinationKitchen?.kitchenName || row.destinationKitchenId || '-',
+      render: (value, row) => {
+        const exportRow = row as InventoryExport
+        return exportRow.destinationKitchen?.kitchenName || exportRow.destinationKitchenId || '-'
+      },
     },
     {
       key: 'totalAmount',
@@ -178,30 +181,28 @@ export default function ExportList() {
       columns={columns}
       actions={actions}
       data={
-        exportsData
+        exportsData && exportsData.pagination
           ? {
               data: exportsData.data,
-              meta: exportsData.pagination
-                ? (() => {
-                    const { page, limit, total, total_pages } = exportsData.pagination!
-                    // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
-                    const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
-                    // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
-                    const to = total > 0 
-                      ? (page === 1 
-                          ? Math.min(total, limit)
-                          : Math.min((page - 1) * limit + limit, total))
-                      : 0
-                    return {
-                      current_page: page,
-                      per_page: limit,
-                      total: total,
-                      last_page: total_pages,
-                      from: from,
-                      to: to,
-                    }
-                  })()
-                : undefined,
+              meta: (() => {
+                const { page, limit, total, total_pages } = exportsData.pagination!
+                // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
+                const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
+                // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
+                const to = total > 0
+                  ? (page === 1
+                      ? Math.min(total, limit)
+                      : Math.min((page - 1) * limit + limit, total))
+                  : 0
+                return {
+                  current_page: page,
+                  per_page: limit,
+                  total,
+                  last_page: total_pages,
+                  from,
+                  to,
+                }
+              })(),
             }
           : null
       }

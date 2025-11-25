@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardBody,
@@ -42,68 +42,68 @@ type SupplierInfo = {
   email: string;
   active: boolean;
   createdDate: string;
-  modifiedDate: string
+  modifiedDate: string;
 }
 
 type ProductInfo = {
-  productId: number
-  productName: string
-  ingredientId: string
-  category: string
-  supplierId: string
-  manufacturer: string
-  unit: string
-  specification: string
-  unitPrice: number
-  pricePer1: number
-  effectiveFrom: null
-  effectiveTo: null
-  active: boolean
-  newPrice: number
-  promotion: string
-  createdDate: string
-  modifiedDate: string
+  productId: number;
+  productName: string;
+  ingredientId: string;
+  category: string;
+  supplierId: string;
+  manufacturer: string;
+  unit: string;
+  specification: string;
+  unitPrice: number;
+  pricePer1: number;
+  effectiveFrom: null;
+  effectiveTo: null;
+  active: boolean;
+  newPrice: number;
+  promotion: string;
+  createdDate: string;
+  modifiedDate: string;
 }
 
 type UserInfo = {
-  userId: string
-  userName: string
-  password: string
-  fullName: string
-  role: string
-  kitchenId: string
-  email: string
-  phone: string
-  active: boolean
-  createdDate: string
-  modifiedDate: string
+  userId: string;
+  userName: string;
+  password: string;
+  fullName: string;
+  role: string;
+  kitchenId: string;
+  email: string;
+  phone: string;
+  active: boolean;
+  createdDate: string;
+  modifiedDate: string;
 }
 
 type Selection = {
-  orderIngredientSupplierId: number
-  orderId: string
-  ingredientId: string
-  selectedSupplierId: string
-  selectedProductId: number
-  quantity: number
-  unit: string
-  unitPrice: number
-  totalCost: number
-  selectionDate: string
-  selectedByUserId: string
-  notes: string
-  createdDate: string
-  modifiedDate: string
-  ingredient: IngredientInfo
-  selectedSupplier: SupplierInfo
-  selectedProduct: ProductInfo
-  selectedBy: UserInfo
+  orderIngredientSupplierId: number;
+  orderId: string;
+  ingredientId: string;
+  selectedSupplierId: string;
+  selectedProductId: number;
+  quantity: number;
+  unit: string;
+  unitPrice: number;
+  totalCost: number;
+  selectionDate: string;
+  selectedByUserId: string;
+  notes: string;
+  createdDate: string;
+  modifiedDate: string;
+  ingredient: IngredientInfo;
+  selectedSupplier: SupplierInfo;
+  selectedProduct: ProductInfo;
+  selectedBy: UserInfo;
 }
 
 type SupplierSelectionsResponse = {
-  count: number
-  orderId: string
-  selections: Selection[]
+  count: number;
+  orderId: string;
+  selections: Selection[];
 }
 
 export default function OrderSupplierRequestsPage() {
@@ -133,8 +133,9 @@ export default function OrderSupplierRequestsPage() {
           // Fallback for old format or empty response
           setSelections([])
         }
-      } catch (e: any) {
-        setError(e?.message || 'Failed to load supplier requests')
+      } catch (e) {
+        const errorObj = e as Error
+        setError(errorObj?.message || 'Failed to load supplier requests')
       } finally {
         setLoading(false)
       }
@@ -160,7 +161,7 @@ export default function OrderSupplierRequestsPage() {
   }
 
   const buildZaloMessage = (selection: Selection): string => {
-    const supplierName = selection.selectedSupplier.supplierName
+    const {supplierName} = selection.selectedSupplier
     const headerTemplate = dict.orders?.labels?.zalo_message?.header || 'Supplier request for order #{{orderId}}\nSupplier: {{supplierName}} ({{supplierId}})\nSelected date: {{selectionDate}}'
     const header = headerTemplate
       .replace('{{orderId}}', selection.orderId)
@@ -211,8 +212,9 @@ export default function OrderSupplierRequestsPage() {
         window.open(link, '_blank', 'noopener,noreferrer')
       }, 1000)
       setTimeout(() => setCopySuccess(''), 2500)
-    } catch (err: any) {
+    } catch (err) {
       // Optional: could show error toast if needed
+      console.debug('Copy to clipboard error:', err)
     }
   }
 

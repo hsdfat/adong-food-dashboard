@@ -1,81 +1,81 @@
 // models/supplier_price.ts
 
 export interface SupplierPrice {
-  productId: number
-  productName: string
-  ingredientId: string
-  ingredientName: string
-  category: string
-  supplierId: string
-  supplierName: string
-  manufacturer: string
-  unit: string
-  specification: string
-  unitPrice: number
-  pricePer1: number
-  effectiveFrom?: string | null
-  effectiveTo?: string | null
-  active?: boolean | null
-  newPrice: number
-  promotion: string
+  productId: number;
+  productName: string;
+  ingredientId: string;
+  ingredientName: string;
+  category: string;
+  supplierId: string;
+  supplierName: string;
+  manufacturer: string;
+  unit: string;
+  specification: string;
+  unitPrice: number;
+  pricePer1: number;
+  effectiveFrom?: string | null;
+  effectiveTo?: string | null;
+  active?: boolean | null;
+  newPrice: number;
+  promotion: string;
 
   // Optional populated fields
   ingredient?: {
-    ingredientId: string
-    ingredientName: string
-  }
+    ingredientId: string;
+    ingredientName: string;
+  };
   supplier?: {
-    supplierId: string
-    supplierName: string
-  }
+    supplierId: string;
+    supplierName: string;
+  };
 
   // Best supplier suggestion fields (from API)
-  totalCost?: number
-  isBestSupplier?: boolean
-  isFavorite?: boolean
-  isLowestPrice?: boolean
+  totalCost?: number;
+  isBestSupplier?: boolean;
+  isFavorite?: boolean;
+  isLowestPrice?: boolean;
 }
 
 export interface CreateSupplierPriceInput {
-  productName: string
-  ingredientId: string
-  category: string
-  supplierId: string
-  manufacturer: string
-  unit: string
-  specification: string
-  unitPrice: number
-  pricePer1: number
-  effectiveFrom?: string | null
-  effectiveTo?: string | null
-  active?: boolean | null
-  newPrice?: number
-  promotion?: string
+  productName: string;
+  ingredientId: string;
+  category: string;
+  supplierId: string;
+  manufacturer: string;
+  unit: string;
+  specification: string;
+  unitPrice: number;
+  pricePer1: number;
+  effectiveFrom?: string | null;
+  effectiveTo?: string | null;
+  active?: boolean | null;
+  newPrice?: number;
+  promotion?: string;
 }
 
 export interface UpdateSupplierPriceInput {
-  productName?: string
-  category?: string
-  manufacturer?: string
-  unit?: string
-  specification?: string
-  unitPrice?: number
-  pricePer1?: number
-  effectiveFrom?: string
-  effectiveTo?: string
-  active?: boolean
-  newPrice?: number
-  promotion?: string
+  productName?: string;
+  category?: string;
+  manufacturer?: string;
+  unit?: string;
+  specification?: string;
+  unitPrice?: number;
+  pricePer1?: number;
+  effectiveFrom?: string;
+  effectiveTo?: string;
+  active?: boolean;
+  newPrice?: number;
+  promotion?: string;
 }
 
 export interface SupplierPriceListResponse {
-  data: SupplierPrice[]
+  data: SupplierPrice[];
   meta: {
-    total: number
-    from: number
-    to: number
-    per_page: number
-    last_page: number
-    current_page: number
-  }
+    total: number;
+    from: number;
+    to: number;
+    per_page: number;
+    last_page: number;
+    current_page: number;
+  };
 }

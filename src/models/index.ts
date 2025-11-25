@@ -12,11 +12,6 @@ export type { Kitchen, CreateKitchenInput, UpdateKitchenInput } from './kitchen'
 export type { Dish, CreateDishInput, UpdateDishInput } from './dish'
 
 // Supplier Models
-export type {
-  Supplier,
-  CreateSupplierInput,
-  UpdateSupplierInput,
-} from './supplier'
 export * from './supplier'
 export * from './kitchen-favorite-supplier'
 

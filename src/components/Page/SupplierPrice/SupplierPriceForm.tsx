@@ -17,8 +17,7 @@ import {
 import { useRouter } from 'next/navigation'
 import Select from 'react-select'
 import { supplierPriceApi } from '@/services/supplier-price.service'
-import { ingredientApi } from '@/services'
-import { supplierApi } from '@/services'
+import { ingredientApi , supplierApi } from '@/services'
 import {
   SupplierPrice,
   CreateSupplierPriceInput,
@@ -29,8 +28,8 @@ import { Supplier } from '@/models/supplier'
 import useDictionary from '@/locales/dictionary-hook'
 
 interface SupplierPriceFormProps {
-  supplierPrice?: SupplierPrice
-  isEdit?: boolean
+  supplierPrice?: SupplierPrice;
+  isEdit?: boolean;
 }
 
 export default function SupplierPriceForm({

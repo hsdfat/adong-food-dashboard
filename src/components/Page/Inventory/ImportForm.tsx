@@ -30,8 +30,8 @@ import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 
 interface ImportFormProps {
-  importId?: string
-  isEdit?: boolean
+  importId?: string;
+  isEdit?: boolean;
 }
 
 export default function ImportForm({
@@ -79,7 +79,7 @@ export default function ImportForm({
         try {
           setLoadingData(true)
           const response = await inventoryImportApi.getById(importId)
-          const data = response.data
+          const {data} = response
           setImportData(data)
           setKitchenId(data.kitchenId)
           setKitchenName(data.kitchen?.kitchenName || '')
@@ -222,12 +222,10 @@ export default function ImportForm({
     setImportDetails(updated)
   }
 
-  const calculateTotal = () => {
-    return importDetails.reduce(
+  const calculateTotal = () => importDetails.reduce(
       (sum, detail) => sum + detail.quantity * detail.unitPrice,
       0,
     )
-  }
 
   if (loadingData) {
     return <div>Loading...</div>
@@ -459,7 +457,7 @@ export default function ImportForm({
                       {new Intl.NumberFormat('vi-VN').format(calculateTotal())}
                     </strong>
                   </td>
-                  <td colSpan={3}></td>
+                  <td colSpan={3} />
                 </tr>
               </tfoot>
             </Table>

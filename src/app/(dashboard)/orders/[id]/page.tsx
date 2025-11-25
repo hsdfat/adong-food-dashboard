@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardBody,
@@ -10,9 +10,7 @@ import {
   Badge,
   Spinner,
   Button,
-  FormSelect,
   FormControl,
-  Modal,
   InputGroup,
 } from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
@@ -30,7 +28,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
-import StatusToast from '@/components/Common/StatusToast'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 
 // Mock best supplier data - in real implementation this would come from an API
@@ -129,7 +126,7 @@ const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
     .slice(0, 2)
     .map((s) => ({
       ...s,
-      productId: parseInt(`${s.productId}${ingredientId.slice(-2)}`),
+      productId: parseInt(`${s.productId}${ingredientId.slice(-2)}`, 10),
       price: s.price + Math.floor(Math.random() * 5000) + 1000, // Higher price for alternatives
     }))
 
@@ -139,7 +136,7 @@ const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
     mockPrices.push({
       productId: bestSupplier.productId,
       productName: bestSupplier.productName,
-      ingredientId: ingredientId,
+      ingredientId,
       ingredientName: `Ingredient ${ingredientId}`,
       category: 'Vegetables',
       supplierId: bestSupplier.supplierId,
@@ -161,7 +158,7 @@ const generateMockSupplierPrices = (ingredientId: string): SupplierPrice[] => {
     mockPrices.push({
       productId: alt.productId,
       productName: alt.productName,
-      ingredientId: ingredientId,
+      ingredientId,
       ingredientName: `Ingredient ${ingredientId}`,
       category: 'Vegetables',
       supplierId: alt.supplierId,
@@ -195,10 +192,35 @@ export default function OrderDetailPage() {
   // Ingredient summary + supplier prices
   const [summaryLoading, setSummaryLoading] = useState(false)
   type IngredientSummaryRow = {
-    ingredientId: string
-    ingredientName: string
-    quantity: number
-    unit: string
+    ingredientId: string;
+    ingredientName: string;
+    quantity: number;
+    unit: string;
+  }
+
+  type ApiIngredient = {
+    ingredientId: string;
+    ingredientName: string;
+    totalQuantity?: number;
+    quantity?: number;
+    unit: string;
+    bestSupplier?: {
+      productId: number;
+      productName: string;
+      supplierId: string;
+      supplierName: string;
+      unit: string;
+      specification: string;
+      unitPrice: number;
+      isFavorite: boolean;
+      isLowestPrice: boolean;
+      totalCost: number;
+    };
+  }
+
+  type ApiResponse = {
+    data?: unknown;
+    ingredients?: ApiIngredient[];
   }
   const [ingredientSummary, setIngredientSummary] = useState<
     IngredientSummaryRow[]
@@ -208,9 +230,6 @@ export default function OrderDetailPage() {
   >({})
   const [selectedSupplierByIngredient, setSelectedSupplierByIngredient] =
     useState<Record<string, number | ''>>({})
-  const [filterByIngredient, setFilterByIngredient] = useState<
-    Record<string, string>
-  >({})
   const [saving, setSaving] = useState(false)
   const [savingRow, setSavingRow] = useState<string>('')
   const [saveSuccess, setSaveSuccess] = useState('')
@@ -222,33 +241,7 @@ export default function OrderDetailPage() {
   const [activeIngredientName, setActiveIngredientName] = useState<string>('')
   const [supplierSearch, setSupplierSearch] = useState<string>('')
 
-  useEffect(() => {
-    if (orderId) {
-      loadOrder()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId])
-
-  const loadOrder = async () => {
-    if (!orderId) return
-
-    try {
-      setLoading(true)
-      setError('')
-
-      const data = await orderApi.getById(orderId)
-      setOrder(data)
-      // After order loads, also load ingredient summary
-      await loadIngredientSummary(orderId as string)
-    } catch (err: any) {
-      setError(err.message || 'Failed to load order')
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const loadIngredientSummary = async (id: string | number) => {
+  const loadIngredientSummary = React.useCallback(async (id: string | number) => {
     try {
       setSummaryLoading(true)
       const res = await orderApi.getIngredientsSummary(id)
@@ -257,19 +250,19 @@ export default function OrderDetailPage() {
       // 1) Array<{ ingredientId, ingredientName, unit, totalQuantity }>
       // 2) { ingredients: [...] }
       // 3) { data: [...] } or { data: { ingredients: [...] } }
-      const unwrap = (val: any) => (val?.data !== undefined ? val.data : val)
-      const raw = unwrap(res)
+      const unwrap = (val: ApiResponse | ApiIngredient[]) => ('data' in val && val.data !== undefined ? val.data : val)
+      const raw = unwrap(res as ApiResponse | ApiIngredient[])
 
-      let items: any[] = []
+      let items: ApiIngredient[] = []
       if (Array.isArray(raw)) {
-        items = raw
-      } else if (Array.isArray(raw?.ingredients)) {
+        items = raw as ApiIngredient[]
+      } else if (raw && typeof raw === 'object' && 'ingredients' in raw && Array.isArray(raw.ingredients)) {
         items = raw.ingredients
-      } else if (Array.isArray(raw?.data)) {
-        items = raw.data
+      } else if (raw && typeof raw === 'object' && 'data' in raw && Array.isArray((raw as ApiResponse).data)) {
+        items = (raw as ApiResponse).data as ApiIngredient[]
       }
 
-      const normalized = items.map((ing: any) => ({
+      const normalized = items.map((ing: ApiIngredient) => ({
         ingredientId: ing.ingredientId,
         ingredientName: ing.ingredientName,
         quantity: ing.totalQuantity ?? ing.quantity ?? 0,
@@ -278,7 +271,7 @@ export default function OrderDetailPage() {
       setIngredientSummary(normalized)
 
       // Get best suppliers from API (using GET for existing order)
-      let bestSuppliersData: any = null
+      let bestSuppliersData: ApiResponse | null = null
       try {
         const bestSuppliersResponse = await orderApi.getBestSuppliersByOrderId(
           id,
@@ -296,7 +289,7 @@ export default function OrderDetailPage() {
 
       // Preload supplier prices for each ingredient in parallel
       const uniqueIds = Array.from(
-        new Set(normalized.map((i: any) => i.ingredientId)),
+        new Set(normalized.map((i) => i.ingredientId)),
       )
       const priceResults = await Promise.all(
         uniqueIds.map(async (ingId) => {
@@ -318,7 +311,7 @@ export default function OrderDetailPage() {
             // If we have best suppliers data, create supplier entries from it
             if (bestSuppliersData && bestSuppliersData.ingredients) {
               const bestSupplierInfo = bestSuppliersData.ingredients.find(
-                (ing: any) => ing.ingredientId === ingId,
+                (ing) => ing.ingredientId === ingId,
               )
               if (bestSupplierInfo && bestSupplierInfo.bestSupplier) {
                 const bestSupplierData: SupplierPrice = {
@@ -338,11 +331,11 @@ export default function OrderDetailPage() {
                   effectiveTo: null,
                   active: true,
                   newPrice: bestSupplierInfo.bestSupplier.unitPrice,
-                  promotion: bestSupplierInfo.bestSupplier.isFavorite
-                    ? 'Yêu thích'
-                    : bestSupplierInfo.bestSupplier.isLowestPrice
-                      ? 'Giá tốt nhất'
-                      : '',
+                  promotion: (() => {
+                    if (bestSupplierInfo.bestSupplier.isFavorite) return 'Yêu thích'
+                    if (bestSupplierInfo.bestSupplier.isLowestPrice) return 'Giá tốt nhất'
+                    return ''
+                  })(),
                   totalCost: bestSupplierInfo.bestSupplier.totalCost,
                   isBestSupplier: true,
                   isFavorite: bestSupplierInfo.bestSupplier.isFavorite,
@@ -439,7 +432,7 @@ export default function OrderDetailPage() {
         // Try to get best product ID from API response
         if (bestSuppliersData && bestSuppliersData.ingredients) {
           const bestSupplierInfo = bestSuppliersData.ingredients.find(
-            (bestIng: any) => bestIng.ingredientId === ing.ingredientId,
+            (bestIng) => bestIng.ingredientId === ing.ingredientId,
           )
           if (bestSupplierInfo && bestSupplierInfo.bestSupplier) {
             bestProductId = bestSupplierInfo.bestSupplier.productId
@@ -464,11 +457,11 @@ export default function OrderDetailPage() {
             prices.some((p) => p.productId === bestProductId)
           ) {
             autoFilledSelections[ing.ingredientId] = bestProductId
-            autoFilledCount++
+            autoFilledCount += 1
             console.log(`  ✓ Auto-filled with product ID: ${bestProductId}`)
           } else {
             console.log(
-              `  ✗ Could not auto-fill (no best supplier or not found in prices)`,
+              '  ✗ Could not auto-fill (no best supplier or not found in prices)',
             )
           }
         } else {
@@ -478,7 +471,7 @@ export default function OrderDetailPage() {
         }
       })
 
-      console.log(`Final selections:`, autoFilledSelections)
+      console.log('Final selections:', autoFilledSelections)
       console.log(`Auto-filled count: ${autoFilledCount}`)
       console.log('=== END DEBUG ===')
 
@@ -492,9 +485,37 @@ export default function OrderDetailPage() {
     } finally {
       setSummaryLoading(false)
     }
-  }
+  }, [])
+
+  const loadOrder = React.useCallback(async () => {
+    if (!orderId) return
+
+    try {
+      setLoading(true)
+      setError('')
+
+      const data = await orderApi.getById(orderId)
+      setOrder(data)
+      // After order loads, also load ingredient summary
+      await loadIngredientSummary(orderId as string)
+    } catch (err) {
+      const errorObj = err as Error
+      setError(errorObj.message || 'Failed to load order')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }, [orderId, loadIngredientSummary])
+
+  useEffect(() => {
+    if (orderId) {
+      loadOrder()
+    }
+  }, [orderId, loadOrder])
 
   // Auto-fill best suppliers (function kept for manual use if needed)
+  // Commented out to avoid unused variable warning - uncomment if needed
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAutoFillBestSuppliers = () => {
     const newSelections: Record<string, number | ''> = {}
     let autoFilledCount = 0
@@ -511,7 +532,7 @@ export default function OrderDetailPage() {
       )
       if (bestFromApi) {
         newSelections[ing.ingredientId] = bestFromApi.productId
-        autoFilledCount++
+        autoFilledCount += 1
         return
       }
 
@@ -519,7 +540,7 @@ export default function OrderDetailPage() {
       const bestProductId = mockBestSuppliers[ing.ingredientId]
       if (bestProductId && prices.some((p) => p.productId === bestProductId)) {
         newSelections[ing.ingredientId] = bestProductId
-        autoFilledCount++
+        autoFilledCount += 1
       }
     })
 
@@ -555,9 +576,11 @@ export default function OrderDetailPage() {
     const statusLower = status.toLowerCase()
     if (statusLower === 'pending') {
       return <Badge bg="warning">Pending</Badge>
-    } else if (statusLower === 'approved' || statusLower === 'completed') {
+    }
+    if (statusLower === 'approved' || statusLower === 'completed') {
       return <Badge bg="success">{status}</Badge>
-    } else if (statusLower === 'cancelled' || statusLower === 'rejected') {
+    }
+    if (statusLower === 'cancelled' || statusLower === 'rejected') {
       return <Badge bg="danger">{status}</Badge>
     }
     return <Badge bg="secondary">{status}</Badge>
@@ -576,8 +599,11 @@ export default function OrderDetailPage() {
     }))
   }
 
+  // Commented out to avoid unused variable warning - uncomment if needed
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFilterChange = (ingredientId: string, value: string) => {
-    setFilterByIngredient((prev) => ({ ...prev, [ingredientId]: value }))
+    // This function is kept for potential future use
+    console.log('Filter change:', ingredientId, value)
   }
 
   const handleSaveSelectionsLocal = () => {
@@ -638,9 +664,10 @@ export default function OrderDetailPage() {
 
       handleSaveSelectionsLocal()
       setSaveSuccess('Saved supplier request for 1 ingredient')
-    } catch (e: any) {
+    } catch (e) {
+      const errorObj = e as Error
       console.error('Save failed:', e)
-      setSaveError(e?.message || 'Failed to save supplier request')
+      setSaveError(errorObj?.message || 'Failed to save supplier request')
     } finally {
       setSavingRow('')
       setSaving(false)
@@ -661,21 +688,21 @@ export default function OrderDetailPage() {
       const grouped: Record<
         string,
         {
-          ingredientId: string
-          quantity: number
-          unit: string
-          unitPrice: number
+          ingredientId: string;
+          quantity: number;
+          unit: string;
+          unitPrice: number;
         }[]
       > = {}
       let validSelectionsCount = 0
 
-      for (const ing of ingredientSummary) {
+      ingredientSummary.forEach((ing) => {
         const selectedProductId = selectedSupplierByIngredient[ing.ingredientId]
         if (!selectedProductId) {
           console.warn(
             `No supplier selected for ingredient ${ing.ingredientId}`,
           )
-          continue
+          return
         }
 
         const prices = pricesByIngredient[ing.ingredientId] || []
@@ -686,7 +713,7 @@ export default function OrderDetailPage() {
           console.warn(
             `Selected supplier not found for ingredient ${ing.ingredientId}`,
           )
-          continue
+          return
         }
 
         const unitPrice =
@@ -699,10 +726,10 @@ export default function OrderDetailPage() {
           ingredientId: ing.ingredientId,
           quantity: ing.quantity,
           unit: ing.unit,
-          unitPrice: unitPrice,
+          unitPrice,
         })
-        validSelectionsCount++
-      }
+        validSelectionsCount += 1
+      })
 
       const supplierIds = Object.keys(grouped)
       if (supplierIds.length === 0 || validSelectionsCount === 0) {
@@ -712,17 +739,17 @@ export default function OrderDetailPage() {
 
       // Convert grouped data to selections format with capital field names
       const allSelections: Array<{
-        IngredientId: string
-        SelectedSupplierId: string
-        SelectedProductId: number
-        Quantity: number
-        Unit: string
-        UnitPrice: number
-        Notes: string
+        IngredientId: string;
+        SelectedSupplierId: string;
+        SelectedProductId: number;
+        Quantity: number;
+        Unit: string;
+        UnitPrice: number;
+        Notes: string;
       }> = []
 
-      for (const sid of supplierIds) {
-        for (const ingredient of grouped[sid]) {
+      supplierIds.forEach((sid) => {
+        grouped[sid].forEach((ingredient) => {
           const prices = pricesByIngredient[ingredient.ingredientId] || []
           const selectedPrice = prices.find((p) => p.supplierId === sid)
           if (selectedPrice) {
@@ -736,8 +763,8 @@ export default function OrderDetailPage() {
               Notes: '',
             })
           }
-        }
-      }
+        })
+      })
 
       // Send one request with all selections
       await orderApi.createSupplierRequests(orderId, {
@@ -748,9 +775,10 @@ export default function OrderDetailPage() {
       setSaveSuccess(
         `Saved supplier requests for ${validSelectionsCount} ingredients`,
       )
-    } catch (e: any) {
+    } catch (e) {
+      const errorObj = e as Error
       console.error('Save all failed:', e)
-      setSaveError(e?.message || 'Failed to save supplier requests')
+      setSaveError(errorObj?.message || 'Failed to save supplier requests')
     } finally {
       setSaving(false)
       setTimeout(() => {
@@ -1031,7 +1059,7 @@ export default function OrderDetailPage() {
                       className="spinner-border spinner-border-sm me-2"
                       role="status"
                       aria-hidden="true"
-                    ></span>
+                     />
                     {dict.orders?.labels?.saving || 'Saving...'}
                   </>
                 ) : (
@@ -1044,17 +1072,19 @@ export default function OrderDetailPage() {
               </Button>
             </div>
           </div>
-          {summaryLoading ? (
+          {summaryLoading && (
             <div className="py-3 text-center">
               <Spinner animation="border" className="me-2" />
               {dict.orders?.loading || 'Loading...'}
             </div>
-          ) : ingredientSummary.length === 0 ? (
+          )}
+          {!summaryLoading && ingredientSummary.length === 0 && (
             <Alert variant="info">
               {dict.orders?.no_ingredients ||
                 'No ingredients found for this order'}
             </Alert>
-          ) : (
+          )}
+          {!summaryLoading && ingredientSummary.length > 0 && (
             <Table striped bordered hover responsive>
               <thead className="table-light">
                 <tr>
@@ -1089,11 +1119,13 @@ export default function OrderDetailPage() {
                     (p: SupplierPrice) => p.productId === selected,
                   )
                   const bestSupplier = getBestSupplier(ing.ingredientId)
-                  const unitPrice = selectedPrice
-                    ? selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0
-                      ? selectedPrice.pricePer1
-                      : selectedPrice.unitPrice
-                    : 0
+                  const unitPrice = (() => {
+                    if (!selectedPrice) return 0
+                    if (selectedPrice.pricePer1 && selectedPrice.pricePer1 > 0) {
+                      return selectedPrice.pricePer1
+                    }
+                    return selectedPrice.unitPrice
+                  })()
                   const totalPrice = unitPrice * (ing.quantity || 0)
                   const isBestSelected =
                     bestSupplier &&
@@ -1123,7 +1155,7 @@ export default function OrderDetailPage() {
                             }
                             value={
                               selectedPrice
-                                ? `${selectedPrice.supplierName} ${selectedPrice.productName ? '- ' + selectedPrice.productName : ''}`
+                                ? `${selectedPrice.supplierName} ${selectedPrice.productName ? `- ${  selectedPrice.productName}` : ''}`
                                 : ''
                             }
                             className={
@@ -1160,7 +1192,7 @@ export default function OrderDetailPage() {
                                 className="spinner-border spinner-border-sm"
                                 role="status"
                                 aria-hidden="true"
-                              ></span>
+                               />
                             ) : (
                               <FontAwesomeIcon icon={faSave} />
                             )}
@@ -1284,7 +1316,7 @@ export default function OrderDetailPage() {
               }
               closeLabel={dict.orders?.labels?.close || 'Close'}
               renderItem={(item, isSelected) => {
-                const p = item as any as SupplierPrice
+                const p = item as unknown as SupplierPrice
                 const isBest = bestProductId && p.productId === bestProductId
                 return (
                   <button
@@ -1315,9 +1347,11 @@ export default function OrderDetailPage() {
                         </small>
                       </div>
                       <Badge
-                        bg={
-                          isSelected ? 'light' : isBest ? 'success' : 'primary'
-                        }
+                        bg={(() => {
+                          if (isSelected) return 'light'
+                          if (isBest) return 'success'
+                          return 'primary'
+                        })()}
                         text={isSelected ? 'dark' : 'white'}
                       >
                         {formatNumber(

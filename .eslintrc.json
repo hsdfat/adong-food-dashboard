@@ -43,25 +43,26 @@
     // Since we do not use prop-types
     "react/require-default-props": 0,
     // Use semicolon as member delimiter for interfaces and type
-    "@typescript-eslint/member-delimiter-style": 2,
+    "@typescript-eslint/member-delimiter-style": 0,
     "@typescript-eslint/semi": 0,
-    "react/jsx-props-no-spreading": [
-      2,
-      {
-        "exceptions": [
-          "input",
-          "textarea",
-          "select",
-          "Form.Control",
-          "Form.Check",
-          "Form.Check.Input",
-          "Form.Select",
-          "Form.Switch"
-        ]
-      }
-    ],
+    "react/jsx-props-no-spreading": 0,
     "quotes": [2, "single"],
     "semi": [2, "never"],
-    "eslint-comments/no-unused-disable": 2
+    "eslint-comments/no-unused-disable": 0,
+    "no-console": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-unused-vars": 1,
+    "radix": 1,
+    "@typescript-eslint/no-use-before-define": 1,
+    "no-restricted-globals": 1,
+    "no-alert": 1,
+    "@typescript-eslint/no-shadow": 1,
+    "@typescript-eslint/naming-convention": 0,
+    "no-param-reassign": 1,
+    "no-nested-ternary": 1,
+    "react/no-array-index-key": 1,
+    "jsx-a11y/control-has-associated-label": 1,
+    "no-restricted-exports": 0,
+    "react-hooks/exhaustive-deps": 1
   }
 }

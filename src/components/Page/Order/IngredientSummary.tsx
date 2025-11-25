@@ -15,16 +15,16 @@ import useDictionary from '@/locales/dictionary-hook'
 import { orderApi } from '@/services'
 
 interface IngredientSummaryItem {
-  ingredientId: string
-  ingredientName: string
-  quantity: number
-  unit: string
-  standardPerPortion?: number
+  ingredientId: string;
+  ingredientName: string;
+  quantity: number;
+  unit: string;
+  standardPerPortion?: number;
 }
 
 interface IngredientSummaryResponse {
-  orderId: number | string
-  ingredients: IngredientSummaryItem[]
+  orderId: number | string;
+  ingredients: IngredientSummaryItem[];
 }
 
 export default function IngredientSummary() {
@@ -54,8 +54,8 @@ export default function IngredientSummary() {
       const data = await orderApi.getIngredientsSummary(orderId)
 
       // Normalize various possible response shapes
-      let normalized: IngredientSummaryResponse = {
-        orderId: orderId,
+      const normalized: IngredientSummaryResponse = {
+        orderId,
         ingredients: [],
       }
 
@@ -122,7 +122,7 @@ export default function IngredientSummary() {
       <Card>
         <CardBody>
           <Alert variant="danger">{error}</Alert>
-          <button className="btn btn-secondary" onClick={() => router.back()}>
+          <button type="button" className="btn btn-secondary" onClick={() => router.back()}>
             {dict.orders?.labels?.back_to_orders || 'Go Back'}
           </button>
         </CardBody>
@@ -215,7 +215,7 @@ export default function IngredientSummary() {
                       ? 2
                       : 1
                   }
-                ></td>
+                 />
               </tr>
             </tfoot>
           </Table>
@@ -227,7 +227,7 @@ export default function IngredientSummary() {
         )}
 
         <div className="mt-3">
-          <button className="btn btn-secondary" onClick={() => router.back()}>
+          <button type="button" className="btn btn-secondary" onClick={() => router.back()}>
             {dict.orders?.labels?.back_to_orders || 'Go Back'}
           </button>
         </div>

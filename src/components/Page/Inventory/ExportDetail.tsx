@@ -10,7 +10,7 @@ import ActionButton from '@/components/Common/ActionButton/ActionButton'
 import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
 interface ExportDetailProps {
-  exportId: string
+  exportId: string;
 }
 
 export default function ExportDetail({ exportId }: ExportDetailProps) {
@@ -246,7 +246,7 @@ export default function ExportDetail({ exportId }: ExportDetailProps) {
                       {new Intl.NumberFormat('vi-VN').format(exportData.totalAmount)}
                     </strong>
                   </td>
-                  <td colSpan={1}></td>
+                  <td colSpan={1} />
                 </tr>
               </tfoot>
             </Table>
