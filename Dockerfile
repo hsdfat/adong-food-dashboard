@@ -36,7 +36,7 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --no-frozen-lockfile --prod
 
 ###############################################
 # runner: production image
