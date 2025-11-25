@@ -8,9 +8,9 @@ import useDictionary from '@/locales/dictionary-hook'
 
 interface OrderHeaderFormProps {
   orderId: string;
-  ngayLen: string;
-  tenBep: string;
-  ghiChu: string;
+  ngayLen: string; // Keep prop name for backward compatibility with parent
+  tenBep: string; // Keep prop name for backward compatibility with parent
+  ghiChu: string; // Keep prop name for backward compatibility with parent
   onOrderIdChange: (value: string) => void;
   onDateChange: (value: string) => void;
   onKitchenSelect: () => void;

@@ -8,18 +8,18 @@ import useOrderDictionary from '../locales/use-order-dictionary'
 import DishRow from './DishRow'
 
 interface DishIngredient {
-  nguyenLieuId: string;
-  tenNguyenLieu: string;
-  donViTinh: string;
-  dinhMuc: number;
-  soLuong: number;
+  ingredientId: string;
+  ingredientName: string;
+  unit: string;
+  standardPerPortion: number;
+  quantity: number;
 }
 
 interface OrderDishItem {
   id: string;
-  monanId: string;
-  tenMonAn: string;
-  soSuat: number;
+  dishId: string;
+  dishName: string;
+  portions: number;
   ingredients: DishIngredient[];
 }
 
@@ -27,7 +27,7 @@ interface DishListProps {
   dishes: OrderDishItem[];
   onAddDish: () => void;
   onPortionsChange: (dishId: string, portions: number) => void;
-  onDinhMucChange: (dishId: string, ingredientId: string, dinhMuc: number) => void;
+  onStandardPerPortionChange: (dishId: string, ingredientId: string, standardPerPortion: number) => void;
   onRemoveIngredient: (dishId: string, ingredientId: string) => void;
   onAddIngredient: (index: number) => void;
   onRemoveDish: (dishId: string) => void;
@@ -38,7 +38,7 @@ export default function DishList({
   dishes,
   onAddDish,
   onPortionsChange,
-  onDinhMucChange,
+  onStandardPerPortionChange,
   onRemoveIngredient,
   onAddIngredient,
   onRemoveDish,
@@ -80,7 +80,7 @@ export default function DishList({
                     dish={dish}
                     index={index}
                     onPortionsChange={onPortionsChange}
-                    onDinhMucChange={onDinhMucChange}
+                    onStandardPerPortionChange={onStandardPerPortionChange}
                     onRemoveIngredient={onRemoveIngredient}
                     onAddIngredient={onAddIngredient}
                     onRemoveDish={onRemoveDish}

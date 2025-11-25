@@ -8,20 +8,20 @@ import useOrderDictionary from '../locales/use-order-dictionary'
 
 interface SupplementaryFoodItem {
   id: string;
-  nguyenLieuId: string;
-  tenNguyenLieu: string;
-  donViTinh: string;
-  dinhMuc: number;
-  soSuat: number;
-  soLuong: number;
-  ghiChu?: string;
+  ingredientId: string;
+  ingredientName: string;
+  unit: string;
+  standardPerPortion: number;
+  portions: number;
+  quantity: number;
+  note?: string;
 }
 
 interface SupplementaryFoodRowProps {
   item: SupplementaryFoodItem;
   index: number;
-  onDinhMucChange: (id: string, dinhMuc: number) => void;
-  onSoSuatChange: (id: string, soSuat: number) => void;
+  onStandardPerPortionChange: (id: string, standardPerPortion: number) => void;
+  onPortionsChange: (id: string, portions: number) => void;
   onNoteChange: (id: string, note: string) => void;
   onRemove: (id: string) => void;
   formatNumber: (num: number) => string;
@@ -30,8 +30,8 @@ interface SupplementaryFoodRowProps {
 export default function SupplementaryFoodRow({
   item,
   index,
-  onDinhMucChange,
-  onSoSuatChange,
+  onStandardPerPortionChange,
+  onPortionsChange,
   onNoteChange,
   onRemove,
   formatNumber,
@@ -42,26 +42,37 @@ export default function SupplementaryFoodRow({
     <tr>
       <td>{index + 1}</td>
       <td>
-        <strong>{item.tenNguyenLieu}</strong>
+        <strong>{item.ingredientName}</strong>
         <br />
-        <small className="text-muted">{item.nguyenLieuId}</small>
+        <small className="text-muted">{item.ingredientId}</small>
       </td>
-      <td>{item.dinhMuc}</td>
-      <td>{item.soSuat}</td>
       <td>
         <FormControl
           type="number"
-          value={item.soLuong}
-          onChange={(e) => onSoSuatChange(item.id, parseFloat(e.target.value) || 0)}
+          value={item.standardPerPortion}
+          onChange={(e) => onStandardPerPortionChange(item.id, parseFloat(e.target.value) || 0)}
           size="sm"
           min="0"
-          step="0.01"
+          step="0.0001"
         />
       </td>
       <td>
         <FormControl
+          type="number"
+          value={item.portions}
+          onChange={(e) => onPortionsChange(item.id, parseFloat(e.target.value) || 0)}
+          size="sm"
+          min="0"
+          step="0.0001"
+        />
+      </td>
+      <td>
+        <strong>{formatNumber(item.quantity)}</strong> {item.unit}
+      </td>
+      <td>
+        <FormControl
           type="text"
-          value={item.ghiChu || ''}
+          value={item.note || ''}
           onChange={(e) => onNoteChange(item.id, e.target.value)}
           size="sm"
           placeholder={dict.order_form.notes || 'Note...'}

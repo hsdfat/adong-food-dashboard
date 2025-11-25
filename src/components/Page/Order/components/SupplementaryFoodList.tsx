@@ -9,20 +9,20 @@ import SupplementaryFoodRow from './SupplementaryFoodRow'
 
 interface SupplementaryFoodItem {
   id: string;
-  nguyenLieuId: string;
-  tenNguyenLieu: string;
-  donViTinh: string;
-  dinhMuc: number;
-  soSuat: number;
-  soLuong: number;
-  ghiChu?: string;
+  ingredientId: string;
+  ingredientName: string;
+  unit: string;
+  standardPerPortion: number;
+  portions: number;
+  quantity: number;
+  note?: string;
 }
 
 interface SupplementaryFoodListProps {
   items: SupplementaryFoodItem[];
   onAdd: () => void;
-  onDinhMucChange: (id: string, dinhMuc: number) => void;
-  onSoSuatChange: (id: string, soSuat: number) => void;
+  onStandardPerPortionChange: (id: string, standardPerPortion: number) => void;
+  onPortionsChange: (id: string, portions: number) => void;
   onNoteChange: (id: string, note: string) => void;
   onRemove: (id: string) => void;
   formatNumber: (num: number) => string;
@@ -31,8 +31,8 @@ interface SupplementaryFoodListProps {
 export default function SupplementaryFoodList({
   items,
   onAdd,
-  onDinhMucChange,
-  onSoSuatChange,
+  onStandardPerPortionChange,
+  onPortionsChange,
   onNoteChange,
   onRemove,
   formatNumber,
@@ -74,8 +74,8 @@ export default function SupplementaryFoodList({
                     key={item.id}
                     item={item}
                     index={index}
-                    onDinhMucChange={onDinhMucChange}
-                    onSoSuatChange={onSoSuatChange}
+                    onStandardPerPortionChange={onStandardPerPortionChange}
+                    onPortionsChange={onPortionsChange}
                     onNoteChange={onNoteChange}
                     onRemove={onRemove}
                     formatNumber={formatNumber}

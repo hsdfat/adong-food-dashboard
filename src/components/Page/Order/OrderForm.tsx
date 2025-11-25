@@ -39,35 +39,35 @@ import TotalIngredientsSummary from './components/TotalIngredientsSummary'
 // ==================== TYPE DEFINITIONS ====================
 
 interface OrderIngredient {
-  nguyenLieuId: string;
-  tenNguyenLieu: string;
-  donViTinh: string;
-  dinhMuc: number;
+  ingredientId: string;
+  ingredientName: string;
+  unit: string;
+  standardPerPortion: number;
 }
 
 interface OrderDishItem {
   id: string;
-  monanId: string;
-  tenMonAn: string;
-  soSuat: number;
+  dishId: string;
+  dishName: string;
+  portions: number;
   ingredients: {
-    nguyenLieuId: string;
-    tenNguyenLieu: string;
-    donViTinh: string;
-    dinhMuc: number;
-    soLuong: number;
+    ingredientId: string;
+    ingredientName: string;
+    unit: string;
+    standardPerPortion: number;
+    quantity: number;
   }[];
 }
 
 interface SupplementaryFoodItem {
   id: string;
-  nguyenLieuId: string;
-  tenNguyenLieu: string;
-  donViTinh: string;
-  dinhMuc: number;
-  soSuat: number;
-  soLuong: number;
-  ghiChu?: string;
+  ingredientId: string;
+  ingredientName: string;
+  unit: string;
+  standardPerPortion: number;
+  portions: number;
+  quantity: number;
+  note?: string;
 }
 
 interface TotalIngredient {
@@ -126,10 +126,10 @@ export default function OrderForm({
 
   // Order Header States
   const [orderId, setOrderId] = useState('')
-  const [bepId, setBepId] = useState('')
-  const [tenBep, setTenBep] = useState('')
-  const [ngayLen, setNgayLen] = useState(new Date().toISOString().split('T')[0])
-  const [ghiChu, setGhiChu] = useState('')
+  const [kitchenId, setKitchenId] = useState('')
+  const [kitchenName, setKitchenName] = useState('')
+  const [orderDate, setOrderDate] = useState(new Date().toISOString().split('T')[0])
+  const [note, setNote] = useState('')
 
   // Kitchen Modal States
   const [showKitchenModal, setShowKitchenModal] = useState(false)
@@ -175,6 +175,8 @@ export default function OrderForm({
   const [supplierSelections, setSupplierSelections] = useState<
     Record<string, number | ''>
   >({})
+  // Cache for supplier data to avoid redundant API calls
+  const supplierCacheRef = useRef<Record<string, SupplierPrice[]>>({})
   const [availableSuppliersByIngredient, setAvailableSuppliersByIngredient] =
     useState<Record<string, SupplierPrice[]>>({})
   const [bestSupplierByIngredient, setBestSupplierByIngredient] = useState<
@@ -195,13 +197,13 @@ export default function OrderForm({
       setOrderId(bestSuppliersData.orderId)
     }
     if (bestSuppliersData.kitchenId) {
-      setBepId(bestSuppliersData.kitchenId)
+      setKitchenId(bestSuppliersData.kitchenId)
       // Find and set kitchen name
       const kitchen = availableKitchens.find(
         (k) => k.kitchenId === bestSuppliersData.kitchenId,
       )
       if (kitchen) {
-        setTenBep(kitchen.kitchenName)
+        setKitchenName(kitchen.kitchenName)
       }
     }
 
@@ -209,13 +211,13 @@ export default function OrderForm({
     const supplementaryItems: SupplementaryFoodItem[] =
       bestSuppliersData.ingredients.map((ing: any, index: number) => ({
         id: `prefill-${index}`,
-        nguyenLieuId: ing.ingredientId,
-        tenNguyenLieu: ing.ingredientName,
-        donViTinh: ing.unit,
-        dinhMuc: 0, // No standard per portion for supplementary items
-        soSuat: 1, // Default to 1 portion
-        soLuong: ing.totalQuantity,
-        ghiChu: '',
+        ingredientId: ing.ingredientId,
+        ingredientName: ing.ingredientName,
+        unit: ing.unit,
+        standardPerPortion: 0, // No standard per portion for supplementary items
+        portions: 1, // Default to 1 portion
+        quantity: ing.totalQuantity,
+        note: '',
       }))
 
     setSupplementaryFoods(supplementaryItems)
@@ -265,29 +267,43 @@ export default function OrderForm({
       const response = await dishApi.getAll('?per_page=100')
       const dishes = response.data || []
       setAvailableDishes(dishes)
-
-      // Load recipe standards for all dishes
-      const recipeStandardsMap = new Map<string, RecipeStandard[]>()
-      await Promise.all(
-        dishes.map(async (dish) => {
-          try {
-            const recipeResponse = await recipeStandardApi.getByDish(
-              dish.dishId,
-            )
-            recipeStandardsMap.set(dish.dishId, recipeResponse.data || [])
-          } catch (err) {
-            console.error(
-              `Failed to load recipe standards for dish ${dish.dishId}:`,
-              err,
-            )
-            recipeStandardsMap.set(dish.dishId, [])
-          }
-        }),
-      )
-      setDishRecipeStandards(recipeStandardsMap)
+      // Don't load recipe standards upfront - load them lazily when needed
     } catch (err) {
       console.error('Failed to load dishes:', err)
       setError(dict.common?.error || 'Failed to load dishes')
+    }
+  }
+
+  // Lazy load recipe standards for a specific dish
+  const loadRecipeStandardsForDish = async (dishId: string) => {
+    // Check if already loaded
+    if (dishRecipeStandards.has(dishId)) {
+      return dishRecipeStandards.get(dishId) || []
+    }
+
+    try {
+      const recipeResponse = await recipeStandardApi.getByDish(dishId)
+      const recipes = recipeResponse.data || []
+
+      // Update the map with the new data
+      setDishRecipeStandards((prev) => {
+        const newMap = new Map(prev)
+        newMap.set(dishId, recipes)
+        return newMap
+      })
+
+      return recipes
+    } catch (err) {
+      console.error(
+        `Failed to load recipe standards for dish ${dishId}:`,
+        err,
+      )
+      setDishRecipeStandards((prev) => {
+        const newMap = new Map(prev)
+        newMap.set(dishId, [])
+        return newMap
+      })
+      return []
     }
   }
 
@@ -301,6 +317,76 @@ export default function OrderForm({
     }
   }
 
+  // ==================== UTILITY FUNCTIONS ====================
+
+  // Safely add numbers avoiding floating point errors
+  const safeAdd = (a: number, b: number): number => {
+    return Math.round((a + b) * 10000) / 10000
+  }
+
+  // Safely multiply numbers avoiding floating point errors
+  const safeMultiply = (a: number, b: number): number => {
+    return Math.round(a * b * 10000) / 10000
+  }
+
+  // Round to 4 decimal places
+  const safeRound = (num: number): number => {
+    return Math.round(num * 10000) / 10000
+  }
+
+  // Format number to 4 decimal places, removing trailing zeros
+  const formatNumber = (num: number): string => {
+    const rounded = safeRound(num)
+    return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
+  }
+
+  const calculateTotalIngredients = (): TotalIngredient[] => {
+    const totals: Record<string, TotalIngredient> = {}
+
+    // From dishes
+    orderDishes.forEach((dish) => {
+      dish.ingredients.forEach((ing) => {
+        if (totals[ing.ingredientId]) {
+          totals[ing.ingredientId].totalQuantity = safeAdd(
+            totals[ing.ingredientId].totalQuantity,
+            ing.quantity
+          )
+        } else {
+          totals[ing.ingredientId] = {
+            ingredientId: ing.ingredientId,
+            ingredientName: ing.ingredientName,
+            totalQuantity: safeRound(ing.quantity),
+            unit: ing.unit,
+          }
+        }
+      })
+    })
+
+    // From supplementary foods
+    supplementaryFoods.forEach((item) => {
+      if (totals[item.ingredientId]) {
+        totals[item.ingredientId].totalQuantity = safeAdd(
+          totals[item.ingredientId].totalQuantity,
+          item.quantity
+        )
+      } else {
+        totals[item.ingredientId] = {
+          ingredientId: item.ingredientId,
+          ingredientName: item.ingredientName,
+          totalQuantity: safeRound(item.quantity),
+          unit: item.unit,
+        }
+      }
+    })
+
+    return Object.values(totals)
+  }
+
+  const totalIngredients = useMemo(
+    () => calculateTotalIngredients(),
+    [orderDishes, supplementaryFoods],
+  )
+
   // ==================== SUPPLIER MANAGEMENT ====================
 
   const loadBestSuppliers = async (
@@ -308,7 +394,7 @@ export default function OrderForm({
     bestSuppliersData?: any,
   ) => {
     // For creating new orders, we need kitchenId and ingredients
-    if (!bepId) {
+    if (!kitchenId) {
       console.log('Kitchen ID is required to get best suppliers')
       return
     }
@@ -326,8 +412,11 @@ export default function OrderForm({
 
         if (totalIngredients.length === 0) {
           console.log('No ingredients to get best suppliers for')
+          setLoadingBestSuppliers(false)
           return
         }
+
+        console.log('Loading best suppliers for ingredients:', totalIngredients)
 
         // Map to backend expected format: ingredientId, quantity, unit
         const ingredientsPayload = totalIngredients.map((ing) => ({
@@ -337,17 +426,20 @@ export default function OrderForm({
         }))
 
         const response = await orderApi.getBestSuppliersForNewOrder({
-          kitchenId: bepId,
+          kitchenId: kitchenId,
           ingredients: ingredientsPayload,
         })
 
         data = response as BestSupplierResponse
+        console.log('Best suppliers API response:', data)
       }
 
       // Process best suppliers
       const newSelections: Record<string, number> = {}
       const newAvailableSuppliers: Record<string, SupplierPrice[]> = {}
       const newBestSuppliers: Record<string, BestSupplier | null> = {}
+
+      console.log('Processing best suppliers for', data.ingredients.length, 'ingredients')
 
       // Use Promise.all to avoid await in loop
       await Promise.all(data.ingredients.map(async (ingData) => {
@@ -390,20 +482,30 @@ export default function OrderForm({
           }
           }
 
-        // Load all available suppliers for this ingredient
+        // Load all available suppliers for this ingredient (with caching)
           try {
-            const suppliersResponse =
-              await supplierPriceApi.getByIngredient(ingId)
             let suppliers: SupplierPrice[] = []
 
-            if (
-              suppliersResponse &&
-              typeof suppliersResponse === 'object' &&
-              'data' in suppliersResponse
-            ) {
-              suppliers = suppliersResponse.data as SupplierPrice[]
-            } else if (Array.isArray(suppliersResponse)) {
-              suppliers = suppliersResponse
+            // Check cache first
+            if (supplierCacheRef.current[ingId]) {
+              suppliers = supplierCacheRef.current[ingId]
+            } else {
+              // Fetch from API if not in cache
+              const suppliersResponse =
+                await supplierPriceApi.getByIngredient(ingId)
+
+              if (
+                suppliersResponse &&
+                typeof suppliersResponse === 'object' &&
+                'data' in suppliersResponse
+              ) {
+                suppliers = suppliersResponse.data as SupplierPrice[]
+              } else if (Array.isArray(suppliersResponse)) {
+                suppliers = suppliersResponse
+              }
+
+              // Store in cache
+              supplierCacheRef.current[ingId] = suppliers
             }
 
             // Filter active suppliers
@@ -460,14 +562,18 @@ export default function OrderForm({
     }
   }
 
-  // Auto-load best suppliers when ingredients or kitchen change
+  // Auto-load best suppliers when ingredients or kitchen change (with debounce)
   useEffect(() => {
-    const totalIngredients = calculateTotalIngredients()
-    if (totalIngredients.length > 0 && bepId) {
-      loadBestSuppliers()
+    if (totalIngredients.length > 0 && kitchenId) {
+      // Debounce to avoid excessive API calls during rapid changes
+      const timeoutId = setTimeout(() => {
+        loadBestSuppliers()
+      }, 500) // Wait 500ms after last change
+
+      return () => clearTimeout(timeoutId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderDishes, supplementaryFoods, bepId])
+  }, [orderDishes, supplementaryFoods, kitchenId])
 
   const handleSupplierChange = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
@@ -479,29 +585,35 @@ export default function OrderForm({
 
   // ==================== DISH MANAGEMENT ====================
 
-  const handleAddDishes = () => {
+  const handleAddDishes = async () => {
     if (selectedDishes.length === 0 || portions <= 0) {
       alert(dict.order_form?.validation?.add_dish_or_food || 'Please select dishes and enter valid portions')
       return
     }
 
-    const newDishes: OrderDishItem[] = selectedDishes.map((dishId) => {
+    // Load recipe standards for selected dishes if not already loaded
+    const recipePromises = selectedDishes.map((dishId) =>
+      loadRecipeStandardsForDish(dishId)
+    )
+    const recipeResults = await Promise.all(recipePromises)
+
+    const newDishes: OrderDishItem[] = selectedDishes.map((dishId, index) => {
       const dish = availableDishes.find((d) => d.dishId === dishId)!
-      const recipeStandards = dishRecipeStandards.get(dishId) || []
+      const recipeStandards = recipeResults[index]
 
       const ingredients = recipeStandards.map((rs) => ({
-        nguyenLieuId: rs.ingredientId,
-        tenNguyenLieu: rs.ingredientName || '',
-        donViTinh: rs.unit,
-        dinhMuc: rs.standardPer1,
-        soLuong: rs.standardPer1 * portions,
+        ingredientId: rs.ingredientId,
+        ingredientName: rs.ingredientName || '',
+        unit: rs.unit,
+        standardPerPortion: safeRound(rs.standardPer1),
+        quantity: safeMultiply(rs.standardPer1, portions),
       }))
 
       return {
         id: `${Date.now()}-${Math.random()}`,
-        monanId: dish.dishId,
-        tenMonAn: dish.dishName,
-        soSuat: portions,
+        dishId: dish.dishId,
+        dishName: dish.dishName,
+        portions: portions,
         ingredients,
       }
     })
@@ -524,10 +636,10 @@ export default function OrderForm({
         if (dish.id === dishId) {
           return {
             ...dish,
-            soSuat: newPortions,
+            portions: newPortions,
             ingredients: dish.ingredients.map((ing) => ({
               ...ing,
-              soLuong: Math.round(ing.dinhMuc * newPortions * 100) / 100,
+              quantity: safeMultiply(ing.standardPerPortion, newPortions),
             })),
           }
         }
@@ -536,14 +648,14 @@ export default function OrderForm({
     )
   }
 
-  const handleUpdateDinhMuc = (
+  const handleUpdateStandardPerPortion = (
     dishId: string,
     ingredientId: string,
-    newDinhMuc: number,
+    newStandardPerPortion: number,
   ) => {
-    if (newDinhMuc < 0) return
+    if (newStandardPerPortion < 0) return
 
-    const roundedDinhMuc = Math.round(newDinhMuc * 100) / 100
+    const roundedStandardPerPortion = safeRound(newStandardPerPortion)
 
     setOrderDishes(
       orderDishes.map((dish) => {
@@ -551,12 +663,11 @@ export default function OrderForm({
           return {
             ...dish,
             ingredients: dish.ingredients.map((ing) =>
-              ing.nguyenLieuId === ingredientId
+              ing.ingredientId === ingredientId
                 ? {
                     ...ing,
-                    dinhMuc: roundedDinhMuc,
-                    soLuong:
-                      Math.round(roundedDinhMuc * dish.soSuat * 100) / 100,
+                    standardPerPortion: roundedStandardPerPortion,
+                    quantity: safeMultiply(roundedStandardPerPortion, dish.portions),
                   }
                 : ing,
             ),
@@ -574,7 +685,7 @@ export default function OrderForm({
           return {
             ...dish,
             ingredients: dish.ingredients.filter(
-              (ing) => ing.nguyenLieuId !== ingredientId,
+              (ing) => ing.ingredientId !== ingredientId,
             ),
           }
         }
@@ -604,16 +715,16 @@ export default function OrderForm({
         if (!ingredient) return null
 
         const exists = dish.ingredients.find(
-          (ing) => ing.nguyenLieuId === ingId,
+          (ing) => ing.ingredientId === ingId,
         )
         if (exists) return null
 
         return {
-          nguyenLieuId: ingredient.ingredientId,
-          tenNguyenLieu: ingredient.ingredientName,
-          donViTinh: ingredient.unit,
-          dinhMuc: 0,
-          soLuong: customAmount,
+          ingredientId: ingredient.ingredientId,
+          ingredientName: ingredient.ingredientName,
+          unit: ingredient.unit,
+          standardPerPortion: 0,
+          quantity: safeRound(customAmount),
         }
       })
       .filter((ing) => ing !== null) as any[]
@@ -652,18 +763,18 @@ export default function OrderForm({
           )
           if (!ingredient) return null
 
-          const dinhMuc = 0
-          const soLuong = Math.round(dinhMuc * supplementaryAmount * 100) / 100
+          const standardPerPortion = 0
+          const quantity = safeMultiply(standardPerPortion, supplementaryAmount)
 
           return {
             id: `${Date.now()}-${Math.random()}`,
-            nguyenLieuId: ingredient.ingredientId,
-            tenNguyenLieu: ingredient.ingredientName,
-            donViTinh: ingredient.unit,
-            dinhMuc,
-            soSuat: supplementaryAmount,
-            soLuong,
-            ghiChu: '',
+            ingredientId: ingredient.ingredientId,
+            ingredientName: ingredient.ingredientName,
+            unit: ingredient.unit,
+            standardPerPortion,
+            portions: supplementaryAmount,
+            quantity,
+            note: '',
           }
         })
         .filter((item) => item !== null) as SupplementaryFoodItem[]
@@ -672,20 +783,19 @@ export default function OrderForm({
     closeSupplementaryModal()
   }
 
-  const handleUpdateSupplementaryDinhMuc = (id: string, newDinhMuc: number) => {
-    if (newDinhMuc < 0) return
+  const handleUpdateSupplementaryStandardPerPortion = (id: string, newStandardPerPortion: number) => {
+    if (newStandardPerPortion < 0) return
 
-    const roundedDinhMuc = Math.round(newDinhMuc * 100) / 100
+    const roundedStandardPerPortion = safeRound(newStandardPerPortion)
 
     setSupplementaryFoods(
       supplementaryFoods.map((item) => {
         if (item.id === id) {
-          const newSoLuong =
-            Math.round(roundedDinhMuc * item.soSuat * 100) / 100
+          const newQuantity = safeMultiply(roundedStandardPerPortion, item.portions)
           return {
             ...item,
-            dinhMuc: roundedDinhMuc,
-            soLuong: newSoLuong,
+            standardPerPortion: roundedStandardPerPortion,
+            quantity: newQuantity,
           }
         }
         return item
@@ -693,20 +803,19 @@ export default function OrderForm({
     )
   }
 
-  const handleUpdateSupplementarySoSuat = (id: string, newSoSuat: number) => {
-    if (newSoSuat <= 0) return
+  const handleUpdateSupplementaryPortions = (id: string, newPortions: number) => {
+    if (newPortions <= 0) return
 
-    const roundedSoSuat = Math.round(newSoSuat * 100) / 100
+    const roundedPortions = safeRound(newPortions)
 
     setSupplementaryFoods(
       supplementaryFoods.map((item) => {
         if (item.id === id) {
-          const newSoLuong =
-            Math.round(item.dinhMuc * roundedSoSuat * 100) / 100
+          const newQuantity = safeMultiply(item.standardPerPortion, roundedPortions)
           return {
             ...item,
-            soSuat: roundedSoSuat,
-            soLuong: newSoLuong,
+            portions: roundedPortions,
+            quantity: newQuantity,
           }
         }
         return item
@@ -714,10 +823,10 @@ export default function OrderForm({
     )
   }
 
-  const handleUpdateSupplementaryNote = (id: string, note: string) => {
+  const handleUpdateSupplementaryNote = (id: string, noteText: string) => {
     setSupplementaryFoods(
       supplementaryFoods.map((item) =>
-        item.id === id ? { ...item, ghiChu: note } : item,
+        item.id === id ? { ...item, note: noteText } : item,
       ),
     )
   }
@@ -728,54 +837,11 @@ export default function OrderForm({
     }
   }
 
-  // ==================== UTILITY FUNCTIONS ====================
-
-  const formatNumber = (num: number): string => {
-    const rounded = Math.round(num * 100) / 100
-    return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
-  }
-
-  const calculateTotalIngredients = (): TotalIngredient[] => {
-    const totals: Record<string, TotalIngredient> = {}
-
-    // From dishes
-    orderDishes.forEach((dish) => {
-      dish.ingredients.forEach((ing) => {
-        if (totals[ing.nguyenLieuId]) {
-          totals[ing.nguyenLieuId].totalQuantity += ing.soLuong
-        } else {
-          totals[ing.nguyenLieuId] = {
-            ingredientId: ing.nguyenLieuId,
-            ingredientName: ing.tenNguyenLieu,
-            totalQuantity: ing.soLuong,
-            unit: ing.donViTinh,
-          }
-        }
-      })
-    })
-
-    // From supplementary foods
-    supplementaryFoods.forEach((item) => {
-      if (totals[item.nguyenLieuId]) {
-        totals[item.nguyenLieuId].totalQuantity += item.soLuong
-      } else {
-        totals[item.nguyenLieuId] = {
-          ingredientId: item.nguyenLieuId,
-          ingredientName: item.tenNguyenLieu,
-          totalQuantity: item.soLuong,
-          unit: item.donViTinh,
-        }
-      }
-    })
-
-    return Object.values(totals)
-  }
-
   // ==================== MODAL HANDLERS ====================
 
   const handleSelectKitchen = (kitchen: Kitchen) => {
-    setBepId(kitchen.kitchenId)
-    setTenBep(kitchen.kitchenName)
+    setKitchenId(kitchen.kitchenId)
+    setKitchenName(kitchen.kitchenName)
     closeKitchenModal()
   }
 
@@ -824,7 +890,7 @@ export default function OrderForm({
       return
     }
 
-    if (!bepId.trim()) {
+    if (!kitchenId.trim()) {
       setError(dict.order_form?.validation?.select_kitchen || 'Please select kitchen')
       isSubmittingRef.current = false
       return
@@ -843,28 +909,28 @@ export default function OrderForm({
     try {
       const orderData: CreateOrderInput = {
         orderId,
-        kitchenId: bepId,
-        orderDate: ngayLen,
-        note: ghiChu,
+        kitchenId: kitchenId,
+        orderDate: orderDate,
+        note: note,
         status: 'Pending',
         details: orderDishes.map((dish) => ({
-          dishId: dish.monanId,
-          portions: dish.soSuat,
+          dishId: dish.dishId,
+          portions: dish.portions,
           note: '',
           ingredients: dish.ingredients.map((ing) => ({
-            ingredientId: ing.nguyenLieuId,
-            quantity: ing.soLuong,
-            unit: ing.donViTinh,
-            standardPerPortion: ing.dinhMuc,
+            ingredientId: ing.ingredientId,
+            quantity: ing.quantity,
+            unit: ing.unit,
+            standardPerPortion: ing.standardPerPortion,
           })),
         })),
         supplementaryFoods: supplementaryFoods.map((item) => ({
-          ingredientId: item.nguyenLieuId,
-          quantity: item.soLuong,
-          unit: item.donViTinh,
-          standardPerPortion: item.dinhMuc,
-          portions: item.soSuat,
-          note: item.ghiChu || '',
+          ingredientId: item.ingredientId,
+          quantity: item.quantity,
+          unit: item.unit,
+          standardPerPortion: item.standardPerPortion,
+          portions: item.portions,
+          note: item.note || '',
         })),
       }
 
@@ -918,11 +984,6 @@ export default function OrderForm({
     [availableKitchens, searchKitchen],
   )
 
-  const totalIngredients = useMemo(
-    () => calculateTotalIngredients(),
-    [orderDishes, supplementaryFoods],
-  )
-
   // ==================== RENDER ====================
 
   return (
@@ -943,13 +1004,13 @@ export default function OrderForm({
         {/* Order Header */}
         <OrderHeaderForm
           orderId={orderId}
-          ngayLen={ngayLen}
-          tenBep={tenBep}
-          ghiChu={ghiChu}
+          ngayLen={orderDate}
+          tenBep={kitchenName}
+          ghiChu={note}
           onOrderIdChange={setOrderId}
-          onDateChange={setNgayLen}
+          onDateChange={setOrderDate}
           onKitchenSelect={() => setShowKitchenModal(true)}
-          onNoteChange={setGhiChu}
+          onNoteChange={setNote}
         />
 
         {/* Dishes Section */}
@@ -957,7 +1018,7 @@ export default function OrderForm({
           dishes={orderDishes}
           onAddDish={() => setShowDishModal(true)}
           onPortionsChange={handleUpdatePortions}
-          onDinhMucChange={handleUpdateDinhMuc}
+          onStandardPerPortionChange={handleUpdateStandardPerPortion}
           onRemoveIngredient={handleRemoveIngredient}
           onAddIngredient={(index) => {
             setCurrentDishIndex(index)
@@ -971,8 +1032,8 @@ export default function OrderForm({
         <SupplementaryFoodList
           items={supplementaryFoods}
           onAdd={() => setShowSupplementaryModal(true)}
-          onDinhMucChange={handleUpdateSupplementaryDinhMuc}
-          onSoSuatChange={handleUpdateSupplementarySoSuat}
+          onStandardPerPortionChange={handleUpdateSupplementaryStandardPerPortion}
+          onPortionsChange={handleUpdateSupplementaryPortions}
           onNoteChange={handleUpdateSupplementaryNote}
           onRemove={handleRemoveSupplementaryFood}
           formatNumber={formatNumber}
@@ -1042,7 +1103,7 @@ export default function OrderForm({
         }))}
         searchValue={searchKitchen}
         onSearchChange={setSearchKitchen}
-        selectedId={bepId}
+        selectedId={kitchenId}
         onSelect={(item) => handleSelectKitchen(item as Kitchen)}
         searchPlaceholder={dict.orders_list?.search_placeholder || 'Search kitchens...'}
         emptyMessage={dict.common?.no_data || 'No kitchen found'}
@@ -1120,7 +1181,7 @@ export default function OrderForm({
             <FormControl
               type="number"
               min="0"
-              step="0.01"
+              step="0.001"
               value={customAmount}
               onChange={(e) => setCustomAmount(parseFloat(e.target.value) || 0)}
             />
