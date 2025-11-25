@@ -10,7 +10,7 @@ RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
 
 # Install only deps first for better layer caching
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --no-frozen-lockfile --prod=false
 
 ###############################################
 # builder: build the Next.js app
