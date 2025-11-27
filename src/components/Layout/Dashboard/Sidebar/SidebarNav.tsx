@@ -3,6 +3,17 @@ import {
   faPuzzlePiece,
   faUtensils,
   faBoxes,
+  faCarrot,
+  faKitchenSet,
+  faBowlFood,
+  faTruck,
+  faBook,
+  faPlus,
+  faClipboardList,
+  faDollarSign,
+  faWarehouse,
+  faBoxOpen,
+  faTruckRampBox,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
@@ -38,16 +49,16 @@ export default async function SidebarNav() {
         toggleIcon={faPuzzlePiece}
         toggleText={dict.sidebar.items.master_data || 'Master Data'}
       >
-        <SidebarNavItem href="/ingredients">
+        <SidebarNavItem icon={faCarrot} href="/ingredients">
           {dict.sidebar.items.ingredients}
         </SidebarNavItem>
-        <SidebarNavItem href="/kitchens">
+        <SidebarNavItem icon={faKitchenSet} href="/kitchens">
           {dict.sidebar.items.kitchens}
         </SidebarNavItem>
-        <SidebarNavItem href="/dishes">
+        <SidebarNavItem icon={faBowlFood} href="/dishes">
           {dict.sidebar.items.dishes}
         </SidebarNavItem>
-        <SidebarNavItem href="/suppliers">
+        <SidebarNavItem icon={faTruck} href="/suppliers">
           {dict.sidebar.items.suppliers}
         </SidebarNavItem>
       </SidebarNavGroup>
@@ -56,14 +67,14 @@ export default async function SidebarNav() {
         toggleIcon={faUtensils}
         toggleText={dict.sidebar.items.recipes || 'Recipes'}
       >
-        <SidebarNavItem href="/recipe-standards">
+        <SidebarNavItem icon={faBook} href="/recipe-standards">
           {dict.sidebar.items.recipe_standards}
         </SidebarNavItem>
-        <SidebarNavItem href="/orders/create">
+        <SidebarNavItem icon={faPlus} href="/orders/create">
           {dict.sidebar.items.order || 'Create Order'}
         </SidebarNavItem>
 
-        <SidebarNavItem href="/orders">
+        <SidebarNavItem icon={faClipboardList} href="/orders">
           {dict.sidebar.items.orders}
         </SidebarNavItem>
       </SidebarNavGroup>
@@ -72,16 +83,16 @@ export default async function SidebarNav() {
         toggleIcon={faBoxes}
         toggleText={dict.sidebar.items.inventory_management || 'Inventory'}
       >
-        <SidebarNavItem href="/supplier-prices">
+        <SidebarNavItem icon={faDollarSign} href="/supplier-prices">
           {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
         </SidebarNavItem>
-        <SidebarNavItem href="/inventory/stocks">
+        <SidebarNavItem icon={faWarehouse} href="/inventory/stocks">
           {dict.sidebar.items.stocks || 'Stocks'}
         </SidebarNavItem>
-        <SidebarNavItem href="/inventory/imports">
+        <SidebarNavItem icon={faBoxOpen} href="/inventory/imports">
           {dict.sidebar.items.imports || 'Imports'}
         </SidebarNavItem>
-        <SidebarNavItem href="/inventory/exports">
+        <SidebarNavItem icon={faTruckRampBox} href="/inventory/exports">
           {dict.sidebar.items.exports || 'Exports'}
         </SidebarNavItem>
         {/* <SidebarNavItem href="/receiving">
