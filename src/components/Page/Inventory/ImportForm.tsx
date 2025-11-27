@@ -276,7 +276,7 @@ export default function ImportForm({
     if (supplierId) {
       setLoadingIngredients(true)
       try {
-        const response = await supplierPriceApi.getBySupplier(supplierId, { per_page: 1000 })
+        const response = await supplierPriceApi.getBySupplier(supplierId, { per_page: 100 })
 
         // Extract unique ingredients from supplier prices
         const uniqueIngredients = new Map<string, Ingredient>()

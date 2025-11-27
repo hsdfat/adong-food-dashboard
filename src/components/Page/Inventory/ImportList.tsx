@@ -11,7 +11,7 @@ import {
   TableColumn,
   TableAction,
 } from '@/components/Common/MasterDataTable/MasterDataTable'
-import { Badge } from 'react-bootstrap'
+import { Badge, Button } from 'react-bootstrap'
 
 export default function ImportList() {
   const [importsData, setImportsData] =
@@ -33,7 +33,7 @@ export default function ImportList() {
       // Build query string
       const params = new URLSearchParams()
       params.append('page', page.toString())
-      params.append('limit', perPage.toString())
+      params.append('per_page', perPage.toString())
       if (search) {
         params.append('search', search)
       }
@@ -84,7 +84,30 @@ export default function ImportList() {
       align: 'left',
       render: (value, row) => {
         const importRow = row as InventoryImport
-        return importRow.supplier?.supplierName || importRow.supplierId || '-'
+        const supplierName = importRow.supplier?.supplierName || importRow.supplierId || '-'
+        const zaloLink = importRow.supplier?.zaloLink
+
+        if (zaloLink) {
+          return (
+            <div className="d-flex align-items-center gap-2">
+              <span>{supplierName}</span>
+              <Button
+                variant="link"
+                size="sm"
+                className="p-0"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(zaloLink, '_blank')
+                }}
+                title="Contact on Zalo"
+              >
+                <i className="bi bi-chat-dots-fill text-primary"></i>
+              </Button>
+            </div>
+          )
+        }
+
+        return supplierName
       },
     },
     {
@@ -167,32 +190,7 @@ export default function ImportList() {
       loadingMessage={dict.inventory?.loading || 'Loading...'}
       columns={columns}
       actions={actions}
-      data={
-        importsData && importsData.pagination
-          ? {
-              data: importsData.data,
-              meta: (() => {
-                const { page, limit, total, total_pages } = importsData.pagination!
-                // Calculate from: page 1 starts at 1, otherwise (page - 1) * limit + 1
-                const from = total > 0 ? (page === 1 ? 1 : (page - 1) * limit + 1) : 0
-                // Calculate to: for page 1, use min(total, limit), otherwise page * limit (capped at total)
-                const to = total > 0
-                  ? (page === 1
-                      ? Math.min(total, limit)
-                      : Math.min((page - 1) * limit + limit, total))
-                  : 0
-                return {
-                  current_page: page,
-                  per_page: limit,
-                  total,
-                  last_page: total_pages,
-                  from,
-                  to,
-                }
-              })(),
-            }
-          : null
-      }
+      data={importsData}
       loading={loading}
       error={error}
       onLoadData={loadImports}

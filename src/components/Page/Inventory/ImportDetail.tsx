@@ -137,6 +137,17 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
                 <p>
                   <strong>{dict.inventory?.supplier || 'Supplier'}:</strong>{' '}
                   {importData.supplier.supplierName || importData.supplierId}
+                  {importData.supplier.zaloLink && (
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="ms-2 p-0"
+                      onClick={() => window.open(importData.supplier!.zaloLink!, '_blank')}
+                      title="Contact on Zalo"
+                    >
+                      <i className="bi bi-chat-dots-fill text-primary"></i> Zalo
+                    </Button>
+                  )}
                 </p>
               )}
               {importData.orderId && (

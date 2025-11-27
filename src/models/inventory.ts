@@ -253,11 +253,13 @@ export interface InventoryApiResponse<T> {
 
 export interface InventoryListResponse<T> {
   data: T[];
-  pagination?: {
+  meta?: {
+    current_page: number;
+    last_page: number;
+    from: number;
+    to: number;
+    per_page: number;
     total: number;
-    page: number;
-    limit: number;
-    total_pages: number;
   };
 }
 
