@@ -10,6 +10,7 @@
     "add_dish": "Add Dish",
     "add_supplementary_food": "Add Supplementary Food",
     "select_dish": "Select Dish",
+    "select_kitchen": "Select Kitchen",
     "portions": "Portions",
     "quantity": "Quantity",
     "standard": "Standard",
@@ -19,12 +20,27 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
+    "add": "Add",
     "confirm_delete_dish": "Are you sure you want to remove this dish?",
     "confirm_delete_supplementary": "Are you sure you want to remove this supplementary food?",
     "select_dish_and_portions": "Please select dishes and enter valid portions",
     "select_ingredient_and_quantity": "Please select ingredients and enter valid quantity",
     "all_ingredients_exist": "All ingredients already exist in the dish",
     "edit_after_add": "You can edit standard and quantity after adding",
+    "no_kitchen_found": "No kitchen found",
+    "no_dish_found": "No dish found",
+    "no_ingredient_found": "No ingredient found",
+    "add_ingredients_to_dish": "Add Ingredients to Dish",
+    "add_supplementary_ingredients": "Add Supplementary Ingredients",
+    "supplier_requests": "Supplier Requests",
+    "save_order": "Save Order",
+    "processing": "Processing...",
+    "error_load_kitchens": "Failed to load kitchens",
+    "error_load_dishes": "Failed to load dishes",
+    "error_load_recipe_standards": "Failed to load recipe standards for dish",
+    "error_load_ingredients": "Failed to load ingredients",
+    "error_load_suppliers": "Failed to load suppliers for ingredient",
+    "error_creating_order": "Error occurred while creating order",
     "validation": {
       "enter_order_id": "Please enter order ID",
       "select_kitchen": "Please select kitchen",
@@ -33,22 +49,35 @@
   },
   "orders_list": {
     "title": "Orders List",
+    "page_title": "Order Management",
+    "create_order": "Create Order",
     "search_placeholder": "Search orders...",
     "no_orders": "No orders found",
     "no_orders_match_filters": "No orders found matching the filters",
+    "error_load_orders": "Failed to load orders",
+    "success": "Success",
+    "error": "Error",
+    "status_updated": "Status updated successfully.",
+    "error_update_status": "Failed to update status.",
     "table_headers": {
+      "id": "ID",
       "order_id": "Order ID",
       "kitchen": "Kitchen",
       "order_date": "Order Date",
+      "event_date": "Event Date",
+      "total_amount": "Total Amount",
       "status": "Status",
       "created_by": "Created By",
       "details_count": "Details Count",
       "actions": "Actions"
     },
     "actions": {
+      "view": "View",
       "view_details": "View Details",
       "view_ingredients": "View Ingredients",
+      "ingredients": "Ingredients",
       "view_supplier_requests": "View Supplier Requests",
+      "supplier_requests": "Supplier Requests",
       "delete_order": "Delete Order"
     },
     "status_badges": {
@@ -61,12 +90,24 @@
   },
   "ingredient_summary": {
     "title": "Ingredient Summary",
+    "page_title": "Ingredient Summary",
+    "page_subtitle": "Total ingredients required for this order",
     "subtitle": "Total ingredients required for this order",
     "no_ingredients": "No ingredients found for this order",
+    "go_back": "Go Back",
+    "error_loading": "Failed to load ingredient summary",
     "table_headers": {
       "ingredient": "Ingredient",
+      "ingredient_id": "Ingredient ID",
+      "ingredient_name": "Ingredient Name",
       "quantity": "Quantity",
-      "unit": "Unit"
+      "unit": "Unit",
+      "supplier": "Supplier",
+      "product": "Product",
+      "unit_price": "Unit Price",
+      "total_cost": "Total Cost",
+      "specification": "Specification",
+      "details": "Details"
     },
     "suppliers": {
       "title": "Supplier Selection",
@@ -91,30 +132,97 @@
       "supplier_saved_bulk": "Saved supplier requests for selected ingredients",
       "supplier_save_failed": "Failed to save",
       "supplier_save_none_selected": "No supplier selected to save"
+    },
+    "labels": {
+      "total_ingredients": "Total Ingredients",
+      "order": "Order"
     }
   },
   "dish_row": {
     "portions": "Portions",
     "ingredients": "Ingredients",
     "view_ingredients": "View Ingredients",
+    "no_ingredients_yet": "No ingredients yet",
+    "per_portion": "/portion",
+    "add_ingredient": "Add Ingredient",
     "edit": "Edit",
     "delete": "Delete"
   },
   "dish_list": {
     "title": "Dishes",
+    "dishes": "Dishes",
     "no_dishes": "No dishes added",
     "add_dish": "Add Dish",
+    "add_dish_to_start": "Add Dish to start",
     "portions_for_all": "Portions (apply to all selected dishes):",
     "table_headers": {
       "dish": "Dish",
       "portions": "Portions",
-      "ingredients": "Ingredients"
+      "ingredients": "Ingredients",
+      "actions": "Actions"
     }
   },
   "supplementary_food_row": {
     "quantity": "Quantity",
+    "note_placeholder": "Note...",
     "edit": "Edit",
     "delete": "Delete"
+  },
+  "supplementary_food_list": {
+    "title": "Supplementary Foods",
+    "supplementary_foods": "Supplementary Foods",
+    "add_supplementary": "Add Supplementary",
+    "no_ingredients": "No supplementary ingredients",
+    "add_supplementary_to_add_new": "Add supplementary to add new",
+    "table_headers": {
+      "ingredient": "Ingredient",
+      "standard_per_portion": "Standard/Portion",
+      "portions": "Portions",
+      "quantity": "Quantity",
+      "note": "Note",
+      "actions": "Actions"
+    }
+  },
+  "order_header_form": {
+    "order_information": "Order Information",
+    "order_id": "Order ID",
+    "order_date": "Order Date",
+    "kitchen": "Kitchen",
+    "select_kitchen": "Select Kitchen",
+    "notes": "Notes"
+  },
+  "order_filters": {
+    "search": "Search",
+    "search_orders": "Search orders...",
+    "show_filters": "Show Filters",
+    "hide_filters": "Hide Filters",
+    "clear_filters": "Clear Filters",
+    "date_from": "Date From",
+    "date_to": "Date To"
+  },
+  "order_table": {
+    "no_orders_match_filters": "No orders found matching the filters",
+    "no_orders_yet": "No orders yet",
+    "table_headers": {
+      "order_id": "Order ID",
+      "kitchen": "Kitchen",
+      "order_date": "Order Date",
+      "status": "Status",
+      "created_by": "Created By",
+      "details_count": "Details Count",
+      "actions": "Actions"
+    }
+  },
+  "order_actions": {
+    "actions": "Actions",
+    "view_details": "View Details",
+    "ingredient_summary": "Ingredient Summary",
+    "view_supplier_requests": "View Supplier Requests",
+    "delete_order": "Delete Order"
+  },
+  "status_select": {
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "common": {
     "loading": "Loading...",

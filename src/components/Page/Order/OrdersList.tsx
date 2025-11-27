@@ -1,45 +1,19 @@
 'use client'
 
-import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Alert,
-  Spinner,
-} from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPlus,
-} from '@fortawesome/free-solid-svg-icons'
-import { useRouter, useSearchParams } from 'next/navigation'
+import React, { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
-import Pagination from '@/components/Pagination/Pagination'
-import OrderFilters from './components/OrderFilters'
-import OrderTable from './components/OrderTable'
+import MasterDataListPage from '@/components/Common/MasterDataListPage'
+import {
+  TableColumn,
+  TableAction,
+} from '@/components/Common/MasterDataTable/MasterDataTable'
+import StatusCell from './components/StatusCell'
+import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
-// ==================== TYPE DEFINITIONS ====================
-
-interface FilterState {
-  searchQuery: string;
-  dateFrom: string;
-  dateTo: string;
-  showFilters: boolean;
-}
-
-interface StatusState {
-  original: Record<string, string>;
-  edited: Record<string, string>;
-  saving: Record<string, boolean>;
-}
-
-// ==================== CONSTANTS ====================
-
-const DEFAULT_PER_PAGE = 10
 const COMMON_STATUSES = [
   'Pending',
   'Approved',
@@ -48,475 +22,175 @@ const COMMON_STATUSES = [
   'Rejected',
 ]
 
-const STATUS_COLORS = {
-  pending: { bg: '#ffc107', text: '#000000', border: '#ffc107' },
-  approved: { bg: '#198754', text: '#ffffff', border: '#198754' },
-  completed: { bg: '#198754', text: '#ffffff', border: '#198754' },
-  cancelled: { bg: '#dc3545', text: '#ffffff', border: '#dc3545' },
-  rejected: { bg: '#dc3545', text: '#ffffff', border: '#dc3545' },
-  default: { bg: '#6c757d', text: '#ffffff', border: '#6c757d' },
-}
-
-// ==================== UTILITY FUNCTIONS ====================
-
-function getDefaultDateRange() {
-  const today = new Date()
-  const weekAgo = new Date()
-  weekAgo.setDate(today.getDate() - 7)
-
-  return {
-    from: weekAgo.toISOString().split('T')[0],
-    to: today.toISOString().split('T')[0],
-  }
-}
-
-function getStatusColors(status: string) {
-  const statusLower = status.toLowerCase()
-  return (
-    STATUS_COLORS[statusLower as keyof typeof STATUS_COLORS] ||
-    STATUS_COLORS.default
-  )
-}
-
-// ==================== MAIN COMPONENT ====================
-
-function OrdersList() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const dict = useDictionary()
-
-  // ==================== STATE MANAGEMENT ====================
-
-  // Data State
+export default function OrdersList() {
   const [ordersData, setOrdersData] =
     useState<ResourceCollection<OrderDTO> | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<string>('')
+  const router = useRouter()
+  const dict = useDictionary()
+  const { addNotification } = useNotification()
 
-  // Filter State
-  const [filters, setFilters] = useState<FilterState>({
-    searchQuery: '',
-    dateFrom: '',
-    dateTo: '',
-    showFilters: true,
-  })
-
-  // Status Management State
-  const [statusState, setStatusState] = useState<StatusState>({
-    original: {},
-    edited: {},
-    saving: {},
-  })
-
-  // Refs for preventing duplicate calls
-  const isInitialized = useRef(false)
-  const isLoadingRef = useRef(false)
-
-  // ==================== URL PARAMS ====================
-
-  const urlParams = useMemo(
-    () => ({
-      page: parseInt(searchParams.get('page') || '1'),
-      perPage: parseInt(
-        searchParams.get('per_page') || String(DEFAULT_PER_PAGE),
-      ),
-      search: searchParams.get('search') || '',
-      fromDate: searchParams.get('from_date') || '',
-      toDate: searchParams.get('to_date') || '',
-    }),
-    [searchParams],
-  )
-
-  // ==================== DATA LOADING ====================
-
-  const loadOrders = useCallback(async () => {
-    // Prevent duplicate API calls
-    if (isLoadingRef.current) {
-      console.log('[OrdersList] Already loading, skipping duplicate call')
-      return
-    }
-
+  const loadOrders = async (
+    page: number,
+    perPage: number,
+    search: string,
+  ) => {
     try {
-      isLoadingRef.current = true
       setLoading(true)
       setError('')
 
       const data = await orderApi.getAll({
-        page: urlParams.page,
-        per_page: urlParams.perPage,
-        search: urlParams.search || undefined,
-        from_date: urlParams.fromDate || undefined,
-        to_date: urlParams.toDate || undefined,
+        page,
+        per_page: perPage,
+        search: search || undefined,
       })
 
       setOrdersData(data)
-
-      // Initialize status tracking
-      if (data.data) {
-        const originalStatuses: Record<string, string> = {}
-        data.data.forEach((order) => {
-          originalStatuses[order.orderId] = order.status
-        })
-
-        setStatusState((prev) => ({
-          ...prev,
-          original: originalStatuses,
-          // Keep only edited statuses for orders still in current page
-          edited: Object.fromEntries(
-            Object.entries(prev.edited).filter(([orderId]) =>
-              data.data.some((o) => String(o.orderId) === orderId),
-            ),
-          ),
-        }))
-      }
     } catch (err: any) {
-      console.error('[OrdersList] Load error:', err)
-      setError(err?.message || 'Failed to load orders')
+      setError(err?.message || dict.orders?.error_load || 'Failed to load orders')
+      console.error(err)
     } finally {
       setLoading(false)
-      isLoadingRef.current = false
     }
-  }, [
-    urlParams.page,
-    urlParams.perPage,
-    urlParams.search,
-    urlParams.fromDate,
-    urlParams.toDate,
-  ])
+  }
 
-  // ==================== INITIALIZATION ====================
+  const handleDelete = async (id: string) => {
+    await orderApi.delete(parseInt(id))
+  }
 
-  useEffect(() => {
-    // Initialize default date range only once on mount
-    if (!isInitialized.current) {
-      isInitialized.current = true
-
-      // Set default dates if not in URL
-      if (!urlParams.fromDate && !urlParams.toDate) {
-        const defaults = getDefaultDateRange()
-        const newParams = new URLSearchParams(searchParams)
-        newParams.set('from_date', defaults.from)
-        newParams.set('to_date', defaults.to)
-        router.replace(`/orders?${newParams.toString()}`, { scroll: false })
-        return // Don't load orders yet, wait for URL update
-      }
-    }
-
-    // Load orders when URL params change
-    loadOrders()
-  }, [
-    urlParams.page,
-    urlParams.perPage,
-    urlParams.search,
-    urlParams.fromDate,
-    urlParams.toDate,
-  ])
-
-  // Sync filters with URL params
-  useEffect(() => {
-    const defaults = getDefaultDateRange()
-    setFilters({
-      searchQuery: urlParams.search,
-      dateFrom: urlParams.fromDate || defaults.from,
-      dateTo: urlParams.toDate || defaults.to,
-      showFilters: true,
-    })
-  }, [urlParams.search, urlParams.fromDate, urlParams.toDate])
-
-  // ==================== FILTER HANDLERS ====================
-
-  const handleSearch = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault()
-
-      const newParams = new URLSearchParams(searchParams)
-      newParams.set('page', '1') // Reset to first page
-
-      if (filters.searchQuery.trim()) {
-        newParams.set('search', filters.searchQuery.trim())
-      } else {
-        newParams.delete('search')
-      }
-
-      if (filters.dateFrom) {
-        newParams.set('from_date', filters.dateFrom)
-      } else {
-        newParams.delete('from_date')
-      }
-
-      if (filters.dateTo) {
-        newParams.set('to_date', filters.dateTo)
-      } else {
-        newParams.delete('to_date')
-      }
-
-      router.push(`/orders?${newParams.toString()}`)
-    },
-    [filters, searchParams, router],
-  )
-
-  const handleClearFilters = useCallback(() => {
-    setFilters((prev) => ({
-      ...prev,
-      searchQuery: '',
-      dateFrom: '',
-      dateTo: '',
-    }))
-
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set('page', '1')
-    newParams.delete('search')
-    newParams.delete('from_date')
-    newParams.delete('to_date')
-    router.push(`/orders?${newParams.toString()}`)
-  }, [searchParams, router])
-
-  const toggleFilters = useCallback(() => {
-    setFilters((prev) => ({ ...prev, showFilters: !prev.showFilters }))
-  }, [])
-
-  const updateFilter = useCallback(
-    <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
-      setFilters((prev) => ({ ...prev, [key]: value }))
-    },
-    [],
-  )
-
-  // ==================== STATUS HANDLERS ====================
-
-  const handleStatusChange = useCallback(
-    (orderId: string, newStatus: string) => {
-      setStatusState((prev) => {
-        const originalStatus = prev.original[orderId]
-
-        if (newStatus === originalStatus) {
-          // Revert to original - remove from edited
-          const { [orderId]: _, ...remainingEdited } = prev.edited
-          return { ...prev, edited: remainingEdited }
-        } 
-          // Status changed - add to edited
-          return {
-            ...prev,
-            edited: { ...prev.edited, [orderId]: newStatus },
-          }
-        
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+    try {
+      await orderApi.updateStatus(orderId, newStatus)
+      addNotification({
+        type: 'success',
+        title: dict.common?.success || 'Success',
+        message: dict.orders?.status_updated || 'Status updated successfully.',
       })
-    },
-    [],
-  )
+      // Reload orders to reflect changes
+      const page = 1 // You can maintain current page if needed
+      const perPage = 10
+      await loadOrders(page, perPage, '')
+    } catch (err: any) {
+      console.error('[OrdersList] Status update error:', err)
+      addNotification({
+        type: 'error',
+        title: dict.common?.error || 'Error',
+        message: err?.message || dict.orders?.error_update_status || 'Failed to update status.',
+      })
+      throw err
+    }
+  }
 
-  const handleSaveStatus = useCallback(
-    async (orderId: string) => {
-      const newStatus = statusState.edited[orderId]
-      if (!newStatus) return
-
-      try {
-        setStatusState((prev) => ({
-          ...prev,
-          saving: { ...prev.saving, [orderId]: true },
-        }))
-        setError('')
-
-        await orderApi.updateStatus(parseInt(orderId), newStatus)
-
-        // Update original status and remove from edited
-        setStatusState((prev) => {
-          const { [orderId]: _, ...remainingEdited } = prev.edited
-          const { [orderId]: __, ...remainingSaving } = prev.saving
-          return {
-            original: { ...prev.original, [orderId]: newStatus },
-            edited: remainingEdited,
-            saving: remainingSaving,
-          }
-        })
-
-        // Reload to get fresh data
-        await loadOrders()
-      } catch (err: any) {
-        console.error('[OrdersList] Status update error:', err)
-        setError(err?.message || 'Failed to update order status')
-        setStatusState((prev) => ({
-          ...prev,
-          saving: { ...prev.saving, [orderId]: false },
-        }))
-      }
-    },
-    [statusState.edited, loadOrders],
-  )
-
-  const handleDiscardStatus = useCallback((orderId: string) => {
-    setStatusState((prev) => {
-      const { [orderId]: _, ...remainingEdited } = prev.edited
-      return { ...prev, edited: remainingEdited }
-    })
-  }, [])
-
-  // ==================== DELETE HANDLER ====================
-
-  const handleDelete = useCallback(
-    async (orderId: string) => {
-      if (!confirm(dict.orders?.confirm_delete || 'Are you sure you want to delete this order?')) {
-        return
-      }
-
-      try {
-        await orderApi.delete(parseInt(orderId))
-        await loadOrders()
-      } catch (err: any) {
-        console.error('[OrdersList] Delete error:', err)
-        setError(err?.message || 'Failed to delete order')
-      }
-    },
-    [loadOrders],
-  )
-
-  // ==================== COMPUTED VALUES ====================
-
+  // Get all unique statuses from loaded orders
   const allStatuses = useMemo(() => {
     const statusSet = new Set<string>(COMMON_STATUSES)
-
-    // Add any statuses from loaded orders
     ordersData?.data?.forEach((order) => {
       if (order.status) {
         statusSet.add(order.status)
       }
     })
-
     return Array.from(statusSet).sort()
   }, [ordersData?.data])
 
-  const hasActiveFilters = useMemo(
-    () => Boolean(urlParams.search || urlParams.fromDate || urlParams.toDate),
-    [urlParams.search, urlParams.fromDate, urlParams.toDate],
-  )
+  // Define table columns
+  const columns: TableColumn[] = [
+    {
+      key: 'orderId',
+      label: dict.orders?.id || 'ID',
+      align: 'left',
+      priority: true,
+    },
+    {
+      key: 'status',
+      label: dict.orders?.status || 'Status',
+      align: 'left',
+      priority: true,
+      render: (_value, row) => {
+        const order = row as OrderDTO
+        // Ensure orderId exists and is valid
+        if (!order.orderId) {
+          console.error('[OrdersList] Missing orderId for order:', order)
+          return <span>-</span>
+        }
+        return (
+          <StatusCell
+            orderId={String(order.orderId)}
+            currentStatus={order.status || 'Pending'}
+            allStatuses={allStatuses}
+            onSave={handleUpdateStatus}
+          />
+        )
+      },
+    },
+    {
+      key: 'orderDate',
+      label: dict.orders?.order_date || 'Order Date',
+      align: 'left',
+      render: (value) =>
+        value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'eventDate',
+      label: dict.orders?.event_date || 'Event Date',
+      align: 'left',
+      render: (value) =>
+        value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'totalAmount',
+      label: dict.orders?.total_amount || 'Total Amount',
+      align: 'right',
+      render: (value) => (value ? `$${Number(value).toFixed(2)}` : '-'),
+    },
+  ]
 
-  // ==================== HELPER FUNCTIONS ====================
-
-  const getCurrentStatus = useCallback(
-    (orderId: string): string => (
-        statusState.edited[orderId] ||
-        statusState.original[orderId] ||
-        'Pending'
-      ),
-    [statusState.edited, statusState.original],
-  )
-
-  const isStatusChanged = useCallback(
-    (orderId: string): boolean => orderId in statusState.edited,
-    [statusState.edited],
-  )
-
-  const isSavingStatus = useCallback(
-    (orderId: string): boolean => Boolean(statusState.saving[orderId]),
-    [statusState.saving],
-  )
-
-  // ==================== RENDER HELPERS ====================
-
-  // ==================== RENDER ====================
-
-  if (loading && !ordersData) {
-    return (
-      <Card>
-        <CardBody>
-          <div className="text-center py-5">
-            <Spinner animation="border" className="me-2" />
-            <span>{dict.orders?.loading || 'Loading orders...'}</span>
-          </div>
-        </CardBody>
-      </Card>
-    )
-  }
+  // Define table actions
+  const actions: TableAction[] = [
+    {
+      label: dict.action?.view || 'View',
+      onClick: async (row: unknown) => {
+        const order = row as OrderDTO
+        router.push(`/orders/${order.orderId}`)
+      },
+    },
+    {
+      label: dict.action?.ingredients || 'Ingredients',
+      onClick: async (row: unknown) => {
+        const order = row as OrderDTO
+        router.push(`/orders/${order.orderId}/ingredients/summary`)
+      },
+    },
+    {
+      label: dict.action?.supplier_requests || 'Supplier Requests',
+      onClick: async (row: unknown) => {
+        const order = row as OrderDTO
+        router.push(`/orders/${order.orderId}/supplier-requests`)
+      },
+    },
+  ]
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="d-flex justify-content-between align-items-center">
-          <div>
-            <h4>{dict.orders?.title || 'Order Management'}</h4>
-            <div className="text-muted">{dict.orders?.subtitle || 'List of orders'}</div>
-          </div>
-          <Button
-            variant="primary"
-            onClick={() => router.push('/orders/create')}
-          >
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
-            {dict.orders?.create || 'Create Order'}
-          </Button>
-        </div>
-      </CardHeader>
-
-      <CardBody>
-        {error && (
-          <Alert variant="danger" dismissible onClose={() => setError('')}>
-            {error}
-          </Alert>
-        )}
-
-        {/* Search and Filters */}
-        <OrderFilters
-          filters={filters}
-          hasActiveFilters={hasActiveFilters}
-          onFilterChange={updateFilter}
-          onSearch={handleSearch}
-          onClearFilters={handleClearFilters}
-          onToggleFilters={toggleFilters}
-        />
-
-        {/* Orders Table */}
-        {ordersData?.data && ordersData.data.length > 0 ? (
-          <>
-            <OrderTable
-              orders={ordersData.data}
-              allStatuses={allStatuses}
-              hasActiveFilters={hasActiveFilters}
-              getCurrentStatus={getCurrentStatus}
-              isStatusChanged={isStatusChanged}
-              isSavingStatus={isSavingStatus}
-              getStatusColors={getStatusColors}
-              onStatusChange={handleStatusChange}
-              onSaveStatus={handleSaveStatus}
-              onDiscardStatus={handleDiscardStatus}
-              onView={(orderId) => router.push(`/orders/${orderId}`)}
-              onViewIngredients={(orderId) =>
-                router.push(`/orders/${orderId}/ingredients/summary`)
-              }
-              onViewSupplierRequests={(orderId) =>
-                router.push(`/orders/${orderId}/supplier-requests`)
-              }
-              onDelete={handleDelete}
-            />
-
-            {/* Pagination */}
-            {ordersData.meta && <Pagination meta={ordersData.meta} />}
-          </>
-        ) : (
-          <OrderTable
-            orders={[]}
-            allStatuses={allStatuses}
-            hasActiveFilters={hasActiveFilters}
-            getCurrentStatus={getCurrentStatus}
-            isStatusChanged={isStatusChanged}
-            isSavingStatus={isSavingStatus}
-            getStatusColors={getStatusColors}
-            onStatusChange={handleStatusChange}
-            onSaveStatus={handleSaveStatus}
-            onDiscardStatus={handleDiscardStatus}
-            onView={(orderId) => router.push(`/orders/${orderId}`)}
-            onViewIngredients={(orderId) =>
-              router.push(`/orders/${orderId}/ingredients/summary`)
-            }
-            onViewSupplierRequests={(orderId) =>
-              router.push(`/orders/${orderId}/supplier-requests`)
-            }
-            onDelete={handleDelete}
-          />
-        )}
-      </CardBody>
-    </Card>
+    <MasterDataListPage<OrderDTO>
+      title={dict.orders?.title || 'Order Management'}
+      addNewLabel={dict.orders?.create || 'Create Order'}
+      createPath="/orders/create"
+      searchPlaceholder={dict.orders?.search_placeholder || 'Search orders...'}
+      emptyMessage={dict.orders?.no_data || 'No orders found'}
+      loadingMessage={dict.orders?.loading || 'Loading orders...'}
+      columns={columns}
+      actions={actions}
+      data={ordersData}
+      loading={loading}
+      error={error}
+      onLoadData={loadOrders}
+      onDelete={handleDelete}
+      onError={setError}
+      getItemName={(order) => `Order #${order.orderId}`}
+      getItemId={(order) => String(order.orderId)}
+      basePath="/orders"
+      dictKey="orders"
+      actionsColumnPosition="orderId"
+    />
   )
 }
-
-// ==================== EXPORT ====================
-
-export default React.memo(OrdersList)

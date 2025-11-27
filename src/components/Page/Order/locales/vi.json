@@ -10,6 +10,7 @@
     "add_dish": "Thêm món ăn",
     "add_supplementary_food": "Thêm thực phẩm bổ sung",
     "select_dish": "Chọn món ăn",
+    "select_kitchen": "Chọn Bếp",
     "portions": "Số suất",
     "quantity": "Số lượng",
     "standard": "Định mức",
@@ -19,12 +20,27 @@
     "delete": "Xóa",
     "save": "Lưu",
     "cancel": "Hủy",
+    "add": "Thêm",
     "confirm_delete_dish": "Bạn có chắc muốn xóa món này?",
     "confirm_delete_supplementary": "Bạn có chắc muốn xóa thực phẩm bổ sung này?",
     "select_dish_and_portions": "Vui lòng chọn món ăn và nhập số suất hợp lệ",
     "select_ingredient_and_quantity": "Vui lòng chọn nguyên liệu và nhập số lượng hợp lệ",
     "all_ingredients_exist": "Tất cả nguyên liệu đã có trong món ăn",
     "edit_after_add": "Bạn có thể chỉnh sửa định mức và số lượng sau khi thêm",
+    "no_kitchen_found": "Không tìm thấy bếp",
+    "no_dish_found": "Không tìm thấy món ăn",
+    "no_ingredient_found": "Không tìm thấy nguyên liệu",
+    "add_ingredients_to_dish": "Thêm nguyên liệu vào món ăn",
+    "add_supplementary_ingredients": "Thêm nguyên liệu bổ sung",
+    "supplier_requests": "Yêu cầu nhà cung cấp",
+    "save_order": "Lưu đơn hàng",
+    "processing": "Đang xử lý...",
+    "error_load_kitchens": "Không thể tải danh sách bếp",
+    "error_load_dishes": "Không thể tải danh sách món ăn",
+    "error_load_recipe_standards": "Không thể tải định mức công thức cho món ăn",
+    "error_load_ingredients": "Không thể tải danh sách nguyên liệu",
+    "error_load_suppliers": "Không thể tải nhà cung cấp cho nguyên liệu",
+    "error_creating_order": "Đã xảy ra lỗi khi tạo đơn hàng",
     "validation": {
       "enter_order_id": "Vui lòng nhập mã đơn hàng",
       "select_kitchen": "Vui lòng chọn bếp",
@@ -33,22 +49,35 @@
   },
   "orders_list": {
     "title": "Danh sách đơn hàng",
+    "page_title": "Quản lý đơn hàng",
+    "create_order": "Tạo đơn hàng",
     "search_placeholder": "Tìm kiếm đơn hàng...",
     "no_orders": "Không tìm thấy đơn hàng",
     "no_orders_match_filters": "Không tìm thấy đơn hàng nào phù hợp với bộ lọc",
+    "error_load_orders": "Không thể tải danh sách đơn hàng",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "status_updated": "Cập nhật trạng thái thành công.",
+    "error_update_status": "Không thể cập nhật trạng thái.",
     "table_headers": {
+      "id": "Mã",
       "order_id": "Mã đơn hàng",
       "kitchen": "Bếp",
       "order_date": "Ngày đặt hàng",
+      "event_date": "Ngày sự kiện",
+      "total_amount": "Tổng tiền",
       "status": "Trạng thái",
       "created_by": "Người tạo",
       "details_count": "Số lượng chi tiết",
       "actions": "Hành động"
     },
     "actions": {
+      "view": "Xem",
       "view_details": "Xem chi tiết",
       "view_ingredients": "Xem nguyên liệu",
+      "ingredients": "Nguyên liệu",
       "view_supplier_requests": "Xem yêu cầu nhà cung cấp",
+      "supplier_requests": "Yêu cầu nhà cung cấp",
       "delete_order": "Xóa đơn hàng"
     },
     "status_badges": {
@@ -61,12 +90,24 @@
   },
   "ingredient_summary": {
     "title": "Tóm tắt nguyên liệu",
+    "page_title": "Tóm tắt nguyên liệu",
+    "page_subtitle": "Tổng nguyên liệu cần thiết cho đơn hàng này",
     "subtitle": "Tổng nguyên liệu cần thiết cho đơn hàng này",
     "no_ingredients": "Không tìm thấy nguyên liệu cho đơn hàng này",
+    "go_back": "Quay lại",
+    "error_loading": "Không thể tải tóm tắt nguyên liệu",
     "table_headers": {
       "ingredient": "Nguyên liệu",
+      "ingredient_id": "Mã nguyên liệu",
+      "ingredient_name": "Tên nguyên liệu",
       "quantity": "Số lượng",
-      "unit": "Đơn vị"
+      "unit": "Đơn vị",
+      "supplier": "Nhà cung cấp",
+      "product": "Sản phẩm",
+      "unit_price": "Đơn giá",
+      "total_cost": "Thành tiền",
+      "specification": "Quy cách",
+      "details": "Chi tiết"
     },
     "suppliers": {
       "title": "Chọn nhà cung cấp",
@@ -91,30 +132,97 @@
       "supplier_saved_bulk": "Đã lưu yêu cầu nhà cung cấp cho các nguyên liệu đã chọn",
       "supplier_save_failed": "Lưu thất bại",
       "supplier_save_none_selected": "Chưa chọn nhà cung cấp nào để lưu"
+    },
+    "labels": {
+      "total_ingredients": "Tổng nguyên liệu",
+      "order": "Đơn hàng"
     }
   },
   "dish_row": {
     "portions": "Số suất",
     "ingredients": "Nguyên liệu",
     "view_ingredients": "Xem nguyên liệu",
+    "no_ingredients_yet": "Chưa có nguyên liệu",
+    "per_portion": "/khẩu phần",
+    "add_ingredient": "Thêm nguyên liệu",
     "edit": "Sửa",
     "delete": "Xóa"
   },
   "dish_list": {
     "title": "Món ăn",
+    "dishes": "Món ăn",
     "no_dishes": "Chưa thêm món ăn nào",
     "add_dish": "Thêm món ăn",
+    "add_dish_to_start": "Thêm món ăn để bắt đầu",
     "portions_for_all": "Số suất (áp dụng cho tất cả món đã chọn):",
     "table_headers": {
       "dish": "Món ăn",
       "portions": "Số suất",
-      "ingredients": "Nguyên liệu"
+      "ingredients": "Nguyên liệu",
+      "actions": "Hành động"
     }
   },
   "supplementary_food_row": {
     "quantity": "Số lượng",
+    "note_placeholder": "Ghi chú...",
     "edit": "Sửa",
     "delete": "Xóa"
+  },
+  "supplementary_food_list": {
+    "title": "Thực phẩm bổ sung",
+    "supplementary_foods": "Thực phẩm bổ sung",
+    "add_supplementary": "Thêm bổ sung",
+    "no_ingredients": "Chưa có nguyên liệu bổ sung",
+    "add_supplementary_to_add_new": "Thêm bổ sung để thêm mới",
+    "table_headers": {
+      "ingredient": "Nguyên liệu",
+      "standard_per_portion": "Định mức/Khẩu phần",
+      "portions": "Số suất",
+      "quantity": "Số lượng",
+      "note": "Ghi chú",
+      "actions": "Hành động"
+    }
+  },
+  "order_header_form": {
+    "order_information": "Thông tin đơn hàng",
+    "order_id": "Mã đơn hàng",
+    "order_date": "Ngày đặt hàng",
+    "kitchen": "Bếp",
+    "select_kitchen": "Chọn bếp",
+    "notes": "Ghi chú"
+  },
+  "order_filters": {
+    "search": "Tìm kiếm",
+    "search_orders": "Tìm kiếm đơn hàng...",
+    "show_filters": "Hiện bộ lọc",
+    "hide_filters": "Ẩn bộ lọc",
+    "clear_filters": "Xóa bộ lọc",
+    "date_from": "Từ ngày",
+    "date_to": "Đến ngày"
+  },
+  "order_table": {
+    "no_orders_match_filters": "Không tìm thấy đơn hàng nào phù hợp với bộ lọc",
+    "no_orders_yet": "Chưa có đơn hàng",
+    "table_headers": {
+      "order_id": "Mã đơn hàng",
+      "kitchen": "Bếp",
+      "order_date": "Ngày đặt hàng",
+      "status": "Trạng thái",
+      "created_by": "Người tạo",
+      "details_count": "Số lượng chi tiết",
+      "actions": "Hành động"
+    }
+  },
+  "order_actions": {
+    "actions": "Hành động",
+    "view_details": "Xem chi tiết",
+    "ingredient_summary": "Tóm tắt nguyên liệu",
+    "view_supplier_requests": "Xem yêu cầu nhà cung cấp",
+    "delete_order": "Xóa đơn hàng"
+  },
+  "status_select": {
+    "save": "Lưu",
+    "cancel": "Hủy"
   },
   "common": {
     "loading": "Đang tải...",

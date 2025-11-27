@@ -35,6 +35,7 @@ import OrderHeaderForm from './components/OrderHeaderForm'
 import DishList from './components/DishList'
 import SupplementaryFoodList from './components/SupplementaryFoodList'
 import TotalIngredientsSummary from './components/TotalIngredientsSummary'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 // ==================== TYPE DEFINITIONS ====================
 
@@ -116,6 +117,7 @@ export default function OrderForm({
   const router = useRouter()
   const dict = useOrderDictionary()
   const isSubmittingRef = useRef(false)
+  const { showLoading, hideLoading } = useLoadingOverlay()
 
   // ==================== STATE MANAGEMENT ====================
 
@@ -903,6 +905,7 @@ export default function OrderForm({
     }
 
     setLoading(true)
+    showLoading()
     setError('')
     setSuccess('')
 
@@ -937,7 +940,7 @@ export default function OrderForm({
       const createdOrder = await orderApi.create(orderData)
       setSuccess(dict.common?.success || 'Order created successfully!')
 
-      // Redirect to order detail page
+      // Redirect to order detail page - loading will auto-hide on route change
       setTimeout(() => {
         router.push(`/orders/${createdOrder.orderId}`)
       }, 1500)
@@ -946,6 +949,7 @@ export default function OrderForm({
       setError(errorMessage)
       console.error(err)
       setSuccess('')
+      hideLoading()
     } finally {
       setLoading(false)
       isSubmittingRef.current = false
@@ -1071,7 +1075,10 @@ export default function OrderForm({
             <Button
               type="button"
               variant="info"
-              onClick={() => router.push(`/orders/${existingOrderId}/supplier-requests`)}
+              onClick={() => {
+                showLoading()
+                router.push(`/orders/${existingOrderId}/supplier-requests`)
+              }}
             >
               <FontAwesomeIcon icon={faFileAlt} className="me-2" />
               {dict.orders?.labels?.supplier_requests_title || 'Supplier Requests'}
@@ -1081,7 +1088,10 @@ export default function OrderForm({
           <Button
             type="button"
             variant="secondary"
-            onClick={() => router.push('/orders')}
+            onClick={() => {
+              showLoading()
+              router.push('/orders')
+            }}
           >
             <FontAwesomeIcon icon={faTimes} className="me-2" />
             {dict.order_form?.cancel || 'Cancel'}

@@ -38,6 +38,7 @@
     "info": "Info",
     "edit": "Edit",
     "delete": "Delete",
+    "deleting": "Deleting...",
     "submit": "Submit",
     "submitting": "Submitting...",
     "reset": "Reset",
@@ -45,7 +46,9 @@
     "save": "Save",
     "saving": "Saving...",
     "add": "Add",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "ingredients": "Ingredients",
+    "supplier_requests": "Supplier Requests"
   },
   "theme": {
     "light": "Light",
@@ -446,12 +449,16 @@
     "dish": "Dish",
     "quantity": "Quantity",
     "order_date": "Order Date",
+    "event_date": "Event Date",
+    "total_amount": "Total Amount",
     "status": "Status",
     "loading": "Loading...",
     "no_data": "No orders found",
     "no_orders": "No orders found",
     "confirm_delete": "Are you sure you want to delete this order?",
     "error_load": "Failed to load orders",
+    "status_updated": "Status updated successfully",
+    "error_update_status": "Failed to update status",
     "error_load_summary": "Failed to load ingredient summary",
     "error_delete": "Failed to delete order",
     "error_create": "Failed to create order",
@@ -765,7 +772,13 @@
     "save_error": "Failed to save data",
     "load_error": "Failed to load data",
     "optional": "Optional",
-    "created_by": "Created by"
+    "created_by": "Created by",
+    "processing": "Processing...",
+    "saving": "Saving...",
+    "close": "Close",
+    "confirm": "Confirm",
+    "error": "Error",
+    "success": "Success"
   },
   "validation": {
     "required_field": "This field is required",

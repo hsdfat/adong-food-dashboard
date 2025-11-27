@@ -34,10 +34,11 @@
   },
   "action": {
     "quick_action": "Hành động nhanh",
-    "view": "View",
+    "view": "Xem",
     "info": "Thông tin",
     "edit": "Sửa",
     "delete": "Xóa",
+    "deleting": "Đang xóa...",
     "submit": "Gửi",
     "submitting": "Đang gửi...",
     "reset": "Đặt lại",
@@ -45,7 +46,9 @@
     "save": "Lưu",
     "saving": "Đang lưu...",
     "add": "Thêm mới",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "ingredients": "Nguyên liệu",
+    "supplier_requests": "Yêu cầu nhà cung cấp"
   },
   "theme": {
     "light": "Sáng",
@@ -377,12 +380,16 @@
     "dish": "Món ăn",
     "quantity": "Số lượng",
     "order_date": "Ngày đặt hàng",
+    "event_date": "Ngày sự kiện",
+    "total_amount": "Tổng tiền",
     "status": "Trạng thái",
     "loading": "Đang tải...",
     "no_data": "Không tìm thấy đơn hàng",
     "no_orders": "Không tìm thấy đơn hàng",
     "confirm_delete": "Bạn có chắc chắn muốn xóa đơn hàng này?",
     "error_load": "Không thể tải danh sách đơn hàng",
+    "status_updated": "Cập nhật trạng thái thành công",
+    "error_update_status": "Không thể cập nhật trạng thái",
     "error_load_summary": "Không thể tải tóm tắt nguyên liệu",
     "error_delete": "Không thể xóa đơn hàng",
     "error_create": "Không thể tạo đơn hàng",
@@ -778,7 +785,13 @@
     "save_error": "Không thể lưu dữ liệu",
     "load_error": "Không thể tải dữ liệu",
     "optional": "Tùy chọn",
-    "created_by": "Tạo bởi"
+    "created_by": "Tạo bởi",
+    "processing": "Đang xử lý...",
+    "saving": "Đang lưu...",
+    "close": "Đóng",
+    "confirm": "Xác nhận",
+    "error": "Lỗi",
+    "success": "Thành công"
   },
   "validation": {
     "required_field": "Trường này là bắt buộc",
