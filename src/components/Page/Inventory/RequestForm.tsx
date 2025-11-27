@@ -9,7 +9,7 @@ import {
   Supplier,
   Order,
 } from '@/models'
-import { ingredientApi, supplierApi, orderApi } from '@/services/api'
+import { ingredientApi, supplierApi, orderApi } from '@/services'
 import { ingredientRequestApi } from '@/services/inventory-api'
 
 interface RequestFormProps {

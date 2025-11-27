@@ -17,7 +17,6 @@ import {
   InventoryAdjustment,
   CreateAdjustmentInput,
   UpdateAdjustmentInput,
-  IngredientRequest,
   CreateRequestInput,
   UpdateRequestInput,
   StockMovementReport,
