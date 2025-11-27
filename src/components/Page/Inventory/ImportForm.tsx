@@ -14,7 +14,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { inventoryImportApi, kitchenApi, ingredientApi, supplierApi } from '@/services'
+import { inventoryImportApi, kitchenApi, ingredientApi, supplierApi, orderApi, supplierPriceApi } from '@/services'
 import {
   InventoryImport,
   CreateImportInput,
@@ -23,6 +23,9 @@ import {
   Kitchen,
   Ingredient,
   Supplier,
+  Order,
+  GetOrderSuppliersResponse,
+  SupplierWithOrderFlag,
 } from '@/models'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
@@ -53,6 +56,7 @@ export default function ImportForm({
     new Date().toISOString().split('T')[0],
   )
   const [orderId, setOrderId] = useState('')
+  const [orderDate, setOrderDate] = useState('')
   const [supplierId, setSupplierId] = useState('')
   const [supplierName, setSupplierName] = useState('')
   const [notes, setNotes] = useState('')
@@ -62,15 +66,22 @@ export default function ImportForm({
 
   // Modal states
   const [showKitchenModal, setShowKitchenModal] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
   const [showSupplierModal, setShowSupplierModal] = useState(false)
   const [showIngredientModal, setShowIngredientModal] = useState(false)
   const [availableKitchens, setAvailableKitchens] = useState<Kitchen[]>([])
+  const [availableOrders, setAvailableOrders] = useState<any[]>([])
   const [availableSuppliers, setAvailableSuppliers] = useState<Supplier[]>([])
+  const [suppliersWithOrderFlag, setSuppliersWithOrderFlag] = useState<SupplierWithOrderFlag[]>([])
   const [availableIngredients, setAvailableIngredients] = useState<Ingredient[]>([])
+  const [supplierIngredients, setSupplierIngredients] = useState<Ingredient[]>([]) // Ingredients for selected supplier
   const [searchKitchen, setSearchKitchen] = useState('')
+  const [searchOrder, setSearchOrder] = useState('')
   const [searchSupplier, setSearchSupplier] = useState('')
   const [searchIngredient, setSearchIngredient] = useState('')
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
+  const [loadingOrderData, setLoadingOrderData] = useState(false)
+  const [loadingIngredients, setLoadingIngredients] = useState(false)
 
   // Load data for edit
   useEffect(() => {
@@ -133,6 +144,74 @@ export default function ImportForm({
     loadOptions()
   }, [])
 
+  // Load orders when kitchen is selected
+  useEffect(() => {
+    const loadOrders = async () => {
+      if (kitchenId) {
+        try {
+          const ordersRes = await orderApi.getAll({ kitchen_id: kitchenId, per_page: 100 })
+          setAvailableOrders(ordersRes.data || [])
+        } catch (err) {
+          console.error('Failed to load orders:', err)
+        }
+      }
+    }
+
+    loadOrders()
+  }, [kitchenId])
+
+  // Handle order selection and load supplier data
+  const handleOrderSelect = async (selectedOrderId: string) => {
+    if (!selectedOrderId) return
+
+    setLoadingOrderData(true)
+    try {
+      // Fetch both order suppliers data and suppliers with highlighting in parallel
+      const [orderSuppliers, suppliersHighlight] = await Promise.all([
+        orderApi.getSuppliersForInventory(selectedOrderId),
+        orderApi.getSuppliersWithHighlight(selectedOrderId),
+      ])
+
+      setOrderId(selectedOrderId)
+      setOrderDate(orderSuppliers.orderDate)
+
+      // Store suppliers with order flag for highlighting in modal
+      setSuppliersWithOrderFlag(suppliersHighlight.suppliers)
+
+      // Auto-populate import details from order
+      if (orderSuppliers.suppliers && orderSuppliers.suppliers.length > 0) {
+        // Set supplier from the first ingredient (assuming same supplier for all)
+        const firstSupplier = orderSuppliers.suppliers.find(s => s.supplierId)
+        if (firstSupplier) {
+          setSupplierId(firstSupplier.supplierId || '')
+          setSupplierName(firstSupplier.supplierName || '')
+        }
+
+        // Populate import details
+        const details: (CreateImportDetailInput & { tempId?: string })[] = orderSuppliers.suppliers.map((item) => ({
+          ingredientId: item.ingredientId,
+          quantity: item.quantity,
+          unit: item.unit,
+          unitPrice: item.unitPrice || 0,
+          tempId: `order-${Date.now()}-${Math.random()}`,
+        }))
+
+        setImportDetails(details)
+        setSuccess(`Loaded ${details.length} ingredients from order ${selectedOrderId}`)
+
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccess(''), 3000)
+      }
+
+      setShowOrderModal(false)
+    } catch (err: any) {
+      console.error('Failed to load order data:', err)
+      setError(err.message || 'Failed to load order data')
+    } finally {
+      setLoadingOrderData(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -189,11 +268,51 @@ export default function ImportForm({
     }
   }
 
+  // Load ingredients when opening the modal
+  const handleOpenIngredientModal = async () => {
+    setShowIngredientModal(true)
+
+    // If a supplier is selected, load only that supplier's ingredients
+    if (supplierId) {
+      setLoadingIngredients(true)
+      try {
+        const response = await supplierPriceApi.getBySupplier(supplierId, { per_page: 1000 })
+
+        // Extract unique ingredients from supplier prices
+        const uniqueIngredients = new Map<string, Ingredient>()
+        response.data.forEach((price) => {
+          if (price.ingredientId && !uniqueIngredients.has(price.ingredientId)) {
+            uniqueIngredients.set(price.ingredientId, {
+              ingredientId: price.ingredientId,
+              ingredientName: price.ingredientName,
+              unit: price.unit,
+              category: price.category,
+            } as Ingredient)
+          }
+        })
+
+        setSupplierIngredients(Array.from(uniqueIngredients.values()))
+      } catch (err: any) {
+        console.error('Failed to load supplier ingredients:', err)
+        setError(err.message || 'Failed to load ingredients for selected supplier')
+        // Fallback to all ingredients
+        setSupplierIngredients(availableIngredients)
+      } finally {
+        setLoadingIngredients(false)
+      }
+    } else {
+      // No supplier selected, show all ingredients
+      setSupplierIngredients(availableIngredients)
+    }
+  }
+
   const handleAddIngredients = () => {
+    const ingredientSource = supplierId ? supplierIngredients : availableIngredients
+
     const newDetails = selectedIngredients
       .filter((id) => !importDetails.some((d) => d.ingredientId === id))
       .map((id) => {
-        const ingredient = availableIngredients.find((i) => i.ingredientId === id)
+        const ingredient = ingredientSource.find((i) => i.ingredientId === id)
         return {
           ingredientId: id,
           quantity: 0,
@@ -266,6 +385,47 @@ export default function ImportForm({
         </FormGroup>
 
         <FormGroup className="mb-3">
+          <FormLabel>{dict.inventory?.order || 'Order'}</FormLabel>
+          <div className="d-flex gap-2">
+            <FormControl
+              type="text"
+              value={orderId ? `${orderId} ${orderDate ? `(${orderDate})` : ''}` : ''}
+              readOnly
+              placeholder="Select order (optional)"
+            />
+            <Button
+              variant="outline-primary"
+              onClick={() => setShowOrderModal(true)}
+              disabled={!kitchenId || loadingOrderData}
+            >
+              {loadingOrderData ? 'Loading...' : (dict.action as any)?.select || 'Select'}
+            </Button>
+            {orderId && (
+              <Button
+                variant="outline-secondary"
+                onClick={() => {
+                  setOrderId('')
+                  setOrderDate('')
+                  setImportDetails([])
+                  setSupplierId('')
+                  setSupplierName('')
+                }}
+              >
+                Clear
+              </Button>
+            )}
+          </div>
+          {!kitchenId && (
+            <small className="text-muted">Please select a kitchen first to choose an order</small>
+          )}
+          {orderId && (
+            <small className="text-success d-block mt-1">
+              Order selected. Supplier and ingredients populated automatically.
+            </small>
+          )}
+        </FormGroup>
+
+        <FormGroup className="mb-3">
           <FormLabel>{dict.inventory?.import_date || 'Import Date'} *</FormLabel>
           <FormControl
             type="date"
@@ -305,16 +465,6 @@ export default function ImportForm({
         </FormGroup>
 
         <FormGroup className="mb-3">
-          <FormLabel>{dict.inventory?.order_id || 'Order ID'}</FormLabel>
-          <FormControl
-            type="text"
-            value={orderId}
-            onChange={(e) => setOrderId(e.target.value)}
-            placeholder="Order ID (optional)"
-          />
-        </FormGroup>
-
-        <FormGroup className="mb-3">
           <FormLabel>{dict.inventory?.notes || 'Notes'}</FormLabel>
           <FormControl
             as="textarea"
@@ -333,7 +483,7 @@ export default function ImportForm({
             <Button
               variant="primary"
               size="sm"
-              onClick={() => setShowIngredientModal(true)}
+              onClick={handleOpenIngredientModal}
             >
               <FontAwesomeIcon icon={faPlus} className="me-2" />
               {dict.action?.add || 'Add'} {dict.inventory?.ingredient || 'Ingredient'}
@@ -465,6 +615,33 @@ export default function ImportForm({
         </div>
       </MasterDataFormPage>
 
+      {/* Order Selection Modal */}
+      <SingleSelectionModal
+        show={showOrderModal}
+        onHide={() => {
+          setShowOrderModal(false)
+          setSearchOrder('')
+        }}
+        title={dict.inventory?.select_order || 'Select Order'}
+        items={availableOrders
+          .filter((o) =>
+            o.orderId.toLowerCase().includes(searchOrder.toLowerCase()) ||
+            (o.note && o.note.toLowerCase().includes(searchOrder.toLowerCase()))
+          )
+          .map((o) => ({
+            id: o.orderId,
+            name: `Order ${o.orderId}`,
+            subtitle: `${o.orderDate} - ${o.status}${o.note ? ` - ${o.note}` : ''}`,
+            badge: o.status,
+          }))}
+        searchValue={searchOrder}
+        onSearchChange={setSearchOrder}
+        selectedId={orderId}
+        onSelect={(item) => handleOrderSelect(item.id)}
+        searchPlaceholder={dict.inventory?.search_order || 'Search orders...'}
+        emptyMessage={kitchenId ? (dict.inventory?.no_order || 'No order found') : 'Please select a kitchen first'}
+      />
+
       {/* Kitchen Selection Modal */}
       <SingleSelectionModal
         show={showKitchenModal}
@@ -504,24 +681,67 @@ export default function ImportForm({
           setSearchSupplier('')
         }}
         title={dict.inventory?.select_supplier || 'Select Supplier'}
-        items={availableSuppliers
+        items={(orderId && suppliersWithOrderFlag.length > 0
+          ? suppliersWithOrderFlag
+          : availableSuppliers.map(s => ({
+              supplierId: s.supplierId,
+              supplierName: s.supplierName,
+              address: s.address,
+              phone: s.phone,
+              email: s.email,
+              active: s.active,
+              isUsedInOrder: false,
+              ingredientCount: 0,
+            }))
+        )
           .filter((s) =>
             s.supplierName.toLowerCase().includes(searchSupplier.toLowerCase()),
           )
           .map((s) => ({
             id: s.supplierId,
             name: s.supplierName,
-            subtitle: s.address,
-            badge: s.supplierId,
+            subtitle: `${s.address || ''}${s.isUsedInOrder ? ` • ${s.ingredientCount} ingredient(s) in order` : ''}`,
+            badge: s.isUsedInOrder ? '✓ In Order' : s.supplierId,
+            variant: s.isUsedInOrder ? 'success' : undefined,
           }))}
         searchValue={searchSupplier}
         onSearchChange={setSearchSupplier}
         selectedId={supplierId}
-        onSelect={(item) => {
+        onSelect={async (item) => {
           setSupplierId(item.id)
-          const supplier = availableSuppliers.find((s) => s.supplierId === item.id)
+          const supplier = orderId && suppliersWithOrderFlag.length > 0
+            ? suppliersWithOrderFlag.find((s) => s.supplierId === item.id)
+            : availableSuppliers.find((s) => s.supplierId === item.id)
           setSupplierName(supplier?.supplierName || '')
           setShowSupplierModal(false)
+
+          // If an order is selected, refetch ingredients filtered by this supplier
+          if (orderId) {
+            setLoadingOrderData(true)
+            try {
+              const orderSuppliers = await orderApi.getSuppliersForInventory(orderId, item.id)
+
+              // Update import details with ingredients from this supplier only
+              if (orderSuppliers.suppliers && orderSuppliers.suppliers.length > 0) {
+                const details: (CreateImportDetailInput & { tempId?: string })[] = orderSuppliers.suppliers.map((supplierItem) => ({
+                  ingredientId: supplierItem.ingredientId,
+                  quantity: supplierItem.quantity,
+                  unit: supplierItem.unit,
+                  unitPrice: supplierItem.unitPrice || 0,
+                  tempId: `order-${Date.now()}-${Math.random()}`,
+                }))
+
+                setImportDetails(details)
+              } else {
+                // No ingredients for this supplier in the order
+                setImportDetails([])
+              }
+            } catch (err: any) {
+              setError(err.message || 'Failed to load ingredients for selected supplier')
+            } finally {
+              setLoadingOrderData(false)
+            }
+          }
         }}
         searchPlaceholder={dict.inventory?.search_supplier || 'Search suppliers...'}
         emptyMessage={dict.inventory?.no_supplier || 'No supplier found'}
@@ -535,17 +755,23 @@ export default function ImportForm({
           setSearchIngredient('')
           setSelectedIngredients([])
         }}
-        title={dict.inventory?.select_ingredients || 'Select Ingredients'}
-        items={availableIngredients
-          .filter((i) =>
-            i.ingredientName.toLowerCase().includes(searchIngredient.toLowerCase()),
-          )
-          .map((i) => ({
-            id: i.ingredientId,
-            name: i.ingredientName,
-            subtitle: i.unit,
-            badge: i.ingredientId,
-          }))}
+        title={
+          supplierId
+            ? `${dict.inventory?.select_ingredients || 'Select Ingredients'} (${supplierName})`
+            : (dict.inventory?.select_ingredients || 'Select Ingredients')
+        }
+        items={loadingIngredients
+          ? []
+          : (supplierId ? supplierIngredients : availableIngredients)
+              .filter((i) =>
+                i.ingredientName.toLowerCase().includes(searchIngredient.toLowerCase()),
+              )
+              .map((i) => ({
+                id: i.ingredientId,
+                name: i.ingredientName,
+                subtitle: i.unit,
+                badge: i.ingredientId,
+              }))}
         searchValue={searchIngredient}
         onSearchChange={setSearchIngredient}
         selectedIds={selectedIngredients}
@@ -558,7 +784,13 @@ export default function ImportForm({
         }}
         onConfirm={handleAddIngredients}
         searchPlaceholder={dict.inventory?.search_ingredient || 'Search ingredients...'}
-        emptyMessage={dict.inventory?.no_ingredient || 'No ingredient found'}
+        emptyMessage={
+          loadingIngredients
+            ? 'Loading ingredients...'
+            : supplierId && supplierIngredients.length === 0
+            ? `No ingredients available for ${supplierName}. Please select a different supplier.`
+            : (dict.inventory?.no_ingredient || 'No ingredient found')
+        }
         confirmLabel={`${dict.action?.add || 'Add'} ${selectedIngredients.length} ${dict.inventory?.ingredients || 'Ingredients'}`}
         selectedCountLabel={`${dict.common?.selected || 'Selected'} ${selectedIngredients.length}`}
       />

@@ -56,12 +56,26 @@ export const supplierPriceApi = {
   },
 
   /**
-   * Get supplier prices by supplier ID
+   * Get supplier prices by supplier ID with pagination
    */
-  async getBySupplier(supplierId: string): Promise<SupplierPrice[]> {
-    return apiClient<SupplierPrice[]>(
-      `${BASE_URL}/supplier/${supplierId}`,
-    )
+  async getBySupplier(
+    supplierId: string,
+    params?: {
+      page?: number;
+      per_page?: number;
+      search?: string;
+    },
+  ): Promise<SupplierPriceListResponse> {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append('page', params.page.toString())
+    if (params?.per_page) queryParams.append('per_page', params.per_page.toString())
+    if (params?.search) queryParams.append('search', params.search)
+
+    const url = queryParams.toString()
+      ? `${BASE_URL}/supplier/${supplierId}?${queryParams.toString()}`
+      : `${BASE_URL}/supplier/${supplierId}`
+
+    return apiClient<SupplierPriceListResponse>(url)
   },
 
   /**

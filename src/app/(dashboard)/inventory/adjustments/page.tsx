@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { inventoryAdjustmentApi } from '@/services/inventory-api'
-import { InventoryAdjustment } from '@/models'
+import { InventoryAdjustment } from '@/models/inventory'
 import Link from 'next/link'
+import useDictionary from '@/locales/dictionary-hook'
 
 export default function AdjustmentsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const dictionary = useDictionary()
   const [adjustments, setAdjustments] = useState<InventoryAdjustment[]>([])
   const [loading, setLoading] = useState(true)
   const [pagination, setPagination] = useState({
@@ -32,32 +34,6 @@ export default function AdjustmentsPage() {
     other: 'Other',
   }
 
-  useEffect(() => {
-    const fetchAdjustments = async () => {
-      try {
-        setLoading(true)
-        const queryString = searchParams.toString()
-          ? `?${searchParams.toString()}`
-          : '?page=1&page_size=20'
-        const response = await inventoryAdjustmentApi.getAll(queryString)
-        setAdjustments(response.data)
-        if (response.pagination) {
-          setPagination({
-            page: response.pagination.page,
-            pageSize: response.pagination.limit,
-            total: response.pagination.total,
-            totalPages: response.pagination.total_pages,
-          })
-        }
-      } catch (error) {
-        console.error('Error fetching adjustments:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchAdjustments()
-  }, [searchParams])
-
   const fetchAdjustments = async () => {
     try {
       setLoading(true)
@@ -80,6 +56,11 @@ export default function AdjustmentsPage() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchAdjustments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const handleDelete = async (id: string) => {
     // eslint-disable-next-line no-alert, no-restricted-globals
@@ -143,14 +124,14 @@ export default function AdjustmentsPage() {
             <table className="table table-hover">
               <thead>
                 <tr>
-                  <th>Adjustment ID</th>
-                  <th>Kitchen</th>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Reason</th>
-                  <th>Total Value</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>{dictionary.inventory.adjustment_id}</th>
+                  <th>{dictionary.inventory.kitchen}</th>
+                  <th>{dictionary.inventory.adjustment_date}</th>
+                  <th>{dictionary.inventory.adjustment_type}</th>
+                  <th>{dictionary.inventory.reason}</th>
+                  <th>{dictionary.inventory.total_value}</th>
+                  <th>{dictionary.inventory.status}</th>
+                  <th>{dictionary.common.actions}</th>
                 </tr>
               </thead>
               <tbody>

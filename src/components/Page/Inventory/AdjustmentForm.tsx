@@ -42,10 +42,6 @@ export default function AdjustmentForm({
     })) || [],
   })
 
-  useEffect(() => {
-    fetchStocks()
-  }, [formData.kitchenId])
-
   const fetchStocks = async () => {
     try {
       const response = await inventoryStockApi.getAll(
@@ -56,6 +52,11 @@ export default function AdjustmentForm({
       console.error('Error fetching stocks:', error)
     }
   }
+
+  useEffect(() => {
+    fetchStocks()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.kitchenId])
 
   const handleAddDetail = () => {
     const newDetail = {
@@ -102,6 +103,7 @@ export default function AdjustmentForm({
     e.preventDefault()
 
     if (formData.adjustmentDetails.length === 0) {
+      // eslint-disable-next-line no-alert
       alert('Please add at least one adjustment detail')
       return
     }
@@ -111,6 +113,7 @@ export default function AdjustmentForm({
       (d) => !d.ingredientId,
     )
     if (invalidDetails.length > 0) {
+      // eslint-disable-next-line no-alert
       alert('Please select ingredients for all details')
       return
     }
@@ -119,6 +122,7 @@ export default function AdjustmentForm({
     try {
       if (mode === 'create') {
         const response = await inventoryAdjustmentApi.create(formData)
+        // eslint-disable-next-line no-alert
         alert('Adjustment created successfully')
         router.push(`/inventory/adjustments/${response.data.adjustmentId}`)
       } else if (adjustment) {
@@ -126,11 +130,13 @@ export default function AdjustmentForm({
           adjustment.adjustmentId,
           formData,
         )
+        // eslint-disable-next-line no-alert
         alert('Adjustment updated successfully')
         router.push(`/inventory/adjustments/${response.data.adjustmentId}`)
       }
     } catch (error: any) {
       console.error('Error saving adjustment:', error)
+      // eslint-disable-next-line no-alert
       alert(error.message || 'Failed to save adjustment')
     } finally {
       setLoading(false)
@@ -155,10 +161,11 @@ export default function AdjustmentForm({
         <div className="card-body">
           <div className="row g-3">
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="kitchenIdInput" className="form-label">
                 Kitchen ID <span className="text-danger">*</span>
               </label>
               <input
+                id="kitchenIdInput"
                 type="text"
                 className="form-control"
                 value={formData.kitchenId}
@@ -169,10 +176,11 @@ export default function AdjustmentForm({
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="adjustmentDateInput" className="form-label">
                 Adjustment Date <span className="text-danger">*</span>
               </label>
               <input
+                id="adjustmentDateInput"
                 type="date"
                 className="form-control"
                 value={formData.adjustmentDate}
@@ -183,10 +191,11 @@ export default function AdjustmentForm({
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="adjustmentTypeSelect" className="form-label">
                 Type <span className="text-danger">*</span>
               </label>
               <select
+                id="adjustmentTypeSelect"
                 className="form-select"
                 value={formData.adjustmentType}
                 onChange={(e) =>
@@ -205,8 +214,11 @@ export default function AdjustmentForm({
               </select>
             </div>
             <div className="col-md-3">
-              <label className="form-label">Status</label>
+              <label htmlFor="statusSelect" className="form-label">
+                Status
+              </label>
               <select
+                id="statusSelect"
                 className="form-select"
                 value={formData.status}
                 onChange={(e) =>
@@ -220,8 +232,11 @@ export default function AdjustmentForm({
               </select>
             </div>
             <div className="col-12">
-              <label className="form-label">Reason</label>
+              <label htmlFor="reasonTextarea" className="form-label">
+                Reason
+              </label>
               <textarea
+                id="reasonTextarea"
                 className="form-control"
                 rows={2}
                 value={formData.reason}
@@ -243,7 +258,7 @@ export default function AdjustmentForm({
             className="btn btn-sm btn-primary"
             onClick={handleAddDetail}
           >
-            <i className="fa fa-plus me-2"></i>
+            <i className="fa fa-plus me-2" />
             Add Item
           </button>
         </div>
@@ -271,6 +286,12 @@ export default function AdjustmentForm({
                 {formData.adjustmentDetails.map((detail, index) => {
                   const diff = detail.quantityAfter - detail.quantityBefore
                   const totalValue = diff * (detail.unitCost || 0)
+                  let diffClass = 'fw-bold'
+                  if (diff > 0) {
+                    diffClass += ' text-success'
+                  } else if (diff < 0) {
+                    diffClass += ' text-danger'
+                  }
 
                   return (
                     <tr key={index}>
@@ -314,6 +335,7 @@ export default function AdjustmentForm({
                           }
                           step="0.01"
                           readOnly
+                          aria-label="Quantity before"
                         />
                       </td>
                       <td>
@@ -330,12 +352,11 @@ export default function AdjustmentForm({
                           }
                           step="0.01"
                           required
+                          aria-label="Quantity after"
                         />
                       </td>
                       <td>
-                        <span
-                          className={`fw-bold ${diff > 0 ? 'text-success' : diff < 0 ? 'text-danger' : ''}`}
-                        >
+                        <span className={diffClass}>
                           {diff > 0 ? '+' : ''}
                           {diff.toFixed(2)}
                         </span>
@@ -349,6 +370,7 @@ export default function AdjustmentForm({
                             handleDetailChange(index, 'unit', e.target.value)
                           }
                           required
+                          aria-label="Unit"
                         />
                       </td>
                       <td>
@@ -365,6 +387,7 @@ export default function AdjustmentForm({
                           }
                           step="0.01"
                           placeholder="0.00"
+                          aria-label="Unit cost"
                         />
                       </td>
                       <td className="text-end">
@@ -375,8 +398,9 @@ export default function AdjustmentForm({
                           type="button"
                           className="btn btn-sm btn-outline-danger"
                           onClick={() => handleRemoveDetail(index)}
+                          aria-label="Remove item"
                         >
-                          <i className="fa fa-trash"></i>
+                          <i className="fa fa-trash" />
                         </button>
                       </td>
                     </tr>
@@ -385,7 +409,7 @@ export default function AdjustmentForm({
                 {formData.adjustmentDetails.length === 0 && (
                   <tr>
                     <td colSpan={9} className="text-center py-4">
-                      No items added. Click "Add Item" to start.
+                      No items added. Click &quot;Add Item&quot; to start.
                     </td>
                   </tr>
                 )}
@@ -407,7 +431,7 @@ export default function AdjustmentForm({
                       .toLocaleString()}{' '}
                     VND
                   </td>
-                  <td></td>
+                  <td aria-label="Empty cell" />
                 </tr>
               </tfoot>
             </table>
@@ -419,12 +443,12 @@ export default function AdjustmentForm({
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? (
             <>
-              <span className="spinner-border spinner-border-sm me-2"></span>
+              <span className="spinner-border spinner-border-sm me-2" />
               Saving...
             </>
           ) : (
             <>
-              <i className="fa fa-save me-2"></i>
+              <i className="fa fa-save me-2" />
               {mode === 'create' ? 'Create' : 'Update'} Adjustment
             </>
           )}

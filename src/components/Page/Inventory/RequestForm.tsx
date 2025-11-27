@@ -45,10 +45,6 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
     })) || [],
   })
 
-  useEffect(() => {
-    fetchData()
-  }, [])
-
   const fetchData = async () => {
     try {
       const [ingredientsRes, suppliersRes, ordersRes] = await Promise.all([
@@ -63,6 +59,11 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
       console.error('Error fetching data:', error)
     }
   }
+
+  useEffect(() => {
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleAddDetail = () => {
     const newDetail = {
@@ -108,6 +109,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
     e.preventDefault()
 
     if (formData.requestDetails.length === 0) {
+      // eslint-disable-next-line no-alert
       alert('Please add at least one request detail')
       return
     }
@@ -117,6 +119,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
       (d) => !d.ingredientId || d.quantity <= 0,
     )
     if (invalidDetails.length > 0) {
+      // eslint-disable-next-line no-alert
       alert('Please fill all required fields for all details')
       return
     }
@@ -125,6 +128,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
     try {
       if (mode === 'create') {
         const response = await ingredientRequestApi.create(formData)
+        // eslint-disable-next-line no-alert
         alert('Request created successfully')
         router.push(`/inventory/requests/${response.data.requestId}`)
       } else if (request) {
@@ -132,11 +136,13 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
           request.requestId,
           formData,
         )
+        // eslint-disable-next-line no-alert
         alert('Request updated successfully')
         router.push(`/inventory/requests/${response.data.requestId}`)
       }
     } catch (error: any) {
       console.error('Error saving request:', error)
+      // eslint-disable-next-line no-alert
       alert(error.message || 'Failed to save request')
     } finally {
       setLoading(false)
@@ -152,10 +158,11 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
         <div className="card-body">
           <div className="row g-3">
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="orderIdSelect" className="form-label">
                 Order ID <span className="text-danger">*</span>
               </label>
               <select
+                id="orderIdSelect"
                 className="form-select"
                 value={formData.orderId}
                 onChange={(e) =>
@@ -172,10 +179,11 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
               </select>
             </div>
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="kitchenIdInput" className="form-label">
                 Kitchen ID <span className="text-danger">*</span>
               </label>
               <input
+                id="kitchenIdInput"
                 type="text"
                 className="form-control"
                 value={formData.kitchenId}
@@ -186,10 +194,11 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="requestDateInput" className="form-label">
                 Request Date <span className="text-danger">*</span>
               </label>
               <input
+                id="requestDateInput"
                 type="date"
                 className="form-control"
                 value={formData.requestDate}
@@ -200,10 +209,11 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label">
+              <label htmlFor="requiredDateInput" className="form-label">
                 Required Date <span className="text-danger">*</span>
               </label>
               <input
+                id="requiredDateInput"
                 type="date"
                 className="form-control"
                 value={formData.requiredDate}
@@ -214,8 +224,11 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
               />
             </div>
             <div className="col-12">
-              <label className="form-label">Notes</label>
+              <label htmlFor="notesTextarea" className="form-label">
+                Notes
+              </label>
               <textarea
+                id="notesTextarea"
                 className="form-control"
                 rows={2}
                 value={formData.notes}
@@ -237,7 +250,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
             className="btn btn-sm btn-primary"
             onClick={handleAddDetail}
           >
-            <i className="fa fa-plus me-2"></i>
+            <i className="fa fa-plus me-2" />
             Add Item
           </button>
         </div>
@@ -257,7 +270,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
                   <th style={{ width: '20%' }}>Supplier</th>
                   <th style={{ width: '12%' }}>Unit Price</th>
                   <th style={{ width: '10%' }}>Total</th>
-                  <th style={{ width: '3%' }}></th>
+                  <th style={{ width: '3%' }} aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
@@ -359,8 +372,9 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
                           type="button"
                           className="btn btn-sm btn-outline-danger"
                           onClick={() => handleRemoveDetail(index)}
+                          aria-label="Remove item"
                         >
-                          <i className="fa fa-trash"></i>
+                          <i className="fa fa-trash" />
                         </button>
                       </td>
                     </tr>
@@ -369,7 +383,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
                 {formData.requestDetails.length === 0 && (
                   <tr>
                     <td colSpan={8} className="text-center py-4">
-                      No items added. Click "Add Item" to start.
+                      No items added. Click &quot;Add Item&quot; to start.
                     </td>
                   </tr>
                 )}
@@ -388,7 +402,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
                       .toLocaleString()}{' '}
                     VND
                   </td>
-                  <td></td>
+                  <td aria-label="Empty cell" />
                 </tr>
               </tfoot>
             </table>
@@ -400,12 +414,12 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? (
             <>
-              <span className="spinner-border spinner-border-sm me-2"></span>
+              <span className="spinner-border spinner-border-sm me-2" />
               Saving...
             </>
           ) : (
             <>
-              <i className="fa fa-save me-2"></i>
+              <i className="fa fa-save me-2" />
               {mode === 'create' ? 'Create' : 'Update'} Request
             </>
           )}

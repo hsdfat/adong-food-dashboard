@@ -5,6 +5,8 @@ import {
   CreateOrderInput,
   UpdateOrderInput,
   GetOrdersParams,
+  GetOrderSuppliersResponse,
+  GetSuppliersForOrderResponse,
 } from '@/models/order'
 import { ResourceCollection } from '@/models/resource'
 
@@ -206,6 +208,30 @@ export const orderApi = {
       {
         method: 'GET',
       },
+    )
+  },
+
+  /**
+   * Get order suppliers for inventory operations
+   * Returns order with supplier details optimized for import/export forms
+   * GET /api/orders/{orderId}/suppliers-for-inventory
+   * Optional supplier_id parameter to filter ingredients by specific supplier
+   */
+  async getSuppliersForInventory(orderId: string, supplierId?: string): Promise<GetOrderSuppliersResponse> {
+    const url = supplierId
+      ? `${BASE_URL}/${orderId}/suppliers-for-inventory?supplier_id=${supplierId}`
+      : `${BASE_URL}/${orderId}/suppliers-for-inventory`
+    return apiClient<GetOrderSuppliersResponse>(url)
+  },
+
+  /**
+   * Get all suppliers with highlighting for which are used in the order
+   * Returns all suppliers with isUsedInOrder flag and ingredient count
+   * GET /api/orders/{orderId}/suppliers-with-highlight
+   */
+  async getSuppliersWithHighlight(orderId: string): Promise<GetSuppliersForOrderResponse> {
+    return apiClient<GetSuppliersForOrderResponse>(
+      `${BASE_URL}/${orderId}/suppliers-with-highlight`,
     )
   },
 }

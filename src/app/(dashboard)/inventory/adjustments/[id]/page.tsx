@@ -24,21 +24,6 @@ export default function AdjustmentDetailPage() {
     other: 'Other',
   }
 
-  useEffect(() => {
-    const fetchAdjustment = async () => {
-      try {
-        setLoading(true)
-        const response = await inventoryAdjustmentApi.getById(id)
-        setAdjustment(response.data)
-      } catch (error) {
-        console.error('Error fetching adjustment:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchAdjustment()
-  }, [id])
-
   const fetchAdjustment = async () => {
     try {
       setLoading(true)
@@ -51,9 +36,14 @@ export default function AdjustmentDetailPage() {
     }
   }
 
+  useEffect(() => {
+    fetchAdjustment()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
   const handleApprove = async () => {
-    // eslint-disable-next-line no-alert, no-restricted-globals
     if (
+      // eslint-disable-next-line no-alert, no-restricted-globals
       !confirm(
         'Approve this adjustment? This will update inventory stocks immediately.',
       )

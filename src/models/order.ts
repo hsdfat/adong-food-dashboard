@@ -209,3 +209,42 @@ export interface GetOrdersParams {
   dish_id?: string;
   ingredient_id?: string;
 }
+
+// Order ingredient with supplier for inventory operations
+export interface OrderIngredientWithSupplier {
+  orderId: string;
+  ingredientId: string;
+  ingredientName: string;
+  quantity: number;
+  unit: string;
+  supplierId?: string;
+  supplierName?: string;
+  unitPrice?: number;
+  totalCost?: number;
+}
+
+// Get order suppliers response for inventory operations
+export interface GetOrderSuppliersResponse {
+  orderId: string;
+  orderDate: string;
+  status: string;
+  suppliers: OrderIngredientWithSupplier[];
+}
+
+// Supplier with order flag for highlighting
+export interface SupplierWithOrderFlag {
+  supplierId: string;
+  supplierName: string;
+  phone: string;
+  email: string;
+  address: string;
+  active?: boolean;
+  isUsedInOrder: boolean;     // Flag indicating if supplier is used in the order
+  ingredientCount: number;    // Number of ingredients from this supplier
+}
+
+// Get suppliers with order highlight response
+export interface GetSuppliersForOrderResponse {
+  orderId: string;
+  suppliers: SupplierWithOrderFlag[];
+}
