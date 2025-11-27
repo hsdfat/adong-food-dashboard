@@ -14,6 +14,9 @@ import {
   faWarehouse,
   faBoxOpen,
   faTruckRampBox,
+  faBalanceScale,
+  faFileInvoice,
+  faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
@@ -89,15 +92,21 @@ export default async function SidebarNav() {
         <SidebarNavItem icon={faWarehouse} href="/inventory/stocks">
           {dict.sidebar.items.stocks || 'Stocks'}
         </SidebarNavItem>
+        <SidebarNavItem icon={faFileInvoice} href="/inventory/requests">
+          {dict.sidebar.items.ingredient_requests || 'Ingredient Requests'}
+        </SidebarNavItem>
         <SidebarNavItem icon={faBoxOpen} href="/inventory/imports">
           {dict.sidebar.items.imports || 'Imports'}
         </SidebarNavItem>
         <SidebarNavItem icon={faTruckRampBox} href="/inventory/exports">
           {dict.sidebar.items.exports || 'Exports'}
         </SidebarNavItem>
-        {/* <SidebarNavItem href="/receiving">
-          {dict.sidebar.items.receiving}
-        </SidebarNavItem> */}
+        <SidebarNavItem icon={faBalanceScale} href="/inventory/adjustments">
+          {dict.sidebar.items.adjustments || 'Adjustments'}
+        </SidebarNavItem>
+        <SidebarNavItem icon={faChartLine} href="/inventory/reports">
+          {dict.sidebar.items.reports || 'Reports'}
+        </SidebarNavItem>
       </SidebarNavGroup>
 
       {/* <SidebarNavItem icon={faClipboardList} href="/reports">
