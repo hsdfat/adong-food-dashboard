@@ -33,7 +33,7 @@
     }
   },
   "action": {
-    "quick_action": "Quick Action",
+    "quick_action": "Quick Actions",
     "view": "View",
     "info": "Info",
     "edit": "Edit",
@@ -434,6 +434,7 @@
   },
   "orders": {
     "create": "Create Order",
+    "import_list": "Import List",
     "subtitle": "List of orders",
     "add": "Add",
     "columns": {

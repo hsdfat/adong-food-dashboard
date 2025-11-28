@@ -33,7 +33,7 @@
     "rows_per_page": "Số dòng mỗi trang"
   },
   "action": {
-    "quick_action": "Hành động nhanh",
+    "quick_action": "Hành động nhanh chóng",
     "view": "Xem",
     "info": "Thông tin",
     "edit": "Sửa",
@@ -365,6 +365,7 @@
   },
   "orders": {
     "create": "Tạo đơn hàng",
+    "import_list": "Danh sách nhập kho",
     "subtitle": "Danh sách phiếu lên đơn",
     "add": "Thêm",
     "columns": {
