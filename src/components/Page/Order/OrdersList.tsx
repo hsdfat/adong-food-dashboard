@@ -6,13 +6,13 @@ import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
+import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 import MasterDataListPage from '@/components/Common/MasterDataListPage'
 import {
   TableColumn,
   TableAction,
 } from '@/components/Common/MasterDataTable/MasterDataTable'
 import StatusCell from './components/StatusCell'
-import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 
 const COMMON_STATUSES = [
   'Pending',

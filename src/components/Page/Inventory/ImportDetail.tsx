@@ -8,6 +8,7 @@ import { InventoryImport } from '@/models'
 import useDictionary from '@/locales/dictionary-hook'
 import ActionButton from '@/components/Common/ActionButton/ActionButton'
 import { useNotification } from '@/components/Common/Notification/NotificationProvider'
+import { approveImport, getImportById } from '@/app/actions/inventory'
 
 interface ImportDetailProps {
   importId: string;
@@ -46,14 +47,14 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
 
     try {
       setApproving(true)
-      await inventoryImportApi.approve(importId)
+      await approveImport(importId)
       addNotification({
         type: 'success',
         title: 'Success',
         message: dict.inventory?.approved_success || 'Import approved successfully',
       })
       // Reload data
-      const response = await inventoryImportApi.getById(importId)
+      const response = await getImportById(importId)
       setImportData(response.data)
     } catch (err: any) {
       addNotification({
@@ -145,7 +146,7 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
                       onClick={() => window.open(importData.supplier!.zaloLink!, '_blank')}
                       title="Contact on Zalo"
                     >
-                      <i className="bi bi-chat-dots-fill text-primary"></i> Zalo
+                      <i className="bi bi-chat-dots-fill text-primary" /> Zalo
                     </Button>
                   )}
                 </p>
@@ -187,76 +188,134 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
         </CardBody>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <h5 className="mb-0">{dict.inventory?.import_details || 'Import Details'}</h5>
-        </CardHeader>
-        <CardBody>
-          {importData.importDetails && importData.importDetails.length > 0 ? (
-            <Table responsive bordered>
-              <thead>
-                <tr>
-                  <th>{dict.inventory?.ingredient || 'Ingredient'}</th>
-                  <th>{dict.inventory?.quantity || 'Quantity'}</th>
-                  <th>{dict.inventory?.unit || 'Unit'}</th>
-                  <th>{dict.inventory?.unit_price || 'Unit Price'}</th>
-                  <th>{dict.inventory?.total_price || 'Total Price'}</th>
-                  {importData.importDetails.some((d) => d.expiryDate) && (
-                    <th>{dict.inventory?.expiry_date || 'Expiry Date'}</th>
-                  )}
-                  {importData.importDetails.some((d) => d.batchNumber) && (
-                    <th>{dict.inventory?.batch_number || 'Batch Number'}</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {importData.importDetails.map((detail, index) => (
-                  <tr key={detail.importDetailId || index}>
-                    <td>
-                      {detail.ingredient?.ingredientName || detail.ingredientId}
-                    </td>
-                    <td>{detail.quantity}</td>
-                    <td>{detail.unit}</td>
-                    <td>{new Intl.NumberFormat('vi-VN').format(detail.unitPrice)}</td>
-                    <td>
-                      <strong>
-                        {new Intl.NumberFormat('vi-VN').format(detail.totalPrice)}
-                      </strong>
-                    </td>
-                    {importData.importDetails!.some((d) => d.expiryDate) && (
-                      <td>
-                        {detail.expiryDate
-                          ? new Date(detail.expiryDate).toLocaleDateString()
-                          : '-'}
-                      </td>
-                    )}
-                    {importData.importDetails!.some((d) => d.batchNumber) && (
-                      <td>{detail.batchNumber || '-'}</td>
-                    )}
-                  </tr>
+      <div>
+        <h5 className="mb-3">{dict.inventory?.import_details || 'Import Details'}</h5>
+        {importData.importDetails && importData.importDetails.length > 0 ? (
+          (() => {
+            // Group by supplier
+            const grouped = new Map<string, typeof importData.importDetails>()
+            importData.importDetails.forEach((detail) => {
+              const suppId = detail.supplierId || 'no-supplier'
+              if (!grouped.has(suppId)) {
+                grouped.set(suppId, [])
+              }
+              grouped.get(suppId)!.push(detail)
+            })
+
+            const blocks = Array.from(grouped.entries()).map(([suppId, details]) => {
+              const supplier = suppId === 'no-supplier'
+                ? null
+                : details[0]?.supplier
+              const blockTotal = details.reduce((sum, d) => sum + d.totalPrice, 0)
+
+              return {
+                supplierId: suppId,
+                supplierName: supplier?.supplierName || 'No Supplier',
+                supplier,
+                details,
+                total: blockTotal
+              }
+            })
+
+            return (
+              <>
+                {blocks.map((block, blockIndex) => (
+                  <Card key={block.supplierId} className="mb-3">
+                    <CardHeader className="bg-light">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 className="mb-0">
+                            <Badge bg="primary" className="me-2">Supplier {blockIndex + 1}</Badge>
+                            {block.supplierName}
+                            {block.supplier?.zaloLink && (
+                              <Button
+                                variant="link"
+                                size="sm"
+                                className="ms-2 p-0"
+                                onClick={() => window.open(block.supplier!.zaloLink!, '_blank')}
+                                title="Contact on Zalo"
+                              >
+                                <i className="bi bi-chat-dots-fill text-primary" /> Zalo
+                              </Button>
+                            )}
+                          </h6>
+                          <small className="text-muted">
+                            {block.details.length} ingredient(s)
+                          </small>
+                        </div>
+                        <h6 className="mb-0 text-primary">
+                          {new Intl.NumberFormat('vi-VN').format(block.total)}
+                        </h6>
+                      </div>
+                    </CardHeader>
+                    <CardBody>
+                      <Table responsive bordered size="sm">
+                        <thead>
+                          <tr>
+                            <th>{dict.inventory?.ingredient || 'Ingredient'}</th>
+                            <th>{dict.inventory?.quantity || 'Quantity'}</th>
+                            <th>{dict.inventory?.unit || 'Unit'}</th>
+                            <th>{dict.inventory?.unit_price || 'Unit Price'}</th>
+                            <th>{dict.inventory?.total_price || 'Total Price'}</th>
+                            {block.details.some((d) => d.expiryDate) && (
+                              <th>{dict.inventory?.expiry_date || 'Expiry Date'}</th>
+                            )}
+                            {block.details.some((d) => d.batchNumber) && (
+                              <th>{dict.inventory?.batch_number || 'Batch Number'}</th>
+                            )}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {block.details.map((detail, index) => (
+                            <tr key={detail.importDetailId || index}>
+                              <td>
+                                {detail.ingredient?.ingredientName || detail.ingredientId}
+                              </td>
+                              <td>{detail.quantity}</td>
+                              <td>{detail.unit}</td>
+                              <td>{new Intl.NumberFormat('vi-VN').format(detail.unitPrice)}</td>
+                              <td>
+                                <strong>
+                                  {new Intl.NumberFormat('vi-VN').format(detail.totalPrice)}
+                                </strong>
+                              </td>
+                              {block.details.some((d) => d.expiryDate) && (
+                                <td>
+                                  {detail.expiryDate
+                                    ? new Date(detail.expiryDate).toLocaleDateString()
+                                    : '-'}
+                                </td>
+                              )}
+                              {block.details.some((d) => d.batchNumber) && (
+                                <td>{detail.batchNumber || '-'}</td>
+                              )}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </CardBody>
+                  </Card>
                 ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan={4} className="text-end">
-                    <strong>{dict.inventory?.total_amount || 'Total Amount'}:</strong>
-                  </td>
-                  <td>
-                    <strong>
-                      {new Intl.NumberFormat('vi-VN').format(importData.totalAmount)}
-                    </strong>
-                  </td>
-                  <td colSpan={2} />
-                </tr>
-              </tfoot>
-            </Table>
-          ) : (
-            <Alert variant="info">
-              {dict.inventory?.no_details || 'No import details found'}
-            </Alert>
-          )}
-        </CardBody>
-      </Card>
+
+                <Card className="bg-light">
+                  <CardBody>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h5 className="mb-0">{dict.inventory?.total_amount || 'Total Amount'}</h5>
+                      <h4 className="mb-0 text-primary">
+                        {new Intl.NumberFormat('vi-VN').format(importData.totalAmount)}
+                      </h4>
+                    </div>
+                  </CardBody>
+                </Card>
+              </>
+            )
+          })()
+        ) : (
+          <Alert variant="info">
+            {dict.inventory?.no_details || 'No import details found'}
+          </Alert>
+        )}
+      </div>
     </div>
   )
 }

@@ -94,6 +94,7 @@ export interface InventoryImportDetail {
   importDetailId: number;
   importId: string;
   ingredientId: string;
+  supplierId?: string;
   quantity: number;
   unit: string;
   unitPrice: number;
@@ -107,10 +108,16 @@ export interface InventoryImportDetail {
     ingredientId: string;
     ingredientName: string;
   };
+  supplier?: {
+    supplierId: string;
+    supplierName: string;
+    zaloLink?: string;
+  };
 }
 
 export interface CreateImportDetailInput {
   ingredientId: string;
+  supplierId?: string;
   quantity: number;
   unit: string;
   unitPrice: number;

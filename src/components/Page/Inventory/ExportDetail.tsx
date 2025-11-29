@@ -8,6 +8,7 @@ import { InventoryExport } from '@/models'
 import useDictionary from '@/locales/dictionary-hook'
 import ActionButton from '@/components/Common/ActionButton/ActionButton'
 import { useNotification } from '@/components/Common/Notification/NotificationProvider'
+import { approveExport, getExportById } from '@/app/actions/inventory'
 
 interface ExportDetailProps {
   exportId: string;
@@ -26,7 +27,7 @@ export default function ExportDetail({ exportId }: ExportDetailProps) {
     const loadExport = async () => {
       try {
         setLoading(true)
-        const response = await inventoryExportApi.getById(exportId)
+        const response = await getExportById(exportId)
         setExportData(response.data)
       } catch (err) {
         setError('Failed to load export')
@@ -46,14 +47,14 @@ export default function ExportDetail({ exportId }: ExportDetailProps) {
 
     try {
       setApproving(true)
-      await inventoryExportApi.approve(exportId)
+      await approveExport(exportId)
       addNotification({
         type: 'success',
         title: 'Success',
         message: dict.inventory?.approved_success || 'Export approved successfully',
       })
       // Reload data
-      const response = await inventoryExportApi.getById(exportId)
+      const response = await getExportById(exportId)
       setExportData(response.data)
     } catch (err: any) {
       addNotification({

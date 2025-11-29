@@ -154,6 +154,11 @@ async function apiClient<T>(
 
   const url = `${API_BASE_URL}${endpoint}`
   try {
+    console.log('[API] Making request:', {
+      url,
+      method: fetchOptions.method || 'GET',
+      endpoint,
+    })
     const response = await fetch(url, {
       ...fetchOptions,
       headers,
@@ -264,6 +269,13 @@ async function apiClient<T>(
       throw error
     }
     const errorMessage = error instanceof Error ? error.message : 'Network error'
+    console.error('[API] Request failed:', {
+      url,
+      endpoint,
+      error: errorMessage,
+      errorType: error?.constructor?.name,
+      fullError: error,
+    })
     throw new ApiError(0, errorMessage)
   }
 }

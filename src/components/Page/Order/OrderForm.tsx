@@ -28,6 +28,7 @@ import { Kitchen, RecipeStandard , Dish as DishModel, Ingredient as IngredientMo
 import { CreateOrderInput } from '@/models/order'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 import useOrderDictionary from './locales/use-order-dictionary'
@@ -35,7 +36,6 @@ import OrderHeaderForm from './components/OrderHeaderForm'
 import DishList from './components/DishList'
 import SupplementaryFoodList from './components/SupplementaryFoodList'
 import TotalIngredientsSummary from './components/TotalIngredientsSummary'
-import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 // ==================== TYPE DEFINITIONS ====================
 
@@ -322,19 +322,13 @@ export default function OrderForm({
   // ==================== UTILITY FUNCTIONS ====================
 
   // Safely add numbers avoiding floating point errors
-  const safeAdd = (a: number, b: number): number => {
-    return Math.round((a + b) * 10000) / 10000
-  }
+  const safeAdd = (a: number, b: number): number => Math.round((a + b) * 10000) / 10000
 
   // Safely multiply numbers avoiding floating point errors
-  const safeMultiply = (a: number, b: number): number => {
-    return Math.round(a * b * 10000) / 10000
-  }
+  const safeMultiply = (a: number, b: number): number => Math.round(a * b * 10000) / 10000
 
   // Round to 4 decimal places
-  const safeRound = (num: number): number => {
-    return Math.round(num * 10000) / 10000
-  }
+  const safeRound = (num: number): number => Math.round(num * 10000) / 10000
 
   // Format number to 4 decimal places, removing trailing zeros
   const formatNumber = (num: number): string => {
@@ -428,7 +422,7 @@ export default function OrderForm({
         }))
 
         const response = await orderApi.getBestSuppliersForNewOrder({
-          kitchenId: kitchenId,
+          kitchenId,
           ingredients: ingredientsPayload,
         })
 
@@ -574,15 +568,18 @@ export default function OrderForm({
 
       return () => clearTimeout(timeoutId)
     }
+    return undefined
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDishes, supplementaryFoods, kitchenId])
 
   const handleSupplierChange = (ingredientId: string, productIdStr: string) => {
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
-    setSupplierSelections((prev) => ({
-      ...prev,
-      [ingredientId]: productId,
-    }))
+    if (productId) {
+      setSupplierSelections((prev) => ({
+        ...prev,
+        [ingredientId]: productId,
+      }))
+    }
   }
 
   // ==================== DISH MANAGEMENT ====================
@@ -615,7 +612,7 @@ export default function OrderForm({
         id: `${Date.now()}-${Math.random()}`,
         dishId: dish.dishId,
         dishName: dish.dishName,
-        portions: portions,
+        portions,
         ingredients,
       }
     })
@@ -912,9 +909,9 @@ export default function OrderForm({
     try {
       const orderData: CreateOrderInput = {
         orderId,
-        kitchenId: kitchenId,
-        orderDate: orderDate,
-        note: note,
+        kitchenId,
+        orderDate,
+        note,
         status: 'Pending',
         details: orderDishes.map((dish) => ({
           dishId: dish.dishId,

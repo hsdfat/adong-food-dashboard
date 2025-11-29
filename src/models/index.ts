@@ -41,6 +41,10 @@ export type {
   UpdateOrderIngredientInput,
   UpdateOrderSupplementaryFoodInput,
   GetOrdersParams,
+  OrderIngredientWithSupplier,
+  GetOrderSuppliersResponse,
+  SupplierWithOrderFlag,
+  GetSuppliersForOrderResponse,
 } from './order'
 
 // Resource Models

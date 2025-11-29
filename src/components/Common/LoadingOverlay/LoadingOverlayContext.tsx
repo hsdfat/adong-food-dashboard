@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface LoadingOverlayContextType {
@@ -23,8 +23,10 @@ export function LoadingOverlayProvider({ children }: { children: ReactNode }) {
     setIsLoading(false)
   }, [pathname])
 
+  const value = useMemo(() => ({ isLoading, showLoading, hideLoading }), [isLoading])
+
   return (
-    <LoadingOverlayContext.Provider value={{ isLoading, showLoading, hideLoading }}>
+    <LoadingOverlayContext.Provider value={value}>
       {children}
     </LoadingOverlayContext.Provider>
   )

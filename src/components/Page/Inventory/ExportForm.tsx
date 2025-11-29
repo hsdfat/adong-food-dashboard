@@ -18,6 +18,7 @@ import {
   kitchenApi,
   ingredientApi,
 } from '@/services'
+import { createExport, updateExport, getExportById } from '@/app/actions/inventory'
 import {
   InventoryExport,
   CreateExportInput,
@@ -82,7 +83,7 @@ export default function ExportForm({
       if (isEdit && exportId) {
         try {
           setLoadingData(true)
-          const response = await inventoryExportApi.getById(exportId)
+          const response = await getExportById(exportId)
           const {data} = response
           setExportData(data)
           setKitchenId(data.kitchenId)
@@ -180,10 +181,10 @@ export default function ExportForm({
       }
 
       if (isEdit && exportId) {
-        await inventoryExportApi.update(exportId, submitData)
+        await updateExport(exportId, submitData)
         setSuccess('Export updated successfully')
       } else {
-        await inventoryExportApi.create(submitData)
+        await createExport(submitData)
         setSuccess('Export created successfully')
       }
 

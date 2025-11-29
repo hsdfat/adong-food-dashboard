@@ -12,6 +12,7 @@ import {
   TableAction,
 } from '@/components/Common/MasterDataTable/MasterDataTable'
 import { Badge } from 'react-bootstrap'
+import { approveExport, deleteExport } from '@/app/actions/inventory'
 
 export default function ExportList() {
   const [exportsData, setExportsData] =
@@ -50,7 +51,7 @@ export default function ExportList() {
   }
 
   const handleDelete = async (id: string, exportItem: InventoryExport) => {
-    await inventoryExportApi.delete(id)
+    await deleteExport(id)
   }
 
   // Define table columns
@@ -149,7 +150,7 @@ export default function ExportList() {
         const item = exportItem as InventoryExport
         if (item.status === 'draft') {
           try {
-            await inventoryExportApi.approve(item.exportId)
+            await approveExport(item.exportId)
             loadExports(1, 10, '')
           } catch (err) {
             console.error(err)

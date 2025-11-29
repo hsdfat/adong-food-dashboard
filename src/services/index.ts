@@ -24,6 +24,9 @@ export {
   inventoryStockApi,
   inventoryImportApi,
   inventoryExportApi,
+  inventoryAdjustmentApi,
+  ingredientRequestApi,
+  inventoryReportsApi,
 } from './inventory-api'
 
 // Ingredients API

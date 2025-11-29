@@ -7,8 +7,7 @@ import SidebarNav from '@/components/Layout/Dashboard/Sidebar/SidebarNav'
 import Header from '@/components/Layout/Dashboard/Header/Header'
 import Footer from '@/components/Layout/Dashboard/Footer/Footer'
 import { NotificationProvider } from '@/components/Common/Notification/NotificationProvider'
-import { LoadingOverlayProvider } from '@/components/Common/LoadingOverlay'
-import LoadingOverlay from '@/components/Common/LoadingOverlay'
+import LoadingOverlay, { LoadingOverlayProvider } from '@/components/Common/LoadingOverlay'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

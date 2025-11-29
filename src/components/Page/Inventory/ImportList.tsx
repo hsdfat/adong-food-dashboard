@@ -12,6 +12,7 @@ import {
   TableAction,
 } from '@/components/Common/MasterDataTable/MasterDataTable'
 import { Badge, Button } from 'react-bootstrap'
+import { approveImport, deleteImport } from '@/app/actions/inventory'
 
 export default function ImportList() {
   const [importsData, setImportsData] =
@@ -50,7 +51,7 @@ export default function ImportList() {
   }
 
   const handleDelete = async (id: string, importItem: InventoryImport) => {
-    await inventoryImportApi.delete(id)
+    await deleteImport(id)
   }
 
   // Define table columns
@@ -101,7 +102,7 @@ export default function ImportList() {
                 }}
                 title="Contact on Zalo"
               >
-                <i className="bi bi-chat-dots-fill text-primary"></i>
+                <i className="bi bi-chat-dots-fill text-primary" />
               </Button>
             </div>
           )
@@ -159,7 +160,7 @@ export default function ImportList() {
         const item = importItem as InventoryImport
         if (item.status === 'draft') {
           try {
-            await inventoryImportApi.approve(item.importId)
+            await approveImport(item.importId)
             loadImports(1, 10, '')
           } catch (err) {
             console.error(err)
