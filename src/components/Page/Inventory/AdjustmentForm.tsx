@@ -11,6 +11,7 @@ import {
   InventoryAdjustment,
   InventoryStock,
 } from '@/models'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 interface AdjustmentFormProps {
   adjustment?: InventoryAdjustment
@@ -22,6 +23,7 @@ export default function AdjustmentForm({
   mode,
 }: AdjustmentFormProps) {
   const router = useRouter()
+  const { showLoading, hideLoading } = useLoadingOverlay()
   const [loading, setLoading] = useState(false)
   const [stocks, setStocks] = useState<InventoryStock[]>([])
 
@@ -119,6 +121,7 @@ export default function AdjustmentForm({
     }
 
     setLoading(true)
+    showLoading()
     try {
       if (mode === 'create') {
         const response = await inventoryAdjustmentApi.create(formData)
@@ -138,6 +141,7 @@ export default function AdjustmentForm({
       console.error('Error saving adjustment:', error)
       // eslint-disable-next-line no-alert
       alert(error.message || 'Failed to save adjustment')
+      hideLoading()
     } finally {
       setLoading(false)
     }

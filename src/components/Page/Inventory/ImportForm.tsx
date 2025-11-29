@@ -32,6 +32,7 @@ import useDictionary from '@/locales/dictionary-hook'
 import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 interface ImportFormProps {
   importId?: string;
@@ -52,6 +53,7 @@ export default function ImportForm({
 }: ImportFormProps) {
   const router = useRouter()
   const dict = useDictionary()
+  const { showLoading, hideLoading } = useLoadingOverlay()
   const [loading, setLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(isEdit)
   const [error, setError] = useState('')
@@ -252,12 +254,14 @@ export default function ImportForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    showLoading()
     setError('')
     setSuccess('')
 
     if (!kitchenId) {
       setError('Please select a kitchen')
       setLoading(false)
+      hideLoading()
       return
     }
 
@@ -278,6 +282,7 @@ export default function ImportForm({
     if (allDetails.length === 0) {
       setError('Please add at least one ingredient')
       setLoading(false)
+      hideLoading()
       return
     }
 
@@ -286,6 +291,7 @@ export default function ImportForm({
     if (invalidDetails.length > 0) {
       setError('All ingredients must have valid quantity and unit price (greater than 0)')
       setLoading(false)
+      hideLoading()
       return
     }
 
@@ -318,6 +324,7 @@ export default function ImportForm({
     } catch (err: any) {
       console.error('Submit error:', err)
       setError(err.message || 'Failed to save import')
+      hideLoading()
     } finally {
       setLoading(false)
     }

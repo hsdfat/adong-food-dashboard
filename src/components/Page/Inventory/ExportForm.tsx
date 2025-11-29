@@ -31,6 +31,7 @@ import useDictionary from '@/locales/dictionary-hook'
 import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 interface ExportFormProps {
   exportId?: string;
@@ -43,6 +44,7 @@ export default function ExportForm({
 }: ExportFormProps) {
   const router = useRouter()
   const dict = useDictionary()
+  const { showLoading, hideLoading } = useLoadingOverlay()
   const [loading, setLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(isEdit)
   const [error, setError] = useState('')
@@ -139,24 +141,28 @@ export default function ExportForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    showLoading()
     setError('')
     setSuccess('')
 
     if (!kitchenId) {
       setError('Please select a kitchen')
       setLoading(false)
+      hideLoading()
       return
     }
 
     if (exportType === 'transfer' && !destinationKitchenId) {
       setError('Please select a destination kitchen for transfer')
       setLoading(false)
+      hideLoading()
       return
     }
 
     if (exportDetails.length === 0) {
       setError('Please add at least one export detail')
       setLoading(false)
+      hideLoading()
       return
     }
 
@@ -194,6 +200,7 @@ export default function ExportForm({
     } catch (err: any) {
       setError(err.message || 'Failed to save export')
       console.error(err)
+      hideLoading()
     } finally {
       setLoading(false)
     }

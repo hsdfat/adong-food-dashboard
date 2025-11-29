@@ -7,6 +7,7 @@ import { inventoryStockApi } from '@/services'
 import { InventoryStock, UpdateStockLevelsInput } from '@/models'
 import useDictionary from '@/locales/dictionary-hook'
 import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 interface StockFormProps {
   stockId: number;
@@ -15,6 +16,7 @@ interface StockFormProps {
 export default function StockForm({ stockId }: StockFormProps) {
   const router = useRouter()
   const dict = useDictionary()
+  const { showLoading, hideLoading } = useLoadingOverlay()
   const [loading, setLoading] = useState(false)
   const [loadingStock, setLoadingStock] = useState(true)
   const [error, setError] = useState('')
@@ -52,6 +54,7 @@ export default function StockForm({ stockId }: StockFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    showLoading()
     setError('')
     setSuccess('')
 
@@ -76,6 +79,7 @@ export default function StockForm({ stockId }: StockFormProps) {
     } catch (err: any) {
       setError(err.message || 'Failed to update stock levels')
       console.error(err)
+      hideLoading()
     } finally {
       setLoading(false)
     }
