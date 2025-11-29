@@ -254,9 +254,10 @@ export default function ImportForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    showLoading()
     setError('')
     setSuccess('')
+
+    showLoading()
 
     if (!kitchenId) {
       setError('Please select a kitchen')
@@ -306,15 +307,11 @@ export default function ImportForm({
         importDetails: allDetails,
       }
 
-      console.log('Submitting import data:', JSON.stringify(submitData, null, 2))
-
       if (isEdit && importId) {
-        const response = await updateImport(importId, submitData)
-        console.log('Update response:', response)
+        await updateImport(importId, submitData)
         setSuccess('Import updated successfully')
       } else {
-        const response = await createImport(submitData)
-        console.log('Create response:', response)
+        await createImport(submitData)
         setSuccess('Import created successfully')
       }
 

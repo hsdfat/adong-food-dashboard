@@ -125,16 +125,14 @@ export default function AdjustmentForm({
     try {
       if (mode === 'create') {
         const response = await inventoryAdjustmentApi.create(formData)
-        // eslint-disable-next-line no-alert
-        alert('Adjustment created successfully')
+        // Navigation will keep loading overlay active until page changes
         router.push(`/inventory/adjustments/${response.data.adjustmentId}`)
       } else if (adjustment) {
         const response = await inventoryAdjustmentApi.update(
           adjustment.adjustmentId,
           formData,
         )
-        // eslint-disable-next-line no-alert
-        alert('Adjustment updated successfully')
+        // Navigation will keep loading overlay active until page changes
         router.push(`/inventory/adjustments/${response.data.adjustmentId}`)
       }
     } catch (error: any) {

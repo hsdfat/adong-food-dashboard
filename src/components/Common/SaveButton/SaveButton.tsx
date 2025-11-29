@@ -19,6 +19,11 @@ const SaveButton: React.FC<SaveButtonProps> = ({
 }) => {
   const dict = useDictionary()
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('SaveButton: clicked, type=submit should trigger form submission')
+    props.onClick?.(e)
+  }
+
   return (
     <ActionButton
       variant="success"
@@ -27,6 +32,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({
       loadingLabel={
         submittingLabel || dict.action?.submitting || 'Submitting...'
       }
+      onClick={handleClick}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     >

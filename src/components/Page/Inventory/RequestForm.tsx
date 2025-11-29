@@ -11,6 +11,7 @@ import {
 } from '@/models'
 import { ingredientApi, supplierApi, orderApi } from '@/services'
 import { ingredientRequestApi } from '@/services/inventory-api'
+import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
 
 interface RequestFormProps {
   request?: IngredientRequest
@@ -19,6 +20,7 @@ interface RequestFormProps {
 
 export default function RequestForm({ request, mode }: RequestFormProps) {
   const router = useRouter()
+  const { showLoading, hideLoading } = useLoadingOverlay()
   const [loading, setLoading] = useState(false)
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
@@ -125,25 +127,25 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
     }
 
     setLoading(true)
+    showLoading()
     try {
       if (mode === 'create') {
         const response = await ingredientRequestApi.create(formData)
-        // eslint-disable-next-line no-alert
-        alert('Request created successfully')
+        // Navigation will keep loading overlay active until page changes
         router.push(`/inventory/requests/${response.data.requestId}`)
       } else if (request) {
         const response = await ingredientRequestApi.update(
           request.requestId,
           formData,
         )
-        // eslint-disable-next-line no-alert
-        alert('Request updated successfully')
+        // Navigation will keep loading overlay active until page changes
         router.push(`/inventory/requests/${response.data.requestId}`)
       }
     } catch (error: any) {
       console.error('Error saving request:', error)
       // eslint-disable-next-line no-alert
       alert(error.message || 'Failed to save request')
+      hideLoading()
     } finally {
       setLoading(false)
     }

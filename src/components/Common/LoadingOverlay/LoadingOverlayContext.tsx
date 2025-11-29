@@ -15,8 +15,14 @@ export function LoadingOverlayProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
   const pathname = usePathname()
 
-  const showLoading = () => setIsLoading(true)
-  const hideLoading = () => setIsLoading(false)
+  const showLoading = () => {
+    console.log('LoadingOverlay: showLoading called')
+    setIsLoading(true)
+  }
+  const hideLoading = () => {
+    console.log('LoadingOverlay: hideLoading called')
+    setIsLoading(false)
+  }
 
   // Auto-hide loading overlay when pathname changes
   useEffect(() => {

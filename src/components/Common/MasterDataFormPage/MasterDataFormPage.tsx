@@ -58,9 +58,11 @@ const MasterDataFormPage: React.FC<MasterDataFormPageProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('MasterDataFormPage: handleSubmit called')
     setLocalError('')
     setLocalSuccess('')
     await onSubmit(e)
+    console.log('MasterDataFormPage: onSubmit completed')
   }
 
   return (

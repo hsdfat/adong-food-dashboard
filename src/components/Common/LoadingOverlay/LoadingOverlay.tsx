@@ -8,7 +8,11 @@ import './LoadingOverlay.scss'
 export default function LoadingOverlay() {
   const { isLoading } = useLoadingOverlay()
 
+  console.log('LoadingOverlay: isLoading =', isLoading)
+
   if (!isLoading) return null
+
+  console.log('LoadingOverlay: Rendering overlay')
 
   return (
     <div className="loading-overlay">
