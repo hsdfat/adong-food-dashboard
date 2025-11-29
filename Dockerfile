@@ -29,16 +29,6 @@ COPY . .
 RUN pnpm build
 
 ###############################################
-# production-deps: install only production dependencies
-###############################################
-FROM node:22-alpine AS production-deps
-WORKDIR /app
-
-RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --no-frozen-lockfile --prod
-
-###############################################
 # runner: production image
 ###############################################
 FROM node:22-alpine AS runner
@@ -49,18 +39,16 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# Install wget for healthcheck and dumb-init for proper signal handling
-RUN apk add --no-cache wget dumb-init
+# Install only dumb-init (wget not needed, use node for healthcheck)
+RUN apk add --no-cache dumb-init
 
 # Create non-root user
 RUN addgroup -g 1001 nodejs && adduser -S nextjs -u 1001
 
 WORKDIR /app
 
-# Copy only production dependencies (smaller size)
-COPY --from=production-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
-
-# Copy necessary files for running `next start`
+# Copy necessary files for running standalone Next.js
+# Standalone mode includes all dependencies, so we don't need node_modules separately
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
@@ -68,9 +56,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 USER nextjs
 EXPOSE 3000
 
-# Health check
+# Health check using node instead of wget
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+  CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
 # Use dumb-init to handle signals properly
 CMD ["dumb-init", "node", "server.js"]
