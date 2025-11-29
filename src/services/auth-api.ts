@@ -49,6 +49,9 @@ export const register = async (
   data: RegisterInput,
 ): Promise<RegisterResponse> => {
   try {
+    console.log('[AuthAPI] Sending registration request to:', `${API_BASE_URL}/auth/register`)
+    console.log('[AuthAPI] Request data:', { ...data, password: '***' })
+
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
@@ -57,14 +60,20 @@ export const register = async (
       body: JSON.stringify(data),
     })
 
+    console.log('[AuthAPI] Response status:', response.status, response.statusText)
+
     const result = await response.json()
+    console.log('[AuthAPI] Response body:', result)
 
     if (!response.ok) {
+      console.error('[AuthAPI] Registration failed:', result)
       throw new Error(result.message || 'Registration failed')
     }
 
+    console.log('[AuthAPI] Registration successful')
     return result
   } catch (error) {
+    console.error('[AuthAPI] Registration error:', error)
     if (error instanceof Error) {
       throw error
     }

@@ -44,16 +44,22 @@ export default function Register() {
 
     try {
       // Register the user
+      console.log('[Register] Starting registration...', { username, email })
       const registerResponse = await authApi.register({
         username,
         email,
         password,
       })
 
+      console.log('[Register] Registration response:', registerResponse)
+
       if (!registerResponse.success) {
+        console.error('[Register] Registration failed:', registerResponse.message)
         setError(registerResponse.message || 'Registration failed')
         return
       }
+
+      console.log('[Register] Registration successful, attempting auto-login...')
 
       // Auto-login after successful registration
       const res = await signIn('credentials', {
@@ -62,6 +68,8 @@ export default function Register() {
         redirect: false,
         callbackUrl: '/',
       })
+
+      console.log('[Register] SignIn response:', res)
 
       if (!res) {
         setError('Registration successful, but login failed. Please try logging in.')
@@ -80,10 +88,12 @@ export default function Register() {
         return
       }
 
+      console.log('[Register] Login successful, redirecting to:', url)
       if (url) {
         router.push(url)
       }
     } catch (err) {
+      console.error('[Register] Error during registration:', err)
       if (err instanceof Error) {
         setError(err.message)
       } else {
