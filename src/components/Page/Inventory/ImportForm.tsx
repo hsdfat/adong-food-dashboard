@@ -33,6 +33,7 @@ import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
+import { generateId } from '@/utils/id-generator'
 
 interface ImportFormProps {
   importId?: string;
@@ -61,6 +62,7 @@ export default function ImportForm({
   const [importData, setImportData] = useState<InventoryImport | null>(null)
 
   // Form state
+  const [currentImportId, setCurrentImportId] = useState(importId || '')
   const [kitchenId, setKitchenId] = useState('')
   const [kitchenName, setKitchenName] = useState('')
   const [importDate, setImportDate] = useState(
@@ -90,6 +92,15 @@ export default function ImportForm({
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
   const [loadingOrderData, setLoadingOrderData] = useState(false)
   const [loadingIngredients, setLoadingIngredients] = useState(false)
+
+  // Auto-generate ID for new imports
+  useEffect(() => {
+    if (!isEdit && !importId && !currentImportId) {
+      setCurrentImportId(generateId('IM'))
+    } else if (importId) {
+      setCurrentImportId(importId)
+    }
+  }, [isEdit, importId, currentImportId])
 
   // Load data for edit
   useEffect(() => {

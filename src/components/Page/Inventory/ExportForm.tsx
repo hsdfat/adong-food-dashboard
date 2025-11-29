@@ -32,6 +32,7 @@ import MasterDataFormPage from '@/components/Common/MasterDataFormPage'
 import SingleSelectionModal from '@/components/Common/SingleSelectionModal'
 import MultiSelectionModal from '@/components/Common/MultiSelectionModal'
 import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
+import { generateId } from '@/utils/id-generator'
 
 interface ExportFormProps {
   exportId?: string;
@@ -52,6 +53,7 @@ export default function ExportForm({
   const [exportData, setExportData] = useState<InventoryExport | null>(null)
 
   // Form state
+  const [currentExportId, setCurrentExportId] = useState(exportId || '')
   const [kitchenId, setKitchenId] = useState('')
   const [kitchenName, setKitchenName] = useState('')
   const [exportDate, setExportDate] = useState(
@@ -78,6 +80,15 @@ export default function ExportForm({
   const [searchDestination, setSearchDestination] = useState('')
   const [searchIngredient, setSearchIngredient] = useState('')
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
+
+  // Auto-generate ID for new exports
+  useEffect(() => {
+    if (!isEdit && !exportId && !currentExportId) {
+      setCurrentExportId(generateId('EX'))
+    } else if (exportId) {
+      setCurrentExportId(exportId)
+    }
+  }, [isEdit, exportId, currentExportId])
 
   // Load data for edit
   useEffect(() => {

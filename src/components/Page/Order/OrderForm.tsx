@@ -136,10 +136,12 @@ export default function OrderForm({
 
   // Auto-generate ID for new orders
   useEffect(() => {
-    if (!orderId) {
+    if (!isEdit && !existingOrderId && !orderId) {
       setOrderId(generateId('ORD'))
+    } else if (existingOrderId) {
+      setOrderId(existingOrderId)
     }
-  }, [])
+  }, [isEdit, existingOrderId])
 
   // Kitchen Modal States
   const [showKitchenModal, setShowKitchenModal] = useState(false)
@@ -239,7 +241,6 @@ export default function OrderForm({
   }
 
   const initializeForm = async () => {
-    generateOrderId()
     await Promise.all([loadKitchens(), loadDishes(), loadIngredients()])
 
     // If pre-fill data is provided, use it after loading all data
@@ -249,18 +250,6 @@ export default function OrderForm({
   }
 
   // ==================== DATA LOADING FUNCTIONS ====================
-
-  const generateOrderId = () => {
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = String(now.getMonth() + 1).padStart(2, '0')
-    const day = String(now.getDate()).padStart(2, '0')
-    const hours = String(now.getHours()).padStart(2, '0')
-    const minutes = String(now.getMinutes()).padStart(2, '0')
-    const seconds = String(now.getSeconds()).padStart(2, '0')
-
-    setOrderId(`PLD${year}${month}${day}${hours}${minutes}${seconds}`)
-  }
 
   const loadKitchens = async () => {
     try {

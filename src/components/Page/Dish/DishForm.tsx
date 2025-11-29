@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Form,
   Button,
@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish, CreateDishInput, UpdateDishInput } from '@/models/dish'
 import useDictionary from '@/locales/dictionary-hook'
+import { generateId } from '@/utils/id-generator'
 
 interface DishFormProps {
   dish?: Dish;
@@ -34,6 +35,16 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
     description: dish?.description || '',
     active: dish?.active || true,
   })
+
+  // Auto-generate ID for new dishes
+  useEffect(() => {
+    if (!isEdit && !dish && !formData.dishId) {
+      setFormData((prev) => ({
+        ...prev,
+        dishId: generateId('DISH'),
+      }))
+    }
+  }, [isEdit, dish, formData.dishId])
 
   const handleChangeActive = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,

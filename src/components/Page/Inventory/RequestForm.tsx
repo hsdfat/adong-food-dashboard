@@ -12,6 +12,7 @@ import {
 import { ingredientApi, supplierApi, orderApi } from '@/services'
 import { ingredientRequestApi } from '@/services/inventory-api'
 import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
+import { generateId } from '@/utils/id-generator'
 
 interface RequestFormProps {
   request?: IngredientRequest
@@ -25,6 +26,7 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [orders, setOrders] = useState<Order[]>([])
+  const [requestId, setRequestId] = useState(request?.requestId || '')
 
   const [formData, setFormData] = useState<CreateRequestInput>({
     orderId: request?.orderId || '',
@@ -46,6 +48,15 @@ export default function RequestForm({ request, mode }: RequestFormProps) {
       notes: d.notes || '',
     })) || [],
   })
+
+  // Auto-generate ID for new requests
+  useEffect(() => {
+    if (mode === 'create' && !request && !requestId) {
+      setRequestId(generateId('REQ'))
+    } else if (request?.requestId) {
+      setRequestId(request.requestId)
+    }
+  }, [mode, request, requestId])
 
   const fetchData = async () => {
     try {

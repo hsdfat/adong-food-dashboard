@@ -12,6 +12,7 @@ import {
   InventoryStock,
 } from '@/models'
 import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
+import { generateId } from '@/utils/id-generator'
 
 interface AdjustmentFormProps {
   adjustment?: InventoryAdjustment
@@ -26,6 +27,7 @@ export default function AdjustmentForm({
   const { showLoading, hideLoading } = useLoadingOverlay()
   const [loading, setLoading] = useState(false)
   const [stocks, setStocks] = useState<InventoryStock[]>([])
+  const [adjustmentId, setAdjustmentId] = useState(adjustment?.adjustmentId || '')
 
   const [formData, setFormData] = useState<CreateAdjustmentInput>({
     kitchenId: adjustment?.kitchenId || 'K001',
@@ -43,6 +45,15 @@ export default function AdjustmentForm({
       reason: d.reason || '',
     })) || [],
   })
+
+  // Auto-generate ID for new adjustments
+  useEffect(() => {
+    if (mode === 'create' && !adjustment && !adjustmentId) {
+      setAdjustmentId(generateId('ADJ'))
+    } else if (adjustment?.adjustmentId) {
+      setAdjustmentId(adjustment.adjustmentId)
+    }
+  }, [mode, adjustment, adjustmentId])
 
   const fetchStocks = async () => {
     try {
