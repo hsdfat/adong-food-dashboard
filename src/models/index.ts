@@ -5,6 +5,9 @@ export type {
   UpdateIngredientInput,
 } from './ingredient'
 
+// User Models
+export type { User, CreateUserInput, UpdateUserInput } from './user'
+
 // Kitchen Models
 export type { Kitchen, CreateKitchenInput, UpdateKitchenInput } from './kitchen'
 

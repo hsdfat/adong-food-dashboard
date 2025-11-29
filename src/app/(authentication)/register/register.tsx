@@ -9,6 +9,7 @@ import { useState } from 'react'
 import InputGroupText from 'react-bootstrap/InputGroupText'
 import { signIn } from 'next-auth/react'
 import useDictionary from '@/locales/dictionary-hook'
+import { authApi } from '@/services'
 
 export default function Register() {
   const router = useRouter()
@@ -16,19 +17,54 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
-  const register = async () => {
+  const register = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     setSubmitting(true)
+    setError('')
+
+    const formData = new FormData(event.currentTarget)
+    const username = formData.get('username') as string
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+    const passwordRepeat = formData.get('password_repeat') as string
+
+    // Validate password match
+    if (password !== passwordRepeat) {
+      setError('Passwords do not match')
+      setSubmitting(false)
+      return
+    }
+
+    // Validate password length
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters')
+      setSubmitting(false)
+      return
+    }
 
     try {
+      // Register the user
+      const registerResponse = await authApi.register({
+        username,
+        email,
+        password,
+      })
+
+      if (!registerResponse.success) {
+        setError(registerResponse.message || 'Registration failed')
+        return
+      }
+
+      // Auto-login after successful registration
       const res = await signIn('credentials', {
-        username: 'Username',
-        password: 'Password',
+        username,
+        password,
         redirect: false,
         callbackUrl: '/',
       })
 
       if (!res) {
-        setError('Register failed')
+        setError('Registration successful, but login failed. Please try logging in.')
         return
       }
 
@@ -36,11 +72,11 @@ export default function Register() {
 
       if (!ok) {
         if (err) {
-          setError(err)
+          setError(`Registration successful, but login failed: ${err}`)
           return
         }
 
-        setError('Register failed')
+        setError('Registration successful, but login failed. Please try logging in.')
         return
       }
 
@@ -50,6 +86,8 @@ export default function Register() {
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message)
+      } else {
+        setError('An unexpected error occurred')
       }
     } finally {
       setSubmitting(false)

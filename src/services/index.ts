@@ -3,6 +3,9 @@ import {
   Ingredient,
   CreateIngredientInput,
   UpdateIngredientInput,
+  User,
+  CreateUserInput,
+  UpdateUserInput,
   Kitchen,
   CreateKitchenInput,
   UpdateKitchenInput,
@@ -15,9 +18,11 @@ import {
   KitchenFavoriteSupplier,
   CreateKitchenFavoriteSupplierInput,
   UpdateKitchenFavoriteSupplierInput,
+  ResourceCollection,
 } from '@/models'
 import { recipeStandardApi } from './recipe-standard'
 
+export { authApi } from './auth-api'
 export { supplierPriceApi } from './supplier-price.service'
 export { orderApi } from './order-api'
 export {
@@ -46,6 +51,27 @@ export const ingredientApi = {
     }),
   delete: (id: string) =>
     apiClient<{ message: string }>(`/api/ingredients/${id}`, {
+      method: 'DELETE',
+    }),
+}
+
+// Users API
+export const userApi = {
+  getAll: (queryString: string = '') =>
+    apiClient<ResourceCollection<User>>(`/api/users${queryString}`),
+  getById: (id: string) => apiClient<User>(`/api/users/${id}`),
+  create: (data: CreateUserInput) =>
+    apiClient<User>('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: string, data: UpdateUserInput) =>
+    apiClient<User>(`/api/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: string) =>
+    apiClient<{ message: string }>(`/api/users/${id}`, {
       method: 'DELETE',
     }),
 }

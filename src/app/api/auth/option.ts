@@ -410,6 +410,7 @@ export const authOptions: NextAuthOptions = {
             username,
             email: data.data.user?.email || `${username}@email.com`,
             avatar: data.data.user?.avatar || '/assets/img/avatars/8.jpg',
+            role: data.data.user?.role || 'user',
             accessToken: data.data.access_token, // snake_case -> camelCase
             refreshToken: data.data.refresh_token, // snake_case -> camelCase
             accessTokenExpires: data.data.access_token_expires_at
@@ -439,6 +440,7 @@ declare module 'next-auth' {
     name: string;
     email: string;
     avatar: string;
+    role?: string;
     accessToken?: string;
     refreshToken?: string;
     accessTokenExpires?: number;

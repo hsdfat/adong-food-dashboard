@@ -70,8 +70,12 @@ export default async function HeaderProfileNav() {
           </div>
         </DropdownToggle>
         <DropdownMenu className="pt-0">
-          <DropdownHeader className="fw-bold rounded-top">
-            {dict.profile.account.title}
+          <DropdownHeader className="fw-bold rounded-top bg-light">
+            <div className="d-flex flex-column">
+              <span className="text-primary">{session?.user.name || session?.user.username}</span>
+              <small className="text-muted">{session?.user.role || 'User'}</small>
+              <small className="text-muted">{session?.user.email}</small>
+            </div>
           </DropdownHeader>
           {/* <Link href="#" passHref legacyBehavior>
             <DropdownItem>

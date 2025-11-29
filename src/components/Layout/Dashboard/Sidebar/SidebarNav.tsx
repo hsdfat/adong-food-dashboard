@@ -17,6 +17,7 @@ import {
   faBalanceScale,
   faFileInvoice,
   faChartLine,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
@@ -47,6 +48,10 @@ export default async function SidebarNav() {
       <SidebarNavTitle>
         {dict.sidebar.items.master_data || 'Master Data'}
       </SidebarNavTitle>
+
+      <SidebarNavItem icon={faUsers} href="/users">
+        {dict.sidebar.items.users}
+      </SidebarNavItem>
 
       <SidebarNavGroup
         toggleIcon={faPuzzlePiece}

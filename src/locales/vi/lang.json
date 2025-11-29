@@ -10,7 +10,7 @@
     "forgot_password": "Quên mật khẩu?",
     "signup": {
       "title": "Đăng ký",
-      "description": "Đây là trang demo cho https://github.com/kitloong/nextjs-dashboard. Nhấn 'Đăng nhập' để xem bảng điều khiển đầy đủ."
+      "description": "Nhấn 'Đăng nhập' để xem bảng điều khiển đầy đủ."
     },
     "message": {
       "auth_failed": "Tên đăng nhập hoặc mật khẩu không đúng"
@@ -632,6 +632,35 @@
     "confirm_delete": "Bạn có chắc chắn muốn xóa nhà cung cấp này?",
     "error_load": "Không thể tải danh sách nhà cung cấp",
     "error_delete": "Không thể xóa nhà cung cấp"
+  },
+  "users": {
+    "title": "Quản lý người dùng",
+    "add_new": "Thêm người dùng mới",
+    "id": "Mã người dùng",
+    "user_name": "Tên đăng nhập",
+    "full_name": "Họ và tên",
+    "role": "Vai trò",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "password": "Mật khẩu",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "status": "Trạng thái",
+    "created_date": "Ngày tạo",
+    "loading": "Đang tải...",
+    "no_data": "Không tìm thấy người dùng",
+    "confirm_delete": "Bạn có chắc chắn muốn xóa người dùng này?",
+    "error_load": "Không thể tải danh sách người dùng",
+    "error_delete": "Không thể xóa người dùng",
+    "error_create": "Không thể tạo người dùng",
+    "error_update": "Không thể cập nhật người dùng",
+    "success_create": "Tạo người dùng thành công",
+    "success_update": "Cập nhật người dùng thành công",
+    "roles": {
+      "admin": "Quản trị viên",
+      "user": "Người dùng",
+      "moderator": "Điều hành viên"
+    }
   },
   "recipe_standards": {
     "add": "Thêm định mức công thức",
