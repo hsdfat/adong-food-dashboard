@@ -54,6 +54,7 @@ export const ingredientApi = {
 export const kitchenApi = {
   getAll: (queryString: string = '') =>
     apiClient<ResourceCollection<Kitchen>>(`/api/kitchens${queryString}`),
+  getMyKitchens: () => apiClient<{ data: Kitchen[] }>('/api/kitchens/my'),
   getById: (id: string) => apiClient<Kitchen>(`/api/kitchens/${id}`),
   create: (data: CreateKitchenInput) =>
     apiClient<Kitchen>('/api/kitchens', {
