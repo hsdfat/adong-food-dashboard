@@ -368,10 +368,6 @@
     "import_list": "Danh sách nhập kho",
     "subtitle": "Danh sách phiếu lên đơn",
     "add": "Thêm",
-    "columns": {
-      "dish": "Món ăn",
-      "ingredient": "Nguyên liệu"
-    },
     "title": "Quản lý đơn hàng",
     "create_title": "Tạo đơn hàng",
     "create_description": "Điền thông tin bên dưới để tạo đơn hàng mới.",

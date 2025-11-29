@@ -46,9 +46,43 @@ export const recipeStandardApi = {
       `${BASE_URL}/dish/${dishId}`,
     ),
 
+  // Get recipe standards by kitchen ID
+  getByKitchen: async (
+    kitchenId: string,
+  ): Promise<ResourceCollection<RecipeStandard>> => apiClient<ResourceCollection<RecipeStandard>>(
+      `${BASE_URL}/kitchen/${kitchenId}`,
+    ),
+
+  // Get recipe standards by dish ID and kitchen ID
+  getByDishAndKitchen: async (
+    dishId: string,
+    kitchenId: string,
+  ): Promise<ResourceCollection<RecipeStandard>> => apiClient<ResourceCollection<RecipeStandard>>(
+      `${BASE_URL}/dish/${dishId}/kitchen/${kitchenId}`,
+    ),
+
   // Create new recipe standard
   create: async (data: CreateRecipeStandardInput): Promise<RecipeStandard> => {
     const response = await apiClient<RecipeStandard>(BASE_URL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    return response
+  },
+
+  // Create multiple recipe standards for a dish at once
+  createBulk: async (
+    data: CreateRecipeStandardInput[],
+  ): Promise<{
+    message: string;
+    count: number;
+    data: RecipeStandard[];
+  }> => {
+    const response = await apiClient<{
+      message: string;
+      count: number;
+      data: RecipeStandard[];
+    }>(`${BASE_URL}/bulk`, {
       method: 'POST',
       body: JSON.stringify(data),
     })

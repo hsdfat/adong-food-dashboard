@@ -15,10 +15,11 @@ import {
   InputGroup,
 } from 'react-bootstrap'
 import { useRouter } from 'next/navigation'
-import { recipeStandardApi, dishApi, ingredientApi } from '@/services'
+import { recipeStandardApi, dishApi, ingredientApi, kitchenApi } from '@/services'
 import { RecipeStandard } from '@/models/recipe_standard'
 import { Dish } from '@/models/dish'
 import { Ingredient } from '@/models/ingredient'
+import { Kitchen } from '@/models/kitchen'
 import useDictionary from '@/locales/dictionary-hook'
 import { ResourceCollection } from '@/models/resource'
 import Select from 'react-select'
@@ -40,12 +41,14 @@ export default function RecipeStandardForm({
 
   // Dropdown options
   const [dishes, setDishes] = useState<ResourceCollection<Dish> | null>(null)
+  const [kitchens, setKitchens] = useState<ResourceCollection<Kitchen> | null>(null)
   const [ingredients, setIngredients] =
     useState<ResourceCollection<Ingredient> | null>(null)
   const [loadingOptions, setLoadingOptions] = useState(true)
 
   const [formData, setFormData] = useState({
     dishId: recipeStandard?.dishId || '',
+    kitchenId: recipeStandard?.kitchenId || '',
     ingredientId: recipeStandard?.ingredientId || '',
     unit: recipeStandard?.unit || '',
     standardPer1: recipeStandard?.standardPer1?.toString() || '',
@@ -53,16 +56,18 @@ export default function RecipeStandardForm({
     amount: recipeStandard?.amount?.toString() || '',
   })
 
-  // Load dishes and ingredients for dropdowns
+  // Load dishes, kitchens and ingredients for dropdowns
   useEffect(() => {
     const loadOptions = async () => {
       try {
         setLoadingOptions(true)
-        const [dishesData, ingredientsData] = await Promise.all([
+        const [dishesData, kitchensData, ingredientsData] = await Promise.all([
           dishApi.getAll(),
+          kitchenApi.getAll(),
           ingredientApi.getAll(),
         ])
         setDishes(dishesData)
+        setKitchens(kitchensData)
         setIngredients(ingredientsData)
       } catch (err) {
         console.error('Failed to load options:', err)
@@ -90,6 +95,10 @@ export default function RecipeStandardForm({
   const validateForm = (): boolean => {
     if (!formData.dishId.trim()) {
       setError(dict.validation?.required_field || 'Dish is required')
+      return false
+    }
+    if (!formData.kitchenId.trim()) {
+      setError(dict.validation?.required_field || 'Kitchen is required')
       return false
     }
     if (!formData.ingredientId.trim()) {
@@ -124,6 +133,7 @@ export default function RecipeStandardForm({
     try {
       const submitData = {
         dishId: formData.dishId,
+        kitchenId: formData.kitchenId,
         ingredientId: formData.ingredientId,
         unit: formData.unit,
         standardPer1: parseFloat(formData.standardPer1),
@@ -185,18 +195,18 @@ export default function RecipeStandardForm({
       <Form onSubmit={handleSubmit}>
         <Row>
           {dishes && (
-            <Col md={6}>
+            <Col md={4}>
               <FormGroup className="mb-3">
                 <FormLabel>{dict.recipe_standards?.dish || 'Dish'} *</FormLabel>
                 <Select<{ value: string; label: string }, false>
-                  name="ingredientId"
+                  name="dishId"
                   value={
                     dishes.data
                       .map((dish) => ({
                         value: dish.dishId,
                         label: `${dish.dishId} - ${dish.dishName}`,
                       }))
-                      .find((opt) => opt.value === formData.ingredientId) ||
+                      .find((opt) => opt.value === formData.dishId) ||
                     null
                   }
                   onChange={(selected) =>
@@ -211,13 +221,53 @@ export default function RecipeStandardForm({
                   }))}
                   isDisabled={isEdit || loading}
                   isSearchable
-                  placeholder={dict.common?.select || 'Select an dish'}
+                  placeholder={dict.common?.select || 'Select a dish'}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                  menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
+                />
+              </FormGroup>
+            </Col>
+          )}
+          {kitchens && (
+            <Col md={4}>
+              <FormGroup className="mb-3">
+                <FormLabel>{dict.recipe_standards?.kitchen || 'Kitchen'} *</FormLabel>
+                <Select<{ value: string; label: string }, false>
+                  name="kitchenId"
+                  value={
+                    kitchens.data
+                      .map((kitchen) => ({
+                        value: kitchen.kitchenId,
+                        label: `${kitchen.kitchenId} - ${kitchen.kitchenName}`,
+                      }))
+                      .find((opt) => opt.value === formData.kitchenId) ||
+                    null
+                  }
+                  onChange={(selected) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      kitchenId: selected ? selected.value : '',
+                    }))
+                  }
+                  options={kitchens.data.map((kitchen) => ({
+                    value: kitchen.kitchenId,
+                    label: `${kitchen.kitchenId} - ${kitchen.kitchenName}`,
+                  }))}
+                  isDisabled={isEdit || loading}
+                  isSearchable
+                  placeholder={dict.common?.select || 'Select a kitchen'}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                  menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
                 />
               </FormGroup>
             </Col>
           )}
           {ingredients && (
-            <Col md={6}>
+            <Col md={4}>
               <FormGroup className="mb-3">
                 <FormLabel>
                   {dict.recipe_standards?.ingredient || 'Ingredient'} *
@@ -246,6 +296,10 @@ export default function RecipeStandardForm({
                   isDisabled={isEdit || loading}
                   isSearchable
                   placeholder={dict.common?.select || 'Select an ingredient'}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                  menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
                 />
               </FormGroup>
             </Col>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Form,
   Button,
@@ -17,6 +17,7 @@ import {
   UpdateIngredientInput,
 } from '@/models/ingredient'
 import useDictionary from '@/locales/dictionary-hook'
+import { generateId } from '@/utils/id-generator'
 
 interface IngredientFormProps {
   ingredient?: Ingredient;
@@ -40,6 +41,16 @@ export default function IngredientForm({
     materialGroup: ingredient?.materialGroup || '',
     unit: ingredient?.unit || '',
   })
+
+  // Auto-generate ID for new ingredients
+  useEffect(() => {
+    if (!isEdit && !ingredient && !formData.ingredientId) {
+      setFormData((prev) => ({
+        ...prev,
+        ingredientId: generateId('ING'),
+      }))
+    }
+  }, [isEdit, ingredient, formData.ingredientId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

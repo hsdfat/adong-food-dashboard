@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { notFound } from 'next/navigation'
 import { dishApi } from '@/services'
 import { Dish } from '@/models'
-import DishForm from '@/components/Page/Dish/DishForm'
+import DishWithRecipeForm from '@/components/Page/Dish/DishWithRecipeForm'
 import useDictionary from '@/locales/dictionary-hook'
 import { useState, useEffect } from 'react'
 
@@ -61,7 +61,7 @@ export default function Page({ params }: { params: { id: string } }) {
         {dict.dishes.edit}: {dish.dishName}
       </CardHeader>
       <CardBody>
-        <DishForm dish={dish} />
+        <DishWithRecipeForm dish={dish} isEdit={true} />
       </CardBody>
     </Card>
   )

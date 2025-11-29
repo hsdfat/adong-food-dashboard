@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Form,
   Button,
@@ -17,6 +17,7 @@ import {
   UpdateKitchenInput,
 } from '@/models/kitchen'
 import useDictionary from '@/locales/dictionary-hook'
+import { generateId } from '@/utils/id-generator'
 
 interface KitchenFormProps {
   kitchen?: Kitchen;
@@ -40,6 +41,16 @@ export default function KitchenForm({
     phone: kitchen?.phone || '',
     active: kitchen?.active ?? true,
   })
+
+  // Auto-generate ID for new kitchens
+  useEffect(() => {
+    if (!isEdit && !kitchen && !formData.kitchenId) {
+      setFormData((prev) => ({
+        ...prev,
+        kitchenId: generateId('KIT'),
+      }))
+    }
+  }, [isEdit, kitchen, formData.kitchenId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

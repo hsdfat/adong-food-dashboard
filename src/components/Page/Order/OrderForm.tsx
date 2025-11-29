@@ -36,6 +36,7 @@ import OrderHeaderForm from './components/OrderHeaderForm'
 import DishList from './components/DishList'
 import SupplementaryFoodList from './components/SupplementaryFoodList'
 import TotalIngredientsSummary from './components/TotalIngredientsSummary'
+import { generateId } from '@/utils/id-generator'
 
 // ==================== TYPE DEFINITIONS ====================
 
@@ -132,6 +133,13 @@ export default function OrderForm({
   const [kitchenName, setKitchenName] = useState('')
   const [orderDate, setOrderDate] = useState(new Date().toISOString().split('T')[0])
   const [note, setNote] = useState('')
+
+  // Auto-generate ID for new orders
+  useEffect(() => {
+    if (!orderId) {
+      setOrderId(generateId('ORD'))
+    }
+  }, [])
 
   // Kitchen Modal States
   const [showKitchenModal, setShowKitchenModal] = useState(false)

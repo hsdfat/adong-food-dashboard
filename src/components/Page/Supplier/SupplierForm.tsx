@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Form,
   Button,
@@ -17,6 +17,7 @@ import {
   UpdateSupplierInput,
 } from '@/models/supplier'
 import useDictionary from '@/locales/dictionary-hook'
+import { generateId } from '@/utils/id-generator'
 
 interface SupplierFormProps {
   supplier?: Supplier;
@@ -40,6 +41,16 @@ export default function SupplierForm({
     phone: supplier?.phone || '',
     zaloLink: supplier?.zaloLink || '',
   })
+
+  // Auto-generate ID for new suppliers
+  useEffect(() => {
+    if (!isEdit && !supplier && !formData.supplierId) {
+      setFormData((prev) => ({
+        ...prev,
+        supplierId: generateId('SUP'),
+      }))
+    }
+  }, [isEdit, supplier, formData.supplierId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
