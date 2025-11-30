@@ -128,7 +128,6 @@ export default function DishForm({ dish, isEdit = false }: DishFormProps) {
             value={formData.dishId}
             onChange={handleChange}
             disabled={isEdit}
-            required
           />
         </FormGroup>
 

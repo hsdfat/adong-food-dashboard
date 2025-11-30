@@ -131,13 +131,12 @@ export default function UserForm({
       {success && <Alert variant="success">{success}</Alert>}
 
       <FormGroup className="mb-3">
-        <FormLabel>{dict.users?.id || 'User ID'} *</FormLabel>
+        <FormLabel>{dict.users?.id || 'User ID'}</FormLabel>
         <FormControl
           type="text"
           name="userId"
           value={formData.userId}
           onChange={handleChange}
-          required
           disabled={isEdit}
         />
       </FormGroup>

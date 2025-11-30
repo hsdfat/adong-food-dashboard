@@ -329,14 +329,13 @@ export default function DishWithRecipeForm({
             <Row>
               <Col md={6}>
                 <FormGroup className="mb-3">
-                  <FormLabel>Dish ID *</FormLabel>
+                  <FormLabel>Dish ID</FormLabel>
                   <FormControl
                     type="text"
                     name="dishId"
                     value={dishFormData.dishId}
                     onChange={handleDishChange}
                     disabled={isEdit}
-                    required
                   />
                 </FormGroup>
               </Col>

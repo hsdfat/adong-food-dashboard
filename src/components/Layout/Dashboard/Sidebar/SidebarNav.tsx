@@ -24,6 +24,8 @@ import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGro
 import SidebarNavItem from '@/components/Layout/Dashboard/Sidebar/SidebarNavItem'
 import { getDictionary } from '@/locales/dictionary'
 import { getServerLocale } from '@/locales/server-utils'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/option'
 
 const SidebarNavTitle = (props: PropsWithChildren) => {
   const { children } = props
@@ -38,6 +40,8 @@ const SidebarNavTitle = (props: PropsWithChildren) => {
 export default async function SidebarNav() {
   const locale = await getServerLocale()
   const dict = await getDictionary(locale)
+  const session = await getServerSession(authOptions)
+  const isAdmin = session?.user.role === 'Admin'
 
   return (
     <ul className="list-unstyled">
@@ -49,9 +53,11 @@ export default async function SidebarNav() {
         {dict.sidebar.items.master_data || 'Master Data'}
       </SidebarNavTitle>
 
-      <SidebarNavItem icon={faUsers} href="/users">
-        {dict.sidebar.items.users}
-      </SidebarNavItem>
+      {isAdmin && (
+        <SidebarNavItem icon={faUsers} href="/users">
+          {dict.sidebar.items.users}
+        </SidebarNavItem>
+      )}
 
       <SidebarNavGroup
         toggleIcon={faPuzzlePiece}

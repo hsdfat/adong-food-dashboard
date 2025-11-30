@@ -5,8 +5,13 @@ import UserForm from '@/components/Page/User/UserForm'
 import { authOptions } from '@/app/api/auth/option'
 import { getDictionary } from '@/locales/dictionary'
 import { getServerLocale } from '@/locales/server-utils'
+import { userApi } from '@/services'
 
-export default async function Page() {
+export default async function Page({
+  params,
+}: {
+  params: { userId: string }
+}) {
   const session = await getServerSession(authOptions)
   const locale = await getServerLocale()
   const dict = await getDictionary(locale)
@@ -16,11 +21,14 @@ export default async function Page() {
     redirect('/')
   }
 
+  // Fetch user data server-side
+  const user = await userApi.getById(params.userId)
+
   return (
     <Card>
-      <CardHeader>{dict.users?.add_new || 'Add New User'}</CardHeader>
+      <CardHeader>{dict.users?.edit || 'Edit User'}</CardHeader>
       <CardBody>
-        <UserForm />
+        <UserForm user={user} isEdit={true} />
       </CardBody>
     </Card>
   )

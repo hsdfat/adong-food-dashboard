@@ -140,7 +140,6 @@ export default function KitchenForm({
             value={formData.kitchenId}
             onChange={handleChange}
             disabled={isEdit}
-            required
           />
         </FormGroup>
 

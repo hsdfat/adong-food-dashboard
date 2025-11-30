@@ -140,7 +140,6 @@ export default function SupplierForm({
             value={formData.supplierId}
             onChange={handleChange}
             disabled={isEdit}
-            required
           />
         </FormGroup>
 

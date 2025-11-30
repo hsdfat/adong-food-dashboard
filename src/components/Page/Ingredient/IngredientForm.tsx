@@ -124,7 +124,6 @@ export default function IngredientForm({
             value={formData.ingredientId}
             onChange={handleChange}
             disabled={isEdit}
-            required
           />
         </FormGroup>
 
