@@ -932,6 +932,49 @@ export default function OrderForm({
       }
 
       const createdOrder = await orderApi.create(orderData)
+
+      // Save supplier selections if any were made
+      const hasSupplierSelections = Object.keys(supplierSelections).some(
+        (ingredientId) => supplierSelections[ingredientId] !== ''
+      )
+
+      if (hasSupplierSelections) {
+        try {
+          // Build supplier selections payload
+          const selections = totalIngredients
+            .filter((ing) => supplierSelections[ing.ingredientId])
+            .map((ing) => {
+              const productId = supplierSelections[ing.ingredientId] as number
+              const suppliers = availableSuppliersByIngredient[ing.ingredientId] || []
+              const selectedSupplier = suppliers.find((s) => s.productId === productId)
+
+              if (!selectedSupplier) {
+                console.warn(`No supplier found for ingredient ${ing.ingredientId} with productId ${productId}`)
+                return null
+              }
+
+              return {
+                ingredientId: ing.ingredientId,
+                selectedSupplierId: selectedSupplier.supplierId,
+                selectedProductId: productId,
+                quantity: ing.totalQuantity,
+                unit: ing.unit,
+                unitPrice: selectedSupplier.unitPrice,
+                notes: '',
+              }
+            })
+            .filter((sel) => sel !== null) as any[]
+
+          if (selections.length > 0) {
+            await orderApi.saveSupplierSelections(createdOrder.orderId, selections)
+            console.log('Supplier selections saved successfully')
+          }
+        } catch (supplierErr: any) {
+          console.error('Failed to save supplier selections:', supplierErr)
+          // Don't block the order creation, just log the error
+        }
+      }
+
       setSuccess(dict.common?.success || 'Order created successfully!')
 
       // Redirect to order detail page - loading will auto-hide on route change

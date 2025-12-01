@@ -234,4 +234,26 @@ export const orderApi = {
       `${BASE_URL}/${orderId}/suppliers-with-highlight`,
     )
   },
+
+  /**
+   * Save supplier selections for order ingredients
+   * POST /api/orders/{orderId}/supplier-requests
+   */
+  async saveSupplierSelections(
+    orderId: number | string,
+    selections: Array<{
+      ingredientId: string;
+      selectedSupplierId: string;
+      selectedProductId: number;
+      quantity: number;
+      unit: string;
+      unitPrice: number;
+      notes?: string;
+    }>,
+  ): Promise<any> {
+    return apiClient<any>(`${BASE_URL}/${orderId}/supplier-requests`, {
+      method: 'POST',
+      body: JSON.stringify({ selections }),
+    })
+  },
 }
