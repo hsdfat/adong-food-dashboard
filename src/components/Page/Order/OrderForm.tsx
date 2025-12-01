@@ -319,15 +319,15 @@ export default function OrderForm({
   // ==================== UTILITY FUNCTIONS ====================
 
   // Safely add numbers avoiding floating point errors
-  const safeAdd = (a: number, b: number): number => Math.round((a + b) * 10000) / 10000
+  const safeAdd = (a: number, b: number): number => Math.round((a + b) * 10000000000) / 10000000000
 
   // Safely multiply numbers avoiding floating point errors
-  const safeMultiply = (a: number, b: number): number => Math.round(a * b * 10000) / 10000
+  const safeMultiply = (a: number, b: number): number => Math.round(a * b * 10000000000) / 10000000000
 
-  // Round to 4 decimal places
-  const safeRound = (num: number): number => Math.round(num * 10000) / 10000
+  // Round to 10 decimal places
+  const safeRound = (num: number): number => Math.round(num * 10000000000) / 10000000000
 
-  // Format number to 4 decimal places, removing trailing zeros
+  // Format number to 10 decimal places, removing trailing zeros
   const formatNumber = (num: number): string => {
     const rounded = safeRound(num)
     return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')

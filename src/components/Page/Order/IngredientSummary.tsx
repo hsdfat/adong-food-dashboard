@@ -100,7 +100,7 @@ export default function IngredientSummary() {
   }
 
   const formatNumber = (num: number): string => {
-    const rounded = Math.round(num * 100) / 100
+    const rounded = Math.round(num * 10000000000) / 10000000000
     return rounded.toString().replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
   }
 
