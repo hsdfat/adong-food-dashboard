@@ -55,12 +55,6 @@ export default function SupplieresList() {
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'supplierId',
-      label: dict.suppliers?.id || 'ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'supplierName',
       label: dict.suppliers?.name || 'Supplier Name',
       align: 'left',
@@ -89,6 +83,11 @@ export default function SupplieresList() {
       label: dict.common?.created_date || 'Created Date',
       align: 'center',
       render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'supplierId',
+      label: dict.suppliers?.id || 'ID',
+      align: 'left',
     },
   ]
 

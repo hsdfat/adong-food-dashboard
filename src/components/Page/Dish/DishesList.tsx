@@ -52,12 +52,6 @@ export default function DishesList() {
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'dishId',
-      label: dict.dishes?.id || 'Dish ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'dishName',
       label: dict.dishes?.name || 'Dish Name',
       align: 'left',
@@ -72,6 +66,11 @@ export default function DishesList() {
       key: 'active',
       label: dict.dishes?.status || 'Status',
       align: 'center',
+    },
+    {
+      key: 'dishId',
+      label: dict.dishes?.id || 'Dish ID',
+      align: 'left',
     },
   ]
 

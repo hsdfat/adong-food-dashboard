@@ -57,12 +57,6 @@ export default function ImportList() {
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'importId',
-      label: dict.inventory?.import_id || 'Import ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'kitchen',
       label: dict.inventory?.kitchen || 'Kitchen',
       align: 'left',
@@ -133,6 +127,11 @@ export default function ImportList() {
       align: 'center',
       render: (value) =>
         value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'importId',
+      label: dict.inventory?.import_id || 'Import ID',
+      align: 'left',
     },
   ]
 

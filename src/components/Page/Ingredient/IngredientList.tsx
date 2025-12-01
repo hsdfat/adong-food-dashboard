@@ -55,12 +55,6 @@ export default function IngredientesList() {
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'ingredientId',
-      label: dict.ingredients?.id || 'ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'ingredientName',
       label: dict.ingredients?.name || 'Name',
       align: 'left',
@@ -88,6 +82,11 @@ export default function IngredientesList() {
       label: dict.ingredients?.created_date || 'Created Date',
       align: 'center',
       render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'ingredientId',
+      label: dict.ingredients?.id || 'ID',
+      align: 'left',
     },
   ]
 

@@ -630,6 +630,7 @@ export default function ImportForm({
                         <thead>
                           <tr>
                             <th>{dict.inventory?.ingredient || 'Ingredient'}</th>
+                            <th>{dict.inventory?.supplier || 'Supplier'}</th>
                             <th>{dict.inventory?.quantity || 'Quantity'}</th>
                             <th>{dict.inventory?.unit || 'Unit'}</th>
                             <th>{dict.inventory?.unit_price || 'Unit Price'}</th>
@@ -650,6 +651,28 @@ export default function ImportForm({
                               <tr key={detail.tempId || index}>
                                 <td>
                                   {ingredient?.ingredientName || detail.ingredientId}
+                                </td>
+                                <td>
+                                  <FormControl
+                                    as="select"
+                                    value={detail.supplierId || ''}
+                                    onChange={(e) =>
+                                      handleDetailChange(
+                                        block.id,
+                                        index,
+                                        'supplierId',
+                                        e.target.value || undefined,
+                                      )
+                                    }
+                                    size="sm"
+                                  >
+                                    <option value="">-- Select Supplier --</option>
+                                    {availableSuppliers.map((s) => (
+                                      <option key={s.supplierId} value={s.supplierId}>
+                                        {s.supplierName}
+                                      </option>
+                                    ))}
+                                  </FormControl>
                                 </td>
                                 <td>
                                   <FormControl

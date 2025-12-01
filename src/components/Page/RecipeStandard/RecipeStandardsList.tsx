@@ -69,12 +69,6 @@ export default function RecipeStandardsList({
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'standardId',
-      label: dict.recipe_standards?.dishId ?? 'ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'dishName',
       label: dict.recipe_standards?.dish ?? 'Dish',
       align: 'left',
@@ -111,6 +105,11 @@ export default function RecipeStandardsList({
       align: 'left',
       render: (value) => (value ? String(value) : '-'),
       className: 'text-truncate',
+    },
+    {
+      key: 'standardId',
+      label: dict.recipe_standards?.dishId ?? 'ID',
+      align: 'left',
     },
   ]
 

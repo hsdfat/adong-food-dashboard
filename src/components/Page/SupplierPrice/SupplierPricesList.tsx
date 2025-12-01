@@ -197,12 +197,6 @@ export default function SupplierPricesList({
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'productId',
-      label: dict.supplierPrice?.productID || 'ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'productName',
       label: dict.supplierPrice?.productName || 'Product Name',
       align: 'left',
@@ -280,6 +274,11 @@ export default function SupplierPricesList({
       label: dict.supplierPrice?.promotion || 'Promotion',
       align: 'left',
       render: (value) => (value ? String(value) : '-'),
+    },
+    {
+      key: 'productId',
+      label: dict.supplierPrice?.productID || 'ID',
+      align: 'left',
     },
   ]
 

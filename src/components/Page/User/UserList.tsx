@@ -56,12 +56,6 @@ export default function UserList() {
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'userId',
-      label: dict.users?.id || 'ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'userName',
       label: dict.users?.user_name || 'Username',
       align: 'left',
@@ -121,6 +115,11 @@ export default function UserList() {
       label: dict.users?.created_date || 'Created Date',
       align: 'center',
       render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'userId',
+      label: dict.users?.id || 'ID',
+      align: 'left',
     },
   ]
 

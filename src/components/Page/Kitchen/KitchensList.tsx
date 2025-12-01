@@ -57,12 +57,6 @@ export default function KitchenesList() {
   // Define table columns
   const columns: TableColumn[] = [
     {
-      key: 'kitchenId',
-      label: dict.kitchens?.id || 'ID',
-      align: 'left',
-      priority: true,
-    },
-    {
       key: 'kitchenName',
       label: dict.kitchens?.name || 'Kitchen Name',
       align: 'left',
@@ -90,6 +84,11 @@ export default function KitchenesList() {
       label: dict.common?.created_date || 'Created Date',
       align: 'center',
       render: (value) => value ? new Date(value as string | number).toLocaleDateString() : '-',
+    },
+    {
+      key: 'kitchenId',
+      label: dict.kitchens?.id || 'ID',
+      align: 'left',
     },
   ]
 
