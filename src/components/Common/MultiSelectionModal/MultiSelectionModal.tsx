@@ -133,8 +133,22 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
                       id={`item-${item.id}`}
                       label={
                         <div>
-                          <div className="d-flex justify-content-between">
-                            <strong>{itemName}</strong>
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div>
+                              <strong>{itemName}</strong>
+                              <div>
+                                <small className={isSelected ? 'text-white-50' : 'text-muted'}>
+                                  {item.id}
+                                </small>
+                              </div>
+                              {itemSubtitle && (
+                                <div>
+                                  <small className={isSelected ? 'text-white-50' : 'text-muted'}>
+                                    {itemSubtitle}
+                                  </small>
+                                </div>
+                              )}
+                            </div>
                             {itemBadge && (
                               <Badge
                                 bg={isSelected ? 'light' : 'secondary'}
@@ -144,7 +158,6 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
                               </Badge>
                             )}
                           </div>
-                          {itemSubtitle && <small>{itemSubtitle}</small>}
                         </div>
                       }
                       checked={isSelected}

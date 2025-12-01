@@ -7,29 +7,23 @@ import {
   CardBody,
   CardHeader,
   Table,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Alert,
   Badge,
   FormControl,
   InputGroup,
   Modal,
   Form,
-  Row,
-  Col,
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPlus,
-  faEllipsisVertical,
   faSearch,
-  faEdit,
   faTrash,
   faPhone,
   faEnvelope,
   faMapMarkerAlt,
+  faEdit,
+  faHeart,
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { kitchenFavoriteSupplierApi, supplierApi } from '@/services'
@@ -37,6 +31,9 @@ import { KitchenFavoriteSupplier, Supplier } from '@/models'
 import { ResourceCollection } from '@/models/resource'
 import useDictionary from '@/locales/dictionary-hook'
 import Pagination from '@/components/Pagination/Pagination'
+import MultiSelectionModal, {
+  MultiSelectionModalItem,
+} from '@/components/Common/MultiSelectionModal/MultiSelectionModal'
 
 interface KitchenFavoriteSuppliersListProps {
   kitchenId: string;
@@ -54,7 +51,10 @@ export default function KitchenFavoriteSuppliersList({
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([])
   const [notes, setNotes] = useState<string>('')
-  const [isEditing, setIsEditing] = useState(true)
+  const [supplierSearchQuery, setSupplierSearchQuery] = useState<string>('')
+  const [editingFavorite, setEditingFavorite] = useState<KitchenFavoriteSupplier | null>(null)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editNotes, setEditNotes] = useState<string>('')
   const router = useRouter()
   const searchParams = useSearchParams()
   const dict = useDictionary()
@@ -67,151 +67,6 @@ export default function KitchenFavoriteSuppliersList({
     setSearchQuery(search)
     loadSuppliers()
     loadFavorites()
-    // Temporary: Set sample data for display
-    setFavoritesData({
-      data: [
-        {
-          favoriteId: 1,
-          kitchenId: 'KIT001',
-          supplierId: 'SUP001',
-          notes: 'Thịt tươi chất lượng tốt',
-          displayOrder: undefined,
-          createdByUserId: 'USR002',
-          createdDate: '2025-11-09T10:48:38.596525Z',
-          modifiedDate: '2025-11-09T10:48:38.596525Z',
-          supplier: {
-            supplierId: 'SUP001',
-            supplierName: 'Công ty Thực phẩm Sạch Việt',
-            zaloLink: 'https://zalo.me/sachviet',
-            address: '45 Đường Bến Vân Đồn, Quận 4, TP.HCM',
-            phone: '0283567890',
-            email: 'sachviet@gmail.com',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-          createdBy: {
-            userId: 'USR002',
-            userName: 'chef_k001',
-            fullName: 'Trần Thị Bình',
-            role: 'Chef',
-            kitchenId: 'KIT001',
-            email: 'binh@adongfood.vn',
-            phone: '0901234568',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-        },
-        {
-          favoriteId: 2,
-          kitchenId: 'KIT001',
-          supplierId: 'SUP002',
-          notes: 'Tôm luôn tươi sống',
-          displayOrder: undefined,
-          createdByUserId: 'USR002',
-          createdDate: '2025-11-09T10:48:38.596525Z',
-          modifiedDate: '2025-11-09T10:48:38.596525Z',
-          supplier: {
-            supplierId: 'SUP002',
-            supplierName: 'Nhà cung cấp Hải sản Tươi Sống',
-            zaloLink: 'https://zalo.me/haisantuoisong',
-            address: '78 Đường Đinh Tiên Hoàng, Quận Bình Thạnh, TP.HCM',
-            phone: '0287890123',
-            email: 'haisantuoi@gmail.com',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-          createdBy: {
-            userId: 'USR002',
-            userName: 'chef_k001',
-            fullName: 'Trần Thị Bình',
-            role: 'Chef',
-            kitchenId: 'KIT001',
-            email: 'binh@adongfood.vn',
-            phone: '0901234568',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-        },
-        {
-          favoriteId: 3,
-          kitchenId: 'KIT001',
-          supplierId: 'SUP003',
-          notes: 'Rau sạch Đà Lạt',
-          displayOrder: undefined,
-          createdByUserId: 'USR002',
-          createdDate: '2025-11-09T10:48:38.596525Z',
-          modifiedDate: '2025-11-09T10:48:38.596525Z',
-          supplier: {
-            supplierId: 'SUP003',
-            supplierName: 'Cửa hàng Rau Củ Đà Lạt',
-            zaloLink: 'https://zalo.me/raucudalat',
-            address: '123 Đường Lý Thường Kiệt, Quận 10, TP.HCM',
-            phone: '0289012345',
-            email: 'raudalat@gmail.com',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-          createdBy: {
-            userId: 'USR002',
-            userName: 'chef_k001',
-            fullName: 'Trần Thị Bình',
-            role: 'Chef',
-            kitchenId: 'KIT001',
-            email: 'binh@adongfood.vn',
-            phone: '0901234568',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-        },
-        {
-          favoriteId: 4,
-          kitchenId: 'KIT001',
-          supplierId: 'SUP004',
-          notes: 'Nước mắm ngon',
-          displayOrder: undefined,
-          createdByUserId: 'USR002',
-          createdDate: '2025-11-09T10:48:38.596525Z',
-          modifiedDate: '2025-11-09T10:48:38.596525Z',
-          supplier: {
-            supplierId: 'SUP004',
-            supplierName: 'Công ty Gia vị Việt Nam',
-            zaloLink: 'https://zalo.me/giavivietnam',
-            address: '567 Đường Nguyễn Tri Phương, Quận 5, TP.HCM',
-            phone: '0281234567',
-            email: 'giavi@gmail.com',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-          createdBy: {
-            userId: 'USR002',
-            userName: 'chef_k001',
-            fullName: 'Trần Thị Bình',
-            role: 'Chef',
-            kitchenId: 'KIT001',
-            email: 'binh@adongfood.vn',
-            phone: '0901234568',
-            active: true,
-            createdDate: '2025-11-09T10:48:38.596525Z',
-            modifiedDate: '2025-11-09T10:48:38.596525Z',
-          },
-        },
-      ],
-      meta: {
-        current_page: 1,
-        last_page: 1,
-        from: 1,
-        to: 4,
-        per_page: 10,
-        total: 4,
-      },
-    })
   }, [page, perPage, search])
 
   const loadFavorites = async () => {
@@ -255,34 +110,6 @@ export default function KitchenFavoriteSuppliersList({
     }
   }
 
-  const handleCreateFavorites = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (selectedSuppliers.length === 0) {
-      setError('Please select at least one supplier')
-      return
-    }
-
-    try {
-      // Create favorites for each selected supplier
-      const promises = selectedSuppliers.map((supplierId) => {
-        const createData = {
-          supplier_ids: [supplierId],
-          notes: notes || undefined,
-        }
-        return kitchenFavoriteSupplierApi.create(kitchenId, createData)
-      })
-
-      await Promise.all(promises)
-      setShowCreateModal(false)
-      setSelectedSuppliers([])
-      setNotes('')
-      loadFavorites()
-    } catch (err: any) {
-      setError(err.message || 'Failed to create favorite suppliers')
-      console.error(err)
-    }
-  }
-
   const handleDelete = async (favoriteId: number) => {
     if (
       !confirm(
@@ -300,6 +127,32 @@ export default function KitchenFavoriteSuppliersList({
       setError(
         dict.kitchens?.error_delete || 'Failed to remove favorite supplier',
       )
+      console.error(err)
+    }
+  }
+
+  const handleEditClick = (favorite: KitchenFavoriteSupplier) => {
+    setEditingFavorite(favorite)
+    setEditNotes(favorite.notes || '')
+    setShowEditModal(true)
+  }
+
+  const handleUpdateFavorite = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingFavorite) return
+
+    try {
+      await kitchenFavoriteSupplierApi.update(
+        kitchenId,
+        editingFavorite.favoriteId.toString(),
+        { notes: editNotes },
+      )
+      setShowEditModal(false)
+      setEditingFavorite(null)
+      setEditNotes('')
+      loadFavorites()
+    } catch (err: any) {
+      setError(err.message || 'Failed to update favorite supplier')
       console.error(err)
     }
   }
@@ -330,13 +183,63 @@ export default function KitchenFavoriteSuppliersList({
     )
   }
 
-  const handleSupplierSelection = (supplierId: string) => {
-    setSelectedSuppliers((prev) =>
-      prev.includes(supplierId)
-        ? prev.filter((id) => id !== supplierId)
-        : [...prev, supplierId],
-    )
+  const handleSupplierSelection = (supplierId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedSuppliers((prev) => [...prev, supplierId])
+    } else {
+      setSelectedSuppliers((prev) => prev.filter((id) => id !== supplierId))
+    }
   }
+
+  const handleConfirmSuppliers = async () => {
+    if (selectedSuppliers.length === 0) {
+      setError('Please select at least one supplier')
+      return
+    }
+
+    try {
+      const promises = selectedSuppliers.map((supplierId) => {
+        const createData = {
+          supplier_ids: [supplierId],
+          notes: notes || undefined,
+        }
+        return kitchenFavoriteSupplierApi.create(kitchenId, createData)
+      })
+
+      await Promise.all(promises)
+      setShowCreateModal(false)
+      setSelectedSuppliers([])
+      setNotes('')
+      setSupplierSearchQuery('')
+      loadFavorites()
+    } catch (err: any) {
+      setError(err.message || 'Failed to create favorite suppliers')
+      console.error(err)
+    }
+  }
+
+  // Filter suppliers based on search query and exclude already favorited ones
+  const filteredSuppliers = suppliersData.filter((supplier) => {
+    const matchesSearch =
+      supplier.supplierName.toLowerCase().includes(supplierSearchQuery.toLowerCase()) ||
+      supplier.supplierId.toLowerCase().includes(supplierSearchQuery.toLowerCase()) ||
+      supplier.address?.toLowerCase().includes(supplierSearchQuery.toLowerCase())
+
+    // Exclude suppliers already in favorites
+    const isAlreadyFavorite = favoritesData?.data?.some(
+      (fav) => fav.supplierId === supplier.supplierId,
+    )
+
+    return matchesSearch && !isAlreadyFavorite
+  })
+
+  // Convert suppliers to MultiSelectionModalItem format
+  const supplierModalItems: MultiSelectionModalItem[] = filteredSuppliers.map((supplier) => ({
+    id: supplier.supplierId,
+    name: supplier.supplierName,
+    subtitle: `${supplier.address || ''} • ${supplier.phone || ''}`,
+    badge: supplier.active ? 'Active' : 'Inactive',
+  }))
 
   if (loading) {
     return (
@@ -398,13 +301,14 @@ export default function KitchenFavoriteSuppliersList({
 
           <div className="table-responsive">
             <Table hover>
-              <thead>
+              <thead className="table-light">
                 <tr>
-                  <th>{dict.suppliers?.name || 'Supplier'}</th>
-                  <th>{dict.suppliers?.address || 'Address'}</th>
-                  <th>{(dict.suppliers as any)?.contact || 'Contact'}</th>
-                  <th>{dict.kitchens?.notes || 'Notes'}</th>
-                  <th>{dict.common?.created_date || 'Created Date'}</th>
+                  <th style={{ width: '20%' }}>{dict.suppliers?.name || 'Supplier'}</th>
+                  <th style={{ width: '20%' }}>{dict.suppliers?.address || 'Address'}</th>
+                  <th style={{ width: '20%' }}>{(dict.suppliers as any)?.contact || 'Contact'}</th>
+                  <th style={{ width: '20%' }}>{dict.kitchens?.notes || 'Notes'}</th>
+                  <th style={{ width: '12%' }}>{dict.common?.created_date || 'Created'}</th>
+                  <th style={{ width: '8%' }} className="text-center">{dict.common?.actions || 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -412,7 +316,8 @@ export default function KitchenFavoriteSuppliersList({
                   favoritesData.data.map((favorite) => (
                     <tr key={`${favorite.kitchenId}-${favorite.favoriteId}`}>
                       <td>
-                        <div className="d-flex justify-content-between align-items-start">
+                        <div className="d-flex align-items-center">
+                          <FontAwesomeIcon icon={faHeart} className="text-danger me-2" />
                           <div>
                             <div className="fw-bold">
                               {favorite.supplier?.supplierName ||
@@ -426,6 +331,7 @@ export default function KitchenFavoriteSuppliersList({
                                     : 'secondary'
                                 }
                                 className="mt-1"
+                                pill
                               >
                                 {favorite.supplier.active
                                   ? dict.common?.active || 'Active'
@@ -433,17 +339,6 @@ export default function KitchenFavoriteSuppliersList({
                               </Badge>
                             )}
                           </div>
-                          {isEditing && (
-                            <Button
-                              variant="outline-danger"
-                              size="sm"
-                              onClick={() => handleDelete(favorite.favoriteId)}
-                              title="Delete"
-                              className="ms-2"
-                            >
-                              <FontAwesomeIcon icon={faTrash} />
-                            </Button>
-                          )}
                         </div>
                       </td>
                       <td>
@@ -516,30 +411,38 @@ export default function KitchenFavoriteSuppliersList({
                           </div>
                         </div>
                       </td>
+                      <td className="text-center">
+                        <div className="d-flex gap-2 justify-content-center">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={() => handleEditClick(favorite)}
+                            title={dict.common?.edit || 'Edit'}
+                          >
+                            <FontAwesomeIcon icon={faEdit} />
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDelete(favorite.favoriteId)}
+                            title={dict.common?.delete || 'Delete'}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="text-center py-4">
-                      {dict.kitchens?.no_favorites ||
-                        'No favorite suppliers found'}
-                      <div className="text-muted small mt-2">
-                        Debug: favoritesData exists ={' '}
-                        {favoritesData ? 'true' : 'false'}
-                        <br />
-                        favoritesData.data exists ={' '}
-                        {favoritesData?.data ? 'true' : 'false'}
-                        <br />
-                        favoritesData.data.length ={' '}
-                        {favoritesData?.data?.length || 0}
-                        <br />
-                        <details>
-                          <summary>Full favoritesData</summary>
-                          <pre className="text-start">
-                            {JSON.stringify(favoritesData, null, 2)}
-                          </pre>
-                        </details>
+                    <td colSpan={6} className="text-center py-4 text-muted">
+                      <div className="mb-2">
+                        {dict.kitchens?.no_favorites ||
+                          'No favorite suppliers found'}
                       </div>
+                      <small>
+                        Click &quot;Add Favorite Supplier&quot; to get started
+                      </small>
                     </td>
                   </tr>
                 )}
@@ -553,91 +456,117 @@ export default function KitchenFavoriteSuppliersList({
         </CardBody>
       </Card>
 
-      <Modal
+      <MultiSelectionModal
         show={showCreateModal}
-        onHide={() => setShowCreateModal(false)}
+        onHide={() => {
+          setShowCreateModal(false)
+          setSelectedSuppliers([])
+          setNotes('')
+          setSupplierSearchQuery('')
+        }}
+        title={dict.kitchens?.add_favorite || 'Add Favorite Suppliers'}
+        items={supplierModalItems}
+        searchValue={supplierSearchQuery}
+        onSearchChange={setSupplierSearchQuery}
+        selectedIds={selectedSuppliers}
+        onSelect={handleSupplierSelection}
+        onConfirm={handleConfirmSuppliers}
+        searchPlaceholder={dict.common?.search || 'Search suppliers...'}
+        emptyMessage={dict.suppliers?.no_data || 'No suppliers available'}
+        closeLabel={dict.common?.cancel || 'Cancel'}
+        confirmLabel={`${dict.common?.create || 'Add'} ${selectedSuppliers.length > 0 ? `(${selectedSuppliers.length})` : ''}`}
+        selectedCountLabel={`${selectedSuppliers.length} ${dict.suppliers?.name?.toLowerCase() || 'suppliers'} selected`}
+        size="lg"
+        confirmVariant="primary"
+        additionalFields={
+          <Form.Group className="mt-2">
+            <Form.Label>{dict.kitchens?.notes || 'Notes'}</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={
+                dict.kitchens?.notes_placeholder ||
+                'Add notes about these suppliers...'
+              }
+            />
+            <Form.Text className="text-muted">
+              {dict.common?.optional || 'Optional'} - These notes will be applied
+              to all selected suppliers
+            </Form.Text>
+          </Form.Group>
+        }
+      />
+
+      {/* Edit Modal */}
+      <Modal
+        show={showEditModal}
+        onHide={() => {
+          setShowEditModal(false)
+          setEditingFavorite(null)
+          setEditNotes('')
+        }}
         size="lg"
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {dict.kitchens?.add_favorite || 'Add Favorite Suppliers'}
+            {dict.common?.edit || 'Edit'} {dict.kitchens?.add_favorite || 'Favorite Supplier'}
           </Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleCreateFavorites}>
+        <Form onSubmit={handleUpdateFavorite}>
           <Modal.Body>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                {dict.suppliers?.name || 'Suppliers'} (
-                {selectedSuppliers.length} selected)
-              </Form.Label>
-              <div
-                className="border rounded p-3"
-                style={{ maxHeight: '300px', overflowY: 'auto' }}
-              >
-                {suppliersData.length > 0 ? (
-                  suppliersData.map((supplier) => (
-                    <Form.Check
-                      key={supplier.supplierId}
-                      type="checkbox"
-                      id={`supplier-${supplier.supplierId}`}
-                      label={
-                        <div>
-                          <div className="fw-bold">{supplier.supplierName}</div>
-                          <div className="text-muted small">
-                            {supplier.address} • {supplier.phone}
-                          </div>
+            {editingFavorite && (
+              <>
+                <div className="mb-3 p-3 bg-light rounded">
+                  <div className="d-flex align-items-center">
+                    <FontAwesomeIcon icon={faHeart} className="text-danger me-2" size="lg" />
+                    <div>
+                      <div className="fw-bold fs-5">
+                        {editingFavorite.supplier?.supplierName || editingFavorite.supplierId}
+                      </div>
+                      {editingFavorite.supplier?.address && (
+                        <div className="text-muted small">
+                          <FontAwesomeIcon icon={faMapMarkerAlt} className="me-1" />
+                          {editingFavorite.supplier.address}
                         </div>
-                      }
-                      checked={selectedSuppliers.includes(supplier.supplierId)}
-                      onChange={() =>
-                        handleSupplierSelection(supplier.supplierId)
-                      }
-                      className="mb-2"
-                    />
-                  ))
-                ) : (
-                  <div className="text-muted">
-                    {dict.suppliers?.no_data || 'No suppliers available'}
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
-            </Form.Group>
+                </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>{dict.kitchens?.notes || 'Notes'}</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={
-                  dict.kitchens?.notes_placeholder ||
-                  'Add notes about these suppliers...'
-                }
-              />
-              <Form.Text className="text-muted">
-                {dict.common?.optional || 'Optional'} - These notes will be
-                applied to all selected suppliers
-              </Form.Text>
-            </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>{dict.kitchens?.notes || 'Notes'}</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={4}
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                    placeholder={
+                      dict.kitchens?.notes_placeholder ||
+                      'Add notes about this supplier...'
+                    }
+                  />
+                  <Form.Text className="text-muted">
+                    {dict.common?.optional || 'Optional'}
+                  </Form.Text>
+                </Form.Group>
+              </>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button
               variant="secondary"
               onClick={() => {
-                setShowCreateModal(false)
-                setSelectedSuppliers([])
-                setNotes('')
+                setShowEditModal(false)
+                setEditingFavorite(null)
+                setEditNotes('')
               }}
             >
               {dict.common?.cancel || 'Cancel'}
             </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={selectedSuppliers.length === 0}
-            >
-              {dict.common?.create || 'Create'} ({selectedSuppliers.length})
+            <Button variant="primary" type="submit">
+              {dict.common?.save || 'Save Changes'}
             </Button>
           </Modal.Footer>
         </Form>
