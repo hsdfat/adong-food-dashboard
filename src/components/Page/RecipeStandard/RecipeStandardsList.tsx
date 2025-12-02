@@ -73,14 +73,28 @@ export default function RecipeStandardsList({
       label: dict.recipe_standards?.dish ?? 'Dish',
       align: 'left',
       priority: true,
-      render: (value, row) => row.dish?.dishName || value || row.dishId,
+      render: (value, row) => {
+        const standard = row as RecipeStandard
+        return String(standard.dish?.dishName || value || standard.dishId || '')
+      },
+    },
+    {
+      key: 'kitchenName',
+      label: dict.recipe_standards?.kitchen ?? 'Kitchen',
+      align: 'left',
+      render: (value, row) => {
+        const standard = row as RecipeStandard
+        return String(standard.kitchen?.kitchenName || value || standard.kitchenId || '-')
+      },
     },
     {
       key: 'ingredientName',
       label: dict.recipe_standards?.ingredient ?? 'Ingredient',
       align: 'left',
-      render: (value, row) =>
-        row.ingredient?.ingredientName || value || row.ingredientId,
+      render: (value, row) => {
+        const standard = row as RecipeStandard
+        return String(standard.ingredient?.ingredientName || value || standard.ingredientId || '')
+      },
     },
     {
       key: 'standardPer1',
