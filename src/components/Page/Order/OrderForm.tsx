@@ -999,7 +999,7 @@ export default function OrderForm({
   const closeDishModal = () => {
     setShowDishModal(false)
     setSelectedDishes([])
-    setPortions(1)
+    setPortions(0)
     setSearchDish('')
   }
 
@@ -1338,9 +1338,9 @@ export default function OrderForm({
             <FormLabel>{dict.dish_list?.portions_for_all || 'Portions (apply to all selected dishes):'}</FormLabel>
             <FormControl
               type="number"
-              min="1"
+              min="0"
               value={portions}
-              onChange={(e) => setPortions(parseInt(e.target.value) || 1)}
+              onChange={(e) => setPortions(parseInt(e.target.value) || 0)}
             />
           </FormGroup>
         }
