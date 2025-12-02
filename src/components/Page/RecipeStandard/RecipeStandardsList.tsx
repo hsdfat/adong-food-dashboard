@@ -111,7 +111,10 @@ export default function RecipeStandardsList({
       key: 'amount',
       label: dict.recipe_standards?.amount ?? 'Amount',
       align: 'right',
-      render: (value) => `${value?.toLocaleString('vi-VN')  } VNĐ`,
+      render: (value) => {
+        if (value === null || value === undefined) return '-'
+        return `${new Intl.NumberFormat('vi-VN').format(Number(value))} VNĐ`
+      },
     },
     {
       key: 'note',
