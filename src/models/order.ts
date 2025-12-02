@@ -217,10 +217,70 @@ export interface OrderIngredientWithSupplier {
   ingredientName: string;
   quantity: number;
   unit: string;
-  supplierId?: string;
+  supplierId?: string | null;
   supplierName?: string;
+  fulfillmentSource?: 'supplier' | 'inventory';
   unitPrice?: number;
   totalCost?: number;
+}
+
+// Ingredient with inventory stock info
+export interface IngredientWithInventory {
+  ingredientId: string;
+  ingredientName: string;
+  requiredQuantity: number;
+  unit: string;
+  stockQuantity: number;
+  hasSufficientStock: boolean;
+}
+
+// Best supplier option for an ingredient
+export interface BestSupplierOption {
+  productId: number;
+  productName: string;
+  supplierId: string;
+  supplierName: string;
+  unitPrice: number;
+  unit: string;
+  specification: string;
+  isFavorite: boolean;
+  isLowestPrice: boolean;
+  totalCost: number;
+}
+
+// Ingredient with supplier recommendations
+export interface IngredientSuppliers {
+  ingredientId: string;
+  ingredientName: string;
+  totalQuantity: number;
+  unit: string;
+  bestSupplier: BestSupplierOption | null;
+  stockQuantity?: number;
+  hasSufficientStock?: boolean;
+}
+
+// Best suppliers response
+export interface BestSupplierResponse {
+  orderId?: string;
+  kitchenId: string;
+  ingredients: IngredientSuppliers[];
+}
+
+// Supplier selection input
+export interface SupplierSelectionInput {
+  ingredientId: string;
+  selectedSupplierId?: string | null;
+  selectedProductId?: number | null;
+  fulfillmentSource: 'supplier' | 'inventory';
+  quantity: number;
+  unit: string;
+  unitPrice: number;
+  notes?: string;
+}
+
+// Save supplier selections request
+export interface SaveSupplierSelectionsRequest {
+  selections: SupplierSelectionInput[];
 }
 
 // Get order suppliers response for inventory operations

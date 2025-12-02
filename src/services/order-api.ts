@@ -7,6 +7,9 @@ import {
   GetOrdersParams,
   GetOrderSuppliersResponse,
   GetSuppliersForOrderResponse,
+  BestSupplierResponse,
+  IngredientWithInventory,
+  SaveSupplierSelectionsRequest,
 } from '@/models/order'
 import { ResourceCollection } from '@/models/resource'
 
@@ -236,24 +239,56 @@ export const orderApi = {
   },
 
   /**
-   * Save supplier selections for order ingredients
+   * Save supplier selections for order ingredients (updated to support inventory fulfillment)
    * POST /api/orders/{orderId}/supplier-requests
    */
   async saveSupplierSelections(
     orderId: number | string,
-    selections: Array<{
-      ingredientId: string;
-      selectedSupplierId: string;
-      selectedProductId: number;
-      quantity: number;
-      unit: string;
-      unitPrice: number;
-      notes?: string;
-    }>,
+    request: SaveSupplierSelectionsRequest,
   ): Promise<any> {
     return apiClient<any>(`${BASE_URL}/${orderId}/supplier-requests`, {
       method: 'POST',
-      body: JSON.stringify({ selections }),
+      body: JSON.stringify(request),
     })
+  },
+
+  /**
+   * Get best suppliers for order with inventory info
+   * GET /api/orders/{orderId}/best-suppliers
+   */
+  async getBestSuppliersByOrderId(
+    orderId: number | string,
+  ): Promise<BestSupplierResponse> {
+    return apiClient<BestSupplierResponse>(`${BASE_URL}/${orderId}/best-suppliers`)
+  },
+
+  /**
+   * Get best suppliers for new order (pre-save)
+   * POST /api/orders/best-suppliers
+   */
+  async getBestSuppliersForNewOrder(request: {
+    kitchenId: string;
+    ingredients: Array<{
+      ingredientId: string;
+      quantity: number;
+      unit: string;
+    }>;
+  }): Promise<BestSupplierResponse> {
+    return apiClient<BestSupplierResponse>(`${BASE_URL}/best-suppliers`, {
+      method: 'POST',
+      body: JSON.stringify(request),
+    })
+  },
+
+  /**
+   * Get ingredients with inventory stock info
+   * GET /api/orders/{orderId}/ingredients/with-inventory
+   */
+  async getIngredientsWithInventory(
+    orderId: number | string,
+  ): Promise<{ orderId: string; kitchenId: string; ingredients: IngredientWithInventory[] }> {
+    return apiClient<{ orderId: string; kitchenId: string; ingredients: IngredientWithInventory[] }>(
+      `${BASE_URL}/${orderId}/ingredients/with-inventory`,
+    )
   },
 }

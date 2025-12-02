@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Card, CardBody, Button, Table, Alert, FormSelect, Badge, Spinner } from 'react-bootstrap'
+import { Card, CardBody, Button, Table, Alert, FormSelect, FormCheck, Badge, Spinner } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 import useDictionary from '@/locales/dictionary-hook'
@@ -12,6 +12,8 @@ interface TotalIngredient {
   ingredientName: string;
   totalQuantity: number;
   unit: string;
+  stockQuantity?: number;
+  hasSufficientStock?: boolean;
 }
 
 interface BestSupplier {
@@ -32,9 +34,11 @@ interface TotalIngredientsSummaryProps {
   loading: boolean;
   availableSuppliers: Record<string, SupplierPrice[]>;
   supplierSelections: Record<string, number | ''>;
+  fulfillmentSources?: Record<string, 'supplier' | 'inventory'>;
   bestSuppliers?: Record<string, BestSupplier | null>;
   onRefresh: () => void;
   onSupplierChange: (ingredientId: string, productIdStr: string) => void;
+  onFulfillmentSourceChange?: (ingredientId: string, source: 'supplier' | 'inventory') => void;
   formatNumber: (num: number) => string;
 }
 
@@ -43,9 +47,11 @@ export default function TotalIngredientsSummary({
   loading,
   availableSuppliers,
   supplierSelections,
+  fulfillmentSources = {},
   bestSuppliers = {},
   onRefresh,
   onSupplierChange,
+  onFulfillmentSourceChange,
   formatNumber,
 }: TotalIngredientsSummaryProps) {
   const dict = useDictionary()
@@ -114,112 +120,159 @@ export default function TotalIngredientsSummary({
                         <div className="text-center">
                           <Spinner animation="border" size="sm" />
                         </div>
-                      ) : suppliers.length === 0 ? (
-                        <Alert variant="warning" className="mb-0 py-2">
-                          {dict.orders?.labels?.no_supplier || 'No supplier'}
-                        </Alert>
                       ) : (
                         <div>
-                          {bestSupplier && !selectedProductId && (
-                            <Alert variant="info" className="mb-2 py-2">
-                              <strong>💡 {dict.orders?.labels?.suggestion || 'Suggestion'}:</strong> {bestSupplier.supplierName}
-                              {bestSupplier.isFavorite && (
-                                <Badge bg="primary" className="ms-2">
-                                  {dict.orders?.labels?.favorite || 'Favorite'}
-                                </Badge>
-                              )}
-                              {bestSupplier.isLowestPrice && (
-                                <Badge bg="success" className="ms-2">
-                                  {dict.orders?.labels?.best_price || 'Best Price'}
-                                </Badge>
-                              )}
-                              {' - '}
-                              {formatNumber(bestSupplier.totalCost)} đ
-                            </Alert>
-                          )}
-                          <FormSelect
-                            value={selectedProductId || ''}
-                            onChange={(e) => onSupplierChange(ing.ingredientId, e.target.value)}
-                            size="sm"
-                            className={
-                              isBestSupplierSelected ? 'border-success bg-success-subtle' : ''
-                            }
-                          >
-                            <option value="">-- {dict.orders?.labels?.select_supplier || 'Select Supplier'} --</option>
-                            {suppliers.map((supplier) => {
-                              const isBest =
-                                bestSupplier && bestSupplier.productId === supplier.productId
-                              const tags: string[] = []
-                              if (supplier.isFavorite) tags.push(`❤️ ${dict.orders?.labels?.favorite || 'Favorite'}`)
-                              if (supplier.isLowestPrice) tags.push(`💰 ${dict.orders?.labels?.best_price || 'Best Price'}`)
-                              if (supplier.promotion && !supplier.isFavorite && !supplier.isLowestPrice) {
-                                tags.push(supplier.promotion)
-                              }
-                              return (
-                                <option
-                                  key={supplier.productId}
-                                  value={supplier.productId}
-                                  style={isBest ? { fontWeight: 'bold' } : {}}
-                                >
-                                  {isBest && '⭐ '}
-                                  {supplier.supplierName} - {supplier.productName} (
-                                  {formatNumber(supplier.unitPrice)} đ/{supplier.unit})
-                                  {tags.length > 0 && ` - ${tags.join(', ')}`}
-                                </option>
-                              )
-                            })}
-                          </FormSelect>
-                          {selectedSupplier && (
-                            <div className="mt-2">
-                              <small className="text-muted">
-                                {isBestSupplierSelected && (
-                                  <>
-                                    <Badge bg="success" className="mb-1">
-                                      ⭐ {dict.orders?.labels?.best_suggestion || 'Best Suggestion'}
+                          {/* Inventory Option */}
+                          {onFulfillmentSourceChange && (
+                            <div className="mb-3 p-2 border rounded bg-light">
+                              <FormCheck
+                                type="radio"
+                                id={`inventory-${ing.ingredientId}`}
+                                name={`fulfillment-${ing.ingredientId}`}
+                                label={
+                                  <span>
+                                    <Badge bg={ing.hasSufficientStock ? "success" : "warning"} className="me-2">
+                                      📦 Use From Inventory
                                     </Badge>
-                                    <br />
-                                  </>
-                                )}
-                                <div className="mb-1">
-                                  {selectedSupplier.isFavorite && (
-                                    <Badge bg="danger" className="me-1">
-                                      ❤️ {dict.orders?.labels?.favorite || 'Favorite'}
-                                    </Badge>
-                                  )}
-                                  {selectedSupplier.isLowestPrice && (
-                                    <Badge bg="success" className="me-1">
-                                      💰 {dict.orders?.labels?.best_price || 'Best Price'}
-                                    </Badge>
-                                  )}
-                                  {selectedSupplier.promotion &&
-                                    !selectedSupplier.isFavorite &&
-                                    !selectedSupplier.isLowestPrice && (
-                                      <Badge bg="info" className="me-1">
-                                        {selectedSupplier.promotion}
-                                      </Badge>
-                                    )}
-                                </div>
-                                <strong>{dict.orders?.labels?.details || 'Details'}:</strong> {selectedSupplier.supplierName} (
-                                {selectedSupplier.supplierId})
-                                <br />
-                                <strong>{dict.orders?.labels?.product || 'Product'}:</strong> {selectedSupplier.productName}
-                                <br />
-                                <strong>{dict.orders?.table_headers?.unit_price_label || 'Unit Price'}:</strong> {formatNumber(selectedSupplier.unitPrice)}{' '}
-                                đ/{selectedSupplier.unit}
-                                <br />
-                                <strong>{dict.orders?.table_headers?.total_cost || 'Total Cost'}:</strong>{' '}
-                                {selectedSupplier.totalCost !== undefined
-                                  ? formatNumber(selectedSupplier.totalCost)
-                                  : formatNumber(selectedSupplier.unitPrice * ing.totalQuantity)}{' '}
-                                đ
-                                {selectedSupplier.specification && (
-                                  <>
-                                    <br />
-                                    <strong>{dict.orders?.labels?.specification || 'Specification'}:</strong> {selectedSupplier.specification}
-                                  </>
-                                )}
-                              </small>
+                                    <small className="text-muted">
+                                      Available: {formatNumber(ing.stockQuantity || 0)} {ing.unit}
+                                    </small>
+                                  </span>
+                                }
+                                checked={fulfillmentSources[ing.ingredientId] === 'inventory'}
+                                onChange={() => onFulfillmentSourceChange(ing.ingredientId, 'inventory')}
+                              />
                             </div>
+                          )}
+
+                          {/* Supplier Option */}
+                          {suppliers.length > 0 && (
+                            <div>
+                              {onFulfillmentSourceChange && (
+                                <FormCheck
+                                  type="radio"
+                                  id={`supplier-${ing.ingredientId}`}
+                                  name={`fulfillment-${ing.ingredientId}`}
+                                  label="Order from Supplier"
+                                  checked={fulfillmentSources[ing.ingredientId] !== 'inventory'}
+                                  onChange={() => onFulfillmentSourceChange(ing.ingredientId, 'supplier')}
+                                  className="mb-2"
+                                />
+                              )}
+
+                              {(!onFulfillmentSourceChange || fulfillmentSources[ing.ingredientId] !== 'inventory') && (
+                                <>
+                                  {bestSupplier && !selectedProductId && (
+                                    <Alert variant="info" className="mb-2 py-2">
+                                      <strong>💡 {dict.orders?.labels?.suggestion || 'Suggestion'}:</strong> {bestSupplier.supplierName}
+                                      {bestSupplier.isFavorite && (
+                                        <Badge bg="primary" className="ms-2">
+                                          {dict.orders?.labels?.favorite || 'Favorite'}
+                                        </Badge>
+                                      )}
+                                      {bestSupplier.isLowestPrice && (
+                                        <Badge bg="success" className="ms-2">
+                                          {dict.orders?.labels?.best_price || 'Best Price'}
+                                        </Badge>
+                                      )}
+                                      {' - '}
+                                      {formatNumber(bestSupplier.totalCost)} đ
+                                    </Alert>
+                                  )}
+                                  <FormSelect
+                                    value={selectedProductId || ''}
+                                    onChange={(e) => onSupplierChange(ing.ingredientId, e.target.value)}
+                                    size="sm"
+                                    className={
+                                      isBestSupplierSelected ? 'border-success bg-success-subtle' : ''
+                                    }
+                                  >
+                                    <option value="">-- {dict.orders?.labels?.select_supplier || 'Select Supplier'} --</option>
+                                    {suppliers.map((supplier) => {
+                                      const isBest =
+                                        bestSupplier && bestSupplier.productId === supplier.productId
+                                      const tags: string[] = []
+                                      if (supplier.isFavorite) tags.push(`❤️ ${dict.orders?.labels?.favorite || 'Favorite'}`)
+                                      if (supplier.isLowestPrice) tags.push(`💰 ${dict.orders?.labels?.best_price || 'Best Price'}`)
+                                      if (supplier.promotion && !supplier.isFavorite && !supplier.isLowestPrice) {
+                                        tags.push(supplier.promotion)
+                                      }
+                                      return (
+                                        <option
+                                          key={supplier.productId}
+                                          value={supplier.productId}
+                                          style={isBest ? { fontWeight: 'bold' } : {}}
+                                        >
+                                          {isBest && '⭐ '}
+                                          {supplier.supplierName} - {supplier.productName} (
+                                          {formatNumber(supplier.unitPrice)} đ/{supplier.unit})
+                                          {tags.length > 0 && ` - ${tags.join(', ')}`}
+                                        </option>
+                                      )
+                                    })}
+                                  </FormSelect>
+                                  {selectedSupplier && (
+                                    <div className="mt-2">
+                                      <small className="text-muted">
+                                        {isBestSupplierSelected && (
+                                          <>
+                                            <Badge bg="success" className="mb-1">
+                                              ⭐ {dict.orders?.labels?.best_suggestion || 'Best Suggestion'}
+                                            </Badge>
+                                            <br />
+                                          </>
+                                        )}
+                                        <div className="mb-1">
+                                          {selectedSupplier.isFavorite && (
+                                            <Badge bg="danger" className="me-1">
+                                              ❤️ {dict.orders?.labels?.favorite || 'Favorite'}
+                                            </Badge>
+                                          )}
+                                          {selectedSupplier.isLowestPrice && (
+                                            <Badge bg="success" className="me-1">
+                                              💰 {dict.orders?.labels?.best_price || 'Best Price'}
+                                            </Badge>
+                                          )}
+                                          {selectedSupplier.promotion &&
+                                            !selectedSupplier.isFavorite &&
+                                            !selectedSupplier.isLowestPrice && (
+                                              <Badge bg="info" className="me-1">
+                                                {selectedSupplier.promotion}
+                                              </Badge>
+                                            )}
+                                        </div>
+                                        <strong>{dict.orders?.labels?.details || 'Details'}:</strong> {selectedSupplier.supplierName} (
+                                        {selectedSupplier.supplierId})
+                                        <br />
+                                        <strong>{dict.orders?.labels?.product || 'Product'}:</strong> {selectedSupplier.productName}
+                                        <br />
+                                        <strong>{dict.orders?.table_headers?.unit_price_label || 'Unit Price'}:</strong> {formatNumber(selectedSupplier.unitPrice)}{' '}
+                                        đ/{selectedSupplier.unit}
+                                        <br />
+                                        <strong>{dict.orders?.table_headers?.total_cost || 'Total Cost'}:</strong>{' '}
+                                        {selectedSupplier.totalCost !== undefined
+                                          ? formatNumber(selectedSupplier.totalCost)
+                                          : formatNumber(selectedSupplier.unitPrice * ing.totalQuantity)}{' '}
+                                        đ
+                                        {selectedSupplier.specification && (
+                                          <>
+                                            <br />
+                                            <strong>{dict.orders?.labels?.specification || 'Specification'}:</strong> {selectedSupplier.specification}
+                                          </>
+                                        )}
+                                      </small>
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          )}
+
+                          {/* No suppliers available */}
+                          {suppliers.length === 0 && !onFulfillmentSourceChange && (
+                            <Alert variant="warning" className="mb-0 py-2">
+                              {dict.orders?.labels?.no_supplier || 'No supplier'}
+                            </Alert>
                           )}
                         </div>
                       )}

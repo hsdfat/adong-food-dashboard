@@ -25,7 +25,7 @@ import {
   orderApi,
 } from '@/services'
 import { Kitchen, RecipeStandard , Dish as DishModel, Ingredient as IngredientModel } from '@/models'
-import { CreateOrderInput } from '@/models/order'
+import { CreateOrderInput, BestSupplierResponse, IngredientSuppliers } from '@/models/order'
 import { supplierPriceApi } from '@/services/supplier-price.service'
 import { SupplierPrice } from '@/models/supplier-price'
 import { useLoadingOverlay } from '@/components/Common/LoadingOverlay'
@@ -83,6 +83,8 @@ interface TotalIngredient {
   ingredientName: string;
   totalQuantity: number;
   unit: string;
+  stockQuantity?: number;
+  hasSufficientStock?: boolean;
 }
 
 interface BestSupplier {
@@ -96,16 +98,6 @@ interface BestSupplier {
   isFavorite: boolean;
   isLowestPrice: boolean;
   totalCost: number;
-}
-
-interface BestSupplierResponse {
-  ingredients: Array<{
-    ingredientId: string;
-    ingredientName: string;
-    totalQuantity: number;
-    unit: string;
-    bestSupplier: BestSupplier | null;
-  }>;
 }
 
 interface OrderFormProps {
@@ -194,6 +186,9 @@ export default function OrderForm({
   const [loadingBestSuppliers, setLoadingBestSuppliers] = useState(false)
   const [supplierSelections, setSupplierSelections] = useState<
     Record<string, number | ''>
+  >({})
+  const [fulfillmentSources, setFulfillmentSources] = useState<
+    Record<string, 'supplier' | 'inventory'>
   >({})
   // Cache for supplier data to avoid redundant API calls
   const supplierCacheRef = useRef<Record<string, SupplierPrice[]>>({})
@@ -404,10 +399,18 @@ export default function OrderForm({
     return Object.values(totals)
   }
 
-  const totalIngredients = useMemo(
+  const totalIngredientsBase = useMemo(
     () => calculateTotalIngredients(),
     [orderDishes, supplementaryFoods],
   )
+
+  // Enriched total ingredients with inventory data
+  const [totalIngredients, setTotalIngredients] = useState<TotalIngredient[]>([])
+
+  // Update totalIngredients when base changes
+  useEffect(() => {
+    setTotalIngredients(totalIngredientsBase)
+  }, [totalIngredientsBase])
 
   // ==================== SUPPLIER MANAGEMENT ====================
 
@@ -572,6 +575,20 @@ export default function OrderForm({
       setAvailableSuppliersByIngredient(newAvailableSuppliers)
       setBestSupplierByIngredient(newBestSuppliers)
 
+      // Enrich totalIngredients with inventory data from API response
+      const enrichedIngredients = totalIngredientsBase.map((ing) => {
+        const apiData = data.ingredients.find((item) => item.ingredientId === ing.ingredientId)
+        if (apiData && apiData.stockQuantity !== undefined) {
+          return {
+            ...ing,
+            stockQuantity: apiData.stockQuantity,
+            hasSufficientStock: apiData.hasSufficientStock,
+          }
+        }
+        return ing
+      })
+      setTotalIngredients(enrichedIngredients)
+
       console.log('Best suppliers loaded:', {
         totalIngredients: data.ingredients.length,
         autoSelected: Object.keys(newSelections).length,
@@ -608,10 +625,17 @@ export default function OrderForm({
     }
   }
 
+  const handleFulfillmentSourceChange = (ingredientId: string, source: 'supplier' | 'inventory') => {
+    setFulfillmentSources((prev) => ({
+      ...prev,
+      [ingredientId]: source,
+    }))
+  }
+
   // ==================== DISH MANAGEMENT ====================
 
   const handleAddDishes = async () => {
-    if (selectedDishes.length === 0 || portions <= 0) {
+    if (selectedDishes.length === 0) {
       alert(dict.order_form?.validation?.add_dish_or_food || 'Please select dishes and enter valid portions')
       return
     }
@@ -999,7 +1023,7 @@ export default function OrderForm({
   const closeDishModal = () => {
     setShowDishModal(false)
     setSelectedDishes([])
-    setPortions(0)
+    setPortions(1)
     setSearchDish('')
   }
 
@@ -1083,17 +1107,40 @@ export default function OrderForm({
 
       const createdOrder = await orderApi.create(orderData)
 
-      // Save supplier selections if any were made
+      // Save supplier selections and inventory fulfillments if any were made
       const hasSupplierSelections = Object.keys(supplierSelections).some(
         (ingredientId) => supplierSelections[ingredientId] !== ''
       )
+      const hasFulfillmentSelections = Object.keys(fulfillmentSources).some(
+        (ingredientId) => fulfillmentSources[ingredientId] === 'inventory'
+      )
 
-      if (hasSupplierSelections) {
+      if (hasSupplierSelections || hasFulfillmentSelections) {
         try {
           // Build supplier selections payload
           const selections = totalIngredients
-            .filter((ing) => supplierSelections[ing.ingredientId])
+            .filter((ing) =>
+              supplierSelections[ing.ingredientId] ||
+              fulfillmentSources[ing.ingredientId] === 'inventory'
+            )
             .map((ing) => {
+              const fulfillmentSource = fulfillmentSources[ing.ingredientId]
+
+              // If fulfillment source is inventory
+              if (fulfillmentSource === 'inventory') {
+                return {
+                  ingredientId: ing.ingredientId,
+                  fulfillmentSource: 'inventory' as const,
+                  selectedSupplierId: null,
+                  selectedProductId: null,
+                  quantity: ing.totalQuantity,
+                  unit: ing.unit,
+                  unitPrice: 0,
+                  notes: 'Fulfilled from inventory',
+                }
+              }
+
+              // Otherwise, use supplier
               const productId = supplierSelections[ing.ingredientId] as number
               const suppliers = availableSuppliersByIngredient[ing.ingredientId] || []
               const selectedSupplier = suppliers.find((s) => s.productId === productId)
@@ -1105,6 +1152,7 @@ export default function OrderForm({
 
               return {
                 ingredientId: ing.ingredientId,
+                fulfillmentSource: 'supplier' as const,
                 selectedSupplierId: selectedSupplier.supplierId,
                 selectedProductId: productId,
                 quantity: ing.totalQuantity,
@@ -1116,8 +1164,8 @@ export default function OrderForm({
             .filter((sel) => sel !== null) as any[]
 
           if (selections.length > 0) {
-            await orderApi.saveSupplierSelections(createdOrder.orderId, selections)
-            console.log('Supplier selections saved successfully')
+            await orderApi.saveSupplierSelections(createdOrder.orderId, { selections })
+            console.log('Supplier selections and inventory fulfillments saved successfully')
           }
         } catch (supplierErr: any) {
           console.error('Failed to save supplier selections:', supplierErr)
@@ -1237,9 +1285,11 @@ export default function OrderForm({
           loading={loadingBestSuppliers}
           availableSuppliers={availableSuppliersByIngredient}
           supplierSelections={supplierSelections}
+          fulfillmentSources={fulfillmentSources}
           bestSuppliers={bestSupplierByIngredient}
           onRefresh={() => loadBestSuppliers()}
           onSupplierChange={handleSupplierChange}
+          onFulfillmentSourceChange={handleFulfillmentSourceChange}
           formatNumber={formatNumber}
         />
 
