@@ -10,17 +10,10 @@ import {
 } from 'react-bootstrap'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCreditCard,
-  faFile,
-  faUser,
-} from '@fortawesome/free-regular-svg-icons'
+import { faUser } from '@fortawesome/free-regular-svg-icons'
 import { PropsWithChildren } from 'react'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-import {
-  faGear,
-  faPowerOff,
-} from '@fortawesome/free-solid-svg-icons'
+import { faGear, faPowerOff } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import HeaderLogout from '@/components/Layout/Dashboard/Header/HeaderLogout'
 import { authOptions } from '@/app/api/auth/option'
@@ -77,38 +70,6 @@ export default async function HeaderProfileNav() {
               <small className="text-muted">{session?.user.email}</small>
             </div>
           </DropdownHeader>
-          {/* <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faBell}>
-                {dict.profile.account.items.updates}
-                <Badge bg="info" className="ms-2">42</Badge>
-              </ItemWithIcon>
-            </DropdownItem>
-          </Link>
-          <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faEnvelopeOpen}>
-                {dict.profile.account.items.messages}
-                <Badge bg="success" className="ms-2">42</Badge>
-              </ItemWithIcon>
-            </DropdownItem>
-          </Link>
-          <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faListCheck}>
-                {dict.profile.account.items.tasks}
-                <Badge bg="danger" className="ms-2">42</Badge>
-              </ItemWithIcon>
-            </DropdownItem>
-          </Link>
-          <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faMessage}>
-                {dict.profile.account.items.comments}
-                <Badge bg="warning" className="ms-2">42</Badge>
-              </ItemWithIcon>
-            </DropdownItem>
-          </Link> */}
 
           <DropdownHeader className="fw-bold">
             {dict.profile.settings.title}
@@ -128,28 +89,9 @@ export default async function HeaderProfileNav() {
               </ItemWithIcon>
             </DropdownItem>
           </Link>
-          <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faCreditCard}>
-                {dict.profile.settings.items.payments}
-              </ItemWithIcon>
-            </DropdownItem>
-          </Link>
-          <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faFile}>
-                {dict.profile.settings.items.profile}
-              </ItemWithIcon>
-            </DropdownItem>
-          </Link>
 
           <DropdownDivider />
 
-          {/* <Link href="#" passHref legacyBehavior>
-            <DropdownItem>
-              <ItemWithIcon icon={faLock}>{dict.profile.lock_account}</ItemWithIcon>
-            </DropdownItem>
-          </Link> */}
           <HeaderLogout>
             <DropdownItem>
               <ItemWithIcon icon={faPowerOff}>

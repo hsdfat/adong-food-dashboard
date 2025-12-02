@@ -55,6 +55,17 @@
     "dark": "Tối",
     "auto": "Tự động"
   },
+  "weather": {
+    "days": {
+      "monday": "Thứ Hai",
+      "tuesday": "Thứ Ba",
+      "wednesday": "Thứ Tư",
+      "thursday": "Thứ Năm",
+      "friday": "Thứ Sáu",
+      "saturday": "Thứ Bảy",
+      "sunday": "Chủ Nhật"
+    }
+  },
   "dashboard": {
     "title": "Á Đông Food",
     "welcome": "Xin chào",
@@ -285,6 +296,8 @@
     "items": {
       "order": "Lên đơn món ăn",
       "dashboard": "Bảng điều khiển",
+      "quick_actions": "Hành động nhanh",
+      "favorites": "Yêu thích",
       "ingredients": "Nguyên liệu",
       "kitchens": "Bếp",
       "dishes": "Món ăn",
@@ -292,6 +305,7 @@
       "kitchen_favorite_suppliers": "Nhà cung cấp yêu thích",
       "users": "Người dùng",
       "recipe_standards": "Định mức công thức",
+      "recipes_orders": "Công thức & Đơn hàng",
       "orders": "Đơn hàng",
       "receiving": "Nhận hàng",
       "inventory": "Tồn kho",

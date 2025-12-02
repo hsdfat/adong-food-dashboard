@@ -55,6 +55,17 @@
     "dark": "Dark",
     "auto": "Auto"
   },
+  "weather": {
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  },
   "dashboard": {
     "title": "A Dong Food",
     "welcome": "Hello",
@@ -269,6 +280,8 @@
     "items": {
       "order": "Order",
       "dashboard": "Dashboard",
+      "quick_actions": "Quick Actions",
+      "favorites": "Favorites",
       "ingredients": "Ingredients",
       "kitchens": "Kitchens",
       "dishes": "Dishes",
@@ -276,6 +289,7 @@
       "kitchen_favorite_suppliers": "Favorite Suppliers",
       "users": "Users",
       "recipe_standards": "Recipe Standards",
+      "recipes_orders": "Recipes & Orders",
       "orders": "Orders",
       "receiving": "Receiving",
       "inventory": "Inventory",

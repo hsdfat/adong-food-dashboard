@@ -52,6 +52,12 @@ interface OrderDishItem {
   dishId: string;
   dishName: string;
   portions: number;
+  recipeSource?: string; // Kitchen name or 'Common' to indicate recipe source
+  recipeKitchenId?: string | null; // Kitchen ID for the recipe, null for common recipes
+  availableRecipes?: {
+    kitchen: boolean; // Whether kitchen-specific recipe exists
+    common: boolean; // Whether common recipe exists
+  };
   ingredients: {
     ingredientId: string;
     ingredientName: string;
@@ -160,6 +166,8 @@ export default function OrderForm({
   const [dishRecipeStandards, setDishRecipeStandards] = useState<
     Map<string, RecipeStandard[]>
   >(new Map())
+  // Cache for recipe variants by dish ID
+  const dishVariantsCache = useRef<Map<string, any>>(new Map())
   const [searchDish, setSearchDish] = useState('')
   const [selectedDishes, setSelectedDishes] = useState<string[]>([])
   const [portions, setPortions] = useState(1)
@@ -274,6 +282,27 @@ export default function OrderForm({
   }
 
   // Lazy load recipe standards for a specific dish
+  // Load recipe variants for a dish (grouped by kitchen + common)
+  const loadRecipeVariantsForDish = async (dishId: string) => {
+    // Check cache first
+    if (dishVariantsCache.current.has(dishId)) {
+      return dishVariantsCache.current.get(dishId)
+    }
+
+    try {
+      const variants = await recipeStandardApi.getVariantsByDish(dishId)
+      // Cache the result
+      dishVariantsCache.current.set(dishId, variants)
+      return variants
+    } catch (err) {
+      console.error(
+        `Failed to load recipe variants for dish ${dishId}:`,
+        err,
+      )
+      return { kitchenRecipes: {}, commonRecipes: [] }
+    }
+  }
+
   const loadRecipeStandardsForDish = async (dishId: string) => {
     // Check if already loaded
     if (dishRecipeStandards.has(dishId)) {
@@ -587,30 +616,97 @@ export default function OrderForm({
       return
     }
 
-    // Load recipe standards for selected dishes if not already loaded
-    const recipePromises = selectedDishes.map((dishId) =>
-      loadRecipeStandardsForDish(dishId)
+    if (!kitchenId) {
+      alert('Please select a kitchen for this order first')
+      return
+    }
+
+    // Load recipe variants for selected dishes
+    const variantsPromises = selectedDishes.map((dishId) =>
+      loadRecipeVariantsForDish(dishId)
     )
-    const recipeResults = await Promise.all(recipePromises)
+    const variantsResults = await Promise.all(variantsPromises)
 
-    const newDishes: OrderDishItem[] = selectedDishes.map((dishId, index) => {
+    const newDishes: OrderDishItem[] = []
+
+    selectedDishes.forEach((dishId, index) => {
       const dish = availableDishes.find((d) => d.dishId === dishId)!
-      const recipeStandards = recipeResults[index]
+      const variants = variantsResults[index]
 
-      const ingredients = recipeStandards.map((rs) => ({
-        ingredientId: rs.ingredientId,
-        ingredientName: rs.ingredientName || '',
-        unit: rs.unit,
-        standardPerPortion: safeRound(rs.standardPer1),
-        quantity: safeMultiply(rs.standardPer1, portions),
-      }))
+      // Check if there's a recipe for the selected kitchen
+      const hasKitchenRecipe = variants.kitchenRecipes && variants.kitchenRecipes[kitchenId]
+      const hasCommonRecipes = (variants.commonRecipes?.length || 0) > 0
 
-      return {
-        id: `${Date.now()}-${Math.random()}`,
-        dishId: dish.dishId,
-        dishName: dish.dishName,
-        portions,
-        ingredients,
+      // Auto-select logic:
+      // 1. If kitchen recipe exists, use it (and allow choice with common if both exist)
+      // 2. If no kitchen recipe but common exists, use common
+      // 3. If neither exists, create empty dish
+
+      if (hasKitchenRecipe) {
+        // Use kitchen-specific recipe
+        const recipeStandards = variants.kitchenRecipes[kitchenId]
+        const selectedKitchenName = recipeStandards[0]?.kitchenName || kitchenName
+
+        const ingredients = recipeStandards.map((rs: RecipeStandard) => ({
+          ingredientId: rs.ingredientId,
+          ingredientName: rs.ingredientName || '',
+          unit: rs.unit,
+          standardPerPortion: safeRound(rs.standardPer1),
+          quantity: safeMultiply(rs.standardPer1, portions),
+        }))
+
+        newDishes.push({
+          id: `${Date.now()}-${Math.random()}`,
+          dishId: dish.dishId,
+          dishName: dish.dishName,
+          portions,
+          recipeSource: selectedKitchenName,
+          recipeKitchenId: kitchenId,
+          ingredients,
+          // Store available recipe options for dropdown switching
+          availableRecipes: {
+            kitchen: true,
+            common: hasCommonRecipes,
+          },
+        })
+      } else if (hasCommonRecipes) {
+        // Use common recipe as fallback
+        const ingredients = variants.commonRecipes.map((rs: RecipeStandard) => ({
+          ingredientId: rs.ingredientId,
+          ingredientName: rs.ingredientName || '',
+          unit: rs.unit,
+          standardPerPortion: safeRound(rs.standardPer1),
+          quantity: safeMultiply(rs.standardPer1, portions),
+        }))
+
+        newDishes.push({
+          id: `${Date.now()}-${Math.random()}`,
+          dishId: dish.dishId,
+          dishName: dish.dishName,
+          portions,
+          recipeSource: 'Common',
+          recipeKitchenId: null,
+          ingredients,
+          availableRecipes: {
+            kitchen: false,
+            common: true,
+          },
+        })
+      } else {
+        // No recipe available
+        newDishes.push({
+          id: `${Date.now()}-${Math.random()}`,
+          dishId: dish.dishId,
+          dishName: dish.dishName,
+          portions,
+          recipeSource: 'No Recipe',
+          recipeKitchenId: null,
+          ingredients: [],
+          availableRecipes: {
+            kitchen: false,
+            common: false,
+          },
+        })
       }
     })
 
@@ -686,6 +782,60 @@ export default function OrderForm({
           }
         }
         return dish
+      }),
+    )
+  }
+
+  // Handler to switch between kitchen and common recipe
+  const handleSwitchRecipe = async (dishId: string, useCommon: boolean) => {
+    const dish = orderDishes.find((d) => d.id === dishId)
+    if (!dish) return
+
+    // Load variants from cache
+    const variants = await loadRecipeVariantsForDish(dish.dishId)
+
+    let newIngredients: any[] = []
+    let newRecipeSource = ''
+    let newRecipeKitchenId: string | null = null
+
+    if (useCommon && variants.commonRecipes && variants.commonRecipes.length > 0) {
+      // Switch to common recipe
+      newIngredients = variants.commonRecipes.map((rs: RecipeStandard) => ({
+        ingredientId: rs.ingredientId,
+        ingredientName: rs.ingredientName || '',
+        unit: rs.unit,
+        standardPerPortion: safeRound(rs.standardPer1),
+        quantity: safeMultiply(rs.standardPer1, dish.portions),
+      }))
+      newRecipeSource = 'Common'
+      newRecipeKitchenId = null
+    } else if (!useCommon && kitchenId && variants.kitchenRecipes && variants.kitchenRecipes[kitchenId]) {
+      // Switch to kitchen-specific recipe
+      const recipeStandards = variants.kitchenRecipes[kitchenId]
+      newIngredients = recipeStandards.map((rs: RecipeStandard) => ({
+        ingredientId: rs.ingredientId,
+        ingredientName: rs.ingredientName || '',
+        unit: rs.unit,
+        standardPerPortion: safeRound(rs.standardPer1),
+        quantity: safeMultiply(rs.standardPer1, dish.portions),
+      }))
+      newRecipeSource = recipeStandards[0]?.kitchenName || kitchenName
+      newRecipeKitchenId = kitchenId
+    } else {
+      return // No recipe available
+    }
+
+    setOrderDishes(
+      orderDishes.map((d) => {
+        if (d.id === dishId) {
+          return {
+            ...d,
+            ingredients: newIngredients,
+            recipeSource: newRecipeSource,
+            recipeKitchenId: newRecipeKitchenId,
+          }
+        }
+        return d
       }),
     )
   }
@@ -1066,6 +1216,7 @@ export default function OrderForm({
             setShowIngredientModal(true)
           }}
           onRemoveDish={handleRemoveDish}
+          onSwitchRecipe={handleSwitchRecipe}
           formatNumber={formatNumber}
         />
 

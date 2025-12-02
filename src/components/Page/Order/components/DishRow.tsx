@@ -19,6 +19,12 @@ interface OrderDishItem {
   dishId: string;
   dishName: string;
   portions: number;
+  recipeSource?: string; // Kitchen name or 'Common' to indicate recipe source
+  recipeKitchenId?: string | null; // Kitchen ID for the recipe, null for common recipes
+  availableRecipes?: {
+    kitchen: boolean;
+    common: boolean;
+  };
   ingredients: DishIngredient[];
 }
 
@@ -30,6 +36,7 @@ interface DishRowProps {
   onRemoveIngredient: (dishId: string, ingredientId: string) => void;
   onAddIngredient: (index: number) => void;
   onRemoveDish: (dishId: string) => void;
+  onSwitchRecipe: (dishId: string, useCommon: boolean) => void;
   formatNumber: (num: number) => string;
 }
 
@@ -41,6 +48,7 @@ export default function DishRow({
   onRemoveIngredient,
   onAddIngredient,
   onRemoveDish,
+  onSwitchRecipe,
   formatNumber,
 }: DishRowProps) {
   const dict = useDictionary()
@@ -49,6 +57,30 @@ export default function DishRow({
       <td>{index + 1}</td>
       <td>
         <strong>{dish.dishName}</strong>
+        {dish.recipeSource && (
+          <>
+            <br />
+            {dish.availableRecipes?.kitchen && dish.availableRecipes?.common ? (
+              // Both kitchen and common recipes available - show dropdown
+              <FormControl
+                as="select"
+                size="sm"
+                value={dish.recipeKitchenId === null ? 'common' : 'kitchen'}
+                onChange={(e) => onSwitchRecipe(dish.id, e.target.value === 'common')}
+                className="mt-1"
+                style={{ width: 'auto', display: 'inline-block' }}
+              >
+                <option value="kitchen">Recipe: {dish.recipeKitchenId ? dish.recipeSource : 'Kitchen'}</option>
+                <option value="common">Recipe: Common</option>
+              </FormControl>
+            ) : (
+              // Only one recipe type available - show as text
+              <small className="text-info">
+                Recipe: {dish.recipeSource}
+              </small>
+            )}
+          </>
+        )}
         <br />
         <small className="text-muted">{dish.dishId}</small>
       </td>

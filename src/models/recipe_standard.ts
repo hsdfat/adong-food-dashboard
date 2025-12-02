@@ -6,7 +6,7 @@ import { Kitchen } from './kitchen'
 export interface RecipeStandard {
   standardId: number;
   dishId: string;
-  kitchenId: string;
+  kitchenId: string | null;  // Nullable for common recipes
   ingredientId: string;
   dishName?: string;
   kitchenName?: string;
@@ -27,7 +27,7 @@ export interface RecipeStandard {
 
 export interface CreateRecipeStandardInput {
   dishId: string;
-  kitchenId: string;
+  kitchenId: string | null;  // Nullable for common recipes
   ingredientId: string;
   unit: string;
   standardPer1: number;
@@ -37,12 +37,18 @@ export interface CreateRecipeStandardInput {
 }
 
 export interface UpdateRecipeStandardInput {
-  kitchenId?: string;
+  kitchenId?: string | null;  // Nullable for common recipes
   standardPer1?: number;
   unit?: string;
   note?: string;
   amount?: number;
   updatedById?: string;
+}
+
+// Recipe variants response - grouped by kitchen
+export interface RecipeVariants {
+  kitchenRecipes: Record<string, RecipeStandard[]>;  // Key: kitchenId, Value: recipes
+  commonRecipes: RecipeStandard[];  // Recipes with null kitchenId
 }
 
 // RecipeStandardsResponse is now ResourceCollection<RecipeStandard>

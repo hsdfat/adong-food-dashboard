@@ -4,6 +4,7 @@ import {
   RecipeStandard,
   CreateRecipeStandardInput,
   UpdateRecipeStandardInput,
+  RecipeVariants,
 } from '@/models/recipe_standard'
 import { ResourceCollection } from '@/models/resource'
 
@@ -44,6 +45,13 @@ export const recipeStandardApi = {
     dishId: string,
   ): Promise<ResourceCollection<RecipeStandard>> => apiClient<ResourceCollection<RecipeStandard>>(
       `${BASE_URL}/dish/${dishId}`,
+    ),
+
+  // Get recipe variants by dish ID (grouped by kitchen)
+  getVariantsByDish: async (
+    dishId: string,
+  ): Promise<RecipeVariants> => apiClient<RecipeVariants>(
+      `${BASE_URL}/dish/${dishId}/variants`,
     ),
 
   // Get recipe standards by kitchen ID

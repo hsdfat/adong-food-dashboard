@@ -1,8 +1,5 @@
 import {
   faGauge,
-  faPuzzlePiece,
-  faUtensils,
-  faBoxes,
   faCarrot,
   faKitchenSet,
   faBowlFood,
@@ -18,14 +15,19 @@ import {
   faFileInvoice,
   faChartLine,
   faUsers,
+  faStar,
+  faPuzzlePiece,
+  faUtensils,
+  faBoxes,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
-import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
 import SidebarNavItem from '@/components/Layout/Dashboard/Sidebar/SidebarNavItem'
+import SidebarNavGroup from '@/components/Layout/Dashboard/Sidebar/SidebarNavGroup'
 import { getDictionary } from '@/locales/dictionary'
 import { getServerLocale } from '@/locales/server-utils'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/option'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const SidebarNavTitle = (props: PropsWithChildren) => {
   const { children } = props
@@ -33,6 +35,29 @@ const SidebarNavTitle = (props: PropsWithChildren) => {
   return (
     <li className="nav-title px-3 py-2 mt-3 text-uppercase fw-bold">
       {children}
+    </li>
+  )
+}
+
+const QuickActionItem = (
+  props: PropsWithChildren<{
+    icon: any
+    href: string
+    variant?: string
+  }>,
+) => {
+  const { icon, children, href, variant = 'primary' } = props
+
+  return (
+    <li className="mb-2">
+      <a
+        href={href}
+        className={`btn btn-${variant} btn-sm w-100 d-flex align-items-center justify-content-start text-start`}
+        style={{ padding: '0.5rem 0.75rem' }}
+      >
+        <FontAwesomeIcon icon={icon} className="me-2" fixedWidth />
+        <span className="flex-fill">{children}</span>
+      </a>
     </li>
   )
 }
@@ -45,24 +70,61 @@ export default async function SidebarNav() {
 
   return (
     <ul className="list-unstyled">
+      {/* Dashboard */}
       <SidebarNavItem icon={faGauge} href="/">
         {dict.sidebar.items.dashboard}
       </SidebarNavItem>
 
+      {/* Favorites Section */}
       <SidebarNavTitle>
-        {dict.sidebar.items.master_data || 'Master Data'}
+        <FontAwesomeIcon icon={faStar} className="me-2" />
+        {dict.sidebar.items.favorites || 'Favorites'}
       </SidebarNavTitle>
+      <li className="px-3">
+        <ul className="list-unstyled">
+          <QuickActionItem icon={faPlus} href="/orders/create" variant="primary">
+            {dict.sidebar.items.order || 'Create Order'}
+          </QuickActionItem>
+          <QuickActionItem
+            icon={faBoxOpen}
+            href="/inventory/imports"
+            variant="success"
+          >
+            {dict.sidebar.items.imports || 'Import Inventory'}
+          </QuickActionItem>
+          {/* <li className="mb-2">
+            <a
+              href="/orders"
+              className="btn btn-link btn-sm w-100 d-flex align-items-center justify-content-start text-start text-decoration-none"
+              style={{ padding: '0.25rem 0.5rem' }}
+            >
+              <FontAwesomeIcon icon={faClipboardList} className="me-2" fixedWidth />
+              <span className="flex-fill">{dict.sidebar.items.orders}</span>
+            </a>
+          </li>
+          <li className="mb-2">
+            <a
+              href="/inventory/stocks"
+              className="btn btn-link btn-sm w-100 d-flex align-items-center justify-content-start text-start text-decoration-none"
+              style={{ padding: '0.25rem 0.5rem' }}
+            >
+              <FontAwesomeIcon icon={faWarehouse} className="me-2" fixedWidth />
+              <span className="flex-fill">{dict.sidebar.items.stocks}</span>
+            </a>
+          </li> */}
+        </ul>
+      </li>
 
-      {isAdmin && (
-        <SidebarNavItem icon={faUsers} href="/users">
-          {dict.sidebar.items.users}
-        </SidebarNavItem>
-      )}
-
+      {/* Master Data Category */}
       <SidebarNavGroup
         toggleIcon={faPuzzlePiece}
         toggleText={dict.sidebar.items.master_data || 'Master Data'}
       >
+        {isAdmin && (
+          <SidebarNavItem icon={faUsers} href="/users">
+            {dict.sidebar.items.users}
+          </SidebarNavItem>
+        )}
         <SidebarNavItem icon={faCarrot} href="/ingredients">
           {dict.sidebar.items.ingredients}
         </SidebarNavItem>
@@ -75,31 +137,29 @@ export default async function SidebarNav() {
         <SidebarNavItem icon={faTruck} href="/suppliers">
           {dict.sidebar.items.suppliers}
         </SidebarNavItem>
+        <SidebarNavItem icon={faDollarSign} href="/supplier-prices">
+          {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
+        </SidebarNavItem>
       </SidebarNavGroup>
 
+      {/* Recipes & Orders Category */}
       <SidebarNavGroup
         toggleIcon={faUtensils}
-        toggleText={dict.sidebar.items.recipes || 'Recipes'}
+        toggleText={dict.sidebar.items.recipes_orders || 'Recipes & Orders'}
       >
         <SidebarNavItem icon={faBook} href="/recipe-standards">
           {dict.sidebar.items.recipe_standards}
         </SidebarNavItem>
-        <SidebarNavItem icon={faPlus} href="/orders/create">
-          {dict.sidebar.items.order || 'Create Order'}
-        </SidebarNavItem>
-
         <SidebarNavItem icon={faClipboardList} href="/orders">
           {dict.sidebar.items.orders}
         </SidebarNavItem>
       </SidebarNavGroup>
 
+      {/* Inventory Management Category */}
       <SidebarNavGroup
         toggleIcon={faBoxes}
         toggleText={dict.sidebar.items.inventory_management || 'Inventory'}
       >
-        <SidebarNavItem icon={faDollarSign} href="/supplier-prices">
-          {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
-        </SidebarNavItem>
         <SidebarNavItem icon={faWarehouse} href="/inventory/stocks">
           {dict.sidebar.items.stocks || 'Stocks'}
         </SidebarNavItem>
@@ -119,25 +179,6 @@ export default async function SidebarNav() {
           {dict.sidebar.items.reports || 'Reports'}
         </SidebarNavItem>
       </SidebarNavGroup>
-
-      {/* <SidebarNavItem icon={faClipboardList} href="/reports">
-        {dict.sidebar.items.reports}
-      </SidebarNavItem> */}
-      {/* 
-      <SidebarNavTitle>{dict.sidebar.items.theme}</SidebarNavTitle>
-      <SidebarNavItem icon={faDroplet} href="#">{dict.sidebar.items.colors}</SidebarNavItem>
-      <SidebarNavItem icon={faPencil} href="#">{dict.sidebar.items.typography}</SidebarNavItem>
-
-      <SidebarNavTitle>{dict.sidebar.items.extras}</SidebarNavTitle>
-
-      <SidebarNavGroup toggleIcon={faStar} toggleText={dict.sidebar.items.pages}>
-        <SidebarNavItem icon={faRightToBracket} href="login">{dict.sidebar.items.login}</SidebarNavItem>
-        <SidebarNavItem icon={faAddressCard} href="register">{dict.sidebar.items.register}</SidebarNavItem>
-        <SidebarNavItem icon={faBug} href="#">{dict.sidebar.items.error404}</SidebarNavItem>
-        <SidebarNavItem icon={faBug} href="#">{dict.sidebar.items.error500}</SidebarNavItem>
-      </SidebarNavGroup>
-
-      <SidebarNavItem icon={faFileLines} href="#">{dict.sidebar.items.docs}</SidebarNavItem> */}
     </ul>
   )
 }

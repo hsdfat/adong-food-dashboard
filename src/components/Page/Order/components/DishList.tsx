@@ -20,6 +20,12 @@ interface OrderDishItem {
   dishId: string;
   dishName: string;
   portions: number;
+  recipeSource?: string;
+  recipeKitchenId?: string | null;
+  availableRecipes?: {
+    kitchen: boolean;
+    common: boolean;
+  };
   ingredients: DishIngredient[];
 }
 
@@ -31,6 +37,7 @@ interface DishListProps {
   onRemoveIngredient: (dishId: string, ingredientId: string) => void;
   onAddIngredient: (index: number) => void;
   onRemoveDish: (dishId: string) => void;
+  onSwitchRecipe: (dishId: string, useCommon: boolean) => void;
   formatNumber: (num: number) => string;
 }
 
@@ -42,6 +49,7 @@ export default function DishList({
   onRemoveIngredient,
   onAddIngredient,
   onRemoveDish,
+  onSwitchRecipe,
   formatNumber,
 }: DishListProps) {
   const dict = useOrderDictionary()
@@ -84,6 +92,7 @@ export default function DishList({
                     onRemoveIngredient={onRemoveIngredient}
                     onAddIngredient={onAddIngredient}
                     onRemoveDish={onRemoveDish}
+                    onSwitchRecipe={onSwitchRecipe}
                     formatNumber={formatNumber}
                   />
                 ))}
