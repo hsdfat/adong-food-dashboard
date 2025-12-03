@@ -50,6 +50,23 @@ const ZaloButton: React.FC<ZaloButtonProps> = ({
     .filter(Boolean)
     .join(' ')
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // For iOS Safari compatibility, use window.location.href instead of target="_blank"
+    if (disabled) {
+      e.preventDefault()
+      return
+    }
+
+    // Try to open in new tab, fallback to window.location for iOS
+    e.preventDefault()
+    const newWindow = window.open(zaloLink, '_blank', 'noopener,noreferrer')
+
+    // If popup was blocked (iOS Safari), fallback to same window
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      window.location.href = zaloLink
+    }
+  }
+
   if (disabled) {
     return (
       <span className={btnClasses} style={{ pointerEvents: 'none' }}>
@@ -62,8 +79,7 @@ const ZaloButton: React.FC<ZaloButtonProps> = ({
   return (
     <a
       href={zaloLink}
-      target="_blank"
-      rel="noopener noreferrer"
+      onClick={handleClick}
       className={btnClasses}
       style={{ textDecoration: 'none' }}
     >

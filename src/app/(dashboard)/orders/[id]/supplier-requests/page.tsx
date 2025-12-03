@@ -194,11 +194,12 @@ export default function OrderSupplierRequestsPage() {
   }
 
   const handleZaloClick = async (
-    e: React.MouseEvent,
-    link: string,
+    _e: React.MouseEvent,
+    _link: string,
     selection: Selection,
   ) => {
-    e.preventDefault()
+    // Don't prevent default - let the link work naturally
+    // We'll copy to clipboard in parallel
     setCopySuccess('')
     try {
       const message = buildZaloMessage(selection)
@@ -208,13 +209,13 @@ export default function OrderSupplierRequestsPage() {
           'Copied message to clipboard',
       )
       setShowCopyToast(true)
-      // Open Zalo immediately without delay
-      window.open(link, '_blank', 'noopener,noreferrer')
       setTimeout(() => setCopySuccess(''), 2500)
     } catch (err) {
       // Optional: could show error toast if needed
       console.debug('Copy to clipboard error:', err)
     }
+    // Let the default <a> tag behavior handle opening the link
+    // This is more reliable on iOS Safari than window.open()
   }
 
   if (loading) {
@@ -327,7 +328,6 @@ export default function OrderSupplierRequestsPage() {
                       </div>
                       {selection.selectedSupplier.zaloLink && (
                         <a
-                          className="btn btn-sm btn-outline-primary"
                           href={selection.selectedSupplier.zaloLink}
                           target="_blank"
                           rel="noreferrer"
@@ -369,11 +369,10 @@ export default function OrderSupplierRequestsPage() {
                   <td>
                     <div className="d-flex gap-1">
                       {selection.selectedSupplier.zaloLink && (
-                        <Button
-                          size="sm"
-                          variant="outline-primary"
+                        <a
                           href={selection.selectedSupplier.zaloLink}
                           target="_blank"
+                          rel="noreferrer"
                           onClick={(e) =>
                             handleZaloClick(
                               e,
@@ -387,7 +386,7 @@ export default function OrderSupplierRequestsPage() {
                             className="me-1"
                           />{' '}
                           {dict.orders?.labels?.zalo || 'Zalo'}
-                        </Button>
+                        </a>
                       )}
                     </div>
                   </td>
