@@ -75,9 +75,9 @@ export default function DishList({
               <thead>
                 <tr>
                   <th style={{ width: '5%' }}>#</th>
-                  <th style={{ width: '25%' }}>{dict.dish_list?.table_headers?.dish || 'Dish'}</th>
-                  <th style={{ width: '10%' }}>{dict.dish_list?.table_headers?.portions || 'Portions'}</th>
-                  <th style={{ width: '50%' }}>{dict.dish_list?.table_headers?.ingredients || 'Ingredients'}</th>
+                  <th style={{ width: '18%' }}>{dict.dish_list?.table_headers?.dish || 'Dish'}</th>
+                  <th style={{ width: '12%', minWidth: '120px' }}>{dict.dish_list?.table_headers?.portions || 'Portions'}</th>
+                  <th style={{ width: '55%' }}>{dict.dish_list?.table_headers?.ingredients || 'Ingredients'}</th>
                   <th style={{ width: '10%' }}>Actions</th>
                 </tr>
               </thead>

@@ -412,6 +412,57 @@ export default function OrderForm({
     setTotalIngredients(totalIngredientsBase)
   }, [totalIngredientsBase])
 
+  // Clean up supplier selections when ingredients change
+  useEffect(() => {
+    const currentIngredientIds = new Set(totalIngredientsBase.map(ing => ing.ingredientId))
+
+    // Remove supplier selections for ingredients that are no longer in the order
+    setSupplierSelections(prev => {
+      const cleaned: Record<string, number | ''> = {}
+      let hasChanges = false
+
+      Object.keys(prev).forEach(ingredientId => {
+        if (currentIngredientIds.has(ingredientId)) {
+          cleaned[ingredientId] = prev[ingredientId]
+        } else {
+          hasChanges = true
+          console.log(`Removed supplier selection for ${ingredientId} (no longer in order)`)
+        }
+      })
+
+      return hasChanges ? cleaned : prev
+    })
+
+    // Clean up fulfillment sources too
+    setFulfillmentSources(prev => {
+      const cleaned: Record<string, 'supplier' | 'inventory'> = {}
+      let hasChanges = false
+
+      Object.keys(prev).forEach(ingredientId => {
+        if (currentIngredientIds.has(ingredientId)) {
+          cleaned[ingredientId] = prev[ingredientId]
+        } else {
+          hasChanges = true
+          console.log(`Removed fulfillment source for ${ingredientId} (no longer in order)`)
+        }
+      })
+
+      return hasChanges ? cleaned : prev
+    })
+  }, [totalIngredientsBase])
+
+  // Auto-refresh suppliers when ingredients change
+  useEffect(() => {
+    // Only refresh if we have a kitchen selected and ingredients
+    if (kitchenId && totalIngredientsBase.length > 0) {
+      // Debounce the refresh to avoid too many API calls
+      const timer = setTimeout(() => {
+        loadBestSuppliers()
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [totalIngredientsBase, kitchenId])
+
   // ==================== SUPPLIER MANAGEMENT ====================
 
   const loadBestSuppliers = async (
@@ -616,12 +667,21 @@ export default function OrderForm({
   }, [orderDishes, supplementaryFoods, kitchenId])
 
   const handleSupplierChange = (ingredientId: string, productIdStr: string) => {
+    console.log('handleSupplierChange called:', { ingredientId, productIdStr })
     const productId = productIdStr ? parseInt(productIdStr, 10) : ''
+    console.log('Parsed productId:', productId, 'Type:', typeof productId)
     if (productId) {
-      setSupplierSelections((prev) => ({
-        ...prev,
-        [ingredientId]: productId,
-      }))
+      console.log('Updating supplier selection for ingredient:', ingredientId, 'with productId:', productId)
+      setSupplierSelections((prev) => {
+        const newSelections = {
+          ...prev,
+          [ingredientId]: productId,
+        }
+        console.log('New supplier selections:', newSelections)
+        return newSelections
+      })
+    } else {
+      console.log('productId is falsy, not updating selections')
     }
   }
 
@@ -1108,6 +1168,10 @@ export default function OrderForm({
       const createdOrder = await orderApi.create(orderData)
 
       // Save supplier selections and inventory fulfillments if any were made
+      console.log('Current supplier selections:', supplierSelections)
+      console.log('Current fulfillment sources:', fulfillmentSources)
+      console.log('Total ingredients:', totalIngredients)
+
       const hasSupplierSelections = Object.keys(supplierSelections).some(
         (ingredientId) => supplierSelections[ingredientId] !== ''
       )
@@ -1115,14 +1179,31 @@ export default function OrderForm({
         (ingredientId) => fulfillmentSources[ingredientId] === 'inventory'
       )
 
+      console.log('Has supplier selections:', hasSupplierSelections)
+      console.log('Has fulfillment selections:', hasFulfillmentSelections)
+
       if (hasSupplierSelections || hasFulfillmentSelections) {
         try {
-          // Build supplier selections payload
+          console.log('Building supplier selections payload...')
+          console.log('supplierSelections object keys:', Object.keys(supplierSelections))
+          console.log('supplierSelections object values:', Object.values(supplierSelections))
+
+          // Build list of current ingredient IDs for validation
+          const currentIngredientIds = new Set(totalIngredients.map(ing => ing.ingredientId))
+          console.log('Current ingredient IDs in order:', Array.from(currentIngredientIds))
+
+          // Build supplier selections payload - ONLY for ingredients currently in the order
           const selections = totalIngredients
-            .filter((ing) =>
-              supplierSelections[ing.ingredientId] ||
-              fulfillmentSources[ing.ingredientId] === 'inventory'
-            )
+            .filter((ing) => {
+              // Skip ingredients with no/invalid quantity
+              if (!ing.totalQuantity || ing.totalQuantity <= 0) {
+                console.log(`Skipping ingredient ${ing.ingredientId} (quantity: ${ing.totalQuantity})`)
+                return false
+              }
+              // Only include if has selection or fulfillment source
+              return supplierSelections[ing.ingredientId] ||
+                fulfillmentSources[ing.ingredientId] === 'inventory'
+            })
             .map((ing) => {
               const fulfillmentSource = fulfillmentSources[ing.ingredientId]
 
@@ -1143,12 +1224,22 @@ export default function OrderForm({
               // Otherwise, use supplier
               const productId = supplierSelections[ing.ingredientId] as number
               const suppliers = availableSuppliersByIngredient[ing.ingredientId] || []
+              console.log(`Finding supplier for ingredient ${ing.ingredientId}, productId ${productId}`)
+              console.log(`Available suppliers for this ingredient:`, suppliers)
               const selectedSupplier = suppliers.find((s) => s.productId === productId)
 
               if (!selectedSupplier) {
                 console.warn(`No supplier found for ingredient ${ing.ingredientId} with productId ${productId}`)
+                console.warn(`Available suppliers:`, suppliers.map(s => ({ productId: s.productId, supplierId: s.supplierId, name: s.supplierName })))
                 return null
               }
+
+              console.log(`Selected supplier for ${ing.ingredientId}:`, {
+                productId,
+                supplierId: selectedSupplier.supplierId,
+                supplierName: selectedSupplier.supplierName,
+                unitPrice: selectedSupplier.unitPrice
+              })
 
               return {
                 ingredientId: ing.ingredientId,
@@ -1163,14 +1254,34 @@ export default function OrderForm({
             })
             .filter((sel) => sel !== null) as any[]
 
+          console.log('Built selections payload:', selections)
+
           if (selections.length > 0) {
-            await orderApi.saveSupplierSelections(createdOrder.orderId, { selections })
-            console.log('Supplier selections and inventory fulfillments saved successfully')
+            console.log('Saving supplier selections to order:', createdOrder.orderId)
+            console.log('Payload being sent:', { selections })
+            try {
+              const result = await orderApi.saveSupplierSelections(createdOrder.orderId, { selections })
+              console.log('Supplier selections saved successfully, result:', result)
+            } catch (saveErr: any) {
+              console.error('❌ FAILED to save supplier selections')
+              console.error('Error object:', saveErr)
+              console.error('Error message:', saveErr.message)
+              console.error('Error stack:', saveErr.stack)
+              console.error('Error response:', saveErr.response)
+              console.error('Error status:', saveErr.status)
+              // Re-throw to be caught by outer catch
+              throw saveErr
+            }
+          } else {
+            console.warn('No selections to save (selections array is empty)')
           }
         } catch (supplierErr: any) {
-          console.error('Failed to save supplier selections:', supplierErr)
+          console.error('❌ Outer catch - Failed to save supplier selections:', supplierErr)
+          console.error('Full error:', JSON.stringify(supplierErr, null, 2))
           // Don't block the order creation, just log the error
         }
+      } else {
+        console.log('Skipping supplier selections save (no selections or fulfillments)')
       }
 
       setSuccess(dict.common?.success || 'Order created successfully!')

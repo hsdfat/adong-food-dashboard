@@ -105,6 +105,7 @@
       "supplier": "Nhà cung cấp",
       "product": "Sản phẩm",
       "unit_price": "Đơn giá",
+      "unit_price_label": "Đơn giá",
       "total_cost": "Thành tiền",
       "specification": "Quy cách",
       "details": "Chi tiết"
@@ -135,7 +136,21 @@
     },
     "labels": {
       "total_ingredients": "Tổng nguyên liệu",
-      "order": "Đơn hàng"
+      "order": "Đơn hàng",
+      "use_from_inventory": "Lấy từ kho",
+      "order_from_supplier": "Đặt từ nhà cung cấp",
+      "available": "Khả dụng",
+      "ingredient_summary": "Tổng hợp nguyên liệu & Chọn nhà cung cấp",
+      "refresh_suggestions": "Làm mới đề xuất",
+      "select_supplier": "Chọn nhà cung cấp",
+      "no_supplier": "Không có nhà cung cấp",
+      "suggestion": "Đề xuất",
+      "favorite": "Yêu thích",
+      "best_price": "Giá tốt nhất",
+      "best_suggestion": "Đề xuất tốt nhất",
+      "details": "Chi tiết",
+      "product": "Sản phẩm",
+      "specification": "Quy cách"
     }
   },
   "dish_row": {

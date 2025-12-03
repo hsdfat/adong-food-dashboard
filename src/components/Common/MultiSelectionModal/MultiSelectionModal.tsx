@@ -132,10 +132,10 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
                       type="checkbox"
                       id={`item-${item.id}`}
                       label={
-                        <div>
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <strong>{itemName}</strong>
+                        <div className="w-100">
+                          <div className="d-flex justify-content-between align-items-start gap-2">
+                            <div style={{ flex: '0 1 65%', minWidth: 0 }}>
+                              <strong className="d-block text-truncate" title={itemName}>{itemName}</strong>
                               <div>
                                 <small className={isSelected ? 'text-white-50' : 'text-muted'}>
                                   {item.id}
@@ -153,6 +153,7 @@ export default function MultiSelectionModal<T extends MultiSelectionModalItem>({
                               <Badge
                                 bg={isSelected ? 'light' : 'secondary'}
                                 text={isSelected ? 'dark' : 'white'}
+                                className="flex-shrink-0"
                               >
                                 {itemBadge}
                               </Badge>
