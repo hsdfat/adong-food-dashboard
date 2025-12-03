@@ -161,36 +161,25 @@ export default function OrderSupplierRequestsPage() {
   }
 
   const buildZaloMessage = (selection: Selection): string => {
-    const {supplierName} = selection.selectedSupplier
-    const headerTemplate = dict.orders?.labels?.zalo_message?.header || 'Supplier request for order #{{orderId}}\nSupplier: {{supplierName}} ({{supplierId}})\nSelected date: {{selectionDate}}'
-    const header = headerTemplate
-      .replace('{{orderId}}', selection.orderId)
-      .replace('{{supplierName}}', supplierName)
-      .replace('{{supplierId}}', selection.selectedSupplierId)
-      .replace('{{selectionDate}}', new Date(selection.selectionDate).toLocaleString())
-    
-    const ingredientTemplate = dict.orders?.labels?.zalo_message?.ingredient_line || ' - {{ingredientName}} ({{ingredientId}}): {{quantity}} {{unit}} x {{unitPrice}} = {{totalCost}}'
-    const lines = [
-      ingredientTemplate
-        .replace('{{ingredientName}}', selection.ingredient.ingredientName)
-        .replace('{{ingredientId}}', selection.ingredientId)
-        .replace('{{quantity}}', formatNumber(selection.quantity))
-        .replace('{{unit}}', selection.unit)
-        .replace('{{unitPrice}}', formatNumber(selection.unitPrice))
-        .replace('{{totalCost}}', formatNumber(selection.totalCost)),
-    ]
-    
-    if (selection.notes) {
-      const notesTemplate = dict.orders?.labels?.zalo_message?.notes || 'Notes: {{notes}}'
-      lines.push(notesTemplate.replace('{{notes}}', selection.notes))
-    }
-    
-    const footerTemplate = dict.orders?.labels?.zalo_message?.footer || 'Total cost: {{totalCost}}\nSelected by: {{selectedBy}}\nPlease confirm. Thank you!'
-    const footer = footerTemplate
-      .replace('{{totalCost}}', formatNumber(selection.totalCost))
-      .replace('{{selectedBy}}', selection.selectedBy.fullName)
-    
-    return [header, dict.orders?.labels?.zalo_message?.ingredients_list || 'Ingredient list:', ...lines, footer].join('\n')
+    const { supplierName } = selection.selectedSupplier
+    const { ingredientName } = selection.ingredient
+    const quantity = formatNumber(selection.quantity)
+    const unitPrice = formatNumber(selection.unitPrice)
+    const totalCost = formatNumber(selection.totalCost)
+
+    const message = `Tên bếp: ${selection.orderId}
+Danh sách sản phẩm:
+Sản phẩm           Số lượng    Đơn giá         Thành tiền
+${ingredientName.padEnd(18)} ${quantity.padEnd(11)} ${unitPrice.padEnd(15)} ${totalCost}
+
+Tổng tiền: ${totalCost}
+Ghi chú thêm (nếu có):
+${selection.notes || 'Không có ghi chú'}
+
+👉 Đề nghị NCC ${supplierName} xác nhận đơn. Nếu có thay đổi báo lại để AĐ điều chỉnh.
+Xin cảm ơn!`
+
+    return message
   }
 
   const handleZaloClick = async (
