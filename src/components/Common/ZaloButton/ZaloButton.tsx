@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCommentDots } from '@fortawesome/free-solid-svg-icons'
 
@@ -40,25 +39,37 @@ const ZaloButton: React.FC<ZaloButtonProps> = ({
   className = '',
   showIcon = true,
 }) => {
+  // Build button classes manually to match Bootstrap styling
+  const btnClasses = [
+    'btn',
+    `btn-${variant}`,
+    size && `btn-${size}`,
+    disabled && 'disabled',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  if (disabled) {
+    return (
+      <span className={btnClasses} style={{ pointerEvents: 'none' }}>
+        {showIcon && <FontAwesomeIcon icon={faCommentDots} className="me-2" />}
+        {children || 'Mở Zalo'}
+      </span>
+    )
+  }
+
   return (
-    <Button
-      variant={variant}
-      size={size}
-      disabled={disabled}
-      className={className}
-      as="a"
-      href={disabled ? undefined : zaloLink}
+    <a
+      href={zaloLink}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={(e: React.MouseEvent) => {
-        if (disabled) {
-          e.preventDefault()
-        }
-      }}
+      className={btnClasses}
+      style={{ textDecoration: 'none' }}
     >
       {showIcon && <FontAwesomeIcon icon={faCommentDots} className="me-2" />}
       {children || 'Mở Zalo'}
-    </Button>
+    </a>
   )
 }
 
