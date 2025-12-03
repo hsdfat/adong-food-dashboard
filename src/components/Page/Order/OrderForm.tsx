@@ -1195,29 +1195,40 @@ export default function OrderForm({
           // Build supplier selections payload - ONLY for ingredients currently in the order
           const selections = totalIngredients
             .filter((ing) => {
-              // Skip ingredients with no/invalid quantity
-              if (!ing.totalQuantity || ing.totalQuantity <= 0) {
-                console.log(`Skipping ingredient ${ing.ingredientId} (quantity: ${ing.totalQuantity})`)
+              // Only include if has selection or fulfillment source
+              const hasSelection = supplierSelections[ing.ingredientId] ||
+                fulfillmentSources[ing.ingredientId] === 'inventory'
+
+              if (!hasSelection) {
                 return false
               }
-              // Only include if has selection or fulfillment source
-              return supplierSelections[ing.ingredientId] ||
-                fulfillmentSources[ing.ingredientId] === 'inventory'
+
+              // Warn if quantity is zero but still include (user may have selected supplier without adding dishes)
+              if (!ing.totalQuantity || ing.totalQuantity <= 0) {
+                console.warn(`Warning: ingredient ${ing.ingredientId} has supplier selection but quantity is ${ing.totalQuantity}`)
+              }
+
+              return true
             })
             .map((ing) => {
               const fulfillmentSource = fulfillmentSources[ing.ingredientId]
 
               // If fulfillment source is inventory
               if (fulfillmentSource === 'inventory') {
+                // Use totalQuantity if available, otherwise use minimum quantity to satisfy backend validation
+                const quantity = ing.totalQuantity && ing.totalQuantity > 0 ? ing.totalQuantity : 0.01
+
                 return {
                   ingredientId: ing.ingredientId,
                   fulfillmentSource: 'inventory' as const,
                   selectedSupplierId: null,
                   selectedProductId: null,
-                  quantity: ing.totalQuantity,
+                  quantity: quantity,
                   unit: ing.unit,
                   unitPrice: 0,
-                  notes: 'Fulfilled from inventory',
+                  notes: ing.totalQuantity && ing.totalQuantity > 0
+                    ? 'Fulfilled from inventory'
+                    : 'Fulfilled from inventory (auto-set minimum quantity - no dishes added)',
                 }
               }
 
@@ -1241,15 +1252,19 @@ export default function OrderForm({
                 unitPrice: selectedSupplier.unitPrice
               })
 
+              // Use totalQuantity if available, otherwise use minimum quantity to satisfy backend validation
+              // This handles the case where user selects suppliers without adding dishes
+              const quantity = ing.totalQuantity && ing.totalQuantity > 0 ? ing.totalQuantity : 0.01
+
               return {
                 ingredientId: ing.ingredientId,
                 fulfillmentSource: 'supplier' as const,
                 selectedSupplierId: selectedSupplier.supplierId,
                 selectedProductId: productId,
-                quantity: ing.totalQuantity,
+                quantity: quantity,
                 unit: ing.unit,
                 unitPrice: selectedSupplier.unitPrice,
-                notes: '',
+                notes: ing.totalQuantity && ing.totalQuantity > 0 ? '' : 'Auto-set minimum quantity (no dishes added)',
               }
             })
             .filter((sel) => sel !== null) as any[]

@@ -40,19 +40,21 @@ const ZaloButton: React.FC<ZaloButtonProps> = ({
   className = '',
   showIcon = true,
 }) => {
-  const handleClick = () => {
-    if (zaloLink) {
-      window.open(zaloLink, '_blank', 'noopener,noreferrer')
-    }
-  }
-
   return (
     <Button
       variant={variant}
       size={size}
       disabled={disabled}
-      onClick={handleClick}
       className={className}
+      as="a"
+      href={disabled ? undefined : zaloLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e: React.MouseEvent) => {
+        if (disabled) {
+          e.preventDefault()
+        }
+      }}
     >
       {showIcon && <FontAwesomeIcon icon={faCommentDots} className="me-2" />}
       {children || 'Mở Zalo'}
