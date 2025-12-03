@@ -244,93 +244,95 @@ const MasterDataTable: React.FC<MasterDataTableProps> = ({
   }
 
   return (
-    <Table
-      responsive={responsive}
-      hover={hover}
-      bordered={bordered}
-      className={className}
-    >
-      <thead>
-        <tr>
-          {columns.map((column, colIndex) => {
-            const shouldInsertActionsBefore =
-              actionsColumnIndex === colIndex && actions && actions.length > 0
-
-            return (
-              <React.Fragment key={column.key}>
-                {shouldInsertActionsBefore && (
-                  <th
-                    className="text-center table-non-priority-column table-actions-column"
-                    style={{ width: '60px' }}
-                  >
-                    {actionsColumnLabel}
-                  </th>
-                )}
-                <th
-                  className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
-                >
-                  {column.label}
-                </th>
-              </React.Fragment>
-            )
-          })}
-          {actionsColumnIndex === columns.length &&
-            actions &&
-            actions.length > 0 && (
-              <th
-                className="text-center table-non-priority-column table-actions-column"
-                style={{ width: '60px' }}
-              >
-                {actionsColumnLabel}
-              </th>
-            )}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => {
-          const rowWithId = row as { id?: string | number; key?: string | number }
-          const rowKey = rowWithId.id || rowWithId.key || index
-          return (
-          <tr key={rowKey}>
+    <div>
+      <Table
+        responsive={responsive}
+        hover={hover}
+        bordered={bordered}
+        className={className}
+      >
+        <thead>
+          <tr>
             {columns.map((column, colIndex) => {
               const shouldInsertActionsBefore =
-                actionsColumnIndex === colIndex &&
-                actions &&
-                actions.length > 0
+                actionsColumnIndex === colIndex && actions && actions.length > 0
 
               return (
                 <React.Fragment key={column.key}>
                   {shouldInsertActionsBefore && (
-                    <td
+                    <th
                       className="text-center table-non-priority-column table-actions-column"
-                      style={{ width: '60px' }}
+                      style={{ width: '60px', minWidth: '60px' }}
                     >
-                      {renderActions(row, index)}
-                    </td>
+                      {actionsColumnLabel}
+                    </th>
                   )}
-                  <td
+                  <th
                     className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
                   >
-                    {renderCell(column, row, index)}
-                  </td>
+                    {column.label}
+                  </th>
                 </React.Fragment>
               )
             })}
             {actionsColumnIndex === columns.length &&
               actions &&
               actions.length > 0 && (
-                <td
+                <th
                   className="text-center table-non-priority-column table-actions-column"
-                  style={{ width: '60px' }}
+                  style={{ width: '60px', minWidth: '60px' }}
                 >
-                  {renderActions(row, index)}
-                </td>
+                  {actionsColumnLabel}
+                </th>
               )}
           </tr>
-          )
-        })}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {data.map((row, index) => {
+            const rowWithId = row as { id?: string | number; key?: string | number }
+            const rowKey = rowWithId.id || rowWithId.key || index
+            return (
+            <tr key={rowKey}>
+              {columns.map((column, colIndex) => {
+                const shouldInsertActionsBefore =
+                  actionsColumnIndex === colIndex &&
+                  actions &&
+                  actions.length > 0
+
+                return (
+                  <React.Fragment key={column.key}>
+                    {shouldInsertActionsBefore && (
+                      <td
+                        className="text-center table-non-priority-column table-actions-column"
+                        style={{ width: '60px', minWidth: '60px' }}
+                      >
+                        {renderActions(row, index)}
+                      </td>
+                    )}
+                    <td
+                      className={`${getAlignmentClass(column.align)} ${column.className || ''} ${column.priority ? 'table-priority-column' : 'table-non-priority-column'}`}
+                    >
+                      {renderCell(column, row, index)}
+                    </td>
+                  </React.Fragment>
+                )
+              })}
+              {actionsColumnIndex === columns.length &&
+                actions &&
+                actions.length > 0 && (
+                  <td
+                    className="text-center table-non-priority-column table-actions-column"
+                    style={{ width: '60px', minWidth: '60px' }}
+                  >
+                    {renderActions(row, index)}
+                  </td>
+                )}
+            </tr>
+            )
+          })}
+        </tbody>
+      </Table>
+    </div>
   )
 }
 

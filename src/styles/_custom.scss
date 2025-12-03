@@ -12,11 +12,17 @@
   }
 }
 
+// Simple fix: Add minimum height to card body to prevent dropdown obscuring
+.card-body {
+  min-height: 400px;
+}
+
 // Mobile responsive table styles
 // Hide non-priority columns on mobile devices and make priority columns full width
 @media (max-width: 767.98px) {
   .table-responsive .table,
-  .table {
+  .table,
+  .table-responsive-custom {
     // Hide non-priority columns on mobile (except Actions column)
     .table-non-priority-column:not(.table-actions-column) {
       display: none !important;
@@ -33,6 +39,7 @@
       width: 60px !important;
       min-width: 60px !important;
       max-width: 60px !important;
+      overflow: visible;
     }
 
     // Make the table use full width
@@ -68,5 +75,15 @@
       width: auto;
       min-width: 0;
     }
+  }
+
+  // Ensure dropdowns work on mobile too
+  .dropdown-menu {
+    z-index: 1050 !important;
+  }
+
+  .table-responsive-custom tbody tr:has(.dropdown.show) {
+    position: relative;
+    z-index: 100;
   }
 }

@@ -25,6 +25,7 @@ import { recipeStandardApi } from './recipe-standard'
 export { authApi } from './auth-api'
 export { supplierPriceApi } from './supplier-price.service'
 export { orderApi } from './order-api'
+export { messageTemplateApi } from './message-template-api'
 export {
   inventoryStockApi,
   inventoryImportApi,

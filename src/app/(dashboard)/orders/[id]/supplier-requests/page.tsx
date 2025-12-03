@@ -10,6 +10,7 @@ import {
   Table,
   Badge,
   Spinner,
+  Modal,
 } from 'react-bootstrap'
 import { useParams, useRouter } from 'next/navigation'
 import useDictionary from '@/locales/dictionary-hook'
@@ -18,9 +19,12 @@ import {
   faArrowLeft,
   faEye,
   faExternalLink,
+  faCopy,
+  faFileAlt,
 } from '@fortawesome/free-solid-svg-icons'
-import { orderApi } from '@/services'
+import { orderApi, messageTemplateApi } from '@/services'
 import StatusToast from '@/components/Common/StatusToast'
+import { MessageTemplate } from '@/models/message-template'
 
 type IngredientInfo = {
   ingredientId: string;
@@ -117,6 +121,12 @@ export default function OrderSupplierRequestsPage() {
   const [selections, setSelections] = useState<Selection[]>([])
   const [copySuccess, setCopySuccess] = useState<string>('')
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false)
+  const [messageTemplate, setMessageTemplate] = useState<MessageTemplate | null>(null)
+  const [kitchenId, setKitchenId] = useState<string>('')
+  const [kitchenName, setKitchenName] = useState<string>('')
+  const [showPreviewModal, setShowPreviewModal] = useState(false)
+  const [previewMessage, setPreviewMessage] = useState<string>('')
+  const [originalPreviewMessage, setOriginalPreviewMessage] = useState<string>('')
 
   useEffect(() => {
     const load = async () => {
@@ -124,14 +134,31 @@ export default function OrderSupplierRequestsPage() {
       try {
         setLoading(true)
         setError('')
-        const data = await orderApi.getSupplierRequests(orderId)
-        // Handle new response format
-        if (data && typeof data === 'object' && 'selections' in data) {
-          const response = data as unknown as SupplierSelectionsResponse
+
+        // Load selections, template, and order info in parallel
+        const [selectionsData, templatesData, orderData] = await Promise.all([
+          orderApi.getSupplierRequests(orderId),
+          messageTemplateApi.getAll('?type=zalo_supplier_request&active=true'),
+          orderApi.getById(orderId)
+        ])
+
+        // Handle selections response format
+        if (selectionsData && typeof selectionsData === 'object' && 'selections' in selectionsData) {
+          const response = selectionsData as unknown as SupplierSelectionsResponse
           setSelections(response.selections || [])
         } else {
-          // Fallback for old format or empty response
           setSelections([])
+        }
+
+        // Set the first active template
+        if (templatesData && templatesData.data && templatesData.data.length > 0) {
+          setMessageTemplate(templatesData.data[0])
+        }
+
+        // Set kitchen info from order
+        if (orderData) {
+          setKitchenId(orderData.kitchenId || '')
+          setKitchenName(orderData.kitchenName || orderData.kitchenId || '')
         }
       } catch (e) {
         const errorObj = e as Error
@@ -160,38 +187,67 @@ export default function OrderSupplierRequestsPage() {
     return <Badge bg="secondary">{status}</Badge>
   }
 
-  const buildZaloMessage = (selection: Selection): string => {
-    const { supplierName } = selection.selectedSupplier
-    const { ingredientName } = selection.ingredient
-    const quantity = formatNumber(selection.quantity)
-    const unitPrice = formatNumber(selection.unitPrice)
-    const totalCost = formatNumber(selection.totalCost)
+  const buildZaloMessage = (supplierSelections: Selection[]): string => {
+    if (supplierSelections.length === 0) return ''
 
-    const message = `Tên bếp: ${selection.orderId}
+    const firstSelection = supplierSelections[0]
+    const { supplierName } = firstSelection.selectedSupplier
+
+    // Calculate total cost for all ingredients
+    const grandTotal = supplierSelections.reduce((sum, sel) => sum + sel.totalCost, 0)
+
+    // Build ingredient list with proper alignment
+    const ingredientLines = supplierSelections.map(sel => {
+      const ingredientName = sel.ingredient.ingredientName.padEnd(20, ' ')
+      const quantity = `${formatNumber(sel.quantity)} ${sel.unit}`.padEnd(12, ' ')
+      const unitPrice = formatNumber(sel.unitPrice).padStart(10, ' ')
+      const totalCost = formatNumber(sel.totalCost).padStart(12, ' ')
+      return `${ingredientName}${quantity}${unitPrice}${totalCost}`
+    }).join('\n')
+
+    // Collect all notes
+    const allNotes = supplierSelections
+      .map(sel => sel.notes)
+      .filter(note => note && note.trim())
+      .join('\n')
+
+    // Use template if available, otherwise use default
+    let message = messageTemplate?.content || `Tên bếp: {{kitchenName}}
+Mã đơn: {{orderId}}
+
 Danh sách sản phẩm:
-Sản phẩm           Số lượng    Đơn giá         Thành tiền
-${ingredientName.padEnd(18)} ${quantity.padEnd(11)} ${unitPrice.padEnd(15)} ${totalCost}
+Sản phẩm            Số lượng    Đơn giá     Thành tiền
+{{ingredientList}}
 
-Tổng tiền: ${totalCost}
+Tổng tiền: {{totalCost}}
+
 Ghi chú thêm (nếu có):
-${selection.notes || 'Không có ghi chú'}
+{{notes}}
 
-👉 Đề nghị NCC ${supplierName} xác nhận đơn. Nếu có thay đổi báo lại để AĐ điều chỉnh.
+👉 Đề nghị NCC {{supplierName}} xác nhận đơn. Nếu có thay đổi báo lại để AĐ điều chỉnh.
 Xin cảm ơn!`
+
+    // Replace placeholders with actual values
+    message = message
+      .replace(/\{\{kitchenId\}\}/g, kitchenId)
+      .replace(/\{\{kitchenName\}\}/g, kitchenName)
+      .replace(/\{\{orderId\}\}/g, firstSelection.orderId)
+      .replace(/\{\{supplierName\}\}/g, supplierName)
+      .replace(/\{\{ingredientList\}\}/g, ingredientLines)
+      .replace(/\{\{totalCost\}\}/g, formatNumber(grandTotal))
+      .replace(/\{\{notes\}\}/g, allNotes || 'Không có ghi chú')
+      // Legacy single ingredient placeholders (for backwards compatibility)
+      .replace(/\{\{ingredientName\}\}/g, supplierSelections.length === 1 ? supplierSelections[0].ingredient.ingredientName : '')
+      .replace(/\{\{quantity\}\}/g, supplierSelections.length === 1 ? formatNumber(supplierSelections[0].quantity) : '')
+      .replace(/\{\{unitPrice\}\}/g, supplierSelections.length === 1 ? formatNumber(supplierSelections[0].unitPrice) : '')
 
     return message
   }
 
-  const handleZaloClick = async (
-    _e: React.MouseEvent,
-    _link: string,
-    selection: Selection,
-  ) => {
-    // Don't prevent default - let the link work naturally
-    // We'll copy to clipboard in parallel
+  const handleCopyMessage = async (supplierSelections: Selection[]) => {
     setCopySuccess('')
     try {
-      const message = buildZaloMessage(selection)
+      const message = buildZaloMessage(supplierSelections)
       await navigator.clipboard.writeText(message)
       setCopySuccess(
         dict.orders?.labels?.copy_to_clipboard_success ||
@@ -200,12 +256,38 @@ Xin cảm ơn!`
       setShowCopyToast(true)
       setTimeout(() => setCopySuccess(''), 2500)
     } catch (err) {
-      // Optional: could show error toast if needed
       console.debug('Copy to clipboard error:', err)
     }
+  }
+
+  const handlePreviewMessage = (supplierSelections: Selection[]) => {
+    const message = buildZaloMessage(supplierSelections)
+    setPreviewMessage(message)
+    setOriginalPreviewMessage(message)
+    setShowPreviewModal(true)
+  }
+
+  const handleZaloClick = async (
+    _e: React.MouseEvent,
+    _link: string,
+    supplierSelections: Selection[],
+  ) => {
+    // Don't prevent default - let the link work naturally
+    // We'll copy to clipboard in parallel
+    await handleCopyMessage(supplierSelections)
     // Let the default <a> tag behavior handle opening the link
     // This is more reliable on iOS Safari than window.open()
   }
+
+  // Group selections by supplier
+  const groupedBySupplier = selections.reduce((acc, selection) => {
+    const supplierId = selection.selectedSupplierId
+    if (!acc[supplierId]) {
+      acc[supplierId] = []
+    }
+    acc[supplierId].push(selection)
+    return acc
+  }, {} as Record<string, Selection[]>)
 
   if (loading) {
     return (
@@ -221,6 +303,7 @@ Xin cảm ơn!`
   }
 
   return (
+    <>
     <Card>
       <CardHeader>
         <div className="d-flex justify-content-between align-items-center">
@@ -273,60 +356,36 @@ Xin cảm ơn!`
               'No supplier requests found for this order.'}
           </Alert>
         ) : (
-          <Table striped bordered hover responsive>
-            <thead className="table-light">
-              <tr>
-                                <th>{columns?.selection_id || 'Selection ID'}</th>
-                                <th>{columns?.ingredient || 'Ingredient'}</th>
-                                <th>{columns?.supplier || 'Supplier'}</th>
-                                <th className="text-end">{columns?.quantity || 'Quantity'}</th>
-                                <th className="text-end">{columns?.unit_price || 'Unit Price'}</th>
-                                <th className="text-end">{columns?.total_cost || 'Total Cost'}</th>
-                                <th>{columns?.selected_by || 'Selected By'}</th>
-                                <th>{columns?.selection_date || 'Selection Date'}</th>
-                                <th>{columns?.actions || 'Actions'}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selections.map((selection) => (
-                <tr key={selection.orderIngredientSupplierId}>
-                  <td>
-                    <strong>#{selection.orderIngredientSupplierId}</strong>
-                  </td>
-                  <td>
+          <>
+            {Object.entries(groupedBySupplier).map(([supplierId, supplierSelections]) => {
+              const firstSelection = supplierSelections[0]
+              const supplierTotal = supplierSelections.reduce((sum, sel) => sum + sel.totalCost, 0)
+
+              return (
+                <div key={supplierId} className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-2 p-3 bg-light rounded">
                     <div>
-                      <div>
-                        <strong>{selection.ingredient.ingredientName}</strong>
-                      </div>
+                      <h5 className="mb-1">
+                        {firstSelection.selectedSupplier.supplierName}
+                      </h5>
                       <small className="text-muted">
-                        {selection.ingredientId}
+                        {supplierId} • {supplierSelections.length} ingredient(s) • Total: {formatNumber(supplierTotal)}
                       </small>
-                      <div className="small text-muted">
-                        {selection.ingredient.materialGroup} •{' '}
-                        {selection.ingredient.property}
-                      </div>
                     </div>
-                  </td>
-                  <td>
-                    <div className="d-flex align-items-center gap-2 flex-wrap">
-                      <div>
-                        <div>{selection.selectedSupplier.supplierName}</div>
-                        <small className="text-muted">
-                          {selection.selectedSupplierId}
-                        </small>
-                      </div>
-                      {selection.selectedSupplier.zaloLink && (
+                    <div className="d-flex gap-2">
+                      {firstSelection.selectedSupplier.zaloLink && (
                         <a
-                          href={selection.selectedSupplier.zaloLink}
+                          href={firstSelection.selectedSupplier.zaloLink}
                           target="_blank"
                           rel="noreferrer"
                           onClick={(e) =>
                             handleZaloClick(
                               e,
-                              selection.selectedSupplier.zaloLink,
-                              selection,
+                              firstSelection.selectedSupplier.zaloLink,
+                              supplierSelections,
                             )
                           }
+                          className="btn btn-primary btn-sm"
                         >
                           <FontAwesomeIcon
                             icon={faExternalLink}
@@ -335,56 +394,136 @@ Xin cảm ơn!`
                           {dict.orders?.labels?.zalo || 'Zalo'}
                         </a>
                       )}
+                      <Button
+                        size="sm"
+                        variant="outline-secondary"
+                        onClick={() => handleCopyMessage(supplierSelections)}
+                        title="Copy message to clipboard"
+                      >
+                        <FontAwesomeIcon icon={faCopy} className="me-1" />
+                        Copy
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-info"
+                        onClick={() => handlePreviewMessage(supplierSelections)}
+                        title="Preview message"
+                      >
+                        <FontAwesomeIcon icon={faFileAlt} className="me-1" />
+                        Preview
+                      </Button>
                     </div>
-                  </td>
-                  <td className="text-end">
-                    {formatNumber(selection.quantity)} {selection.unit}
-                  </td>
-                  <td className="text-end">
-                    {formatNumber(selection.unitPrice)}
-                  </td>
-                  <td className="text-end">
-                    <strong>{formatNumber(selection.totalCost)}</strong>
-                  </td>
-                  <td>
-                    <div>
-                      <div>{selection.selectedBy.fullName}</div>
-                      <small className="text-muted">
-                        {selection.selectedBy.role}
-                      </small>
-                    </div>
-                  </td>
-                  <td>{new Date(selection.selectionDate).toLocaleString()}</td>
-                  <td>
-                    <div className="d-flex gap-1">
-                      {selection.selectedSupplier.zaloLink && (
-                        <a
-                          href={selection.selectedSupplier.zaloLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={(e) =>
-                            handleZaloClick(
-                              e,
-                              selection.selectedSupplier.zaloLink,
-                              selection,
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon
-                            icon={faExternalLink}
-                            className="me-1"
-                          />{' '}
-                          {dict.orders?.labels?.zalo || 'Zalo'}
-                        </a>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+                  </div>
+
+                  <Table striped bordered hover responsive size="sm">
+                    <thead className="table-light">
+                      <tr>
+                        <th>{columns?.ingredient || 'Ingredient'}</th>
+                        <th className="text-end">{columns?.quantity || 'Quantity'}</th>
+                        <th className="text-end">{columns?.unit_price || 'Unit Price'}</th>
+                        <th className="text-end">{columns?.total_cost || 'Total Cost'}</th>
+                        <th>{columns?.selected_by || 'Selected By'}</th>
+                        <th>{columns?.selection_date || 'Selection Date'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {supplierSelections.map((selection) => (
+                        <tr key={selection.orderIngredientSupplierId}>
+                          <td>
+                            <div>
+                              <div>
+                                <strong>{selection.ingredient.ingredientName}</strong>
+                              </div>
+                              <small className="text-muted">
+                                {selection.ingredientId}
+                              </small>
+                              <div className="small text-muted">
+                                {selection.ingredient.materialGroup} •{' '}
+                                {selection.ingredient.property}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text-end">
+                            {formatNumber(selection.quantity)} {selection.unit}
+                          </td>
+                          <td className="text-end">
+                            {formatNumber(selection.unitPrice)}
+                          </td>
+                          <td className="text-end">
+                            <strong>{formatNumber(selection.totalCost)}</strong>
+                          </td>
+                          <td>
+                            <div>
+                              <div>{selection.selectedBy.fullName}</div>
+                              <small className="text-muted">
+                                {selection.selectedBy.role}
+                              </small>
+                            </div>
+                          </td>
+                          <td>{new Date(selection.selectionDate).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              )
+            })}
+          </>
         )}
       </CardBody>
     </Card>
+
+    {/* Preview Modal */}
+    <Modal show={showPreviewModal} onHide={() => setShowPreviewModal(false)} size="lg">
+      <Modal.Header closeButton>
+        <Modal.Title>Message Preview & Edit</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="mb-2">
+          <small className="text-muted">You can edit the message below before copying:</small>
+        </div>
+        <textarea
+          className="form-control"
+          style={{
+            fontFamily: 'monospace',
+            whiteSpace: 'pre',
+            minHeight: '400px',
+            fontSize: '14px'
+          }}
+          value={previewMessage}
+          onChange={(e) => setPreviewMessage(e.target.value)}
+        />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowPreviewModal(false)}>
+          Close
+        </Button>
+        <Button
+          variant="outline-warning"
+          onClick={() => setPreviewMessage(originalPreviewMessage)}
+          disabled={previewMessage === originalPreviewMessage}
+        >
+          Reset
+        </Button>
+        <Button
+          variant="primary"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(previewMessage)
+              setCopySuccess('Copied message to clipboard')
+              setShowCopyToast(true)
+              setTimeout(() => setCopySuccess(''), 2500)
+              setShowPreviewModal(false)
+            } catch (err) {
+              console.debug('Copy error:', err)
+            }
+          }}
+        >
+          <FontAwesomeIcon icon={faCopy} className="me-2" />
+          Copy to Clipboard
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  </>
   )
 }

@@ -19,6 +19,7 @@ import {
   faPuzzlePiece,
   faUtensils,
   faBoxes,
+  faEnvelope,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { PropsWithChildren } from 'react'
 import SidebarNavItem from '@/components/Layout/Dashboard/Sidebar/SidebarNavItem'
@@ -139,6 +140,9 @@ export default async function SidebarNav() {
         </SidebarNavItem>
         <SidebarNavItem icon={faDollarSign} href="/supplier-prices">
           {dict.sidebar.items.supplier_prices || 'Supplier Prices'}
+        </SidebarNavItem>
+        <SidebarNavItem icon={faEnvelope} href="/message-templates">
+          {dict.sidebar.items.message_templates || 'Message Templates'}
         </SidebarNavItem>
       </SidebarNavGroup>
 
