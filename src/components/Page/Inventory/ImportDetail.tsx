@@ -9,6 +9,7 @@ import useDictionary from '@/locales/dictionary-hook'
 import ActionButton from '@/components/Common/ActionButton/ActionButton'
 import { useNotification } from '@/components/Common/Notification/NotificationProvider'
 import { approveImport, getImportById } from '@/app/actions/inventory'
+import ZaloButton from '@/components/Common/ZaloButton'
 
 interface ImportDetailProps {
   importId: string;
@@ -139,15 +140,14 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
                   <strong>{dict.inventory?.supplier || 'Supplier'}:</strong>{' '}
                   {importData.supplier.supplierName || importData.supplierId}
                   {importData.supplier.zaloLink && (
-                    <Button
+                    <ZaloButton
+                      zaloLink={importData.supplier.zaloLink}
                       variant="link"
                       size="sm"
                       className="ms-2 p-0"
-                      onClick={() => window.open(importData.supplier!.zaloLink!, '_blank')}
-                      title="Contact on Zalo"
                     >
                       <i className="bi bi-chat-dots-fill text-primary" /> Zalo
-                    </Button>
+                    </ZaloButton>
                   )}
                 </p>
               )}
@@ -228,15 +228,14 @@ export default function ImportDetail({ importId }: ImportDetailProps) {
                             <Badge bg="primary" className="me-2">Supplier {blockIndex + 1}</Badge>
                             {block.supplierName}
                             {block.supplier?.zaloLink && (
-                              <Button
+                              <ZaloButton
+                                zaloLink={block.supplier.zaloLink}
                                 variant="link"
                                 size="sm"
                                 className="ms-2 p-0"
-                                onClick={() => window.open(block.supplier!.zaloLink!, '_blank')}
-                                title="Contact on Zalo"
                               >
                                 <i className="bi bi-chat-dots-fill text-primary" /> Zalo
-                              </Button>
+                              </ZaloButton>
                             )}
                           </h6>
                           <small className="text-muted">

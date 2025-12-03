@@ -1499,6 +1499,7 @@ export default function OrderForm({
             <FormLabel>{dict.dish_list?.portions_for_all || 'Portions (apply to all selected dishes):'}</FormLabel>
             <FormControl
               type="number"
+              inputMode="decimal"
               min="0"
               value={portions}
               onChange={(e) => setPortions(parseInt(e.target.value) || 0)}
@@ -1539,6 +1540,7 @@ export default function OrderForm({
             <FormLabel>{dict.order_form?.quantity || 'Quantity (apply to all selected ingredients):'}</FormLabel>
             <FormControl
               type="number"
+              inputMode="decimal"
               min="0"
               step="0.001"
               value={customAmount}
@@ -1585,6 +1587,7 @@ export default function OrderForm({
             <FormLabel>{dict.dish_list?.portions_for_all || 'Portions (apply to all selected ingredients):'}</FormLabel>
             <FormControl
               type="number"
+              inputMode="decimal"
               min="1"
               value={supplementaryAmount}
               onChange={(e) =>

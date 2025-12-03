@@ -208,9 +208,8 @@ export default function OrderSupplierRequestsPage() {
           'Copied message to clipboard',
       )
       setShowCopyToast(true)
-      setTimeout(() => {
-        window.open(link, '_blank', 'noopener,noreferrer')
-      }, 1000)
+      // Open Zalo immediately without delay
+      window.open(link, '_blank', 'noopener,noreferrer')
       setTimeout(() => setCopySuccess(''), 2500)
     } catch (err) {
       // Optional: could show error toast if needed

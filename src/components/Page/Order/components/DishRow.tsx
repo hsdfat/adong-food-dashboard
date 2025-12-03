@@ -87,6 +87,7 @@ export default function DishRow({
       <td>
         <FormControl
           type="number"
+          inputMode="decimal"
           min="1"
           value={dish.portions}
           onChange={(e) => onPortionsChange(dish.id, parseInt(e.target.value) || 1)}
@@ -109,6 +110,7 @@ export default function DishRow({
                   <td style={{ width: '20%' }}>
                     <FormControl
                       type="number"
+                      inputMode="decimal"
                       min="0"
                       step="0.0001"
                       value={ing.standardPerPortion}

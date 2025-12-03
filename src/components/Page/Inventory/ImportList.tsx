@@ -13,6 +13,7 @@ import {
 } from '@/components/Common/MasterDataTable/MasterDataTable'
 import { Badge, Button } from 'react-bootstrap'
 import { approveImport, deleteImport } from '@/app/actions/inventory'
+import ZaloButton from '@/components/Common/ZaloButton'
 
 export default function ImportList() {
   const [importsData, setImportsData] =
@@ -86,18 +87,15 @@ export default function ImportList() {
           return (
             <div className="d-flex align-items-center gap-2">
               <span>{supplierName}</span>
-              <Button
+              <ZaloButton
+                zaloLink={zaloLink}
                 variant="link"
                 size="sm"
                 className="p-0"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  window.open(zaloLink, '_blank')
-                }}
-                title="Contact on Zalo"
+                showIcon={true}
               >
                 <i className="bi bi-chat-dots-fill text-primary" />
-              </Button>
+              </ZaloButton>
             </div>
           )
         }

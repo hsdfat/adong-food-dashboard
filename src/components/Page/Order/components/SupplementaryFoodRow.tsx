@@ -49,6 +49,7 @@ export default function SupplementaryFoodRow({
       <td>
         <FormControl
           type="number"
+          inputMode="decimal"
           value={item.standardPerPortion}
           onChange={(e) => onStandardPerPortionChange(item.id, parseFloat(e.target.value) || 0)}
           size="sm"
@@ -59,6 +60,7 @@ export default function SupplementaryFoodRow({
       <td>
         <FormControl
           type="number"
+          inputMode="decimal"
           value={item.portions}
           onChange={(e) => onPortionsChange(item.id, parseFloat(e.target.value) || 0)}
           size="sm"
