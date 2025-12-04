@@ -439,6 +439,43 @@
       "price": "Đơn giá",
       "total_price": "Thành tiền"
     },
+    "status_names": {
+      "pending": "Chờ xử lý",
+      "approved": "Đã duyệt",
+      "rejected": "Đã từ chối",
+      "completed": "Hoàn thành"
+    },
+    "rejection_reasons": {
+      "title": "Lý do từ chối *",
+      "placeholder": "Nhập lý do hoặc chọn từ các lý do phổ biến bên dưới",
+      "common_title": "Lý do phổ biến (nhấp để sử dụng):",
+      "lack_of_ingredient": "Thiếu nguyên liệu - hết hàng",
+      "insufficient_quantity": "Số lượng không đủ",
+      "price_too_high": "Giá tăng vượt ngân sách",
+      "quality_issues": "Chất lượng không đạt yêu cầu",
+      "supplier_unavailable": "Nhà cung cấp tạm thời không khả dụng",
+      "seasonal": "Nguyên liệu theo mùa - hiện không có",
+      "delivery_time": "Thời gian giao hàng quá lâu",
+      "minimum_order": "Không đạt số lượng đặt hàng tối thiểu",
+      "explanation": "Vui lòng giải thích lý do yêu cầu nhà cung cấp bị từ chối"
+    },
+    "supplier_request_status": {
+      "title": "Cập nhật trạng thái yêu cầu NCC",
+      "ingredient": "Nguyên liệu",
+      "supplier": "Nhà cung cấp",
+      "new_status": "Trạng thái mới",
+      "update_button": "Cập nhật trạng thái",
+      "updating": "Đang cập nhật...",
+      "status_updated": "Đã cập nhật trạng thái yêu cầu nhà cung cấp thành {{status}}",
+      "update_failed": "Không thể cập nhật trạng thái yêu cầu nhà cung cấp"
+    },
+    "status_notes": {
+      "title": "Ghi chú",
+      "placeholder": "Nhập ghi chú về thay đổi trạng thái (không bắt buộc)",
+      "explanation": "Ghi chú về lý do thay đổi trạng thái (không bắt buộc)"
+    },
+    "bulk_status_update": "Cập nhật tất cả",
+    "bulk_status_update_info": "Cập nhật trạng thái cho {{count}} nguyên liệu từ nhà cung cấp này",
     "labels": {
       "order_information": "Thông tin đơn hàng",
       "order_details": "Chi tiết đơn hàng",

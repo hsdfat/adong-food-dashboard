@@ -48,7 +48,11 @@ export default function OrdersList() {
 
       setOrdersData(data)
     } catch (err: any) {
-      setError(err?.message || dict.orders?.error_load || 'Failed to load orders')
+      setError(
+        err?.message ||
+          dict.orders?.error_load ||
+          'Không thể tải danh sách đơn hàng',
+      )
       console.error(err)
     } finally {
       setLoading(false)
@@ -64,8 +68,10 @@ export default function OrdersList() {
       await orderApi.updateStatus(orderId, newStatus)
       addNotification({
         type: 'success',
-        title: dict.common?.success || 'Success',
-        message: dict.orders?.status_updated || 'Status updated successfully.',
+        title: dict.common?.success || 'Thành công',
+        message:
+          dict.orders?.status_updated ||
+          'Cập nhật trạng thái đơn hàng thành công.',
       })
       // Reload orders to reflect changes
       const page = 1 // You can maintain current page if needed
@@ -75,8 +81,11 @@ export default function OrdersList() {
       console.error('[OrdersList] Status update error:', err)
       addNotification({
         type: 'error',
-        title: dict.common?.error || 'Error',
-        message: err?.message || dict.orders?.error_update_status || 'Failed to update status.',
+        title: dict.common?.error || 'Lỗi',
+        message:
+          err?.message ||
+          dict.orders?.error_update_status ||
+          'Không thể cập nhật trạng thái đơn hàng.',
       })
       throw err
     }
@@ -97,13 +106,13 @@ export default function OrdersList() {
   const columns: TableColumn[] = [
     {
       key: 'orderId',
-      label: dict.orders?.id || 'ID',
+      label: dict.orders?.id || 'Mã đơn',
       align: 'left',
       priority: true,
     },
     {
       key: 'status',
-      label: dict.orders?.status || 'Status',
+      label: dict.orders?.status || 'Trạng thái',
       align: 'left',
       priority: true,
       render: (_value, row) => {
@@ -125,21 +134,21 @@ export default function OrdersList() {
     },
     {
       key: 'orderDate',
-      label: dict.orders?.order_date || 'Order Date',
+      label: dict.orders?.order_date || 'Ngày đặt hàng',
       align: 'left',
       render: (value) =>
         value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
     {
       key: 'eventDate',
-      label: dict.orders?.event_date || 'Event Date',
+      label: dict.orders?.event_date || 'Ngày sự kiện',
       align: 'left',
       render: (value) =>
         value ? new Date(value as string | number).toLocaleDateString() : '-',
     },
     {
       key: 'totalAmount',
-      label: dict.orders?.total_amount || 'Total Amount',
+      label: dict.orders?.total_amount || 'Tổng tiền',
       align: 'right',
       render: (value) => (value ? `$${Number(value).toFixed(2)}` : '-'),
     },
@@ -148,21 +157,21 @@ export default function OrdersList() {
   // Define table actions
   const actions: TableAction[] = [
     {
-      label: dict.action?.view || 'View',
+      label: dict.action?.view || 'Xem chi tiết',
       onClick: async (row: unknown) => {
         const order = row as OrderDTO
         router.push(`/orders/${order.orderId}`)
       },
     },
     {
-      label: dict.action?.ingredients || 'Ingredients',
+      label: dict.action?.ingredients || 'Nguyên liệu',
       onClick: async (row: unknown) => {
         const order = row as OrderDTO
         router.push(`/orders/${order.orderId}/ingredients/summary`)
       },
     },
     {
-      label: dict.action?.supplier_requests || 'Supplier Requests',
+      label: dict.action?.supplier_requests || 'Yêu cầu nhà cung cấp',
       onClick: async (row: unknown) => {
         const order = row as OrderDTO
         router.push(`/orders/${order.orderId}/supplier-requests`)
@@ -172,12 +181,14 @@ export default function OrdersList() {
 
   return (
     <MasterDataListPage<OrderDTO>
-      title={dict.orders?.title || 'Order Management'}
-      addNewLabel={dict.orders?.create || 'Create Order'}
+      title={dict.orders?.title || 'Quản lý đơn hàng'}
+      addNewLabel={dict.orders?.create || 'Tạo đơn hàng'}
       createPath="/orders/create"
-      searchPlaceholder={dict.orders?.search_placeholder || 'Search orders...'}
-      emptyMessage={dict.orders?.no_data || 'No orders found'}
-      loadingMessage={dict.orders?.loading || 'Loading orders...'}
+      searchPlaceholder={
+        dict.orders?.search_placeholder || 'Tìm kiếm đơn hàng...'
+      }
+      emptyMessage={dict.orders?.no_data || 'Không có đơn hàng nào'}
+      loadingMessage={dict.orders?.loading || 'Đang tải danh sách đơn hàng...'}
       columns={columns}
       actions={actions}
       data={ordersData}
