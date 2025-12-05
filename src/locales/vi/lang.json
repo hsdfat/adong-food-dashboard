@@ -67,6 +67,11 @@
     }
   },
   "dashboard": {
+    "order_statistic":"Thống kê đơn món",
+    "orders_need_attention": "Đơn món cần xử lý",
+    "total_orders": "Tổng số đơn món",
+    "all_orders": "Tất cả đơn món",
+    "orders": "đơn món",
     "title": "Á Đông Food",
     "welcome": "Xin chào",
     "featured": {
@@ -443,7 +448,8 @@
       "pending": "Chờ xử lý",
       "approved": "Đã duyệt",
       "rejected": "Đã từ chối",
-      "completed": "Hoàn thành"
+      "completed": "Hoàn thành",
+      "cancelled": "Đã hủy"
     },
     "rejection_reasons": {
       "title": "Lý do từ chối *",

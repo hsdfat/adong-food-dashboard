@@ -3,6 +3,7 @@ import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { getDictionary } from '@/locales/dictionary'
 import { getServerLocale } from '@/locales/server-utils'
 import QuickActions from '@/components/Dashboard/QuickActions'
+import OrderStatistics from '@/components/Dashboard/OrderStatistics'
 
 export default async function DashboardPage() {
   const localeCookie = await getServerLocale()
@@ -13,16 +14,19 @@ export default async function DashboardPage() {
       <h1>{dict.dashboard?.title || 'Dashboard'}</h1>
       <p>{dict.dashboard?.welcome || 'Welcome to Á Đông Food Management'}</p>
 
-      <Card className="mt-4">
-        <CardHeader>
+      <Card className="mb-4" style={{ minHeight: 'auto' }}>
+        <CardHeader className="py-2">
           <h5 className="mb-0">
             {dict.action?.quick_action || 'Hành động nhanh'}
           </h5>
         </CardHeader>
-        <CardBody>
+        <CardBody className="p-3">
           <QuickActions />
+          <OrderStatistics />
         </CardBody>
       </Card>
+
+
     </div>
   )
 }

@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBell } from '@fortawesome/free-regular-svg-icons'
 import { useNotifications } from '@/hooks/use-notifications'
 import { NotificationPanel } from './NotificationPanel'
 
@@ -46,7 +48,7 @@ export function NotificationBell({
         }}
         aria-label="Notifications"
       >
-        <i className="bi bi-bell" style={{ fontSize: '1.25rem' }}></i>
+        <FontAwesomeIcon icon={faBell} style={{ fontSize: '1.25rem' }} />
         {unreadCount > 0 && (
           <span
             className="position-absolute translate-middle badge rounded-pill bg-danger"

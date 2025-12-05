@@ -308,3 +308,16 @@ export interface GetSuppliersForOrderResponse {
   orderId: string;
   suppliers: SupplierWithOrderFlag[];
 }
+
+// Order status count
+export interface OrderStatusCount {
+  status: string;
+  count: number;
+}
+
+// Order count response
+export interface OrderCountResponse {
+  totalCount: number;
+  statusCounts: OrderStatusCount[];
+  pendingCount: number;
+}

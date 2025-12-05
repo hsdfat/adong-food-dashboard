@@ -10,6 +10,7 @@ import {
   BestSupplierResponse,
   IngredientWithInventory,
   SaveSupplierSelectionsRequest,
+  OrderCountResponse,
 } from '@/models/order'
 import { ResourceCollection } from '@/models/resource'
 
@@ -41,6 +42,19 @@ export const orderApi = {
       ? `${BASE_URL}?${queryParams.toString()}`
       : BASE_URL
     return apiClient<ResourceCollection<OrderDTO>>(url)
+  },
+
+  /**
+   * Get order count by status
+   */
+  async getCount(params?: { kitchen_id?: string }): Promise<OrderCountResponse> {
+    const queryParams = new URLSearchParams()
+    if (params?.kitchen_id) queryParams.append('kitchen_id', params.kitchen_id)
+
+    const url = queryParams.toString()
+      ? `${BASE_URL}/count?${queryParams.toString()}`
+      : `${BASE_URL}/count`
+    return apiClient<OrderCountResponse>(url)
   },
 
   /**

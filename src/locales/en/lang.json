@@ -67,6 +67,11 @@
     }
   },
   "dashboard": {
+    "order_statistic":"Order Statistics",
+    "orders_need_attention": "Orders need attention",
+    "total_orders": "Total Orders",
+    "all_orders": "All orders",
+    "orders": "orders",
     "title": "A Dong Food",
     "welcome": "Hello",
     "featured": {
@@ -540,6 +545,13 @@
       "selected_by": "Selected By",
       "selection_date": "Selection Date",
       "unit_price_label": "Unit Price"
+    },
+    "status_names": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected"
     },
     "status_badges": {
       "pending": "Pending"

@@ -8,7 +8,7 @@ import { faClipboardList, faFileImport } from '@fortawesome/free-solid-svg-icons
 export default function QuickActions() {
   return (
     <>
-      <div className="row g-3">
+      <div className="row g-2">
         <div className="col-12 col-sm-6 col-lg-4">
           <Link href="/orders/create" className="text-decoration-none">
             <div className="quick-action-card quick-action-primary">
@@ -43,14 +43,13 @@ export default function QuickActions() {
         .quick-action-card {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          padding: 1.5rem;
+          gap: 0.75rem;
+          padding: 0.875rem 1rem;
           border-radius: 0.5rem;
           transition: all 0.3s ease;
           cursor: pointer;
           border: 2px solid transparent;
           height: 100%;
-          min-height: 120px;
         }
 
         .quick-action-card:hover {
@@ -77,11 +76,11 @@ export default function QuickActions() {
         }
 
         .quick-action-icon {
-          font-size: 2.5rem;
+          font-size: 1.75rem;
           opacity: 0.9;
           flex-shrink: 0;
-          width: 60px;
-          height: 60px;
+          width: 45px;
+          height: 45px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -97,31 +96,31 @@ export default function QuickActions() {
           font-weight: 600;
           margin-bottom: 0.25rem;
           color: white;
+          font-size: 0.95rem;
         }
 
         .quick-action-content small {
           color: rgba(255, 255, 255, 0.85);
-          font-size: 0.875rem;
+          font-size: 0.8rem;
         }
 
         @media (max-width: 576px) {
           .quick-action-card {
-            padding: 1.25rem;
-            min-height: 100px;
+            padding: 0.75rem 0.875rem;
           }
 
           .quick-action-icon {
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
           }
 
           .quick-action-content h6 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
           }
 
           .quick-action-content small {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
           }
         }
       `}</style>
