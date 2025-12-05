@@ -33,12 +33,15 @@ const CurrentTheme = ({ theme }: { theme: string }) => (
 export default function HeaderTheme({
   currentPreferredTheme,
 }: {
-  currentPreferredTheme: Theme;
-}) {
+  currentPreferredTheme?: Theme;
+} = {}) {
   const dict = useDictionary()
-  const [preferredTheme, setPreferredTheme] = useState<Theme>(
-    currentPreferredTheme,
-  )
+  const getInitialTheme = () => {
+    if (currentPreferredTheme) return currentPreferredTheme
+    const cookieTheme = Cookies.get('preferred_theme') as Theme | undefined
+    return cookieTheme || Theme.Auto
+  }
+  const [preferredTheme, setPreferredTheme] = useState<Theme>(getInitialTheme())
   const router = useRouter()
 
   const changePreferredTheme = useCallback(

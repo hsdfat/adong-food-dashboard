@@ -1,18 +1,21 @@
+'use client'
+
 import { Nav, NavItem } from 'react-bootstrap'
 import HeaderLocale from '@/components/Layout/Dashboard/Header/HeaderLocale'
-import { getLocale } from '@/locales/dictionary'
-import { getPreferredTheme } from '@/themes/theme'
 import HeaderTheme from '@/components/Layout/Dashboard/Header/HeaderTheme'
-import Cookies from 'js-cookie'
+import HeaderNotificationBell from '@/components/Layout/Dashboard/Header/HeaderNotificationBell'
 
-export default async function HeaderNotificationNav() {
+export default function HeaderNotificationNav() {
   return (
     <Nav>
       <NavItem>
-        <HeaderLocale currentLocale={getLocale(Cookies.get('locale'))} />
+        <HeaderNotificationBell />
       </NavItem>
       <NavItem>
-        <HeaderTheme currentPreferredTheme={getPreferredTheme()} />
+        <HeaderLocale />
+      </NavItem>
+      <NavItem>
+        <HeaderTheme />
       </NavItem>
     </Nav>
   )

@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Card,
-  CardBody,
   Button,
   Spinner,
   Alert,
@@ -26,6 +24,7 @@ import {
   faCheck,
   faTimes,
   faEdit,
+  faSearch,
 } from '@fortawesome/free-solid-svg-icons'
 import { orderApi } from '@/services'
 import { OrderDTO } from '@/models/order'
@@ -84,6 +83,7 @@ export default function OrdersGroupedList() {
   const [newStatus, setNewStatus] = useState('')
   const [rejectionReason, setRejectionReason] = useState('')
   const [updating, setUpdating] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
   const dict = useDictionary()
   const { addNotification } = useNotification()
@@ -109,7 +109,13 @@ export default function OrdersGroupedList() {
       setLoading(true)
       setError('')
       const response = await orderApi.getAll({ per_page: 1000 })
-      setOrders(response.data || [])
+      // Sort by latest time (createdDate or modifiedDate)
+      const sortedOrders = (response.data || []).sort((a, b) => {
+        const dateA = new Date(a.modifiedDate || a.createdDate).getTime()
+        const dateB = new Date(b.modifiedDate || b.createdDate).getTime()
+        return dateB - dateA // Latest first
+      })
+      setOrders(sortedOrders)
     } catch (err) {
       setError(
         (dict.orders as any)?.error_load || 'Không thể tải danh sách đơn hàng',
@@ -119,6 +125,26 @@ export default function OrdersGroupedList() {
       setLoading(false)
     }
   }
+
+  // Filter orders based on search query
+  const filteredOrders = orders.filter((order) => {
+    if (!searchQuery.trim()) return true
+
+    const query = searchQuery.toLowerCase()
+    const orderId = String(order.orderId).toLowerCase()
+    const kitchenName = (order.kitchenName || '').toLowerCase()
+    const note = (order.note || '').toLowerCase()
+    const status = (order.status || '').toLowerCase()
+    const createdBy = (order.createdByName || '').toLowerCase()
+
+    return (
+      orderId.includes(query) ||
+      kitchenName.includes(query) ||
+      note.includes(query) ||
+      status.includes(query) ||
+      createdBy.includes(query)
+    )
+  })
 
   const loadSupplierRequestsForOrder = async (orderId: string) => {
     if (orderSuppliers.has(orderId)) return
@@ -590,13 +616,41 @@ export default function OrdersGroupedList() {
           </Button>
         </div>
 
+        {/* Search Box */}
+        <div className="mb-3">
+          <Form.Group>
+            <div className="position-relative">
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="position-absolute top-50 translate-middle-y ms-3 text-muted"
+              />
+              <Form.Control
+                type="text"
+                placeholder={(dict.orders as any)?.search_placeholder || 'Tìm kiếm đơn hàng theo ID, bếp, ghi chú, trạng thái...'}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="ps-5"
+              />
+            </div>
+          </Form.Group>
+          {searchQuery && (
+            <small className="text-muted">
+              {filteredOrders.length} / {orders.length} {(dict.orders as any)?.results || 'kết quả'}
+            </small>
+          )}
+        </div>
+
         {orders.length === 0 ? (
           <Alert variant="info">
             {dict.common?.no_data || 'Không có đơn hàng nào'}
           </Alert>
+        ) : filteredOrders.length === 0 ? (
+          <Alert variant="warning">
+            {(dict.orders as any)?.no_results || 'Không tìm thấy đơn hàng nào phù hợp'}
+          </Alert>
         ) : (
           <Accordion activeKey={activeKey}>
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <AccordionItem key={order.orderId} eventKey={String(order.orderId)}>
                 <AccordionHeader
                   onClick={() => handleAccordionToggle(String(order.orderId))}

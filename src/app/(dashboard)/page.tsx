@@ -1,10 +1,8 @@
 import React from 'react'
-import { Button, Card, CardBody, CardHeader } from 'react-bootstrap'
-import Link from 'next/link'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboardList, faFileImport } from '@fortawesome/free-solid-svg-icons'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
 import { getDictionary } from '@/locales/dictionary'
 import { getServerLocale } from '@/locales/server-utils'
+import QuickActions from '@/components/Dashboard/QuickActions'
 
 export default async function DashboardPage() {
   const localeCookie = await getServerLocale()
@@ -18,22 +16,11 @@ export default async function DashboardPage() {
       <Card className="mt-4">
         <CardHeader>
           <h5 className="mb-0">
-            {dict.action?.quick_action || 'Quick Actions'}
+            {dict.action?.quick_action || 'Hành động nhanh'}
           </h5>
         </CardHeader>
-        <CardBody className="d-flex gap-3 flex-wrap">
-          <Link href="/orders/create" passHref legacyBehavior>
-            <Button variant="primary" size="lg">
-              <FontAwesomeIcon icon={faClipboardList} className="me-2" />
-              {dict.orders?.create || 'Tạo phiếu lên đơn món'}
-            </Button>
-          </Link>
-          <Link href="/inventory/imports" passHref legacyBehavior>
-            <Button variant="success" size="lg">
-              <FontAwesomeIcon icon={faFileImport} className="me-2" />
-              {dict.orders?.import_list || 'Danh sách nhập kho'}
-            </Button>
-          </Link>
+        <CardBody>
+          <QuickActions />
         </CardBody>
       </Card>
     </div>

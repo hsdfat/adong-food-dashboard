@@ -12,18 +12,22 @@ import {
 } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
+import { getLocale } from '@/locales/dictionary'
 
 export default function HeaderLocale({
   currentLocale,
 }: {
-  currentLocale: string;
-}) {
-  const [locale, setLocale] = useState(currentLocale)
+  currentLocale?: string;
+} = {}) {
+  const initialLocale = currentLocale || getLocale(Cookies.get('locale'))
+  const [locale, setLocale] = useState(initialLocale)
   const router = useRouter()
 
   // Sync state with prop when it changes (after page refresh)
   useEffect(() => {
-    setLocale(currentLocale)
+    if (currentLocale) {
+      setLocale(currentLocale)
+    }
   }, [currentLocale])
 
   const changeLocale = (loc: string) => {
